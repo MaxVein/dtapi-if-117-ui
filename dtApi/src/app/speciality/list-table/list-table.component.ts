@@ -1,9 +1,11 @@
 import { HttpClient } from '@angular/common/http'
 import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core'
+import { FormControl, FormGroup, Validators } from '@angular/forms'
 import { MatPaginator } from '@angular/material/paginator'
 import { MatSort } from '@angular/material/sort'
 import { MatTable } from '@angular/material/table'
 import { ApiService } from '../api.service'
+import { IsNumValidators } from '../isnum.validators'
 
 export interface ListTableItem {
     speciality_id: number
@@ -19,6 +21,8 @@ export interface ListTableItem {
 export class ListTableComponent implements OnInit {
     dataSource: ListTableItem[]
 
+    form: FormGroup
+
     /** Columns displayed in the table. Columns IDs can be added, removed, or reordered. */
     displayedColumns = ['id', 'name', 'code']
 
@@ -26,12 +30,22 @@ export class ListTableComponent implements OnInit {
     ngOnInit() {
         const body = { username: 'admin', password: 'dtapi_admin' }
         this.getSpeciality()
+
+        this.form = new FormGroup({
+            speciality_name: new FormControl('', Validators.required),
+            speciality_code: new FormControl('', [
+                Validators.required,
+                Validators.maxLength(5),
+                IsNumValidators.isNum,
+            ]),
+        })
     }
     addSpeciality() {
-        // this.http.post('https://dtapi.if.ua/api/Speciality/insertData', {
-        //     speciality_name: 'hello 2',
-        //     speciality_code: 991,
-        // })
+        if (this.form.valid) {
+            this.apiService
+                .addEntity('Speciality', this.form.value)
+                .subscribe((response) => response)
+        }
     }
 
     getSpeciality() {
