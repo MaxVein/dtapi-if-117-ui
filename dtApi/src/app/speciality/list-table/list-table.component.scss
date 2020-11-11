@@ -5,3 +5,35 @@ table {
     width: 80%;
     margin: 20px auto;
 }
+form {
+    text-align: center;
+}
+.form-control {
+    padding: 10px;
+}
+.btn {
+    padding: 10px;
+    margin: 10px;
+    background-color: aqua;
+    border: none;
+    color: grey;
+}
+.btn:hover {
+    background-color: rgb(44, 124, 161);
+    color: white;
+}
+.btn:disabled {
+    cursor: not-allowed;
+}
+
+input {
+    &.ng-invalid.ng-touched {
+        border: 1px solid red;
+    }
+    &.ng-valid {
+        border: 1px solid green;
+    }
+}
+small {
+    color: red;
+}

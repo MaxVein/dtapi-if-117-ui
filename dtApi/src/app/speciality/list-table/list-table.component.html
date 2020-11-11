@@ -1,3 +1,62 @@
+<form [formGroup]="form" (ngSubmit)="addSpeciality()">
+    <label>
+        <div class="form-control">
+            <label>Entity</label>
+            <input
+                type="text"
+                placeholder="entity"
+                formControlName="speciality_name"
+            />
+            <div
+                class="validation"
+                *ngIf="
+                    form.get('speciality_name').invalid &&
+                    form.get('speciality_name').touched
+                "
+            >
+                <small>Поле не може бути пустим</small>
+            </div>
+        </div>
+        <div>
+            <label>Code</label>
+            <input
+                type="text"
+                placeholder="code"
+                formControlName="speciality_code"
+            />
+            <div
+                class="validation"
+                *ngIf="
+                    form.get('speciality_code').invalid &&
+                    form.get('speciality_code').touched
+                "
+            >
+                <small *ngIf="form.get('speciality_code').errors.required"
+                    >Поле не може бути пустим</small
+                >
+                <small *ngIf="form.get('speciality_code').errors.maxlength"
+                    >Поле повинно містити не більше
+                    {{
+                        form.get('speciality_code').errors.maxlength
+                            .requiredLength
+                    }}
+                    чисел , у вас:
+                    {{
+                        form.get('speciality_code').errors.maxlength
+                            .actualLength
+                    }}</small
+                >
+                <small *ngIf="form.get('speciality_code').errors.isNum">
+                    Поле може містити тільки числа
+                </small>
+            </div>
+        </div>
+        <button class="btn" type="submit" [disabled]="form.invalid">
+            Add Soeciality
+        </button>
+    </label>
+</form>
+
 <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
     <!--- Note that these columns can be defined in any order.
         The actual rendered columns are set as a property on the row definition" -->
