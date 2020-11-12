@@ -1,0 +1,19 @@
+<h1 mat-dialog-title>Hi </h1>
+<div mat-dialog-content>
+  <mat-form-field>
+    <mat-label>Group name</mat-label>
+    <input matInput [(ngModel)]="data.group_name">
+  </mat-form-field>
+  <mat-form-field>
+    <mat-label>Speciality name</mat-label>
+    <input matInput >
+  </mat-form-field>
+  <mat-form-field>
+    <mat-label>Faculty name</mat-label>
+    <input matInput >
+  </mat-form-field>
+</div>
+<div mat-dialog-actions>
+  <button mat-button (click)="onNoClick()">No Thanks</button>
+  <button mat-button [mat-dialog-close]="data.group_name" cdkFocusInitial>Ok</button>
+</div>
