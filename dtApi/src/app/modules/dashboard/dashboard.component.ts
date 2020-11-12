@@ -21,21 +21,20 @@ export class DashboardComponent implements OnInit {
             this.menuIcon = 'menu_open'
         }
     }
-
-    logininfo: object
-    facultiesAmount: object
-    groupsAmount: object
-    specialitiesAmount: object
-    subjectsAmount: object
-    studentsAmount: object
-    adminAmount: object
+    logininfo: string
+    facultiesAmount: number
+    groupsAmount: number
+    specialitiesAmount: number
+    subjectsAmount: number
+    studentsAmount: number
+    adminAmount: number
 
     cards = this.breakpointObserver.observe(Breakpoints.Handset).pipe(
         map(({ matches }) => {
             if (matches) {
                 return [
                     {
-                        title: 'Факультети',
+                        title: 'Fac',
                         cols: 1,
                         rows: 1,
                         url: '/',
@@ -178,48 +177,43 @@ export class DashboardComponent implements OnInit {
         private infoservice: DashboardMetricsService
     ) {}
     ngOnInit(): void {
-        if (
-            this.infoservice
-                .BackendLogin()
-                .subscribe((info) => (this.logininfo = info))
-        ) {
-            this.infoservice
-                .getFacultiesNumber()
-                .subscribe(
-                    (facultiesInfo) =>
-                        (this.facultiesAmount = facultiesInfo.numberOfRecords)
-                )
-            this.infoservice
-                .getSubjectsNumber()
-                .subscribe(
-                    (subjectsInfo) =>
-                        (this.subjectsAmount = subjectsInfo.numberOfRecords)
-                )
-            this.infoservice
-                .getGroupsNumber()
-                .subscribe(
-                    (groupsInfo) =>
-                        (this.groupsAmount = groupsInfo.numberOfRecords)
-                )
-            this.infoservice
-                .getSpecialitiesNumber()
-                .subscribe(
-                    (specialitiesInfo) =>
-                        (this.specialitiesAmount =
-                            specialitiesInfo.numberOfRecords)
-                )
-            this.infoservice
-                .getStudentsNumber()
-                .subscribe(
-                    (studentsInfo) =>
-                        (this.studentsAmount = studentsInfo.numberOfRecords)
-                )
-            this.infoservice
-                .getAdminsNumber()
-                .subscribe(
-                    (adminsInfo) =>
-                        (this.adminAmount = adminsInfo.numberOfRecords)
-                )
-        }
+        // this.infoservice
+        //     .BackendLogin()
+        //     .subscribe((info) => (this.logininfo = info))
+
+        this.infoservice
+            .getFacultiesNumber()
+            .subscribe(
+                (facultiesInfo) =>
+                    (this.facultiesAmount = facultiesInfo.numberOfRecords)
+            )
+        this.infoservice
+            .getSubjectsNumber()
+            .subscribe(
+                (subjectsInfo) =>
+                    (this.subjectsAmount = subjectsInfo.numberOfRecords)
+            )
+        this.infoservice
+            .getGroupsNumber()
+            .subscribe(
+                (groupsInfo) => (this.groupsAmount = groupsInfo.numberOfRecords)
+            )
+        this.infoservice
+            .getSpecialitiesNumber()
+            .subscribe(
+                (specialitiesInfo) =>
+                    (this.specialitiesAmount = specialitiesInfo.numberOfRecords)
+            )
+        this.infoservice
+            .getStudentsNumber()
+            .subscribe(
+                (studentsInfo) =>
+                    (this.studentsAmount = studentsInfo.numberOfRecords)
+            )
+        this.infoservice
+            .getAdminsNumber()
+            .subscribe(
+                (adminsInfo) => (this.adminAmount = adminsInfo.numberOfRecords)
+            )
     }
 }
