@@ -5,7 +5,8 @@ import { MatPaginator } from '@angular/material/paginator'
 import { MatSort } from '@angular/material/sort'
 import { MatTable } from '@angular/material/table'
 import { ApiService } from '../api.service'
-import { IsNumValidators } from '../isnum.validators'
+import { ModalFormComponent } from '../modal-form/modal-form.component'
+import { MatDialog, MatDialogRef } from '@angular/material/dialog'
 
 export interface ListTableItem {
     speciality_id: number
@@ -20,39 +21,35 @@ export interface ListTableItem {
 })
 export class ListTableComponent implements OnInit {
     dataSource: ListTableItem[]
-
-    form: FormGroup
-
-    /** Columns displayed in the table. Columns IDs can be added, removed, or reordered. */
     displayedColumns = ['id', 'name', 'code']
 
-    constructor(private http: HttpClient, private apiService: ApiService) {}
+    fileNameDialogRef: MatDialogRef<ModalFormComponent>
+
+    constructor(
+        private http: HttpClient,
+        private apiService: ApiService,
+        private dialog: MatDialog
+    ) {}
+
     ngOnInit() {
-        const body = { username: 'admin', password: 'dtapi_admin' }
         this.getSpeciality()
-
-        this.form = new FormGroup({
-            speciality_name: new FormControl('', Validators.required),
-            speciality_code: new FormControl('', [
-                Validators.required,
-                Validators.maxLength(5),
-                IsNumValidators.isNum,
-            ]),
-        })
-    }
-    addSpeciality() {
-        if (this.form.valid) {
-            this.apiService
-                .addEntity('Speciality', this.form.value)
-                .subscribe((response) => response)
-        }
     }
 
-    getSpeciality() {
+    getSpeciality(): any {
         this.apiService
             .getEntity('Speciality')
             .subscribe(
                 (response: ListTableItem[]) => (this.dataSource = response)
             )
+    }
+
+    openModal() {
+        this.fileNameDialogRef = this.dialog.open(ModalFormComponent, {
+            disableClose: true,
+        })
+
+        this.fileNameDialogRef.afterClosed().subscribe((result) => {
+            console.log('The dialog was closed')
+        })
     }
 }

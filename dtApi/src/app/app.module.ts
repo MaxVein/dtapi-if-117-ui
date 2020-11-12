@@ -9,9 +9,14 @@ import { HttpClientModule } from '@angular/common/http'
 import { MatTableModule } from '@angular/material/table'
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations'
 import { ListTableComponent } from './speciality/list-table/list-table.component'
+import { ModalFormComponent } from './speciality/modal-form/modal-form.component'
+import { MatDialogModule } from '@angular/material/dialog'
+import { MatFormFieldModule } from '@angular/material/form-field'
+import { MatButtonModule } from '@angular/material/button'
+import { MatInputModule } from '@angular/material/input'
 
 @NgModule({
-    declarations: [AppComponent, ListTableComponent],
+    declarations: [AppComponent, ListTableComponent, ModalFormComponent],
     imports: [
         BrowserModule,
         AppRoutingModule,
@@ -20,6 +25,10 @@ import { ListTableComponent } from './speciality/list-table/list-table.component
         ReactiveFormsModule,
         HttpClientModule,
         MatTableModule,
+        MatFormFieldModule,
+        MatButtonModule,
+        MatInputModule,
+        MatDialogModule,
         BrowserAnimationsModule,
     ],
     providers: [],
