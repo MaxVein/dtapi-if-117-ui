@@ -9,14 +9,16 @@ import {
 } from '@angular/material/dialog'
 import { CreateGroupDialogComponent } from './create-group-dialog/create-group-dialog.component'
 
-export interface PeriodicElement {
+export interface GroupData {
     group_id: string
     group_name: string
     speciality_id: string
     faculty_id: string
 }
 
-let ELEMENT_DATA: PeriodicElement[] = []
+
+
+let ELEMENT_DATA: GroupData[] = []
 
 @Component({
     selector: 'app-groups',
@@ -24,7 +26,10 @@ let ELEMENT_DATA: PeriodicElement[] = []
     styleUrls: ['./groups.component.scss'],
 })
 export class GroupsComponent implements OnInit {
-    group_name: string
+    group_name: string;
+    speciality_name: string;
+    faculty_name: string;
+
     displayedColumns: string[] = [
         'group_id',
         'group_name',
@@ -32,7 +37,7 @@ export class GroupsComponent implements OnInit {
         'faculty_name',
         'actions',
     ]
-    dataSource = new MatTableDataSource<PeriodicElement>()
+    dataSource = new MatTableDataSource<GroupData>()
     res = []
     constructor(
         private groupsSertvice: GroupsService,
@@ -50,22 +55,22 @@ export class GroupsComponent implements OnInit {
         //   console.log(data);
         //   this.res = data;
         // })
-        this.groupsSertvice.getData().subscribe((data: any[]) => {
+        this.groupsSertvice.getData('Group').subscribe((data: any[]) => {
             console.log(data)
             data.map((item) => {
                 this.groupsSertvice
-                    .getSpec(item.speciality_id)
+                    .getData('Speciality',item.speciality_id)
                     .subscribe((data: any) => {
                         item.speciality_name = data[0].speciality_name
                     })
                 this.groupsSertvice
-                    .getFac(item.faculty_id)
+                    .getData('Faculty',item.faculty_id)
                     .subscribe((data: any) => {
                         item.faculty_name = data[0].faculty_name
                     })
             })
             ELEMENT_DATA = data
-            this.dataSource = new MatTableDataSource<PeriodicElement>(
+            this.dataSource = new MatTableDataSource<GroupData>(
                 ELEMENT_DATA
             )
         })
@@ -74,12 +79,10 @@ export class GroupsComponent implements OnInit {
     createGroup(): void {
         const dialogRef = this.dialog.open(CreateGroupDialogComponent, {
             width: '350px',
-            data: { group_name: this.group_name },
         })
 
         dialogRef.afterClosed().subscribe((result) => {
             console.log(result)
-            this.group_name = result
         })
     }
 }

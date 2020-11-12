@@ -6,7 +6,9 @@ import {
 } from '@angular/material/dialog'
 
 export interface DialogData {
-    group_name: string
+    group_name: string,
+    speciality_name: string,
+    faculty_name: string
 }
 
 @Component({

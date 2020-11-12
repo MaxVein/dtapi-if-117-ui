@@ -1,28 +1,26 @@
 import { Injectable } from '@angular/core'
 import { HttpClient } from '@angular/common/http'
 import { Observable } from 'rxjs'
+import { environment } from 'src/environments/environment'
 
 @Injectable({
     providedIn: 'root',
 })
 export class GroupsService {
-    apiURI = 'https://dtapi.if.ua/api/'
+    apiURI = ''
 
     constructor(private http: HttpClient) {}
 
     public logIn() {
-        return this.http.post(`${this.apiURI}Login/index`, {
+        return this.http.post(`${environment.apiUrl}Login/index`, {
             username: 'admin',
             password: 'dtapi_admin',
         })
     }
-    public getData() {
-        return this.http.get(`${this.apiURI}Group/getRecords`)
+    public getData(entity,id?) {
+        return this.http.get(`${environment.apiUrl}/${entity}/getRecords/${id ? id : ''}`)
     }
-    public getSpec(id: number) {
-        return this.http.get(`${this.apiURI}Speciality/getRecords/${id}`)
-    }
-    public getFac(id: number) {
-        return this.http.get(`${this.apiURI}Faculty/getRecords/${id}`)
-    }
+    public insertData(id: number, payload) {
+      return this.http.post(`${environment.apiUrl}Faculty/insertData/`, payload)
+  }
 }

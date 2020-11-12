@@ -6,14 +6,14 @@
   </mat-form-field>
   <mat-form-field>
     <mat-label>Speciality name</mat-label>
-    <input matInput >
+    <input matInput [(ngModel)]="data.speciality_name">
   </mat-form-field>
   <mat-form-field>
     <mat-label>Faculty name</mat-label>
-    <input matInput >
+    <input matInput [(ngModel)]="data.faculty_name">
   </mat-form-field>
 </div>
 <div mat-dialog-actions>
   <button mat-button (click)="onNoClick()">No Thanks</button>
-  <button mat-button [mat-dialog-close]="data.group_name" cdkFocusInitial>Ok</button>
+  <button mat-button [mat-dialog-close]="data" cdkFocusInitial>Ok</button>
 </div>
