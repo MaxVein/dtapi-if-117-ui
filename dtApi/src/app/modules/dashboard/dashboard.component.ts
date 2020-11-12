@@ -1,8 +1,9 @@
-import { Component } from '@angular/core'
+/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable @typescript-eslint/ban-types */
+import { Component, OnInit } from '@angular/core'
 import { Breakpoints, BreakpointObserver } from '@angular/cdk/layout'
 import { Observable } from 'rxjs'
 import { map, shareReplay } from 'rxjs/operators'
-import { OnInit } from '@angular/core'
 import { DashboardMetricsService } from './services/dashboard-metrics.service'
 
 @Component({
@@ -12,13 +13,23 @@ import { DashboardMetricsService } from './services/dashboard-metrics.service'
     providers: [DashboardMetricsService],
 })
 export class DashboardComponent implements OnInit {
-    faculties: []
-    groups: number
-    specialities: number
-    subjects: number
-    students: number
-    admins: number
-    /** Based on the screen size, switch from standard to one column per row */
+    menuIcon = 'menu_open'
+    menuIconChange(): void {
+        if (this.menuIcon === 'menu_open') {
+            this.menuIcon = 'menu'
+        } else {
+            this.menuIcon = 'menu_open'
+        }
+    }
+
+    logininfo: object
+    facultiesAmount: object
+    groupsAmount: object
+    specialitiesAmount: object
+    subjectsAmount: object
+    studentsAmount: object
+    adminAmount: object
+
     cards = this.breakpointObserver.observe(Breakpoints.Handset).pipe(
         map(({ matches }) => {
             if (matches) {
@@ -28,110 +39,134 @@ export class DashboardComponent implements OnInit {
                         cols: 1,
                         rows: 1,
                         url: '/',
-                        icon: 'home',
-                        count: this.faculties.length,
+                        icon: 'account_balance',
+                        count: this.facultiesAmount,
+                        link: '/faculties',
                     },
-                    { title: 'Групи', cols: 1, rows: 1, icon: 'home' },
+                    {
+                        title: 'Групи',
+                        cols: 1,
+                        rows: 1,
+                        url: '/groups',
+                        icon: 'groups',
+                        count: this.groupsAmount,
+                    },
                     {
                         title: 'Спеціальності',
                         cols: 1,
                         rows: 1,
-                        url: '/',
-                        icon: 'home',
+                        url: '/specialities',
+                        icon: 'dns',
+                        count: this.specialitiesAmount,
                     },
                     {
                         title: 'Предмети',
                         cols: 1,
                         rows: 1,
-                        url: '/',
-                        icon: 'home',
+                        url: '/subjects',
+                        icon: 'collections_bookmark',
+                        count: this.subjectsAmount,
                     },
                     {
                         title: 'Студенти',
                         cols: 1,
                         rows: 1,
-                        url: '/',
-                        icon: 'home',
+                        url: '/students',
+                        icon: 'how_to_reg',
+                        count: this.studentsAmount,
                     },
                     {
                         title: 'Адміни',
                         cols: 1,
                         rows: 1,
-                        url: '/',
-                        icon: 'home',
+                        url: '/admins',
+                        icon: 'supervised_user_circle',
+                        count: this.adminAmount,
                     },
                     {
                         title: 'Результати',
                         cols: 1,
                         rows: 1,
-                        url: '/',
-                        icon: 'home',
+                        url: '/result',
+                        icon: 'insights',
                     },
                     {
                         title: 'Протокол',
                         cols: 1,
                         rows: 1,
-                        url: '/',
-                        icon: 'home',
+                        url: '/protocol',
+                        icon: 'contact_page',
                     },
                 ]
             }
-
             return [
                 {
                     title: 'Факультети',
                     cols: 1,
                     rows: 1,
                     url: '/',
-                    icon: 'home',
-                    count: this.faculties.length,
+                    icon: 'account_balance',
+                    count: this.facultiesAmount,
+                    link: '/faculties',
                 },
-                { title: 'Групи', cols: 1, rows: 1, icon: 'home' },
+                {
+                    title: 'Групи',
+                    cols: 1,
+                    rows: 1,
+                    url: '/groups',
+                    icon: 'groups',
+                    count: this.groupsAmount,
+                },
                 {
                     title: 'Спеціальності',
                     cols: 1,
                     rows: 1,
-                    url: '/',
-                    icon: 'home',
+                    url: '/specialities',
+                    icon: 'dns',
+                    count: this.specialitiesAmount,
                 },
                 {
                     title: 'Предмети',
                     cols: 1,
                     rows: 1,
-                    url: '/',
-                    icon: 'home',
+                    url: '/subjects',
+                    icon: 'collections_bookmark',
+                    count: this.subjectsAmount,
                 },
                 {
                     title: 'Студенти',
                     cols: 1,
                     rows: 1,
-                    url: '/',
-                    icon: 'home',
+                    url: '/students',
+                    icon: 'how_to_reg',
+                    count: this.studentsAmount,
                 },
                 {
                     title: 'Адміни',
                     cols: 1,
                     rows: 1,
-                    url: '/',
-                    icon: 'home',
+                    url: '/admins',
+                    icon: 'supervised_user_circle',
+                    count: this.adminAmount,
                 },
                 {
                     title: 'Результати',
                     cols: 1,
                     rows: 1,
-                    url: '/',
-                    icon: 'home',
+                    url: '/result',
+                    icon: 'insights',
                 },
                 {
                     title: 'Протокол',
                     cols: 1,
                     rows: 1,
-                    url: '/',
-                    icon: 'home',
+                    url: '/protocol',
+                    icon: 'contact_page',
                 },
             ]
         })
     )
+
     isHandset$: Observable<boolean> = this.breakpointObserver
         .observe(Breakpoints.Handset)
         .pipe(
@@ -142,12 +177,49 @@ export class DashboardComponent implements OnInit {
         private breakpointObserver: BreakpointObserver,
         private infoservice: DashboardMetricsService
     ) {}
-
     ngOnInit(): void {
-        // this.infoservice.BackendLogin().subscribe((info) => console.log(info))
-
-        this.infoservice
-            .getFacultiesNumber()
-            .subscribe((facultiesInfo) => (this.faculties = facultiesInfo))
+        if (
+            this.infoservice
+                .BackendLogin()
+                .subscribe((info) => (this.logininfo = info))
+        ) {
+            this.infoservice
+                .getFacultiesNumber()
+                .subscribe(
+                    (facultiesInfo) =>
+                        (this.facultiesAmount = facultiesInfo.numberOfRecords)
+                )
+            this.infoservice
+                .getSubjectsNumber()
+                .subscribe(
+                    (subjectsInfo) =>
+                        (this.subjectsAmount = subjectsInfo.numberOfRecords)
+                )
+            this.infoservice
+                .getGroupsNumber()
+                .subscribe(
+                    (groupsInfo) =>
+                        (this.groupsAmount = groupsInfo.numberOfRecords)
+                )
+            this.infoservice
+                .getSpecialitiesNumber()
+                .subscribe(
+                    (specialitiesInfo) =>
+                        (this.specialitiesAmount =
+                            specialitiesInfo.numberOfRecords)
+                )
+            this.infoservice
+                .getStudentsNumber()
+                .subscribe(
+                    (studentsInfo) =>
+                        (this.studentsAmount = studentsInfo.numberOfRecords)
+                )
+            this.infoservice
+                .getAdminsNumber()
+                .subscribe(
+                    (adminsInfo) =>
+                        (this.adminAmount = adminsInfo.numberOfRecords)
+                )
+        }
     }
 }
