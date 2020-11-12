@@ -7,6 +7,7 @@ import { MatTable, MatTableDataSource } from '@angular/material/table'
 import { ApiService } from '../api.service'
 import { ModalFormComponent } from '../modal-form/modal-form.component'
 import { MatDialog, MatDialogRef } from '@angular/material/dialog'
+import { Observable } from 'rxjs'
 
 export interface ListTableItem {
     speciality_id: number
@@ -35,19 +36,19 @@ export class ListTableComponent implements OnInit, AfterViewInit {
     ngOnInit(): void {
         this.getSpeciality()
     }
-    ngAfterViewInit() {
+    ngAfterViewInit(): void {
         this.dataSource.paginator = this.paginator
     }
 
-    getSpeciality(): any {
-        this.apiService
+    getSpeciality(): Observable<ListTableItem> {
+        return this.apiService
             .getEntity('Speciality')
             .subscribe(
                 (response: ListTableItem[]) => (this.dataSource.data = response)
             )
     }
 
-    openModal() {
+    openModal(): void {
         this.fileNameDialogRef = this.dialog.open(ModalFormComponent, {
             disableClose: true,
         })
@@ -56,10 +57,16 @@ export class ListTableComponent implements OnInit, AfterViewInit {
             console.log('The dialog was closed')
         })
     }
-    deleteSpeciality(elem) {
-        this.apiService
+    deleteSpeciality(elem: ListTableItem): Observable<any> {
+        return this.apiService
             .delEntity('Speciality', elem.speciality_id)
-            .subscribe((res) => res)
+            .subscribe((res) => {
+                this.dataSource.data.filter(
+                    (speciality) =>
+                        speciality.speciality_id !== elem.speciality_id
+                )
+                this.getSpeciality()
+            })
     }
-    editSpeciality(elem) {}
+    editSpeciality(elem): void {}
 }
