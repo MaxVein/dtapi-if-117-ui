@@ -9,7 +9,6 @@ import { MatTable } from '@angular/material/table'
 import { FormControl, FormGroup, Validators } from '@angular/forms'
 import { IsNumValidators } from '../isnum.validators'
 import { ApiService } from '../api.service'
-import { ListTableComponent } from '../list-table/list-table.component'
 
 export interface DialogData {
     animal: string
@@ -26,26 +25,29 @@ export class ModalFormComponent implements OnInit {
         private apiService: ApiService,
         private dialogRef: MatDialogRef<ModalFormComponent>
     ) {}
-    form
-    ngOnInit(): void {
-        this.form = new FormGroup({
-            speciality_name: new FormControl('', Validators.required),
-            speciality_code: new FormControl('', [
-                Validators.required,
-                Validators.maxLength(5),
-                IsNumValidators.isNum,
-            ]),
-        })
-    }
+
+    form = new FormGroup({
+        speciality_name: new FormControl('', Validators.required),
+        speciality_code: new FormControl('', [
+            Validators.required,
+            Validators.maxLength(5),
+            IsNumValidators.isNum,
+        ]),
+    })
+
+    ngOnInit(): void {}
     addSpeciality(): any {
-        if (this.form.valid) {
-            this.apiService
-                .addEntity('Speciality', this.form.value)
-                .subscribe((response) => response)
-            this.dialogRef.close()
+        if (!this.form.value.speciality_id) {
         }
+        // if (this.form.valid) {
+        //     this.apiService
+        //         .addEntity('Speciality', this.form.value)
+        //         .subscribe((response) => response)
+        //     this.dialogRef.close()
+        // }
     }
     onCancel() {
         this.dialogRef.close()
     }
+    updSpeciality(elem) {}
 }

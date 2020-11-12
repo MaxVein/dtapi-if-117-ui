@@ -21,4 +21,7 @@ export class ApiService {
             payload
         )
     }
+    delEntity(entity: string, id: number): any {
+        return this.http.get(`${environment.apiUrl}/${entity}/del/${id}`)
+    }
 }

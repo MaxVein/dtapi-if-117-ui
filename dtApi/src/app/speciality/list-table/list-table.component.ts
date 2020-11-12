@@ -21,17 +21,18 @@ export interface ListTableItem {
 })
 export class ListTableComponent implements OnInit, AfterViewInit {
     dataSource = new MatTableDataSource<ListTableItem>()
-    displayedColumns: string[] = ['id', 'name', 'code']
-
+    displayedColumns: string[] = ['id', 'name', 'code', 'buttons']
     fileNameDialogRef: MatDialogRef<ModalFormComponent>
+
     @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator
+
     constructor(
         private http: HttpClient,
         private apiService: ApiService,
         private dialog: MatDialog
     ) {}
 
-    ngOnInit() {
+    ngOnInit(): void {
         this.getSpeciality()
     }
     ngAfterViewInit() {
@@ -55,4 +56,10 @@ export class ListTableComponent implements OnInit, AfterViewInit {
             console.log('The dialog was closed')
         })
     }
+    deleteSpeciality(elem) {
+        this.apiService
+            .delEntity('Speciality', elem.speciality_id)
+            .subscribe((res) => res)
+    }
+    editSpeciality(elem) {}
 }
