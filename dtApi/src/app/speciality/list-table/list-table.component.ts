@@ -3,7 +3,7 @@ import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core'
 import { FormControl, FormGroup, Validators } from '@angular/forms'
 import { MatPaginator } from '@angular/material/paginator'
 import { MatSort } from '@angular/material/sort'
-import { MatTable } from '@angular/material/table'
+import { MatTable, MatTableDataSource } from '@angular/material/table'
 import { ApiService } from '../api.service'
 import { ModalFormComponent } from '../modal-form/modal-form.component'
 import { MatDialog, MatDialogRef } from '@angular/material/dialog'
@@ -19,12 +19,12 @@ export interface ListTableItem {
     templateUrl: './list-table.component.html',
     styleUrls: ['./list-table.component.scss'],
 })
-export class ListTableComponent implements OnInit {
-    dataSource: ListTableItem[]
-    displayedColumns = ['id', 'name', 'code']
+export class ListTableComponent implements OnInit, AfterViewInit {
+    dataSource = new MatTableDataSource<ListTableItem>()
+    displayedColumns: string[] = ['id', 'name', 'code']
 
     fileNameDialogRef: MatDialogRef<ModalFormComponent>
-
+    @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator
     constructor(
         private http: HttpClient,
         private apiService: ApiService,
@@ -34,12 +34,15 @@ export class ListTableComponent implements OnInit {
     ngOnInit() {
         this.getSpeciality()
     }
+    ngAfterViewInit() {
+        this.dataSource.paginator = this.paginator
+    }
 
     getSpeciality(): any {
         this.apiService
             .getEntity('Speciality')
             .subscribe(
-                (response: ListTableItem[]) => (this.dataSource = response)
+                (response: ListTableItem[]) => (this.dataSource.data = response)
             )
     }
 

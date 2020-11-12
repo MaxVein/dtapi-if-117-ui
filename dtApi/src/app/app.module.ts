@@ -14,6 +14,7 @@ import { MatDialogModule } from '@angular/material/dialog'
 import { MatFormFieldModule } from '@angular/material/form-field'
 import { MatButtonModule } from '@angular/material/button'
 import { MatInputModule } from '@angular/material/input'
+import { MatPaginatorModule } from '@angular/material/paginator'
 
 @NgModule({
     declarations: [AppComponent, ListTableComponent, ModalFormComponent],
@@ -28,6 +29,7 @@ import { MatInputModule } from '@angular/material/input'
         MatFormFieldModule,
         MatButtonModule,
         MatInputModule,
+        MatPaginatorModule,
         MatDialogModule,
         BrowserAnimationsModule,
     ],
