@@ -1,17 +1,17 @@
-import { Component, OnInit, AfterViewInit, ViewChild } from '@angular/core'
+import { Component, AfterViewInit, ViewChild } from '@angular/core'
 import { MatPaginator } from '@angular/material/paginator'
 import { MatTableDataSource } from '@angular/material/table'
+import { MatSort } from '@angular/material/sort'
 
 import { TestService } from './services/test.service'
 import { Test } from './models/Test'
-import { MatSort } from '@angular/material/sort'
 
 @Component({
     selector: 'app-tests',
     templateUrl: './test.component.html',
     styleUrls: ['./test.component.scss'],
 })
-export class TestComponent implements OnInit, AfterViewInit {
+export class TestComponent implements AfterViewInit {
     displayedColumns: string[] = [
         'test_id',
         'test_name',
@@ -34,9 +34,16 @@ export class TestComponent implements OnInit, AfterViewInit {
         })
     }
 
-    ngOnInit() {}
     ngAfterViewInit() {
         this.dataSource.sort = this.sort
         this.dataSource.paginator = this.paginator
+    }
+    applyFilter(event: Event) {
+        const filterValue = (event.target as HTMLInputElement).value
+        this.dataSource.filter = filterValue.trim().toLowerCase()
+
+        if (this.dataSource.paginator) {
+            this.dataSource.paginator.firstPage()
+        }
     }
 }
