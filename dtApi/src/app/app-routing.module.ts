@@ -3,10 +3,11 @@ import { Routes, RouterModule } from '@angular/router'
 
 const routes: Routes = [
     {
-        path: 'test',
+        path: '',
         loadChildren: () =>
             import('./modules/test/test.module').then((m) => m.TestModule),
     },
+    { path: '**', redirectTo: '/' },
 ]
 
 @NgModule({

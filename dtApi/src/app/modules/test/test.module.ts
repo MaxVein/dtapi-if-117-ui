@@ -10,7 +10,7 @@ import { MatInputModule } from '@angular/material/input'
 
 import { TestComponent } from './test.component'
 
-const testsRoutes: Routes = [{ path: '', component: TestComponent }]
+const testsRoutes: Routes = [{ path: 'test', component: TestComponent }]
 
 @NgModule({
     declarations: [TestComponent],
