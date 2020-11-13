@@ -9,6 +9,7 @@ import { environment } from '../../../../environments/environment'
 })
 export class TestService {
     constructor(private http: HttpClient) {}
+
     getEntity(entity: string, id?: number): Observable<any> {
         if (id === undefined) {
             return this.http.get(`${environment.apiUrl}/${entity}/getRecords`)
@@ -29,5 +30,12 @@ export class TestService {
             `${environment.apiUrl}${entity}/update/${id}`,
             payload
         )
+    }
+
+    login() {
+        return this.http.post(`https://dtapi.if.ua/api/login`, {
+            username: 'admin',
+            password: 'dtapi_admin',
+        })
     }
 }

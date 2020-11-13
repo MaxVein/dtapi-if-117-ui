@@ -5,6 +5,7 @@ import { HttpClientModule } from '@angular/common/http'
 import { AppRoutingModule } from './app-routing.module'
 import { AppComponent } from './app.component'
 import { AngularMaterialModule } from './shared/modules/angular-material/angular-material.module'
+import { MatTableModule } from '@angular/material/table'
 
 @NgModule({
     declarations: [AppComponent],
@@ -12,6 +13,7 @@ import { AngularMaterialModule } from './shared/modules/angular-material/angular
         BrowserModule,
         AppRoutingModule,
         AngularMaterialModule,
+        MatTableModule,
         HttpClientModule,
     ],
     providers: [],
