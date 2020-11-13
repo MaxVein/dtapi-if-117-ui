@@ -24,10 +24,9 @@ let ELEMENT_DATA: GroupData[] = []
     styleUrls: ['./groups.component.scss'],
 })
 export class GroupsComponent implements OnInit {
-  
-    specialities: any = [];
-    faculties: any = [];
-    sharedData = [];
+    specialities: any = []
+    faculties: any = []
+    sharedData = []
     group_name: string
     speciality_name: string
     faculty_name: string
@@ -62,55 +61,64 @@ export class GroupsComponent implements OnInit {
                 this.groupsSertvice
                     .getData('Speciality', item.speciality_id)
                     .subscribe((data) => {
-                        this.specialities.push({...data});
-                        item.speciality_name = data[0].speciality_name;            
+                        this.specialities.push({ ...data })
+                        item.speciality_name = data[0].speciality_name
                     })
                 this.groupsSertvice
                     .getData('Faculty', item.faculty_id)
                     .subscribe((data: any) => {
-                         this.faculties.push({...data});
+                        this.faculties.push({ ...data })
                         item.faculty_name = data[0].faculty_name
                     })
             })
-            this.sharedData.push(this.specialities,this.faculties)
+            this.sharedData.push(this.specialities, this.faculties)
             ELEMENT_DATA = data
             this.dataSource = new MatTableDataSource<GroupData>(ELEMENT_DATA)
-            console.log(this.sharedData);
-            this.sharedData? this.groupsSertvice.saveData(this.sharedData) : false;
-
+            console.log(this.sharedData)
+            this.sharedData
+                ? this.groupsSertvice.saveData(this.sharedData)
+                : false
         })
     }
 
     createGroup(): void {
         const dialogRef = this.dialog.open(CreateGroupDialogComponent, {
             width: '300px',
-            data: {group_name : this.group_name,speciality_name : this.speciality_name,faculty_name : this.faculty_name}
+            data: {
+                group_name: this.group_name,
+                speciality_name: this.speciality_name,
+                faculty_name: this.faculty_name,
+            },
         })
 
         dialogRef.afterClosed().subscribe((result) => {
-            console.log(result);
             if (result) {
-              this.addGroup({
-                  group_id:'1223423',
-                  group_name: result.group_name,
-                  faculty_id:this.getSpecialityId(result.speciality_name_name),
-                  speciality_id:this.getFacultyId(result.faculty_name_name)
-              });
+                this.addGroup({
+                    group_name: result.group_name,
+                    speciality_id: parseInt(this.getSpecialityId(result.speciality_name),10),
+                    faculty_id: parseInt(this.getFacultyId(
+                        result.faculty_name),10
+                    )                })
             }
         })
     }
     addGroup(group) {
-      this.groupsSertvice.insertData("Group", group).subscribe((result: GroupData[]) => {
-        this.dataSource.paginator = this.paginator;
-        console.log(result);
-      });
+        this.groupsSertvice
+            .insertData('Group', group)
+            .subscribe((result: GroupData[]) => {
+                this.dataSource.paginator = this.paginator
+            })
     }
-    getSpecialityId(spec:string){
-        let currentSpec = this.specialities.filter(item => item.speciality_name === spec);
-        return  currentSpec.speciality_id;
+    getSpecialityId(spec: string) {
+        const currentSpec = this.specialities.filter(
+            (item) => item[0].speciality_name === spec
+        )
+        return currentSpec[0][0].speciality_id
     }
-    getFacultyId(spec:string){
-        let currentSpec = this.faculties.filter(item => item.facultyy_name === spec);
-        return  currentSpec.faculty_id;
+    getFacultyId(spec: string) {
+        const currentSpec = this.faculties.filter(
+            (item) => item[0].faculty_name === spec
+        )
+        return currentSpec[0][0].faculty_id
     }
 }

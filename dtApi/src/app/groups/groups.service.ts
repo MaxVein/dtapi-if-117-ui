@@ -7,15 +7,15 @@ import { environment } from 'src/environments/environment'
     providedIn: 'root',
 })
 export class GroupsService {
-    apiURI = '';
-    sharingData = [];
+    apiURI = ''
+    sharingData = []
 
     constructor(private http: HttpClient) {}
-    public saveData(data:any){
-        this.sharingData.push(data);
+    public saveData(data: any) {
+        this.sharingData.push(data)
     }
-    public getsharedData(){
-        return this.sharingData; 
+    public getsharedData() {
+        return this.sharingData
     }
     public logIn() {
         return this.http.post(`${environment.apiUrl}Login/index`, {
@@ -30,7 +30,7 @@ export class GroupsService {
     }
     public insertData(entity, payload) {
         return this.http.post(
-            `${environment.apiUrl}/${entity}/insertData/`,
+            `${environment.apiUrl}/${entity}/insertData`,
             payload
         )
     }

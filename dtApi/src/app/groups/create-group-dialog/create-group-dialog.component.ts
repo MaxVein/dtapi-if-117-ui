@@ -4,7 +4,7 @@ import {
     MatDialogRef,
     MAT_DIALOG_DATA,
 } from '@angular/material/dialog'
-import { GroupsService } from '../groups.service';
+import { GroupsService } from '../groups.service'
 
 export interface DialogData {
     group_name: string
@@ -18,21 +18,20 @@ export interface DialogData {
     styleUrls: ['./create-group-dialog.component.scss'],
 })
 export class CreateGroupDialogComponent {
-    sharedInfo:any;
-    specialities:any;
-    faculties:any;
-    constructor(private groupsSertvice: GroupsService,
+    sharedInfo: any
+    specialities: any
+    faculties: any
+    constructor(
+        private groupsSertvice: GroupsService,
         public dialogRef: MatDialogRef<CreateGroupDialogComponent>,
         @Inject(MAT_DIALOG_DATA) public data: DialogData
     ) {
-        this.sharedInfo=groupsSertvice.getsharedData();
-        this.specialities = this.sharedInfo[0][0];
-        this.faculties = this.sharedInfo[0][1];
-
+        this.sharedInfo = groupsSertvice.getsharedData()
+        this.specialities = this.sharedInfo[0][0]
+        this.faculties = this.sharedInfo[0][1]
     }
 
     onNoClick(): void {
         this.dialogRef.close()
     }
-
 }

@@ -6,7 +6,7 @@ import { MatButtonModule } from '@angular/material/button'
 import { MatDialogModule } from '@angular/material/dialog'
 import { MatFormFieldModule } from '@angular/material/form-field'
 import { MatInputModule } from '@angular/material/input'
-import {MatSelectModule} from '@angular/material/select';
+import { MatSelectModule } from '@angular/material/select'
 
 @NgModule({
     declarations: [],
@@ -18,7 +18,7 @@ import {MatSelectModule} from '@angular/material/select';
         MatDialogModule,
         MatFormFieldModule,
         MatInputModule,
-        MatSelectModule
+        MatSelectModule,
     ],
     exports: [
         MatTableModule,
@@ -28,7 +28,7 @@ import {MatSelectModule} from '@angular/material/select';
         MatDialogModule,
         MatFormFieldModule,
         MatInputModule,
-        MatSelectModule
+        MatSelectModule,
     ],
 })
 export class AngularMaterialModule {}
