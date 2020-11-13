@@ -1,0 +1,36 @@
+.modal {
+    width: 600px;
+    height: 850px;
+
+    &__close {
+        display: flex;
+        justify-content: flex-end;
+        cursor: pointer;
+    }
+
+    &__header {
+        text-align: center;
+        margin-bottom: 15px;
+
+        & h3 {
+            font-size: 30px;
+            font-weight: 500;
+        }
+    }
+
+    &__form {
+        margin: 50px auto 50px auto;
+        padding: 2% 5%;
+
+        & mat-form-field {
+            width: 100%;
+            font-size: 16px;
+            margin-bottom: 20px;
+        }
+    }
+
+    &__btn {
+        font-size: 16px;
+        padding: 5px 25px 5px 25px;
+    }
+}

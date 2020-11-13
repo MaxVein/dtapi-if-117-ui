@@ -1,0 +1,171 @@
+<div class="modal">
+  <div class="modal__close">
+    <mat-icon class="closeForm" (click)="closeModal()">close</mat-icon>
+  </div>
+  <div class="modal__header">
+    <h3>{{data.isUpdateData ? 'Edit student info' : 'Add new student'}}</h3>
+  </div>
+  <div class="modal__form">
+    <form class="add-form" [formGroup]="form" (ngSubmit)="submit()">
+      <div
+        class="form-control"
+        [ngClass]="{invalid: form.get('lastname').touched && form.get('lastname').invalid}">
+        <mat-form-field class="mat-form-field-lastname">
+          <mat-label for="lastname"><mat-icon style="vertical-align: bottom; font-size: 20px; margin-right: 5px;">person_outline</mat-icon>Lastname</mat-label>
+          <input matInput formControlName="lastname" type="text" id="lastname">
+          <mat-error
+            *ngIf="form.get('lastname').touched && form.get('lastname').invalid"
+            class="validation"
+          >
+            <small *ngIf="form.get('lastname').errors.required">
+              Please input student lastname
+            </small>
+          </mat-error>
+        </mat-form-field>
+      </div>
+
+      <div
+        class="form-control"
+        [ngClass]="{invalid: form.get('firstname').touched && form.get('firstname').invalid}">
+        <mat-form-field class="mat-form-field-firstname">
+          <mat-label for="firstname"><mat-icon style="vertical-align: bottom; font-size: 20px; margin-right: 5px;">person_outline</mat-icon>Firstname</mat-label>
+          <input matInput formControlName="firstname" type="text" id="firstname">
+          <mat-error
+            *ngIf="form.get('firstname').touched && form.get('firstname').invalid"
+            class="validation"
+          >
+            <small *ngIf="form.get('firstname').errors.required">
+              Please input student firstname
+            </small>
+          </mat-error>
+        </mat-form-field>
+      </div>
+
+      <div
+        class="form-control"
+        [ngClass]="{invalid: form.get('fathername').touched && form.get('fathername').invalid}">
+        <mat-form-field class="mat-form-field-fathername">
+          <mat-label for="fathername"><mat-icon style="vertical-align: bottom; font-size: 20px; margin-right: 5px;">person_outline</mat-icon>Father name</mat-label>
+          <input matInput formControlName="fathername" type="text" id="fathername">
+          <mat-error
+            *ngIf="form.get('fathername').touched && form.get('fathername').invalid"
+            class="validation"
+          >
+            <small *ngIf="form.get('fathername').errors.required">
+              Please input student father name
+            </small>
+          </mat-error>
+        </mat-form-field>
+      </div>
+
+      <div
+        class="form-control"
+        [ngClass]="{invalid: form.get('gradebookID').touched && form.get('gradebookID').invalid}">
+        <mat-form-field class="mat-form-field-gradebook">
+          <mat-label for="gradebookID"><mat-icon style="vertical-align: bottom; font-size: 20px; margin-right: 5px;">library_books</mat-icon>Gradebook ID</mat-label>
+          <input matInput formControlName="gradebookID" type="text" id="gradebookID">
+          <mat-error
+            *ngIf="form.get('gradebookID').touched && form.get('gradebookID').invalid"
+            class="validation"
+          >
+            <small *ngIf="form.get('gradebookID').errors.required">
+              Please input student gradebook ID
+            </small>
+          </mat-error>
+        </mat-form-field>
+      </div>
+
+      <div
+        class="form-control"
+        [ngClass]="{invalid: form.get('username').touched && form.get('username').invalid}">
+        <mat-form-field class="mat-form-field-username">
+          <mat-label for="username"><mat-icon style="vertical-align: bottom; font-size: 20px; margin-right: 5px;">person_add</mat-icon>Username</mat-label>
+          <input matInput formControlName="username" type="text" id="username">
+          <mat-error
+            *ngIf="form.get('username').touched && form.get('username').invalid"
+            class="validation"
+          >
+            <small *ngIf="form.get('username').errors.required">
+              Please input student username
+            </small>
+          </mat-error>
+        </mat-form-field>
+      </div>
+
+      <div
+        class="form-control"
+        [ngClass]="{invalid: form.get('email').touched && form.get('email').invalid}">
+        <mat-form-field class="mat-form-field-email">
+          <mat-label for="email"><mat-icon style="vertical-align: bottom; font-size: 20px; margin-right: 5px;">email</mat-icon>Email address</mat-label>
+          <input matInput formControlName="email" type="email" id="email" placeholder="Ex. pat@example.com">
+          <mat-error
+            *ngIf="form.get('email').touched && form.get('email').invalid"
+            class="validation"
+          >
+            <small *ngIf="form.get('email').errors.required">
+              Please input student email address
+            </small>
+            <small *ngIf="form.get('email').errors.email">
+              Please enter a valid email address
+            </small>
+          </mat-error>
+        </mat-form-field>
+      </div>
+
+      <div
+        class="form-control"
+        [ngClass]="{invalid: form.get('password').touched && form.get('password').invalid}">
+        <mat-form-field class="mat-form-field-password">
+          <mat-label for="password"><mat-icon style="vertical-align: bottom; font-size: 20px">vpn_key</mat-icon> Password</mat-label>
+          <input matInput formControlName="password" type="password" style="border: none" id="password">
+          <mat-error
+            *ngIf="form.get('password').touched && form.get('password').invalid"
+            class="validation"
+          >
+            <small *ngIf="form.get('password').errors.minlength">
+              Min password length must be
+              {{form.get('password').errors.minlength.requiredLength}}
+              symbols. Now it is
+              {{form.get('password').errors.minlength.actualLength}}
+              symbols
+            </small>
+            <small *ngIf="form.get('password').errors.required">
+              Please enter password
+            </small>
+          </mat-error>
+        </mat-form-field>
+      </div>
+
+      <div
+        class="form-control"
+        [ngClass]="{invalid: form.get('password_confirm').touched && form.get('password_confirm').invalid}">
+        <mat-form-field class="mat-form-field-password_confirm">
+          <mat-label for="password_confirm"><mat-icon style="vertical-align: bottom; font-size: 20px">vpn_key</mat-icon> Confirm Password</mat-label>
+          <input matInput formControlName="password_confirm" type="password" style="border: none" id="password_confirm">
+          <mat-error
+            *ngIf="form.get('password_confirm').touched && form.get('password_confirm').invalid"
+            class="validation"
+          >
+            <small *ngIf="form.get('password_confirm').errors.minlength">
+              Min password length must be
+              {{form.get('password_confirm').errors.minlength.requiredLength}}
+              symbols. Now it is
+              {{form.get('password_confirm').errors.minlength.actualLength}}
+              symbols
+            </small>
+            <small *ngIf="form.get('password_confirm').errors.required">
+              Please enter password
+            </small>
+          </mat-error>
+        </mat-form-field>
+      </div>
+
+      <button mat-flat-button color="accent"
+              type="submit"
+              class="modal__btn"
+              [disabled]="form.invalid || submitted">
+        {{data.isUpdateData ? 'Edit student' : 'Add student'}}
+      </button>
+    </form>
+  </div>
+</div>
