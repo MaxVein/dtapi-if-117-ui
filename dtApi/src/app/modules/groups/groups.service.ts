@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core'
 import { HttpClient } from '@angular/common/http'
-import { Observable } from 'rxjs'
 import { environment } from 'src/environments/environment'
 
 @Injectable({
@@ -26,6 +25,11 @@ export class GroupsService {
     public getData(entity, id?) {
         return this.http.get(
             `${environment.apiUrl}/${entity}/getRecords/${id ? id : ''}`
+        )
+    }
+    public delData(entity, id?) {
+        return this.http.get(
+            `${environment.apiUrl}/${entity}/del/${id ? id : ''}`
         )
     }
     public insertData(entity, payload) {

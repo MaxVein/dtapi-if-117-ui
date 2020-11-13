@@ -126,4 +126,10 @@ export class GroupsComponent implements OnInit {
         )
         return currentSpec[0][0].faculty_id
     }
+    delGroup(id) {
+        console.log(id)
+        this.groupsSertvice.delData('Group',id).subscribe((result) => {
+        console.log('deleted')
+        })
+    }
 }
