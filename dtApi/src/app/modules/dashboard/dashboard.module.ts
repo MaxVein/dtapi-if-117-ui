@@ -12,9 +12,10 @@ import { MatToolbarModule } from '@angular/material/toolbar'
 import { MatListModule } from '@angular/material/list'
 
 import { DashboardComponent } from './dashboard.component'
+import { StatisticsComponent } from './components/statistics/statistics.component'
 
 @NgModule({
-    declarations: [DashboardComponent],
+    declarations: [DashboardComponent, StatisticsComponent],
     imports: [
         CommonModule,
         MatSidenavModule,
