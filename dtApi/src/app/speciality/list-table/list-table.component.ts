@@ -8,6 +8,8 @@ import { ApiService } from '../api.service'
 import { ModalFormComponent } from '../modal-form/modal-form.component'
 import { MatDialog, MatDialogRef } from '@angular/material/dialog'
 import { Observable } from 'rxjs'
+import { ConfirmDialogComponent } from '../confirm-dialog/confirm-dialog.component'
+import { DialogService } from '../dialog.service'
 
 export interface ListTableItem {
     speciality_id: number
@@ -24,19 +26,21 @@ export class ListTableComponent implements OnInit, AfterViewInit {
     dataSource = new MatTableDataSource<ListTableItem>()
     displayedColumns: string[] = ['id', 'name', 'code', 'buttons']
     fileNameDialogRef: MatDialogRef<ModalFormComponent>
+    confirmDialogRef: MatDialogRef<ConfirmDialogComponent>
 
     @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator
 
     constructor(
         private http: HttpClient,
         private apiService: ApiService,
+        private dialogService: DialogService,
         private dialog: MatDialog
     ) {}
 
-    ngOnInit(): void {
+    ngOnInit() {
         this.getSpeciality()
     }
-    ngAfterViewInit(): void {
+    ngAfterViewInit() {
         this.dataSource.paginator = this.paginator
     }
 
@@ -48,25 +52,33 @@ export class ListTableComponent implements OnInit, AfterViewInit {
             )
     }
 
-    openModal(): void {
+    openModal(data?) {
         this.fileNameDialogRef = this.dialog.open(ModalFormComponent, {
+            data: data ? data : '',
+            autoFocus: true,
             disableClose: true,
         })
 
         this.fileNameDialogRef.afterClosed().subscribe((result) => {
-            console.log('The dialog was closed')
+            this.getSpeciality()
         })
     }
-    deleteSpeciality(elem: ListTableItem): Observable<any> {
-        return this.apiService
-            .delEntity('Speciality', elem.speciality_id)
+
+    editSpeciality(elem) {
+        this.openModal(elem)
+    }
+
+    deleteSpeciality(data: ListTableItem) {
+        this.dialogService
+            .openConfirmDialog(data)
+            .afterClosed()
             .subscribe((res) => {
-                this.dataSource.data.filter(
-                    (speciality) =>
-                        speciality.speciality_id !== elem.speciality_id
-                )
-                this.getSpeciality()
+                if (res === 'ok') {
+                    this.dataSource.data = this.dataSource.data.filter(
+                        (speciality) =>
+                            speciality.speciality_id !== data.speciality_id
+                    )
+                }
             })
     }
-    editSpeciality(elem): void {}
 }

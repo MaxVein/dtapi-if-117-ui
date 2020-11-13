@@ -1,4 +1,5 @@
 <form class="example-form" [formGroup]="form" (ngSubmit)="addSpeciality()">
+    <h1>{{ data ? 'Редагувати спеціальність' : 'Додати спеціальність' }}</h1>
     <mat-form-field class="example-full-width">
         <mat-label>Name</mat-label>
         <input matInput placeholder="Name" formControlName="speciality_name" />
@@ -40,20 +41,22 @@
             </small>
         </div> </mat-form-field
     ><br />
-    <button
-        mat-raised-button
-        type="button"
-        (click)="onCancel()"
-        class="btn2 decline"
-    >
-        Відмінити
-    </button>
-    <button
-        mat-raised-button
-        class="btn2 accept"
-        type="submit"
-        [disabled]="form.invalid"
-    >
-        Добавити
-    </button>
+    <div class="confirm-dialog">
+        <button
+            mat-raised-button
+            type="button"
+            (click)="onCancel()"
+            class="decline"
+        >
+            Відмінити
+        </button>
+        <button
+            mat-raised-button
+            class="agree"
+            type="submit"
+            [disabled]="form.invalid"
+        >
+            Добавити
+        </button>
+    </div>
 </form>

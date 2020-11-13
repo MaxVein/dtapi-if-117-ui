@@ -7,7 +7,6 @@ import { environment } from 'src/environments/environment'
     providedIn: 'root',
 })
 export class ApiService {
-    apiUrl = ''
     constructor(private http: HttpClient) {}
 
     getEntity(entity: string, id?: number): any {
@@ -23,5 +22,17 @@ export class ApiService {
     }
     delEntity(entity: string, id: number): any {
         return this.http.get(`${environment.apiUrl}/${entity}/del/${id}`)
+    }
+    updateEntity(entity: string, id: number, payload): any {
+        return this.http.post(
+            `${environment.apiUrl}/${entity}/update/${id}`,
+            payload
+        )
+    }
+    login() {
+        return this.http.post(`${environment.apiUrl}/Login/index`, {
+            username: 'admin',
+            password: 'dtapi_admin',
+        })
     }
 }

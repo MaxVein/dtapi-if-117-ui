@@ -12,10 +12,11 @@ import { MatFormFieldModule } from '@angular/material/form-field'
 import { MatButtonModule } from '@angular/material/button'
 import { MatInputModule } from '@angular/material/input'
 import { MatPaginatorModule } from '@angular/material/paginator'
-import { RouterModule } from '@angular/router'
+import { RouterModule } from '@angular/router';
+import { ConfirmDialogComponent } from './confirm-dialog/confirm-dialog.component'
 
 @NgModule({
-    declarations: [ListTableComponent, ModalFormComponent],
+    declarations: [ListTableComponent, ModalFormComponent, ConfirmDialogComponent],
     exports: [ListTableComponent, ModalFormComponent],
     imports: [
         CommonModule,
