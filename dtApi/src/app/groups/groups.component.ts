@@ -16,8 +16,6 @@ export interface GroupData {
     faculty_id: string
 }
 
-
-
 let ELEMENT_DATA: GroupData[] = []
 
 @Component({
@@ -26,9 +24,13 @@ let ELEMENT_DATA: GroupData[] = []
     styleUrls: ['./groups.component.scss'],
 })
 export class GroupsComponent implements OnInit {
-    group_name: string;
-    speciality_name: string;
-    faculty_name: string;
+  
+    specialities: any = [];
+    faculties: any = [];
+    sharedData = [];
+    group_name: string
+    speciality_name: string
+    faculty_name: string
 
     displayedColumns: string[] = [
         'group_id',
@@ -56,33 +58,59 @@ export class GroupsComponent implements OnInit {
         //   this.res = data;
         // })
         this.groupsSertvice.getData('Group').subscribe((data: any[]) => {
-            console.log(data)
             data.map((item) => {
                 this.groupsSertvice
-                    .getData('Speciality',item.speciality_id)
-                    .subscribe((data: any) => {
-                        item.speciality_name = data[0].speciality_name
+                    .getData('Speciality', item.speciality_id)
+                    .subscribe((data) => {
+                        this.specialities.push({...data});
+                        item.speciality_name = data[0].speciality_name;            
                     })
                 this.groupsSertvice
-                    .getData('Faculty',item.faculty_id)
+                    .getData('Faculty', item.faculty_id)
                     .subscribe((data: any) => {
+                         this.faculties.push({...data});
                         item.faculty_name = data[0].faculty_name
                     })
             })
+            this.sharedData.push(this.specialities,this.faculties)
             ELEMENT_DATA = data
-            this.dataSource = new MatTableDataSource<GroupData>(
-                ELEMENT_DATA
-            )
+            this.dataSource = new MatTableDataSource<GroupData>(ELEMENT_DATA)
+            console.log(this.sharedData);
+            this.sharedData? this.groupsSertvice.saveData(this.sharedData) : false;
+
         })
     }
 
     createGroup(): void {
         const dialogRef = this.dialog.open(CreateGroupDialogComponent, {
-            width: '350px',
+            width: '300px',
+            data: {group_name : this.group_name,speciality_name : this.speciality_name,faculty_name : this.faculty_name}
         })
 
         dialogRef.afterClosed().subscribe((result) => {
-            console.log(result)
+            console.log(result);
+            if (result) {
+              this.addGroup({
+                  group_id:'1223423',
+                  group_name: result.group_name,
+                  faculty_id:this.getSpecialityId(result.speciality_name_name),
+                  speciality_id:this.getFacultyId(result.faculty_name_name)
+              });
+            }
         })
+    }
+    addGroup(group) {
+      this.groupsSertvice.insertData("Group", group).subscribe((result: GroupData[]) => {
+        this.dataSource.paginator = this.paginator;
+        console.log(result);
+      });
+    }
+    getSpecialityId(spec:string){
+        let currentSpec = this.specialities.filter(item => item.speciality_name === spec);
+        return  currentSpec.speciality_id;
+    }
+    getFacultyId(spec:string){
+        let currentSpec = this.faculties.filter(item => item.facultyy_name === spec);
+        return  currentSpec.faculty_id;
     }
 }
