@@ -1,9 +1,11 @@
 import { Component, OnInit } from '@angular/core'
-import { AuthService } from './services/auth.service'
-import { FormGroup, FormControl } from '@angular/forms'
 import { Router } from '@angular/router'
 import { trigger, style, animate, transition } from '@angular/animations'
+import { FormBuilder } from '@angular/forms'
+
+import { logoSrc } from './interfaces/interfaces'
 import { loginForm } from './interfaces/interfaces'
+import { AuthService } from './services/auth.service'
 
 @Component({
     animations: [
@@ -23,52 +25,56 @@ import { loginForm } from './interfaces/interfaces'
     styleUrls: ['./login.component.scss'],
 })
 export class LoginComponent implements OnInit {
+    ngOnInit(): void {
+        this.getLogo()
+    }
+    constructor(
+        private request: AuthService,
+        private router: Router,
+        private fb: FormBuilder
+    ) {
+        this.loginForm
+    }
+
+    loginForm = this.fb.group({
+        userName: [''],
+        password: [''],
+    })
     hide = true
     badRequest = false
     errorMessage: string
-    loginForm: FormGroup
+    logoSrc: string
+
     private userName: string
     private password: string
 
-    constructor(private request: AuthService, private router: Router) {
-        this._createForm()
-    }
-    private _createForm() {
-        this.loginForm = new FormGroup({
-            userName: new FormControl(null),
-            password: new FormControl(null),
-        })
-    }
-    onSubmit(event) {
-        event.preventDefault()
+    onSubmit() {
         const formValue: loginForm = this.loginForm.value
         this.userName = formValue.userName
         this.password = formValue.password
         this.loginForm.reset()
-        this.request.loginRequest(this.userName, this.password).subscribe(
-            (response) => {
-                // if (response.username === 'admin') {
-                //     this.router.navigate(['/admin/dashboard'])
-                // }
-                // if (response.username === 'student') {
-                //     this.router.navigate(['/student'])
-                // }
-                console.log(response)
-            },
-            (err) => {
+        this.request.loginRequest(this.userName, this.password).subscribe({
+            error: (err) => {
                 this.handlerError(err)
-            }
-        )
+            },
+        })
     }
+
     handlerError(err) {
         this.badRequest = true
         this.errorMessage = err.error.response
         this.removeErrorMessage()
     }
+
     removeErrorMessage() {
         setTimeout(() => {
             this.badRequest = false
         }, 1500)
     }
-    ngOnInit(): void {}
+
+    getLogo() {
+        this.request.getLogo().subscribe((res: logoSrc) => {
+            this.logoSrc = res.logo
+        })
+    }
 }

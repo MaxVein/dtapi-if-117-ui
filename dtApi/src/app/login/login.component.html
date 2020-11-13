@@ -1,10 +1,10 @@
 <div class="container">
+    <div *ngIf="logoSrc" class="logo">
+        <img src={{logoSrc}} alt="logo" srcset="" />
+    </div>
     <div class="form-wrap">
-        <!-- <div class="logo">
-            <img src="../assets/img/logo_transparent.png" alt="logo" srcset="" />
-        </div> -->
         <p class="form-title">Authorization</p>
-        <form [formGroup]="loginForm" novalidate (submit)="onSubmit($event)">
+        <form [formGroup]="loginForm" novalidate (submit)="onSubmit()">
             <mat-form-field class="form-field" appearance="outline">
                 <mat-label> Login </mat-label>
                 <input formControlName="userName" matInput type="text" required />

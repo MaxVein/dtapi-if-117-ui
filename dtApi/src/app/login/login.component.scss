@@ -1,14 +1,13 @@
 .container {
     position: relative;
     height: 100%;
-    display: grid;
-    place-items: center;
-    // background: url('../assets/img/logo_transparent.png') no-repeat;
-    // background-position: center;
-    // background-size: cover;
-    // background: url('../assets/img/logo.png') no-repeat;
-    // background-size: cover;
-    // background-position: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    .logo {
+        padding: 20px;
+    }
     .form-wrap {
         position: relative;
         border-radius: 10px;
@@ -52,7 +51,7 @@
     border: 1px solid rgba(#000000, 0.7);
     border-radius: 3px;
     position: absolute;
-    bottom: 14%;
+    bottom: 4%;
     left: calc(50%-150px);
     text-align: center;
     background-color: #ffffff !important;
