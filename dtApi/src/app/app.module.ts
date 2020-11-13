@@ -8,8 +8,8 @@ import { HttpClientModule } from '@angular/common/http'
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations'
 import { FormsModule } from '@angular/forms'
 
-import { GroupsComponent } from './groups/groups.component'
-import { CreateGroupDialogComponent } from './groups/create-group-dialog/create-group-dialog.component'
+import { CreateGroupDialogComponent } from './modules/groups/create-group-dialog/create-group-dialog.component'
+import { GroupsComponent } from './modules/groups/groups.component'
 
 @NgModule({
     declarations: [AppComponent, GroupsComponent, CreateGroupDialogComponent],

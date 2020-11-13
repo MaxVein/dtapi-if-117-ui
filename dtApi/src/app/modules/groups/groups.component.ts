@@ -95,10 +95,15 @@ export class GroupsComponent implements OnInit {
             if (result) {
                 this.addGroup({
                     group_name: result.group_name,
-                    speciality_id: parseInt(this.getSpecialityId(result.speciality_name),10),
-                    faculty_id: parseInt(this.getFacultyId(
-                        result.faculty_name),10
-                    )                })
+                    speciality_id: parseInt(
+                        this.getSpecialityId(result.speciality_name),
+                        10
+                    ),
+                    faculty_id: parseInt(
+                        this.getFacultyId(result.faculty_name),
+                        10
+                    ),
+                })
             }
         })
     }
