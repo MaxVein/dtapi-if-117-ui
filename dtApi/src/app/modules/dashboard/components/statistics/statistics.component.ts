@@ -38,25 +38,25 @@ export class StatisticsComponent implements OnInit {
         for (const item in result) {
             if (
                 item == this.ResponsiveData.isXLScreen &&
-                result[item] == true
+                result[item] === true
             ) {
                 this.ResponsiveData.breakpoint = 4
                 this.ResponsiveData.rowHeight = 400
             } else if (
                 item == this.ResponsiveData.isLGScreen &&
-                result[item] == true
+                result[item] === true
             ) {
                 this.ResponsiveData.breakpoint = 3
                 this.ResponsiveData.rowHeight = 400
             } else if (
                 item == this.ResponsiveData.isMDScreen &&
-                result[item] == true
+                result[item] === true
             ) {
                 this.ResponsiveData.breakpoint = 2
                 this.ResponsiveData.rowHeight = 350
             } else if (
                 item == this.ResponsiveData.isSMScreen &&
-                result[item] == true
+                result[item] === true
             ) {
                 this.ResponsiveData.breakpoint = 1
                 this.ResponsiveData.rowHeight = 300
@@ -73,49 +73,32 @@ export class StatisticsComponent implements OnInit {
         this.layoutChangesMedia.subscribe((result) => {
             this.layoutChange(result.breakpoints)
         })
-
         // this.infoservice
-        //     .BackendLogin()
+        //     .backendLogin()
         //     .subscribe((info) => (this.logininfo = info))
 
-        {
-            this.infoservice
-                .getFacultiesNumber()
-                .subscribe(
-                    (facultiesInfo) =>
-                        (this.facultiesAmount = facultiesInfo.numberOfRecords)
-                )
-            this.infoservice
-                .getSubjectsNumber()
-                .subscribe(
-                    (subjectsInfo) =>
-                        (this.subjectsAmount = subjectsInfo.numberOfRecords)
-                )
-            this.infoservice
-                .getGroupsNumber()
-                .subscribe(
-                    (groupsInfo) =>
-                        (this.groupsAmount = groupsInfo.numberOfRecords)
-                )
-            this.infoservice
-                .getSpecialitiesNumber()
-                .subscribe(
-                    (specialitiesInfo) =>
-                        (this.specialitiesAmount =
-                            specialitiesInfo.numberOfRecords)
-                )
-            this.infoservice
-                .getStudentsNumber()
-                .subscribe(
-                    (studentsInfo) =>
-                        (this.studentsAmount = studentsInfo.numberOfRecords)
-                )
-            this.infoservice
-                .getAdminsNumber()
-                .subscribe(
-                    (adminsInfo) =>
-                        (this.adminAmount = adminsInfo.numberOfRecords)
-                )
-        }
+        this.infoservice
+            .getFacultiesNumber()
+            .subscribe(
+                (facultiesInfo) => (this.facultiesAmount = facultiesInfo)
+            )
+        this.infoservice
+            .getSubjectsNumber()
+            .subscribe((subjectsInfo) => (this.subjectsAmount = subjectsInfo))
+        this.infoservice
+            .getGroupsNumber()
+            .subscribe((groupsInfo) => (this.groupsAmount = groupsInfo))
+        this.infoservice
+            .getSpecialitiesNumber()
+            .subscribe(
+                (specialitiesInfo) =>
+                    (this.specialitiesAmount = specialitiesInfo)
+            )
+        this.infoservice
+            .getStudentsNumber()
+            .subscribe((studentsInfo) => (this.studentsAmount = studentsInfo))
+        this.infoservice
+            .getAdminsNumber()
+            .subscribe((adminsInfo) => (this.adminAmount = adminsInfo))
     }
 }
