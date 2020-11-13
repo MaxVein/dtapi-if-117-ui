@@ -128,8 +128,8 @@ export class GroupsComponent implements OnInit {
     }
     delGroup(id) {
         console.log(id)
-        this.groupsSertvice.delData('Group',id).subscribe((result) => {
-        console.log('deleted')
+        this.groupsSertvice.delData('Group', id).subscribe((result) => {
+            console.log('deleted')
         })
     }
 }
