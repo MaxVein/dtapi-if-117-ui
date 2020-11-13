@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="BranchesTreeState">
+    <expand>
+      <path>
+        <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="LOCAL_ROOT" type="e8cecc67:BranchNodeDescriptor" />
+      </path>
+      <path>
+        <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="REMOTE_ROOT" type="e8cecc67:BranchNodeDescriptor" />
+      </path>
+      <path>
+        <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="REMOTE_ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="GROUP_NODE:origin" type="e8cecc67:BranchNodeDescriptor" />
+      </path>
+      <path>
+        <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="REMOTE_ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="GROUP_NODE:origin" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="GROUP_NODE:hotfix" type="e8cecc67:BranchNodeDescriptor" />
+      </path>
+    </expand>
+    <select />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="d5d074c0-c311-4e65-b974-714bad5c9db6" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/dtApi/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/dtApi/package-lock.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dtApi/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/dtApi/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dtApi/src/app/app-routing.module.ts" beforeDir="false" afterPath="$PROJECT_DIR$/dtApi/src/app/app-routing.module.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dtApi/src/app/app.module.ts" beforeDir="false" afterPath="$PROJECT_DIR$/dtApi/src/app/app.module.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dtApi/src/app/shared/modules/angular-material/angular-material.module.ts" beforeDir="false" afterPath="$PROJECT_DIR$/dtApi/src/app/shared/modules/angular-material/angular-material.module.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dtApi/src/environments/environment.ts" beforeDir="false" afterPath="$PROJECT_DIR$/dtApi/src/environments/environment.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dtApi/src/styles.scss" beforeDir="false" afterPath="$PROJECT_DIR$/dtApi/src/styles.scss" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dtApi/tslint.json" beforeDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="ProjectId" id="1k9SPxZFf9TIeobpNN1Hpltv4ft" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">
+    <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
+    <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="node.js.detected.package.eslint" value="true" />
+    <property name="node.js.detected.package.tslint" value="true" />
+    <property name="node.js.path.for.package.eslint" value="project" />
+    <property name="node.js.path.for.package.tslint" value="project" />
+    <property name="node.js.selected.package.eslint" value="(autodetect)" />
+    <property name="node.js.selected.package.tslint" value="(autodetect)" />
+    <property name="nodejs_package_manager_path" value="npm" />
+    <property name="prettier.files.pattern" value="{**/*,*}.{js,ts,jsx,tsx, css, scss, sass, html}" />
+    <property name="prettierjs.PrettierConfiguration.Package" value="C:\Users\oleh_\AppData\Roaming\npm\node_modules\prettier" />
+    <property name="run.prettier.on.save" value="true" />
+    <property name="settings.editor.selected.configurable" value="settings.javascript.prettier" />
+    <property name="ts.external.directory.path" value="D:\Projects\IT Academy\dtapi-if-117-ui\dtApi\node_modules\typescript\lib" />
+  </component>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="D:\Projects\IT Academy\dtapi-if-117-ui\dtApi\src\app\common\core\modules" />
+    </key>
+  </component>
+  <component name="RunManager">
+    <configuration name="start" type="js.build_tools.npm" temporary="true" nameIsGenerated="true">
+      <package-json value="$PROJECT_DIR$/dtApi/package.json" />
+      <command value="run" />
+      <scripts>
+        <script value="start" />
+      </scripts>
+      <node-interpreter value="project" />
+      <envs />
+      <method v="2" />
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="npm.start" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="d5d074c0-c311-4e65-b974-714bad5c9db6" name="Default Changelist" comment="" />
+      <created>1605111313168</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1605111313168</updated>
+      <workItem from="1605111327379" duration="331000" />
+      <workItem from="1605112048013" duration="5806000" />
+      <workItem from="1605186557647" duration="3209000" />
+      <workItem from="1605190809701" duration="5202000" />
+      <workItem from="1605200917380" duration="16829000" />
+      <workItem from="1605265205619" duration="14590000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+    <option name="oldMeFiltersMigrated" value="true" />
+  </component>
+  <component name="WindowStateProjectService">
+    <state x="733" y="330" key="#com.intellij.fileTypes.FileTypeChooser" timestamp="1605112358923">
+      <screen x="0" y="0" width="1920" height="1080" />
+    </state>
+    <state x="733" y="330" key="#com.intellij.fileTypes.FileTypeChooser/0.0.1920.1080/1920.0.1680.1050@0.0.1920.1080" timestamp="1605112358923" />
+    <state x="690" y="287" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog" timestamp="1605211059959">
+      <screen x="0" y="0" width="1920" height="1080" />
+    </state>
+    <state x="690" y="287" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog/0.0.1920.1080/1920.0.1680.1050@0.0.1920.1080" timestamp="1605211059959" />
+    <state x="627" y="318" key="EditFileWatcherDialog" timestamp="1605191764861">
+      <screen x="0" y="0" width="1920" height="1080" />
+    </state>
+    <state x="627" y="318" key="EditFileWatcherDialog/0.0.1920.1080/1920.0.1680.1050@0.0.1920.1080" timestamp="1605191764861" />
+    <state width="1877" height="138" key="GridCell.Tab.0.bottom" timestamp="1605275607024">
+      <screen x="0" y="0" width="1920" height="1080" />
+    </state>
+    <state width="1877" height="138" key="GridCell.Tab.0.bottom/0.0.1920.1080/1920.0.1680.1050@0.0.1920.1080" timestamp="1605275607024" />
+    <state width="1877" height="138" key="GridCell.Tab.0.center" timestamp="1605275607024">
+      <screen x="0" y="0" width="1920" height="1080" />
+    </state>
+    <state width="1877" height="138" key="GridCell.Tab.0.center/0.0.1920.1080/1920.0.1680.1050@0.0.1920.1080" timestamp="1605275607024" />
+    <state width="1877" height="138" key="GridCell.Tab.0.left" timestamp="1605275607023">
+      <screen x="0" y="0" width="1920" height="1080" />
+    </state>
+    <state width="1877" height="138" key="GridCell.Tab.0.left/0.0.1920.1080/1920.0.1680.1050@0.0.1920.1080" timestamp="1605275607023" />
+    <state width="1877" height="138" key="GridCell.Tab.0.right" timestamp="1605275607024">
+      <screen x="0" y="0" width="1920" height="1080" />
+    </state>
+    <state width="1877" height="138" key="GridCell.Tab.0.right/0.0.1920.1080/1920.0.1680.1050@0.0.1920.1080" timestamp="1605275607024" />
+    <state x="623" y="235" width="672" height="678" key="search.everywhere.popup" timestamp="1605271539733">
+      <screen x="0" y="0" width="1920" height="1080" />
+    </state>
+    <state x="623" y="235" width="672" height="678" key="search.everywhere.popup/0.0.1920.1080/1920.0.1680.1050@0.0.1920.1080" timestamp="1605271539733" />
+  </component>
+</project>
