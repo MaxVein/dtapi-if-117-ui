@@ -26,14 +26,24 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="d5d074c0-c311-4e65-b974-714bad5c9db6" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/dtApi/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/dtApi/package-lock.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dtApi/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/dtApi/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dtApi/src/app/app-routing.module.ts" beforeDir="false" afterPath="$PROJECT_DIR$/dtApi/src/app/app-routing.module.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dtApi/src/app/app.module.ts" beforeDir="false" afterPath="$PROJECT_DIR$/dtApi/src/app/app.module.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dtApi/src/app/shared/modules/angular-material/angular-material.module.ts" beforeDir="false" afterPath="$PROJECT_DIR$/dtApi/src/app/shared/modules/angular-material/angular-material.module.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dtApi/src/environments/environment.ts" beforeDir="false" afterPath="$PROJECT_DIR$/dtApi/src/environments/environment.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dtApi/.eslintrc.json" beforeDir="false" afterPath="$PROJECT_DIR$/dtApi/.eslintrc.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dtApi/angular.json" beforeDir="false" afterPath="$PROJECT_DIR$/dtApi/angular.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dtApi/karma.conf.js" beforeDir="false" afterPath="$PROJECT_DIR$/dtApi/karma.conf.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dtApi/src/app/app.component.spec.ts" beforeDir="false" afterPath="$PROJECT_DIR$/dtApi/src/app/app.component.spec.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dtApi/src/app/app.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/dtApi/src/app/app.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dtApi/src/app/students/students-page/students-modal/students-modal.component.scss" beforeDir="false" afterPath="$PROJECT_DIR$/dtApi/src/app/students/students-page/students-modal/students-modal.component.scss" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dtApi/src/app/students/students-page/students-modal/students-modal.component.spec.ts" beforeDir="false" afterPath="$PROJECT_DIR$/dtApi/src/app/students/students-page/students-modal/students-modal.component.spec.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dtApi/src/app/students/students-page/students-page.component.scss" beforeDir="false" afterPath="$PROJECT_DIR$/dtApi/src/app/students/students-page/students-page.component.scss" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dtApi/src/app/students/students-page/students-page.component.spec.ts" beforeDir="false" afterPath="$PROJECT_DIR$/dtApi/src/app/students/students-page/students-page.component.spec.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dtApi/src/environments/environment.prod.ts" beforeDir="false" afterPath="$PROJECT_DIR$/dtApi/src/environments/environment.prod.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dtApi/src/main.ts" beforeDir="false" afterPath="$PROJECT_DIR$/dtApi/src/main.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dtApi/src/polyfills.ts" beforeDir="false" afterPath="$PROJECT_DIR$/dtApi/src/polyfills.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/dtApi/src/styles.scss" beforeDir="false" afterPath="$PROJECT_DIR$/dtApi/src/styles.scss" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dtApi/tslint.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dtApi/src/test.ts" beforeDir="false" afterPath="$PROJECT_DIR$/dtApi/src/test.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dtApi/tsconfig.app.json" beforeDir="false" afterPath="$PROJECT_DIR$/dtApi/tsconfig.app.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dtApi/tsconfig.json" beforeDir="false" afterPath="$PROJECT_DIR$/dtApi/tsconfig.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dtApi/tsconfig.spec.json" beforeDir="false" afterPath="$PROJECT_DIR$/dtApi/tsconfig.spec.json" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -100,7 +110,7 @@
       <workItem from="1605186557647" duration="3209000" />
       <workItem from="1605190809701" duration="5202000" />
       <workItem from="1605200917380" duration="16829000" />
-      <workItem from="1605265205619" duration="14590000" />
+      <workItem from="1605265205619" duration="15701000" />
     </task>
     <servers />
   </component>
@@ -132,22 +142,26 @@
       <screen x="0" y="0" width="1920" height="1080" />
     </state>
     <state x="627" y="318" key="EditFileWatcherDialog/0.0.1920.1080/1920.0.1680.1050@0.0.1920.1080" timestamp="1605191764861" />
-    <state width="1877" height="138" key="GridCell.Tab.0.bottom" timestamp="1605275607024">
+    <state width="1877" height="138" key="GridCell.Tab.0.bottom" timestamp="1605280895219">
       <screen x="0" y="0" width="1920" height="1080" />
     </state>
-    <state width="1877" height="138" key="GridCell.Tab.0.bottom/0.0.1920.1080/1920.0.1680.1050@0.0.1920.1080" timestamp="1605275607024" />
-    <state width="1877" height="138" key="GridCell.Tab.0.center" timestamp="1605275607024">
+    <state width="1877" height="138" key="GridCell.Tab.0.bottom/0.0.1920.1080/1920.0.1680.1050@0.0.1920.1080" timestamp="1605280895219" />
+    <state width="1877" height="138" key="GridCell.Tab.0.center" timestamp="1605280895219">
       <screen x="0" y="0" width="1920" height="1080" />
     </state>
-    <state width="1877" height="138" key="GridCell.Tab.0.center/0.0.1920.1080/1920.0.1680.1050@0.0.1920.1080" timestamp="1605275607024" />
-    <state width="1877" height="138" key="GridCell.Tab.0.left" timestamp="1605275607023">
+    <state width="1877" height="138" key="GridCell.Tab.0.center/0.0.1920.1080/1920.0.1680.1050@0.0.1920.1080" timestamp="1605280895219" />
+    <state width="1877" height="138" key="GridCell.Tab.0.left" timestamp="1605280895219">
       <screen x="0" y="0" width="1920" height="1080" />
     </state>
-    <state width="1877" height="138" key="GridCell.Tab.0.left/0.0.1920.1080/1920.0.1680.1050@0.0.1920.1080" timestamp="1605275607023" />
-    <state width="1877" height="138" key="GridCell.Tab.0.right" timestamp="1605275607024">
+    <state width="1877" height="138" key="GridCell.Tab.0.left/0.0.1920.1080/1920.0.1680.1050@0.0.1920.1080" timestamp="1605280895219" />
+    <state width="1877" height="138" key="GridCell.Tab.0.right" timestamp="1605280895219">
       <screen x="0" y="0" width="1920" height="1080" />
     </state>
-    <state width="1877" height="138" key="GridCell.Tab.0.right/0.0.1920.1080/1920.0.1680.1050@0.0.1920.1080" timestamp="1605275607024" />
+    <state width="1877" height="138" key="GridCell.Tab.0.right/0.0.1920.1080/1920.0.1680.1050@0.0.1920.1080" timestamp="1605280895219" />
+    <state x="725" y="171" key="git4idea.branch.GitSmartOperationDialog" timestamp="1605281375168">
+      <screen x="0" y="0" width="1920" height="1080" />
+    </state>
+    <state x="725" y="171" key="git4idea.branch.GitSmartOperationDialog/0.0.1920.1080/1920.0.1680.1050@0.0.1920.1080" timestamp="1605281375168" />
     <state x="623" y="235" width="672" height="678" key="search.everywhere.popup" timestamp="1605271539733">
       <screen x="0" y="0" width="1920" height="1080" />
     </state>
