@@ -1,9 +1,9 @@
-import { Component, OnInit, Inject } from '@angular/core'
+import { Component, Inject } from '@angular/core'
 import {
-    MatDialog,
     MatDialogRef,
     MAT_DIALOG_DATA,
 } from '@angular/material/dialog'
+
 import { GroupsService } from '../groups.service'
 
 export interface DialogData {

@@ -1,14 +1,14 @@
 import {
     Component,
     ViewChild,
-    AfterViewInit,
     OnInit,
     ChangeDetectorRef,
 } from '@angular/core'
 import { MatPaginator } from '@angular/material/paginator'
 import { MatTableDataSource, MatTable } from '@angular/material/table'
-import { GroupsService } from './groups.service'
 import { MatDialog } from '@angular/material/dialog'
+
+import { GroupsService } from './groups.service'
 import { CreateGroupDialogComponent } from './create-group-dialog/create-group-dialog.component'
 import { EditGroupDialogComponent } from './edit-group-dialog/edit-group-dialog.component'
 import { ConfirmDeleteComponent } from './confirm-delete/confirm-delete.component'
@@ -30,7 +30,7 @@ let ELEMENT_DATA: GroupData[]
 export class GroupsComponent implements OnInit {
     specialities: any = []
     faculties: any = []
-    sharedData = []
+    sharedData: any = []
     group_name: string
     speciality_name: string
     faculty_name: string
@@ -44,6 +44,7 @@ export class GroupsComponent implements OnInit {
         'actions',
     ]
     dataSource = new MatTableDataSource<GroupData>(ELEMENT_DATA)
+    
     @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator
     @ViewChild('table', { static: true }) table: MatTable<GroupData>
 
@@ -55,10 +56,6 @@ export class GroupsComponent implements OnInit {
     ) {}
 
     ngOnInit() {
-        // this.groupsSertvice.logIn().subscribe((data: any[])=>{
-        //   console.log(data);
-        //   this.res = data;
-        // })
         this.getGroups()
     }
     getGroups() {
@@ -114,7 +111,6 @@ export class GroupsComponent implements OnInit {
     }
 
     editCurrGroup(group): void {
-        console.log(group)
         const dialogRef = this.dialog.open(EditGroupDialogComponent, {
             width: '300px',
             data: {
@@ -126,7 +122,6 @@ export class GroupsComponent implements OnInit {
         })
         dialogRef.afterClosed().subscribe((result) => {
             if (result) {
-                console.log(result)
                 this.editGroup(group.group_id, {
                     group_name: result.group_name,
                     speciality_id: parseInt(
@@ -143,7 +138,6 @@ export class GroupsComponent implements OnInit {
     }
 
     delCurrGroup(group): void {
-        console.log(group)
         const dialogRef = this.dialog.open(ConfirmDeleteComponent, {
             width: '300px',
             data: {
@@ -151,9 +145,7 @@ export class GroupsComponent implements OnInit {
             },
         })
         dialogRef.afterClosed().subscribe((result) => {
-            console.log(`Dialog result: ${result}`)
             if (result) {
-                console.log(result)
                 this.delGroup(group.group_id)
             }
         })

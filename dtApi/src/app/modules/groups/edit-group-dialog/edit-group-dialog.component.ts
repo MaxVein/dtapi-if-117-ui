@@ -1,5 +1,6 @@
 import { Component, Inject } from '@angular/core'
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog'
+
 import { GroupsService } from '../groups.service'
 
 export interface DialogData {
@@ -30,7 +31,6 @@ export class EditGroupDialogComponent {
     }
 
     ngOnInit() {
-        console.log(this.data.group_id)
         this.groupsSertvice
             .getData('Group', this.data.group_id)
             .subscribe((result) => console.log(result))
