@@ -14,7 +14,6 @@ export interface DialogData {
     templateUrl: './edit-group-dialog.component.html',
     styleUrls: ['./edit-group-dialog.component.scss'],
 })
-
 export class EditGroupDialogComponent {
     sharedInfo: any
     specialities: any
@@ -32,8 +31,9 @@ export class EditGroupDialogComponent {
 
     ngOnInit() {
         console.log(this.data.group_id)
-        this.groupsSertvice.getData('Group', this.data.group_id).subscribe(result =>
-            console.log(result))
+        this.groupsSertvice
+            .getData('Group', this.data.group_id)
+            .subscribe((result) => console.log(result))
     }
 
     onNoClick(): void {

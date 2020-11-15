@@ -14,7 +14,7 @@ import { ConfirmDeleteComponent } from './confirm-delete/confirm-delete.componen
         GroupsComponent,
         CreateGroupDialogComponent,
         EditGroupDialogComponent,
-        ConfirmDeleteComponent
+        ConfirmDeleteComponent,
     ],
     imports: [
         CommonModule,
