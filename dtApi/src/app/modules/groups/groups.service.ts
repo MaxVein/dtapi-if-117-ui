@@ -38,7 +38,7 @@ export class GroupsService {
             payload
         )
     }
-    public updateData(entity, id,payload) {
+    public updateData(entity, id, payload) {
         return this.http.post(
             `${environment.apiUrl}/${entity}/update/${id}`,
             payload

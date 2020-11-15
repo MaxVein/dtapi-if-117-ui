@@ -7,6 +7,7 @@ import {
 } from '@angular/material/dialog'
 import { CreateGroupDialogComponent } from './create-group-dialog/create-group-dialog.component'
 import { EditGroupDialogComponent } from './edit-group-dialog/edit-group-dialog.component'
+import { ConfirmDeleteComponent } from './confirm-delete/confirm-delete.component'
 
 export interface GroupData {
     group_id: string
@@ -110,22 +111,21 @@ export class GroupsComponent implements OnInit {
         })
     }
 
-    editCurrGroup(id): void {
-        console.log(id)
+    editCurrGroup(group): void {
+        console.log(group)
         const dialogRef = this.dialog.open(EditGroupDialogComponent, {
             width: '300px',
             data: {
-                group_id: this.group_id,
-                group_name: this.group_name,
-                speciality_name: this.speciality_name,
-                faculty_name: this.faculty_name,
+                group_id: group.group_id,
+                group_name: group.group_name,
+                speciality_name: group.speciality_name,
+                faculty_name: group.faculty_name,
             },
-            id
         })
         dialogRef.afterClosed().subscribe((result) => {
             if (result) {
                 console.log(result);
-                this.editGroup(id,{
+                this.editGroup(group.group_id,{
                     group_name: result.group_name,
                     speciality_id: parseInt(
                         this.getSpecialityId(result.speciality_name),
@@ -136,6 +136,23 @@ export class GroupsComponent implements OnInit {
                         10
                     ),
                 })
+            }
+        })
+    }
+
+    delCurrGroup(group): void {
+        console.log(group)
+        const dialogRef = this.dialog.open(ConfirmDeleteComponent, {
+            width: '300px',
+            data: {
+                group_name: group.group_name,
+            },
+        })
+        dialogRef.afterClosed().subscribe((result) => {
+            console.log(`Dialog result: ${result}`);
+            if (result) {
+                console.log(result);
+                this.delGroup(group.group_id)
             }
         })
     }
@@ -152,8 +169,7 @@ export class GroupsComponent implements OnInit {
     editGroup(id,group) {
         this.groupsSertvice
             .updateData('Group',id,group )
-            .subscribe((result: GroupData[]) => {
-                let newItems:[];
+            .subscribe(() => {
                 this.dataSource.data.map(item=>{
                     item.group_id === id? item={group_id:id,...group}:false;
                 });  
@@ -174,8 +190,7 @@ export class GroupsComponent implements OnInit {
         return currentSpec[0][0].faculty_id
     }
     delGroup(id) {
-        console.log(id)
-        this.groupsSertvice.delData('Group', id).subscribe((result) => {
+        this.groupsSertvice.delData('Group', id).subscribe(() => {
             this.dataSource.data = this.dataSource.data.filter((item)=> item.group_id ! = id);
             this.ngOnInit();
         })

@@ -3,12 +3,11 @@ import { NgModule } from '@angular/core'
 
 import { AppRoutingModule } from './app-routing.module'
 import { AppComponent } from './app.component'
-import { AngularMaterialModule } from './shared/modules/angular-material/angular-material.module'
 import { HttpClientModule } from '@angular/common/http'
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations'
 import { FormsModule } from '@angular/forms'
 
-import { GroupsModule } from './modules/groups/groups.module'
+import { GroupsModule } from './modules/groups/groups.module';
 
 @NgModule({
     declarations: [AppComponent],
@@ -18,7 +17,7 @@ import { GroupsModule } from './modules/groups/groups.module'
         HttpClientModule,
         BrowserAnimationsModule,
         FormsModule,
-        GroupsModule
+        GroupsModule,
     ],
     providers: [],
     bootstrap: [AppComponent],

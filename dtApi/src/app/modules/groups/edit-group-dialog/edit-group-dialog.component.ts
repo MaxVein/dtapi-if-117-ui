@@ -1,8 +1,5 @@
 import { Component, Inject } from '@angular/core'
-import {
-    MatDialogRef,
-    MAT_DIALOG_DATA,
-} from '@angular/material/dialog'
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog'
 import { GroupsService } from '../groups.service'
 
 export interface DialogData {
@@ -13,9 +10,9 @@ export interface DialogData {
 }
 
 @Component({
-  selector: 'app-edit-group-dialog',
-  templateUrl: './edit-group-dialog.component.html',
-  styleUrls: ['./edit-group-dialog.component.scss']
+    selector: 'app-edit-group-dialog',
+    templateUrl: './edit-group-dialog.component.html',
+    styleUrls: ['./edit-group-dialog.component.scss'],
 })
 
 export class EditGroupDialogComponent {
@@ -33,12 +30,13 @@ export class EditGroupDialogComponent {
         this.faculties = this.sharedInfo[0][1]
     }
 
-    ngOnInit(){
-        this.groupsSertvice.getData('Group',this.data.group_id)
+    ngOnInit() {
+        console.log(this.data.group_id)
+        this.groupsSertvice.getData('Group', this.data.group_id).subscribe(result =>
+            console.log(result))
     }
 
     onNoClick(): void {
         this.dialogRef.close()
     }
 }
-
