@@ -14,7 +14,7 @@ import { StudentsService } from '../shared/services/students/students.service'
         CommonModule,
         RouterModule.forChild([
             {
-                path: 'students',
+                path: 'Students/:id',
                 component: StudentsPageComponent,
             },
         ]),

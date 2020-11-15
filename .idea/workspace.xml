@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="101aefba-85a9-495e-8a04-24e1dbd53f45" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/.idea/codeStyles/Project.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/codeStyles/codeStyleConfig.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/dtapi-if-117-ui.iml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/prettier.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/watcherTasks.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dtApi/src/app/shared/components/confirm/confirm.component.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dtApi/src/app/shared/components/confirm/confirm.component.scss" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dtApi/src/app/shared/components/confirm/confirm.component.spec.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dtApi/src/app/shared/components/confirm/confirm.component.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dtApi/src/app/shared/services/modal.service.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dtApi/src/app/app.module.ts" beforeDir="false" afterPath="$PROJECT_DIR$/dtApi/src/app/app.module.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dtApi/src/app/shared/modules/angular-material/angular-material.module.ts" beforeDir="false" afterPath="$PROJECT_DIR$/dtApi/src/app/shared/modules/angular-material/angular-material.module.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dtApi/src/app/shared/modules/shared.module.ts" beforeDir="false" afterPath="$PROJECT_DIR$/dtApi/src/app/shared/modules/shared.module.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dtApi/src/app/students/students-page/students-modal/students-modal.component.html" beforeDir="false" afterPath="$PROJECT_DIR$/dtApi/src/app/students/students-page/students-modal/students-modal.component.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dtApi/src/app/students/students-page/students-modal/students-modal.component.scss" beforeDir="false" afterPath="$PROJECT_DIR$/dtApi/src/app/students/students-page/students-modal/students-modal.component.scss" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dtApi/src/app/students/students-page/students-modal/students-modal.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/dtApi/src/app/students/students-page/students-modal/students-modal.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dtApi/src/app/students/students-page/students-page.component.html" beforeDir="false" afterPath="$PROJECT_DIR$/dtApi/src/app/students/students-page/students-page.component.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dtApi/src/app/students/students-page/students-page.component.scss" beforeDir="false" afterPath="$PROJECT_DIR$/dtApi/src/app/students/students-page/students-page.component.scss" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dtApi/src/app/students/students-page/students-page.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/dtApi/src/app/students/students-page/students-page.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dtApi/src/app/students/students.module.ts" beforeDir="false" afterPath="$PROJECT_DIR$/dtApi/src/app/students/students.module.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dtApi/tslint.json" beforeDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="ProjectId" id="1kFQRaJrgNiEkRuhhQf2yKA9PGf" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">
+    <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
+    <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="node.js.detected.package.eslint" value="true" />
+    <property name="node.js.detected.package.tslint" value="true" />
+    <property name="node.js.path.for.package.eslint" value="project" />
+    <property name="node.js.path.for.package.tslint" value="project" />
+    <property name="node.js.selected.package.eslint" value="(autodetect)" />
+    <property name="node.js.selected.package.tslint" value="(autodetect)" />
+    <property name="nodejs_package_manager_path" value="npm" />
+    <property name="prettier.files.pattern" value="{**/*,*}.{js,ts,jsx,tsx, css, scss, sass, html}" />
+    <property name="prettierjs.PrettierConfiguration.Package" value="C:\Users\oleh_\AppData\Roaming\npm\node_modules\prettier" />
+    <property name="run.prettier.on.save" value="true" />
+    <property name="settings.editor.selected.configurable" value="settings.javascript.prettier" />
+    <property name="ts.external.directory.path" value="D:\Projects\IT Academy\dtapi-if-117-ui\dtApi\node_modules\typescript\lib" />
+  </component>
+  <component name="RunManager">
+    <configuration name="start" type="js.build_tools.npm" nameIsGenerated="true">
+      <package-json value="$PROJECT_DIR$/dtApi/package.json" />
+      <command value="start" />
+      <node-interpreter value="project" />
+      <envs />
+      <method v="2" />
+    </configuration>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="101aefba-85a9-495e-8a04-24e1dbd53f45" name="Default Changelist" comment="" />
+      <created>1605293855552</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1605293855552</updated>
+      <workItem from="1605293859735" duration="844000" />
+      <workItem from="1605297674444" duration="714000" />
+      <workItem from="1605357018068" duration="19122000" />
+      <workItem from="1605442633875" duration="2887000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="WindowStateProjectService">
+    <state x="414" y="195" width="1092" height="714" key="#com.intellij.execution.impl.EditConfigurationsDialog" timestamp="1605359822567">
+      <screen x="0" y="0" width="1920" height="1080" />
+    </state>
+    <state x="414" y="195" width="1092" height="714" key="#com.intellij.execution.impl.EditConfigurationsDialog/0.0.1920.1080/1920.0.1680.1050@0.0.1920.1080" timestamp="1605359822567" />
+    <state x="740" y="257" key="#com.intellij.ide.macro.MacrosDialog" timestamp="1605359795832">
+      <screen x="0" y="0" width="1920" height="1080" />
+    </state>
+    <state x="740" y="257" key="#com.intellij.ide.macro.MacrosDialog/0.0.1920.1080/1920.0.1680.1050@0.0.1920.1080" timestamp="1605359795832" />
+    <state x="627" y="318" key="EditFileWatcherDialog" timestamp="1605363269804">
+      <screen x="0" y="0" width="1920" height="1080" />
+    </state>
+    <state x="627" y="318" key="EditFileWatcherDialog/0.0.1920.1080/1920.0.1680.1050@0.0.1920.1080" timestamp="1605363269804" />
+    <state width="1877" height="192" key="GridCell.Tab.0.bottom" timestamp="1605380850666">
+      <screen x="0" y="0" width="1920" height="1080" />
+    </state>
+    <state width="1877" height="192" key="GridCell.Tab.0.bottom/0.0.1920.1080/1920.0.1680.1050@0.0.1920.1080" timestamp="1605380850666" />
+    <state width="1877" height="192" key="GridCell.Tab.0.center" timestamp="1605380850664">
+      <screen x="0" y="0" width="1920" height="1080" />
+    </state>
+    <state width="1877" height="192" key="GridCell.Tab.0.center/0.0.1920.1080/1920.0.1680.1050@0.0.1920.1080" timestamp="1605380850664" />
+    <state width="1877" height="192" key="GridCell.Tab.0.left" timestamp="1605380850663">
+      <screen x="0" y="0" width="1920" height="1080" />
+    </state>
+    <state width="1877" height="192" key="GridCell.Tab.0.left/0.0.1920.1080/1920.0.1680.1050@0.0.1920.1080" timestamp="1605380850663" />
+    <state width="1877" height="192" key="GridCell.Tab.0.right" timestamp="1605380850665">
+      <screen x="0" y="0" width="1920" height="1080" />
+    </state>
+    <state width="1877" height="192" key="GridCell.Tab.0.right/0.0.1920.1080/1920.0.1680.1050@0.0.1920.1080" timestamp="1605380850665" />
+  </component>
+</project>

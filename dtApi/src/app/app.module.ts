@@ -6,9 +6,10 @@ import { BrowserModule } from '@angular/platform-browser'
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations'
 import { HttpClientModule } from '@angular/common/http'
 import { SharedModule } from './shared/modules/shared.module'
+import { ConfirmComponent } from './shared/components/confirm/confirm.component'
 
 @NgModule({
-    declarations: [AppComponent],
+    declarations: [AppComponent, ConfirmComponent],
     imports: [
         BrowserModule,
         BrowserAnimationsModule,

@@ -97,14 +97,14 @@ export class StudentsModalComponent implements OnInit {
         if (this.data.isUpdateData) {
             this.studentsService
                 .update(this.data.student_data.user_id, newStudent)
-                .subscribe(() => {
+                .subscribe((data) => {
                     this.form.enable()
-                    this.dialogRef.close()
+                    this.dialogRef.close(data)
                 })
         } else {
-            this.studentsService.create(newStudent).subscribe(() => {
+            this.studentsService.create(newStudent).subscribe((data) => {
                 this.form.enable()
-                this.dialogRef.close()
+                this.dialogRef.close(data)
             })
         }
     }

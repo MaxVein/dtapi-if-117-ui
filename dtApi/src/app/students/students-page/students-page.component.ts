@@ -10,8 +10,10 @@ import { Student } from '../../shared/interfaces/students/interfaces'
 import { Subscription } from 'rxjs'
 import { MatPaginator } from '@angular/material/paginator'
 import { MatTableDataSource } from '@angular/material/table'
-import { MatDialog } from '@angular/material/dialog'
 import { StudentsModalComponent } from './students-modal/students-modal.component'
+import { ActivatedRoute, Router } from '@angular/router'
+import { ModalService } from '../../shared/services/modal.service'
+import { ConfirmComponent } from '../../shared/components/confirm/confirm.component'
 
 @Component({
     selector: 'app-students-page',
@@ -19,6 +21,7 @@ import { StudentsModalComponent } from './students-modal/students-modal.componen
     styleUrls: ['./students-page.component.scss'],
 })
 export class StudentsPageComponent implements OnInit, AfterViewInit, OnDestroy {
+    groupID: number
     loading = false
     isUpdateData = false
     studentSubscription: Subscription
@@ -34,7 +37,9 @@ export class StudentsPageComponent implements OnInit, AfterViewInit, OnDestroy {
 
     constructor(
         private studentsService: StudentsService,
-        public dialog: MatDialog
+        private route: ActivatedRoute,
+        private router: Router,
+        public modalService: ModalService
     ) {}
 
     ngOnInit(): void {
@@ -47,43 +52,111 @@ export class StudentsPageComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     getStudentsByGroup(): void {
+        this.groupID = this.route.snapshot.params['id']
         this.studentSubscription = this.studentsService
-            .getByGroup(1)
-            .subscribe((response) => {
-                this.dataSource.data = response
-                this.loading = false
-            })
+            .getByGroup(this.groupID)
+            .subscribe(
+                (response) => {
+                    this.dataSource.data = response
+                    this.loading = false
+                    this.modalService.showSnackBar('Студентів завантажено')
+                },
+                (error) => {
+                    if (error.status === 403) {
+                        this.modalService.showSnackBar('Ви не авторизовані')
+                        this.router.navigate(['/login'])
+                    } else {
+                        this.modalService.showSnackBar(
+                            'Проблеми із сервером! Перезавантажте сторінку'
+                        )
+                    }
+                }
+            )
     }
 
     add(): void {
         this.isUpdateData = false
-        this.dialog.open(StudentsModalComponent, {
-            data: {
-                isUpdateData: this.isUpdateData,
+        this.modalService.openModal(
+            StudentsModalComponent,
+            {
+                disableClose: true,
+                data: {
+                    isUpdateData: this.isUpdateData,
+                },
             },
-        })
+            (result) => {
+                if (!result) {
+                    this.modalService.showSnackBar('Відмінено')
+                } else if (result.response === 'ok') {
+                    this.loading = true
+                    this.getStudentsByGroup()
+                    this.modalService.showSnackBar('Студента додано')
+                    setTimeout(() => {
+                        this.loading = false
+                    }, 500)
+                } else if (result.response === 'Wrong request') {
+                    this.modalService.showSnackBar(
+                        'Сталася помилка! Спробуйте знову'
+                    )
+                }
+            }
+        )
     }
 
     edit(student: Student): void {
         this.isUpdateData = true
-        this.dialog.open(StudentsModalComponent, {
-            data: {
-                isUpdateData: this.isUpdateData,
-                student_data: student,
+        this.modalService.openModal(
+            StudentsModalComponent,
+            {
+                disableClose: true,
+                data: {
+                    isUpdateData: this.isUpdateData,
+                    student_data: student,
+                },
             },
-        })
+            (result) => {
+                if (!result) {
+                    this.modalService.showSnackBar('Відмінено')
+                } else if (result.response === 'ok') {
+                    this.loading = true
+                    this.getStudentsByGroup()
+                    this.modalService.showSnackBar('Дані студента оновлено')
+                    setTimeout(() => {
+                        this.loading = false
+                    }, 500)
+                } else if (result.response === 'Wrong request') {
+                    this.modalService.showSnackBar(
+                        'Сталася помилка! Спробуйте знову'
+                    )
+                }
+            }
+        )
     }
 
-    remove(id: string): void {
-        const decision = window.confirm('Do you want to delete this student?')
-
-        if (decision) {
-            this.studentsService.remove(id).subscribe(() => {
-                this.dataSource.data = this.dataSource.data.filter(
-                    (s) => s.user_id !== id
-                )
-            })
-        }
+    remove(firstname: string, lastname: string, id: string): void {
+        const message = `Видалити студента ${firstname} ${lastname}?`
+        this.modalService.openModal(
+            ConfirmComponent,
+            {
+                data: {
+                    message,
+                },
+            },
+            (result) => {
+                if (result) {
+                    this.studentsService.remove(id).subscribe((data) => {
+                        if (data) {
+                            this.dataSource.data = this.dataSource.data.filter(
+                                (s) => s.user_id !== id
+                            )
+                            this.modalService.showSnackBar(
+                                'Студента було видалено'
+                            )
+                        }
+                    })
+                }
+            }
+        )
     }
 
     ngOnDestroy(): void {

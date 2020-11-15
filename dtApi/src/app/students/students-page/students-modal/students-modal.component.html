@@ -3,7 +3,7 @@
     <mat-icon class="closeForm" (click)="closeModal()">close</mat-icon>
   </div>
   <div class="modal__header">
-    <h3>{{data.isUpdateData ? 'Edit student info' : 'Add new student'}}</h3>
+    <h3>{{data.isUpdateData ? 'Редагувати дані студента' : 'Додати нового студента'}}</h3>
   </div>
   <div class="modal__form">
     <form class="add-form" [formGroup]="form" (ngSubmit)="submit()">
@@ -11,14 +11,14 @@
         class="form-control"
         [ngClass]="{invalid: form.get('lastname').touched && form.get('lastname').invalid}">
         <mat-form-field class="mat-form-field-lastname">
-          <mat-label for="lastname"><mat-icon style="vertical-align: bottom; font-size: 20px; margin-right: 5px;">person_outline</mat-icon>Lastname</mat-label>
+          <mat-label for="lastname"><mat-icon>person_outline</mat-icon>Прізвище</mat-label>
           <input matInput formControlName="lastname" type="text" id="lastname">
           <mat-error
             *ngIf="form.get('lastname').touched && form.get('lastname').invalid"
             class="validation"
           >
             <small *ngIf="form.get('lastname').errors.required">
-              Please input student lastname
+              Поле не заповнене! Будь-ласка введіть прізвище студента
             </small>
           </mat-error>
         </mat-form-field>
@@ -28,14 +28,14 @@
         class="form-control"
         [ngClass]="{invalid: form.get('firstname').touched && form.get('firstname').invalid}">
         <mat-form-field class="mat-form-field-firstname">
-          <mat-label for="firstname"><mat-icon style="vertical-align: bottom; font-size: 20px; margin-right: 5px;">person_outline</mat-icon>Firstname</mat-label>
+          <mat-label for="firstname"><mat-icon>person_outline</mat-icon>Ім'я</mat-label>
           <input matInput formControlName="firstname" type="text" id="firstname">
           <mat-error
             *ngIf="form.get('firstname').touched && form.get('firstname').invalid"
             class="validation"
           >
             <small *ngIf="form.get('firstname').errors.required">
-              Please input student firstname
+              Поле не заповнене! Будь-ласка введіть ім'я студента
             </small>
           </mat-error>
         </mat-form-field>
@@ -45,14 +45,14 @@
         class="form-control"
         [ngClass]="{invalid: form.get('fathername').touched && form.get('fathername').invalid}">
         <mat-form-field class="mat-form-field-fathername">
-          <mat-label for="fathername"><mat-icon style="vertical-align: bottom; font-size: 20px; margin-right: 5px;">person_outline</mat-icon>Father name</mat-label>
+          <mat-label for="fathername"><mat-icon>person_outline</mat-icon>По-батькові</mat-label>
           <input matInput formControlName="fathername" type="text" id="fathername">
           <mat-error
             *ngIf="form.get('fathername').touched && form.get('fathername').invalid"
             class="validation"
           >
             <small *ngIf="form.get('fathername').errors.required">
-              Please input student father name
+              Поле не заповнене! Будь-ласка введіть ім'я по-батькові студента
             </small>
           </mat-error>
         </mat-form-field>
@@ -62,14 +62,14 @@
         class="form-control"
         [ngClass]="{invalid: form.get('gradebookID').touched && form.get('gradebookID').invalid}">
         <mat-form-field class="mat-form-field-gradebook">
-          <mat-label for="gradebookID"><mat-icon style="vertical-align: bottom; font-size: 20px; margin-right: 5px;">library_books</mat-icon>Gradebook ID</mat-label>
-          <input matInput formControlName="gradebookID" type="text" id="gradebookID">
+          <mat-label for="gradebookID"><mat-icon>library_books</mat-icon>Номер залікової книжки</mat-label>
+          <input matInput formControlName="gradebookID" type="text" id="gradebookID" placeholder="IP-16-2">
           <mat-error
             *ngIf="form.get('gradebookID').touched && form.get('gradebookID').invalid"
             class="validation"
           >
             <small *ngIf="form.get('gradebookID').errors.required">
-              Please input student gradebook ID
+              Поле не заповнене! Будь-ласка введіть номер залікової книжки студента
             </small>
           </mat-error>
         </mat-form-field>
@@ -79,14 +79,14 @@
         class="form-control"
         [ngClass]="{invalid: form.get('username').touched && form.get('username').invalid}">
         <mat-form-field class="mat-form-field-username">
-          <mat-label for="username"><mat-icon style="vertical-align: bottom; font-size: 20px; margin-right: 5px;">person_add</mat-icon>Username</mat-label>
-          <input matInput formControlName="username" type="text" id="username">
+          <mat-label for="username"><mat-icon>person_add</mat-icon>Системне ім'я користувача</mat-label>
+          <input matInput formControlName="username" type="text" id="username" placeholder="oleh-ip-20-1">
           <mat-error
             *ngIf="form.get('username').touched && form.get('username').invalid"
             class="validation"
           >
             <small *ngIf="form.get('username').errors.required">
-              Please input student username
+              Поле не заповнене! Будь-ласка введіть системне ім'я користувача студента
             </small>
           </mat-error>
         </mat-form-field>
@@ -96,17 +96,17 @@
         class="form-control"
         [ngClass]="{invalid: form.get('email').touched && form.get('email').invalid}">
         <mat-form-field class="mat-form-field-email">
-          <mat-label for="email"><mat-icon style="vertical-align: bottom; font-size: 20px; margin-right: 5px;">email</mat-icon>Email address</mat-label>
+          <mat-label for="email"><mat-icon>email</mat-icon>Електронна пошта</mat-label>
           <input matInput formControlName="email" type="email" id="email" placeholder="Ex. pat@example.com">
           <mat-error
             *ngIf="form.get('email').touched && form.get('email').invalid"
             class="validation"
           >
             <small *ngIf="form.get('email').errors.required">
-              Please input student email address
+              Поле не заповнене! Будь-ласка введіть електронну пошту студента
             </small>
             <small *ngIf="form.get('email').errors.email">
-              Please enter a valid email address
+              Некоректні дані! Будь-ласка введіть коректну електронну пошту
             </small>
           </mat-error>
         </mat-form-field>
@@ -116,21 +116,21 @@
         class="form-control"
         [ngClass]="{invalid: form.get('password').touched && form.get('password').invalid}">
         <mat-form-field class="mat-form-field-password">
-          <mat-label for="password"><mat-icon style="vertical-align: bottom; font-size: 20px">vpn_key</mat-icon> Password</mat-label>
-          <input matInput formControlName="password" type="password" style="border: none" id="password">
+          <mat-label for="password"><mat-icon>vpn_key</mat-icon>Пароль</mat-label>
+          <input matInput formControlName="password" type="password" style="border: none" id="password" placeholder="Пароль має містити лише літери, цифри та поширені розділові знаки">
           <mat-error
             *ngIf="form.get('password').touched && form.get('password').invalid"
             class="validation"
           >
             <small *ngIf="form.get('password').errors.minlength">
-              Min password length must be
+              Мінімальна довжина паролю
               {{form.get('password').errors.minlength.requiredLength}}
-              symbols. Now it is
+              символів. Поточна кількість
               {{form.get('password').errors.minlength.actualLength}}
-              symbols
+              символів
             </small>
             <small *ngIf="form.get('password').errors.required">
-              Please enter password
+              Поле не заповнене! Будь-ласка введіть унікальний пароль студента
             </small>
           </mat-error>
         </mat-form-field>
@@ -140,21 +140,21 @@
         class="form-control"
         [ngClass]="{invalid: form.get('password_confirm').touched && form.get('password_confirm').invalid}">
         <mat-form-field class="mat-form-field-password_confirm">
-          <mat-label for="password_confirm"><mat-icon style="vertical-align: bottom; font-size: 20px">vpn_key</mat-icon> Confirm Password</mat-label>
-          <input matInput formControlName="password_confirm" type="password" style="border: none" id="password_confirm">
+          <mat-label for="password_confirm"><mat-icon>vpn_key</mat-icon>Підтвердіть пароль</mat-label>
+          <input matInput formControlName="password_confirm" type="password" style="border: none" id="password_confirm" placeholder="Введіть повторно пароль, який був введений у попередньому полі">
           <mat-error
             *ngIf="form.get('password_confirm').touched && form.get('password_confirm').invalid"
             class="validation"
           >
             <small *ngIf="form.get('password_confirm').errors.minlength">
-              Min password length must be
+              Мінімальна довжина паролю
               {{form.get('password_confirm').errors.minlength.requiredLength}}
-              symbols. Now it is
+              символів. Поточна кількість
               {{form.get('password_confirm').errors.minlength.actualLength}}
-              symbols
+              символів
             </small>
             <small *ngIf="form.get('password_confirm').errors.required">
-              Please enter password
+              Поле не заповнене! Будь-ласка введіть повторно пароль студента, який був введений у попередньому полі
             </small>
           </mat-error>
         </mat-form-field>
@@ -164,7 +164,7 @@
               type="submit"
               class="modal__btn"
               [disabled]="form.invalid || submitted">
-        {{data.isUpdateData ? 'Edit student' : 'Add student'}}
+        {{data.isUpdateData ? 'Редагувати дані' : 'Додати студента'}}
       </button>
     </form>
   </div>
