@@ -17,7 +17,7 @@ export class GroupsService {
         return this.sharingData
     }
     public logIn() {
-        return this.http.post(`${environment.apiUrl}Login/index`, {
+        return this.http.post(`${environment.apiUrl}/Login/index`, {
             username: 'admin',
             password: 'dtapi_admin',
         })
@@ -35,6 +35,12 @@ export class GroupsService {
     public insertData(entity, payload) {
         return this.http.post(
             `${environment.apiUrl}/${entity}/insertData`,
+            payload
+        )
+    }
+    public updateData(entity, id,payload) {
+        return this.http.post(
+            `${environment.apiUrl}/${entity}/update/${id}`,
             payload
         )
     }

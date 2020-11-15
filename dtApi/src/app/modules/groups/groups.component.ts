@@ -1,13 +1,12 @@
-import { AfterViewInit, Component, ViewChild, OnInit } from '@angular/core'
+import { Component, ViewChild, AfterViewInit, OnInit,ChangeDetectorRef  } from '@angular/core'
 import { MatPaginator } from '@angular/material/paginator'
-import { MatTableDataSource } from '@angular/material/table'
+import { MatTableDataSource,MatTable } from '@angular/material/table'
 import { GroupsService } from './groups.service'
 import {
     MatDialog,
-    MatDialogRef,
-    MAT_DIALOG_DATA,
 } from '@angular/material/dialog'
 import { CreateGroupDialogComponent } from './create-group-dialog/create-group-dialog.component'
+import { EditGroupDialogComponent } from './edit-group-dialog/edit-group-dialog.component'
 
 export interface GroupData {
     group_id: string
@@ -16,7 +15,7 @@ export interface GroupData {
     faculty_id: string
 }
 
-let ELEMENT_DATA: GroupData[] = []
+let ELEMENT_DATA: GroupData[]
 
 @Component({
     selector: 'app-groups',
@@ -30,6 +29,7 @@ export class GroupsComponent implements OnInit {
     group_name: string
     speciality_name: string
     faculty_name: string
+    group_id:string 
 
     displayedColumns: string[] = [
         'group_id',
@@ -38,24 +38,27 @@ export class GroupsComponent implements OnInit {
         'faculty_name',
         'actions',
     ]
-    dataSource = new MatTableDataSource<GroupData>()
-    res = []
+    dataSource = new MatTableDataSource<GroupData>(ELEMENT_DATA);
+    @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
+    @ViewChild("table", { static: true }) table: MatTable<GroupData>;
+
+      res = []
     constructor(
         private groupsSertvice: GroupsService,
-        public dialog: MatDialog
+        public dialog: MatDialog,
+        private changeDetectorRefs: ChangeDetectorRef
     ) {}
 
-    @ViewChild(MatPaginator) paginator: MatPaginator
-
-    ngAfterViewInit() {
-        this.dataSource.paginator = this.paginator
-    }
+    
 
     ngOnInit() {
         // this.groupsSertvice.logIn().subscribe((data: any[])=>{
         //   console.log(data);
         //   this.res = data;
         // })
+        this.getGroups();
+    }
+    getGroups(){
         this.groupsSertvice.getData('Group').subscribe((data: any[]) => {
             data.map((item) => {
                 this.groupsSertvice
@@ -74,13 +77,13 @@ export class GroupsComponent implements OnInit {
             this.sharedData.push(this.specialities, this.faculties)
             ELEMENT_DATA = data
             this.dataSource = new MatTableDataSource<GroupData>(ELEMENT_DATA)
-            console.log(this.sharedData)
+            this.dataSource.paginator = this.paginator;
+
             this.sharedData
                 ? this.groupsSertvice.saveData(this.sharedData)
                 : false
         })
     }
-
     createGroup(): void {
         const dialogRef = this.dialog.open(CreateGroupDialogComponent, {
             width: '300px',
@@ -90,7 +93,6 @@ export class GroupsComponent implements OnInit {
                 faculty_name: this.faculty_name,
             },
         })
-
         dialogRef.afterClosed().subscribe((result) => {
             if (result) {
                 this.addGroup({
@@ -107,13 +109,58 @@ export class GroupsComponent implements OnInit {
             }
         })
     }
+
+    editCurrGroup(id): void {
+        console.log(id)
+        const dialogRef = this.dialog.open(EditGroupDialogComponent, {
+            width: '300px',
+            data: {
+                group_id: this.group_id,
+                group_name: this.group_name,
+                speciality_name: this.speciality_name,
+                faculty_name: this.faculty_name,
+            },
+            id
+        })
+        dialogRef.afterClosed().subscribe((result) => {
+            if (result) {
+                console.log(result);
+                this.editGroup(id,{
+                    group_name: result.group_name,
+                    speciality_id: parseInt(
+                        this.getSpecialityId(result.speciality_name),
+                        10
+                    ),
+                    faculty_id: parseInt(
+                        this.getFacultyId(result.faculty_name),
+                        10
+                    ),
+                })
+            }
+        })
+    }
     addGroup(group) {
         this.groupsSertvice
             .insertData('Group', group)
-            .subscribe((result: GroupData[]) => {
+            .subscribe((result: GroupData) => {
                 this.dataSource.paginator = this.paginator
+                this.dataSource.data.push(result[0]);
+                this.ngOnInit();
+
             })
     }
+    editGroup(id,group) {
+        this.groupsSertvice
+            .updateData('Group',id,group )
+            .subscribe((result: GroupData[]) => {
+                let newItems:[];
+                this.dataSource.data.map(item=>{
+                    item.group_id === id? item={group_id:id,...group}:false;
+                });  
+                this.ngOnInit();
+            })
+    }
+ 
     getSpecialityId(spec: string) {
         const currentSpec = this.specialities.filter(
             (item) => item[0].speciality_name === spec
@@ -129,7 +176,9 @@ export class GroupsComponent implements OnInit {
     delGroup(id) {
         console.log(id)
         this.groupsSertvice.delData('Group', id).subscribe((result) => {
-            console.log('deleted')
+            this.dataSource.data = this.dataSource.data.filter((item)=> item.group_id ! = id);
+            this.ngOnInit();
         })
+        
     }
 }
