@@ -6,7 +6,7 @@
         <mat-form-field fxFlex="40%">
           <input matInput type="text" (keyup)="doFilter($event.target.value)" placeholder="Пошук">
         </mat-form-field>
-        <button button mat-stroked-button color="primary" (click)="redirectToCreate(createData)">+ Додати предмет</button>
+        <button button mat-stroked-button color="primary" (click)="openDialog()">+ Додати предмет</button>
       </div>
       <table mat-table [dataSource]="dataSource" matSort matSortStart="desc">
           <ng-container matColumnDef="№">

@@ -19,10 +19,14 @@ import { ReactiveFormsModule } from '@angular/forms'
 
 import { SubjectsRoutingModule } from './subjects-routing.module'
 import { SubjectsHomeComponent } from './subjects-home/subjects-home.component'
-import { SubjectsService } from './subjects.service'
+import { SubjectsService } from './subjects.service';
+import { ModalComponent } from './modal/modal.component'
+
+//////////////////////////////
+import {MatDialogModule} from '@angular/material/dialog';
 
 @NgModule({
-    declarations: [SubjectsHomeComponent],
+    declarations: [SubjectsHomeComponent, ModalComponent ],
     imports: [
         CommonModule,
         BrowserAnimationsModule,
@@ -42,6 +46,9 @@ import { SubjectsService } from './subjects.service'
         MatCardModule,
         MatTooltipModule,
         ReactiveFormsModule,
+
+        //////////////////
+        MatDialogModule
     ],
     exports: [SubjectsHomeComponent],
     providers: [SubjectsService],

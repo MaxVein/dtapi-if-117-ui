@@ -1,0 +1,18 @@
+<h1 mat-dialog-title>Додати новий предмет</h1>
+<div mat-dialog-content>
+  <mat-form-field>
+    <mat-label>Назва предмета</mat-label>
+    <p>{{ data.subject }}</p>
+    <input matInput >
+  </mat-form-field>
+</div>
+<div mat-dialog-content>
+  <mat-form-field>
+    <mat-label>Опис предмета</mat-label>
+    <input matInput >
+  </mat-form-field>
+</div>
+<div mat-dialog-actions>
+  <button mat-button cdkFocusInitial (click)='save()'>Додати</button>
+  <button mat-button (click)='onNoClick()'>Відмінити</button>
+</div>

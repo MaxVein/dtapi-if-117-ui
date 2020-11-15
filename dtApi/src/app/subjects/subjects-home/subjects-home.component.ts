@@ -2,8 +2,10 @@ import { Component, OnInit, ViewChild, AfterViewInit } from '@angular/core'
 import { MatTableDataSource } from '@angular/material/table'
 import { MatSort } from '@angular/material/sort'
 import { MatPaginator } from '@angular/material/paginator'
+import {MatDialog} from '@angular/material/dialog'
 
-import { SubjectsService } from '../subjects.service'
+import { SubjectsService } from '../subjects.service';
+import { ModalComponent } from '../modal/modal.component'
 
 interface Subjects {
     subject_id: number
@@ -40,7 +42,7 @@ export class SubjectsHomeComponent implements OnInit, AfterViewInit {
     @ViewChild(MatSort) sort: MatSort
     @ViewChild(MatPaginator) paginator: MatPaginator
 
-    constructor(private subjectsService: SubjectsService) {
+    constructor(private subjectsService: SubjectsService, public dialog: MatDialog) {
         this.subjectsService.getData('getRecords').subscribe((response) => {
             this.dataSource.data = response
         })
@@ -69,6 +71,26 @@ export class SubjectsHomeComponent implements OnInit, AfterViewInit {
     public redirectToDelete = (id: string) => {
         this.subjectsService.delete(id).subscribe()
     }
+
+
+    /////////////////////////////////////////////
+    //////////////////DIALOG
+    public openDialog(): void {
+        const dialogRef = this.dialog.open(ModalComponent, {
+        //   width: '450px',
+        data: {
+            subject: "SUBJECT PESSED drom parent to the child(modal)!"
+        }
+          
+        });
+    
+        dialogRef.afterClosed().subscribe(result => {
+          console.log('The dialog was closed');
+          console.log(result)
+    
+        });
+      }
+
 
     public doFilter = (value: string) => {
         this.dataSource.filter = value.trim().toLocaleLowerCase()
