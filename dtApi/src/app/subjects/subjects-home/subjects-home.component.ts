@@ -2,13 +2,17 @@ import { Component, OnInit, ViewChild, AfterViewInit } from '@angular/core'
 import { MatTableDataSource } from '@angular/material/table'
 import { MatSort } from '@angular/material/sort'
 import { MatPaginator } from '@angular/material/paginator'
-import {MatDialog} from '@angular/material/dialog'
+import { MatDialog } from '@angular/material/dialog'
 
-import { SubjectsService } from '../subjects.service';
+import { SubjectsService } from '../subjects.service'
 import { ModalComponent } from '../modal/modal.component'
 
-interface Subjects {
+interface SubjectsResponse {
     subject_id: number
+    subject_name: string
+    subject_description: string
+}
+interface SubjectsRequest {
     subject_name: string
     subject_description: string
 }
@@ -27,22 +31,15 @@ export class SubjectsHomeComponent implements OnInit, AfterViewInit {
         'update',
         'delete',
     ]
-    public dataSource = new MatTableDataSource<Subjects>()
-    //TEMPORARY DATA____createData
-    public createData = {
-        subject_name: 'Тест створення_12_11_2020',
-        subject_description: 'Дескріпшин',
-    }
-    //TEMPORARY DATA____updatedData
-    public updatedData = {
-        subject_name: 'Природознавство',
-        subject_description: 'Пізнавайте природу та бережіть її',
-    }
+    public dataSource = new MatTableDataSource<SubjectsResponse>()
 
     @ViewChild(MatSort) sort: MatSort
     @ViewChild(MatPaginator) paginator: MatPaginator
 
-    constructor(private subjectsService: SubjectsService, public dialog: MatDialog) {
+    constructor(
+        private subjectsService: SubjectsService,
+        public dialog: MatDialog
+    ) {
         this.subjectsService.getData('getRecords').subscribe((response) => {
             this.dataSource.data = response
         })
@@ -55,10 +52,7 @@ export class SubjectsHomeComponent implements OnInit, AfterViewInit {
         this.dataSource.paginator = this.paginator
     }
 
-    public redirectToCreate = (data: {
-        subject_name: string
-        subject_description: string
-    }) => {
+    public redirectToCreate = (data: SubjectsRequest) => {
         this.subjectsService.create('insertData', data).subscribe()
     }
 
@@ -72,25 +66,16 @@ export class SubjectsHomeComponent implements OnInit, AfterViewInit {
         this.subjectsService.delete(id).subscribe()
     }
 
-
-    /////////////////////////////////////////////
-    //////////////////DIALOG
     public openDialog(): void {
         const dialogRef = this.dialog.open(ModalComponent, {
-        //   width: '450px',
-        data: {
-            subject: "SUBJECT PESSED drom parent to the child(modal)!"
-        }
-          
-        });
-    
-        dialogRef.afterClosed().subscribe(result => {
-          console.log('The dialog was closed');
-          console.log(result)
-    
-        });
-      }
+                height: '400px',
+                width: '500px',
+        })
 
+        dialogRef.afterClosed().subscribe((result: SubjectsRequest) => {
+            if (result) this.redirectToCreate(result);
+        })
+    }
 
     public doFilter = (value: string) => {
         this.dataSource.filter = value.trim().toLocaleLowerCase()

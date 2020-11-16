@@ -11,8 +11,12 @@ import { catchError } from 'rxjs/operators'
 const apiURI = 'https://dtapi.if.ua/api'
 const entityURI = `${apiURI}/Subject`
 
-interface Subjects {
+interface SubjectsResponse {
     subject_id: number
+    subject_name: string
+    subject_description: string
+}
+interface SubjectsRequest {
     subject_name: string
     subject_description: string
 }
@@ -25,16 +29,16 @@ export class SubjectsService {
 
     public getData(route: string) {
         return this.http
-            .get<Subjects[]>(`${entityURI}/${route}`)
+            .get<SubjectsResponse[]>(`${entityURI}/${route}`)
             .pipe(catchError(this.handleError))
     }
 
     public create = (
         route: string,
-        body: { subject_name: string; subject_description: string }
+        body: SubjectsRequest
     ) => {
         return this.http
-            .post<Subjects>(
+            .post<SubjectsResponse>(
                 `${entityURI}/${route}`,
                 body,
                 this.generateHeaders()
@@ -44,10 +48,10 @@ export class SubjectsService {
 
     public update = (
         route: string,
-        body?: { subject_name: string; subject_description: string }
+        body: SubjectsRequest
     ) => {
         return this.http
-            .post<Subjects>(
+            .post<SubjectsResponse>(
                 `${entityURI}/update/${route}`,
                 body,
                 this.generateHeaders()

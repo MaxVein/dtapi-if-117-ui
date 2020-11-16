@@ -16,17 +16,16 @@ import { MatPaginatorModule } from '@angular/material/paginator'
 import { MatCardModule } from '@angular/material/card'
 import { MatTooltipModule } from '@angular/material/tooltip'
 import { ReactiveFormsModule } from '@angular/forms'
+import { MatDialogModule } from '@angular/material/dialog'
 
 import { SubjectsRoutingModule } from './subjects-routing.module'
 import { SubjectsHomeComponent } from './subjects-home/subjects-home.component'
-import { SubjectsService } from './subjects.service';
+import { SubjectsService } from './subjects.service'
 import { ModalComponent } from './modal/modal.component'
 
-//////////////////////////////
-import {MatDialogModule} from '@angular/material/dialog';
 
 @NgModule({
-    declarations: [SubjectsHomeComponent, ModalComponent ],
+    declarations: [SubjectsHomeComponent, ModalComponent],
     imports: [
         CommonModule,
         BrowserAnimationsModule,
@@ -46,11 +45,9 @@ import {MatDialogModule} from '@angular/material/dialog';
         MatCardModule,
         MatTooltipModule,
         ReactiveFormsModule,
-
-        //////////////////
-        MatDialogModule
+        MatDialogModule,
     ],
-    exports: [SubjectsHomeComponent],
+    exports: [SubjectsHomeComponent, ModalComponent],
     providers: [SubjectsService],
 })
 export class SubjectsModule {}
