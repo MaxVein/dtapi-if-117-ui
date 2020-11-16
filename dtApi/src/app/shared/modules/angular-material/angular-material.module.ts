@@ -11,6 +11,7 @@ import { MatFormFieldModule } from '@angular/material/form-field'
 import { MatInputModule } from '@angular/material/input'
 import { MatSnackBarModule } from '@angular/material/snack-bar'
 import { MatDividerModule } from '@angular/material/divider'
+import { MatSelectModule } from '@angular/material/select'
 
 @NgModule({
     imports: [
@@ -25,6 +26,7 @@ import { MatDividerModule } from '@angular/material/divider'
         MatFormFieldModule,
         MatSnackBarModule,
         MatDividerModule,
+        MatSelectModule,
     ],
     exports: [
         MatTableModule,
@@ -38,6 +40,7 @@ import { MatDividerModule } from '@angular/material/divider'
         MatFormFieldModule,
         MatSnackBarModule,
         MatDividerModule,
+        MatSelectModule,
     ],
 })
 export class AngularMaterialModule {}

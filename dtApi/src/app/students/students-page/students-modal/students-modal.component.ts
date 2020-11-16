@@ -17,6 +17,7 @@ export class StudentsModalComponent implements OnInit {
     image: string | ArrayBuffer = ''
     currentImage = true
     defaultImage = environment.defaultImage
+    student: Student = this.data.student_data
 
     @ViewChild('imageFile') inputRef: ElementRef
 
@@ -34,27 +35,19 @@ export class StudentsModalComponent implements OnInit {
     initForm(): void {
         this.form = new FormGroup({
             lastname: new FormControl(
-                this.data.student_data
-                    ? this.data.student_data.student_surname
-                    : '',
+                this.student ? this.student.student_surname : '',
                 [Validators.required]
             ),
             firstname: new FormControl(
-                this.data.student_data
-                    ? this.data.student_data.student_name
-                    : '',
+                this.student ? this.student.student_name : '',
                 [Validators.required]
             ),
             fathername: new FormControl(
-                this.data.student_data
-                    ? this.data.student_data.student_fname
-                    : '',
+                this.student ? this.student.student_fname : '',
                 [Validators.required]
             ),
             gradebookID: new FormControl(
-                this.data.student_data
-                    ? this.data.student_data.gradebook_id
-                    : '',
+                this.student ? this.student.gradebook_id : '',
                 [Validators.required]
             ),
             username: new FormControl(null, [Validators.required]),
@@ -63,21 +56,11 @@ export class StudentsModalComponent implements OnInit {
                 Validators.email,
             ]),
             password: new FormControl(
-                this.data.student_data
-                    ? this.data.student_data.plain_password
-                    : '',
-                [
-                    Validators.required,
-                    Validators.minLength(8),
-                    // Validators.pattern(
-                    //     '^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)[a-zA-Z\\d]{8,}$'
-                    // ),
-                ]
+                this.student ? this.student.plain_password : '',
+                [Validators.required, Validators.minLength(8)]
             ),
             password_confirm: new FormControl(
-                this.data.student_data
-                    ? this.data.student_data.plain_password
-                    : '',
+                this.student ? this.student.plain_password : '',
                 [Validators.required]
             ),
         })
@@ -85,7 +68,7 @@ export class StudentsModalComponent implements OnInit {
 
     getStudentInfo(): void {
         if (this.data.student_data) {
-            const studentID = this.data.student_data.user_id
+            const studentID = this.student.user_id
             this.studentsService.getById(studentID).subscribe((response) => {
                 this.form.get('username').setValue(response[0].username)
                 this.form.get('email').setValue(response[0].email)
@@ -115,9 +98,13 @@ export class StudentsModalComponent implements OnInit {
             plain_password: this.form.value.password,
         }
 
+        if (this.image === '') {
+            newStudent.photo = this.student.photo
+        }
+
         if (this.data.isUpdateData) {
             this.studentsService
-                .update(this.data.student_data.user_id, newStudent)
+                .update(this.student.user_id, newStudent)
                 .subscribe(
                     (data) => {
                         this.form.enable()

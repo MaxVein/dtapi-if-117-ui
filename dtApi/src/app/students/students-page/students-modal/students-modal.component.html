@@ -1,6 +1,6 @@
 <div class="modal">
   <div class="modal__header">
-    <h3>
+    <h3 mat-dialog-title class="modal__title">
       {{data.isUpdateData ? 'Редагувати дані студента' : 'Додати нового студента'}}
     </h3>
   </div>
@@ -145,9 +145,6 @@
             <small *ngIf="form.get('password').errors.required">
               Поле не заповнене! Будь-ласка введіть унікальний пароль студента
             </small>
-<!--            <small *ngIf="form.get('password').errors?.pattern">-->
-<!--              Пароль не валідний. Використовуйте комбінацію з 8 або більше літер, цифр і символів-->
-<!--            </small>-->
           </mat-error>
         </mat-form-field>
       </div>
@@ -193,13 +190,13 @@
           <img class="preview-image" *ngIf="!image" [src]="defaultImage" alt="preview">
         </div>
 
-        <div class="image" *ngIf="this.data.isUpdateData && this.data.student_data.photo !== ''">
-          <img class="preview-image" *ngIf="this.data.student_data.photo === ''" [src]="defaultImage" alt="preview">
-          <img class="preview-image" *ngIf="!image" [src]="this.data.student_data.photo" alt="preview">
+        <div class="image" *ngIf="this.data.isUpdateData && this.student.photo !== ''">
+          <img class="preview-image" *ngIf="this.student.photo === ''" [src]="defaultImage" alt="preview">
+          <img class="preview-image" *ngIf="!image" [src]="this.student.photo" alt="preview">
           <img class="preview-image" *ngIf="image" [src]="image" alt="preview">
         </div>
 
-        <div class="image" *ngIf="this.data.isUpdateData && this.data.student_data.photo === ''">
+        <div class="image" *ngIf="this.data.isUpdateData && this.student.photo === ''">
           <img class="preview-image" *ngIf="image" [src]="image" alt="preview">
           <img class="preview-image" *ngIf="!image" [src]="defaultImage" alt="preview">
         </div>

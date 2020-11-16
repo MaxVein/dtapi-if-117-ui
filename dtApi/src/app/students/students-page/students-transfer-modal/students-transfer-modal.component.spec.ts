@@ -1,25 +1,24 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing'
 
-import { StudentsTransferModalComponent } from './students-transfer-modal.component';
+import { StudentsTransferModalComponent } from './students-transfer-modal.component'
 
 describe('StudentsTransferModalComponent', () => {
-  let component: StudentsTransferModalComponent;
-  let fixture: ComponentFixture<StudentsTransferModalComponent>;
+    let component: StudentsTransferModalComponent
+    let fixture: ComponentFixture<StudentsTransferModalComponent>
 
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      declarations: [ StudentsTransferModalComponent ]
+    beforeEach(async () => {
+        await TestBed.configureTestingModule({
+            declarations: [StudentsTransferModalComponent],
+        }).compileComponents()
     })
-    .compileComponents();
-  });
 
-  beforeEach(() => {
-    fixture = TestBed.createComponent(StudentsTransferModalComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
-  });
+    beforeEach(() => {
+        fixture = TestBed.createComponent(StudentsTransferModalComponent)
+        component = fixture.componentInstance
+        fixture.detectChanges()
+    })
 
-  it('should create', () => {
-    expect(component).toBeTruthy();
-  });
-});
+    it('should create', () => {
+        expect(component).toBeTruthy()
+    })
+})

@@ -5,15 +5,17 @@ import {
     OnInit,
     ViewChild,
 } from '@angular/core'
-import { StudentsService } from '../../shared/services/students/students.service'
-import { Student } from '../../shared/interfaces/students/interfaces'
+import { ActivatedRoute, Router } from '@angular/router'
 import { Subscription } from 'rxjs'
 import { MatPaginator } from '@angular/material/paginator'
 import { MatTableDataSource } from '@angular/material/table'
-import { StudentsModalComponent } from './students-modal/students-modal.component'
-import { ActivatedRoute, Router } from '@angular/router'
+import { StudentsService } from '../../shared/services/students/students.service'
 import { ModalService } from '../../shared/services/modal.service'
+import { StudentsModalComponent } from './students-modal/students-modal.component'
+import { StudentsViewModalComponent } from './students-view-modal/students-view-modal.component'
+import { StudentsTransferModalComponent } from './students-transfer-modal/students-transfer-modal.component'
 import { ConfirmComponent } from '../../shared/components/confirm/confirm.component'
+import { Student } from '../../shared/interfaces/students/interfaces'
 
 @Component({
     selector: 'app-students-page',
@@ -74,6 +76,11 @@ export class StudentsPageComponent implements OnInit, AfterViewInit, OnDestroy {
             )
     }
 
+    applyFilter(event: Event): void {
+        const filterValue = (event.target as HTMLInputElement).value
+        this.dataSource.filter = filterValue.trim().toLowerCase()
+    }
+
     add(): void {
         this.isUpdateData = false
         this.modalService.openModal(
@@ -130,6 +137,42 @@ export class StudentsPageComponent implements OnInit, AfterViewInit, OnDestroy {
                     }, 500)
                 } else if (result === 'Скасовано') {
                     this.modalService.showSnackBar('Скасовано')
+                }
+            }
+        )
+    }
+
+    transfer(student: Student): void {
+        this.modalService.openModal(
+            StudentsTransferModalComponent,
+            {
+                disableClose: true,
+                data: {
+                    group_id: this.groupID,
+                    student_data: student,
+                },
+            },
+            (result) => {
+                if (result) {
+                    this.modalService.showSnackBar('Скасовано')
+                }
+            }
+        )
+    }
+
+    view(student: Student): void {
+        this.modalService.openModal(
+            StudentsViewModalComponent,
+            {
+                disableClose: true,
+                data: {
+                    group_id: this.groupID,
+                    student_data: student,
+                },
+            },
+            (result) => {
+                if (result) {
+                    this.modalService.showSnackBar('Закрито')
                 }
             }
         )
