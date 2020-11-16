@@ -1,4 +1,8 @@
-<form class="example-form" [formGroup]="form" (ngSubmit)="addSpeciality()">
+<form
+    class="example-form"
+    [formGroup]="form"
+    (ngSubmit)="addSpeciality(data ? 'update' : 'add')"
+>
     <h1>{{ data ? 'Редагувати спеціальність' : 'Додати спеціальність' }}</h1>
     <mat-form-field class="example-full-width">
         <mat-label>Name</mat-label>
@@ -56,7 +60,7 @@
             type="submit"
             [disabled]="form.invalid"
         >
-            Добавити
+            {{ data ? 'Редагувати' : 'Додати' }}
         </button>
     </div>
 </form>

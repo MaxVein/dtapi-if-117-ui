@@ -1,11 +1,7 @@
 import { Component, Inject, OnInit } from '@angular/core'
-import {
-    MatDialog,
-    MatDialogRef,
-    MAT_DIALOG_DATA,
-} from '@angular/material/dialog'
+import { FormBuilder, FormGroup, Validators } from '@angular/forms'
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog'
 
-import { FormControl, FormGroup, Validators } from '@angular/forms'
 import { IsNumValidators } from '../isnum.validators'
 import { ApiService } from '../api.service'
 
@@ -16,45 +12,60 @@ import { ApiService } from '../api.service'
 })
 export class ModalFormComponent implements OnInit {
     constructor(
+        private formBuilder: FormBuilder,
         private apiService: ApiService,
         private dialogRef: MatDialogRef<ModalFormComponent>,
         @Inject(MAT_DIALOG_DATA) public data?
     ) {}
 
-    form = new FormGroup({
-        speciality_name: new FormControl(
-            this.data ? this.data.speciality_name : '',
-            Validators.required
-        ),
-        speciality_code: new FormControl(
-            this.data ? this.data.speciality_code : '',
-            [
-                Validators.required,
-                Validators.maxLength(5),
-                IsNumValidators.isNum,
-            ]
-        ),
-    })
+    form: FormGroup
 
-    ngOnInit() {}
-    addSpeciality() {
-        if (this.form.valid && !this.data) {
-            this.apiService.addEntity('Speciality', this.form.value).subscribe()
-            this.dialogRef.close()
-        } else if (this.form.valid && this.data) {
-            this.apiService
-                .updateEntity(
-                    'Speciality',
-                    this.data.speciality_id,
-                    this.form.value
-                )
-                .subscribe((data) => {
-                    this.dialogRef.close(this.form.value)
-                    return data
-                })
+    ngOnInit() {
+        this.form = this.formBuilder.group({
+            speciality_name: [
+                this.data ? this.data.speciality_name : '',
+                [Validators.required],
+            ],
+            speciality_code: [
+                this.data ? this.data.speciality_code : '',
+                [
+                    Validators.required,
+                    Validators.maxLength(5),
+                    IsNumValidators.isNum,
+                ],
+            ],
+        })
+    }
+    addSpeciality(str: string): void {
+        switch (str) {
+            case 'update':
+                this.apiService
+                    .updateEntity(
+                        'Speciality',
+                        this.data.speciality_id,
+                        this.form.value
+                    )
+                    .subscribe(
+                        (res) => {
+                            this.dialogRef.close(res)
+                        },
+                        (error) => {
+                            this.apiService.snackBarOpen()
+                        }
+                    )
+                break
+            case 'add':
+                this.apiService
+                    .addEntity('Speciality', this.form.value)
+                    .subscribe(
+                        (res) => this.dialogRef.close(res),
+                        (error) => {
+                            this.apiService.snackBarOpen()
+                        }
+                    )
         }
     }
-    onCancel() {
+    onCancel(): void {
         this.dialogRef.close()
     }
 }
