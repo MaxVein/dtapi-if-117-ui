@@ -62,7 +62,7 @@ export class TestComponent implements OnInit {
     }
 
     openAddDialog() {
-        let test = {}
+        const test = {}
         const dialogRef = this.dialog.open(TestModalComponent, {
             data: {
                 data: test,
