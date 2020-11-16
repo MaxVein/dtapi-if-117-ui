@@ -7,7 +7,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations'
 import { AppRoutingModule } from './app-routing.module'
 import { AppComponent } from './app.component'
 import { AngularMaterialModule } from './shared/modules/angular-material/angular-material.module'
-import { LoginComponent } from './login/login.component';
+import { LoginComponent } from './login/login.component'
 import { StudentComponent } from './student/student.component'
 
 @NgModule({
