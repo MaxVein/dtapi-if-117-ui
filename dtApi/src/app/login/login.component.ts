@@ -54,6 +54,11 @@ export class LoginComponent implements OnInit {
         this.password = formValue.password
         this.loginForm.reset()
         this.request.loginRequest(this.userName, this.password).subscribe({
+            next: (res) => {
+                if (res.roles[1] === 'student') {
+                    this.router.navigate(['/student'])
+                }
+            },
             error: (err) => {
                 this.handlerError(err)
             },
