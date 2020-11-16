@@ -14,13 +14,17 @@ import { SharedModule } from './shared/modules/shared.module'
 
 import { DashboardModule } from './modules/dashboard/dashboard.module'
 import { LoginComponent } from './login/login.component'
+import { AngularMaterialModule } from './shared/modules/angular-material/angular-material.module'
+import { SpecialityModule } from './speciality/speciality.module'
 
 @NgModule({
+
     declarations: [AppComponent, LoginComponent],
     imports: [
         BrowserModule,
         AppRoutingModule,
         AngularMaterialModule,
+        SpecialityModule,
         BrowserAnimationsModule,
         ReactiveFormsModule,
         HttpClientModule,
