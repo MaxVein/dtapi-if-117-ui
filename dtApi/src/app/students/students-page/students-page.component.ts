@@ -81,12 +81,15 @@ export class StudentsPageComponent implements OnInit, AfterViewInit, OnDestroy {
             {
                 disableClose: true,
                 data: {
+                    group_id: this.groupID,
                     isUpdateData: this.isUpdateData,
                 },
             },
             (result) => {
                 if (!result) {
-                    this.modalService.showSnackBar('Відмінено')
+                    this.modalService.showSnackBar(
+                        'Сталася помилка! Спробуйте знову'
+                    )
                 } else if (result.response === 'ok') {
                     this.loading = true
                     this.getStudentsByGroup()
@@ -94,10 +97,8 @@ export class StudentsPageComponent implements OnInit, AfterViewInit, OnDestroy {
                     setTimeout(() => {
                         this.loading = false
                     }, 500)
-                } else if (result.response === 'Wrong request') {
-                    this.modalService.showSnackBar(
-                        'Сталася помилка! Спробуйте знову'
-                    )
+                } else if (result === 'Скасовано') {
+                    this.modalService.showSnackBar('Скасовано')
                 }
             }
         )
@@ -110,13 +111,16 @@ export class StudentsPageComponent implements OnInit, AfterViewInit, OnDestroy {
             {
                 disableClose: true,
                 data: {
+                    group_id: this.groupID,
                     isUpdateData: this.isUpdateData,
                     student_data: student,
                 },
             },
             (result) => {
                 if (!result) {
-                    this.modalService.showSnackBar('Відмінено')
+                    this.modalService.showSnackBar(
+                        'Сталася помилка! Спробуйте знову'
+                    )
                 } else if (result.response === 'ok') {
                     this.loading = true
                     this.getStudentsByGroup()
@@ -124,10 +128,8 @@ export class StudentsPageComponent implements OnInit, AfterViewInit, OnDestroy {
                     setTimeout(() => {
                         this.loading = false
                     }, 500)
-                } else if (result.response === 'Wrong request') {
-                    this.modalService.showSnackBar(
-                        'Сталася помилка! Спробуйте знову'
-                    )
+                } else if (result === 'Скасовано') {
+                    this.modalService.showSnackBar('Скасовано')
                 }
             }
         )

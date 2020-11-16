@@ -1,9 +1,8 @@
 <div class="modal">
-  <div class="modal__close">
-    <mat-icon class="closeForm" (click)="closeModal()">close</mat-icon>
-  </div>
   <div class="modal__header">
-    <h3>{{data.isUpdateData ? 'Редагувати дані студента' : 'Додати нового студента'}}</h3>
+    <h3>
+      {{data.isUpdateData ? 'Редагувати дані студента' : 'Додати нового студента'}}
+    </h3>
   </div>
   <div class="modal__form">
     <form class="add-form" [formGroup]="form" (ngSubmit)="submit()">
@@ -117,7 +116,21 @@
         [ngClass]="{invalid: form.get('password').touched && form.get('password').invalid}">
         <mat-form-field class="mat-form-field-password">
           <mat-label for="password"><mat-icon>vpn_key</mat-icon>Пароль</mat-label>
-          <input matInput formControlName="password" type="password" style="border: none" id="password" placeholder="Пароль має містити лише літери, цифри та поширені розділові знаки">
+          <input matInput
+                 [type]="hide ? 'password' : 'text'"
+                 formControlName="password"
+                 style="border: none"
+                 id="password"
+                 placeholder="Пароль має містити лише літери, цифри та поширені розділові знаки">
+          <button [matTooltip]="hide ? 'Показати пароль' : 'Сховати пароль'"
+                  mat-icon-button
+                  matSuffix
+                  (click)="hide = !hide"
+                  [attr.aria-label]="'Hide password'"
+                  [attr.aria-pressed]="hide"
+                  type="button">
+            <mat-icon>{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
+          </button>
           <mat-error
             *ngIf="form.get('password').touched && form.get('password').invalid"
             class="validation"
@@ -132,6 +145,9 @@
             <small *ngIf="form.get('password').errors.required">
               Поле не заповнене! Будь-ласка введіть унікальний пароль студента
             </small>
+<!--            <small *ngIf="form.get('password').errors?.pattern">-->
+<!--              Пароль не валідний. Використовуйте комбінацію з 8 або більше літер, цифр і символів-->
+<!--            </small>-->
           </mat-error>
         </mat-form-field>
       </div>
@@ -141,26 +157,77 @@
         [ngClass]="{invalid: form.get('password_confirm').touched && form.get('password_confirm').invalid}">
         <mat-form-field class="mat-form-field-password_confirm">
           <mat-label for="password_confirm"><mat-icon>vpn_key</mat-icon>Підтвердіть пароль</mat-label>
-          <input matInput formControlName="password_confirm" type="password" style="border: none" id="password_confirm" placeholder="Введіть повторно пароль, який був введений у попередньому полі">
+          <input matInput
+                 appConfirmValidator="password"
+                 [type]="hide ? 'password' : 'text'"
+                 formControlName="password_confirm"
+                 style="border: none"
+                 id="password_confirm"
+                 placeholder="Введіть повторно пароль, який був введений у попередньому полі">
+          <button [matTooltip]="hide ? 'Показати пароль' : 'Сховати пароль'"
+                  mat-icon-button
+                  matSuffix
+                  (click)="hide = !hide"
+                  [attr.aria-label]="'Hide password'"
+                  [attr.aria-pressed]="hide"
+                  type="button">
+            <mat-icon>{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
+          </button>
           <mat-error
             *ngIf="form.get('password_confirm').touched && form.get('password_confirm').invalid"
             class="validation"
           >
-            <small *ngIf="form.get('password_confirm').errors.minlength">
-              Мінімальна довжина паролю
-              {{form.get('password_confirm').errors.minlength.requiredLength}}
-              символів. Поточна кількість
-              {{form.get('password_confirm').errors.minlength.actualLength}}
-              символів
-            </small>
             <small *ngIf="form.get('password_confirm').errors.required">
               Поле не заповнене! Будь-ласка введіть повторно пароль студента, який був введений у попередньому полі
+            </small>
+            <small *ngIf="form.get('password_confirm').errors?.notEqual && !form.get('password_confirm').errors?.required">
+              Паролі не збігаються. Пароль у попередньому полі повинен співпадати з паролем даного поля
             </small>
           </mat-error>
         </mat-form-field>
       </div>
 
-      <button mat-flat-button color="accent"
+      <div class="image-form-control">
+        <div class="image" *ngIf="!this.data.isUpdateData">
+          <img class="preview-image" *ngIf="image" [src]="image" alt="preview">
+          <img class="preview-image" *ngIf="!image" [src]="defaultImage" alt="preview">
+        </div>
+
+        <div class="image" *ngIf="this.data.isUpdateData && this.data.student_data.photo !== ''">
+          <img class="preview-image" *ngIf="this.data.student_data.photo === ''" [src]="defaultImage" alt="preview">
+          <img class="preview-image" *ngIf="!image" [src]="this.data.student_data.photo" alt="preview">
+          <img class="preview-image" *ngIf="image" [src]="image" alt="preview">
+        </div>
+
+        <div class="image" *ngIf="this.data.isUpdateData && this.data.student_data.photo === ''">
+          <img class="preview-image" *ngIf="image" [src]="image" alt="preview">
+          <img class="preview-image" *ngIf="!image" [src]="defaultImage" alt="preview">
+        </div>
+
+        <div class="file-input">
+          <button [matTooltip]="this.data.isUpdateData ? 'Нажміть, щоб оновити фото' : 'Нажміть, щоб завантажити фото'"
+                  (click)="fileInput()"
+                  class="form-upload-btn"
+                  mat-stroked-button
+                  color="primary"
+                  type="button">
+            <mat-icon>cloud_upload</mat-icon>
+            Завантажити фото
+          </button>
+          <input type="file" hidden #imageFile [disabled]="form.disabled" (change)="fileUpload($event)">
+        </div>
+      </div>
+
+      <button mat-flat-button
+              (click)="closeModal()"
+              color="warn"
+              mat-dialog-close
+              class="modal__btn">
+        Скасувати
+      </button>
+
+      <button mat-flat-button
+              color="accent"
               type="submit"
               class="modal__btn"
               [disabled]="form.invalid || submitted">

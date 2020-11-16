@@ -9,6 +9,6 @@ export interface Student {
     student_name: string
     student_fname: string
     group_id: number
-    photo: string
+    photo: string | ArrayBuffer
     plain_password: string
 }

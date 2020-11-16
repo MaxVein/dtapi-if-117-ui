@@ -2,13 +2,8 @@
     width: 600px;
     height: 850px;
 
-    &__close {
-        display: flex;
-        justify-content: flex-end;
-        cursor: pointer;
-    }
-
     &__header {
+      margin-top: 25px;
         text-align: center;
         margin-bottom: 15px;
 
@@ -33,9 +28,29 @@
             font-size: 16px;
             margin-bottom: 20px;
         }
+
+      & .image-form-control {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+        margin-bottom: 30px;
+
+        & .preview-image {
+          width: 300px;
+          height: 300px;
+        }
+
+        & .form-upload-btn {
+          margin-top: 20px;
+          font-size: 16px;
+          padding: 5px 25px 5px 25px;
+        }
+      }
     }
 
     &__btn {
+        margin: 20px 20px auto auto;
         font-size: 16px;
         padding: 5px 25px 5px 25px;
     }

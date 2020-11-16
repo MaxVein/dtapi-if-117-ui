@@ -1,8 +1,9 @@
-import { Component, Inject, OnInit } from '@angular/core'
+import { Component, ElementRef, Inject, OnInit, ViewChild } from '@angular/core'
 import { FormControl, FormGroup, Validators } from '@angular/forms'
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog'
 import { StudentsService } from '../../../shared/services/students/students.service'
 import { Student } from '../../../shared/interfaces/students/interfaces'
+import { environment } from '../../../../environments/environment'
 
 @Component({
     selector: 'app-students-modal',
@@ -12,6 +13,12 @@ import { Student } from '../../../shared/interfaces/students/interfaces'
 export class StudentsModalComponent implements OnInit {
     form: FormGroup
     submitted = false
+    hide = true
+    image: string | ArrayBuffer = ''
+    currentImage = true
+    defaultImage = environment.defaultImage
+
+    @ViewChild('imageFile') inputRef: ElementRef
 
     constructor(
         public dialogRef: MatDialogRef<StudentsModalComponent>,
@@ -21,6 +28,7 @@ export class StudentsModalComponent implements OnInit {
 
     ngOnInit(): void {
         this.initForm()
+        this.getStudentInfo()
     }
 
     initForm(): void {
@@ -49,19 +57,22 @@ export class StudentsModalComponent implements OnInit {
                     : '',
                 [Validators.required]
             ),
-            username: new FormControl(
-                this.data.student_data ? this.data.student_data.username : '',
-                [Validators.required]
-            ),
-            email: new FormControl(
-                this.data.student_data ? this.data.student_data.email : '',
-                [Validators.required, Validators.email]
-            ),
+            username: new FormControl(null, [Validators.required]),
+            email: new FormControl(null, [
+                Validators.required,
+                Validators.email,
+            ]),
             password: new FormControl(
                 this.data.student_data
                     ? this.data.student_data.plain_password
                     : '',
-                [Validators.required, Validators.minLength(8)]
+                [
+                    Validators.required,
+                    Validators.minLength(8),
+                    // Validators.pattern(
+                    //     '^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)[a-zA-Z\\d]{8,}$'
+                    // ),
+                ]
             ),
             password_confirm: new FormControl(
                 this.data.student_data
@@ -70,6 +81,16 @@ export class StudentsModalComponent implements OnInit {
                 [Validators.required]
             ),
         })
+    }
+
+    getStudentInfo(): void {
+        if (this.data.student_data) {
+            const studentID = this.data.student_data.user_id
+            this.studentsService.getById(studentID).subscribe((response) => {
+                this.form.get('username').setValue(response[0].username)
+                this.form.get('email').setValue(response[0].email)
+            })
+        }
     }
 
     submit(): void {
@@ -89,27 +110,46 @@ export class StudentsModalComponent implements OnInit {
             student_surname: this.form.value.lastname,
             student_name: this.form.value.firstname,
             student_fname: this.form.value.fathername,
-            group_id: 1,
-            photo: '',
+            group_id: this.data.group_id,
+            photo: this.image,
             plain_password: this.form.value.password,
         }
 
         if (this.data.isUpdateData) {
             this.studentsService
                 .update(this.data.student_data.user_id, newStudent)
-                .subscribe((data) => {
+                .subscribe(
+                    (data) => {
+                        this.form.enable()
+                        this.dialogRef.close(data)
+                    },
+                    (error) => this.dialogRef.close(error)
+                )
+        } else {
+            this.studentsService.create(newStudent).subscribe(
+                (data) => {
                     this.form.enable()
                     this.dialogRef.close(data)
-                })
-        } else {
-            this.studentsService.create(newStudent).subscribe((data) => {
-                this.form.enable()
-                this.dialogRef.close(data)
-            })
+                },
+                (error) => this.dialogRef.close(error)
+            )
         }
     }
 
     closeModal(): void {
-        this.dialogRef.close()
+        this.dialogRef.close('Скасовано')
+    }
+
+    fileInput(): void {
+        this.inputRef.nativeElement.click()
+    }
+
+    fileUpload(event: any): void {
+        const file = event.target.files[0]
+        const reader = new FileReader()
+        reader.onload = () => {
+            this.image = reader.result
+        }
+        reader.readAsDataURL(file)
     }
 }
