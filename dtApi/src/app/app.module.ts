@@ -7,6 +7,8 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations'
 import { AppRoutingModule } from './app-routing.module'
 import { AppComponent } from './app.component'
 import { AngularMaterialModule } from './shared/modules/angular-material/angular-material.module'
+
+import { DashboardModule } from './modules/dashboard/dashboard.module'
 import { LoginComponent } from './login/login.component'
 
 @NgModule({
@@ -18,8 +20,10 @@ import { LoginComponent } from './login/login.component'
         BrowserAnimationsModule,
         ReactiveFormsModule,
         HttpClientModule,
+        DashboardModule,
     ],
     providers: [],
+    exports: [AngularMaterialModule],
     bootstrap: [AppComponent],
 })
 export class AppModule {}
