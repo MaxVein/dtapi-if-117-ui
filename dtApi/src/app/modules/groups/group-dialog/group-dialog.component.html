@@ -1,25 +1,25 @@
-<h1 mat-dialog-title>Додати групу </h1>
+<h1 mat-dialog-title>{{title}}</h1>
 <div mat-dialog-content>
   <mat-form-field>
     <mat-label>Group name</mat-label>
-    <input matInput [(ngModel)]="data.group_name">
+    <input matInput [(ngModel)]="data.group_name" required>
   </mat-form-field>
 
   <mat-form-field>
     <mat-label>Speciality name</mat-label>
-    <mat-select [(ngModel)]="data.speciality_name">
+    <mat-select [(ngModel)]="data.speciality_name" required>
         <mat-option *ngFor="let item of specialities" [value]="item[0].speciality_name">{{item[0].speciality_name}}</mat-option>
       </mat-select>
   </mat-form-field>
   
   <mat-form-field>
     <mat-label>Faculty name</mat-label>
-    <mat-select [(ngModel)]="data.faculty_name">
+    <mat-select [(ngModel)]="data.faculty_name" required>
       <mat-option *ngFor="let item of faculties" [value]="item[0].faculty_name">{{item[0].faculty_name}}</mat-option>
     </mat-select>
   </mat-form-field>
 </div>
 <div mat-dialog-actions>
   <button mat-button (click)="onNoClick()">Відмінити</button>
-  <button mat-button [mat-dialog-close]="data" cdkFocusInitial>Додати</button>
+  <button mat-button [mat-dialog-close]="data" cdkFocusInitial>Ок</button>
 </div>

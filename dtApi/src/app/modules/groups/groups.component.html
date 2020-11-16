@@ -1,7 +1,7 @@
 <div class="mat-elevation-z8">
   <section class="mat-typography">
     <h2 class="mat-h2">Групи</h2>
-    <button mat-raised-button (click)=createGroup()>Додати групу</button>
+    <button mat-raised-button (click)=changeGroup()>Додати групу</button>
   </section>
   <table mat-table [dataSource]="dataSource">
 
@@ -29,7 +29,7 @@
       <th mat-header-cell *matHeaderCellDef>Дії</th>
       <td mat-cell *matCellDef="let group">
         <button mat-raised-button  
-        (click)=editCurrGroup(group)
+        (click)="changeGroup(group)"
         >
         <mat-icon
           aria-hidden="false"
@@ -37,7 +37,7 @@
           matTooltip="Редагувати групу"
           >edit</mat-icon
         ></button>
-        <button mat-raised-button (click)="delCurrGroup(group)">
+        <button mat-raised-button (click)=delCurrGroup(group)>
         <mat-icon
           aria-hidden="false"
           aria-label="delete"

@@ -1,17 +1,11 @@
-import {
-    Component,
-    ViewChild,
-    OnInit,
-    ChangeDetectorRef,
-} from '@angular/core'
+import { Component, ViewChild, OnInit, ChangeDetectorRef } from '@angular/core'
 import { MatPaginator } from '@angular/material/paginator'
 import { MatTableDataSource, MatTable } from '@angular/material/table'
 import { MatDialog } from '@angular/material/dialog'
 
 import { GroupsService } from './groups.service'
-import { CreateGroupDialogComponent } from './create-group-dialog/create-group-dialog.component'
-import { EditGroupDialogComponent } from './edit-group-dialog/edit-group-dialog.component'
 import { ConfirmDeleteComponent } from './confirm-delete/confirm-delete.component'
+import { GroupDialogComponent } from './group-dialog/group-dialog.component'
 
 export interface GroupData {
     group_id: string
@@ -44,7 +38,7 @@ export class GroupsComponent implements OnInit {
         'actions',
     ]
     dataSource = new MatTableDataSource<GroupData>(ELEMENT_DATA)
-    
+
     @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator
     @ViewChild('table', { static: true }) table: MatTable<GroupData>
 
@@ -84,13 +78,43 @@ export class GroupsComponent implements OnInit {
                 : false
         })
     }
-    createGroup(): void {
-        const dialogRef = this.dialog.open(CreateGroupDialogComponent, {
+
+    changeGroup(group?): void {
+        if (group){
+        const dialogRef = this.dialog.open(GroupDialogComponent, {
+            width: '300px',
+            data: {
+                group_id: group.group_id,
+                group_name: group.group_name,
+                speciality_name: group.speciality_name,
+                faculty_name: group.faculty_name,
+                type:'edit'
+            },
+        })
+        dialogRef.afterClosed().subscribe((result) => {
+            if (result) {
+                this.editGroup(group.group_id, {
+                    group_name: result.group_name,
+                    speciality_id: parseInt(
+                        this.getSpecialityId(result.speciality_name),
+                        10
+                    ),
+                    faculty_id: parseInt(
+                        this.getFacultyId(result.faculty_name),
+                        10
+                    ),
+                })
+            }
+        })
+    }
+    else {
+        const dialogRef = this.dialog.open(GroupDialogComponent, {
             width: '300px',
             data: {
                 group_name: this.group_name,
                 speciality_name: this.speciality_name,
                 faculty_name: this.faculty_name,
+                type:'add'
             },
         })
         dialogRef.afterClosed().subscribe((result) => {
@@ -109,32 +133,6 @@ export class GroupsComponent implements OnInit {
             }
         })
     }
-
-    editCurrGroup(group): void {
-        const dialogRef = this.dialog.open(EditGroupDialogComponent, {
-            width: '300px',
-            data: {
-                group_id: group.group_id,
-                group_name: group.group_name,
-                speciality_name: group.speciality_name,
-                faculty_name: group.faculty_name,
-            },
-        })
-        dialogRef.afterClosed().subscribe((result) => {
-            if (result) {
-                this.editGroup(group.group_id, {
-                    group_name: result.group_name,
-                    speciality_id: parseInt(
-                        this.getSpecialityId(result.speciality_name),
-                        10
-                    ),
-                    faculty_id: parseInt(
-                        this.getFacultyId(result.faculty_name),
-                        10
-                    ),
-                })
-            }
-        })
     }
 
     delCurrGroup(group): void {
