@@ -7,4 +7,12 @@ table {
 .mat-typography {
     display: flex;
     justify-content: space-between;
+    .mat-h2 {
+        margin-left: 1rem;
+        margin-top: 1rem;
+    }
+    .add-group {
+        margin-right: 1rem;
+        margin-top: 1rem;
+    }
 }
