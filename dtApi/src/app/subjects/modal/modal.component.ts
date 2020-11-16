@@ -1,10 +1,10 @@
-import { Component, OnInit, Inject } from '@angular/core';
+import { Component, OnInit, Inject } from '@angular/core'
 import {
     MatDialog,
     MatDialogRef,
     MAT_DIALOG_DATA,
-} from '@angular/material/dialog';
-import { FormControl, FormGroup, Validators} from '@angular/forms';
+} from '@angular/material/dialog'
+import { FormControl, FormGroup, Validators } from '@angular/forms'
 
 interface Subjects {
     subject_name: string
@@ -18,13 +18,15 @@ interface Subjects {
 })
 export class ModalComponent implements OnInit {
     public subjectForm = new FormGroup({
-    subject_name: new FormControl(
-      this.data ? this.data.subject_name : '',
-      [Validators.required, Validators.pattern('[а-яА-ЯіІїЄє ]*')]),
-    subject_description: new FormControl(
-      this.data ? this.data.subject_description: '',
-      [Validators.required, Validators.pattern('[а-яА-ЯіІїЄє ]*')])
-  });
+        subject_name: new FormControl(this.data ? this.data.subject_name : '', [
+            Validators.required,
+            Validators.pattern('[а-яА-ЯіІїЄє ]*'),
+        ]),
+        subject_description: new FormControl(
+            this.data ? this.data.subject_description : '',
+            [Validators.required, Validators.pattern('[а-яА-ЯіІїЄє ]*')]
+        ),
+    })
 
     constructor(
         public dialogRef: MatDialogRef<ModalComponent>,
@@ -38,13 +40,13 @@ export class ModalComponent implements OnInit {
     }
 
     save() {
-        if(this.subjectForm.invalid) {
-            return true;
+        if (this.subjectForm.invalid) {
+            return true
         }
         this.dialogRef.close(this.subjectForm.value)
     }
 
     hasError = (controlName: string, errorName: string) => {
-        return this.subjectForm.controls[controlName].hasError(errorName);
+        return this.subjectForm.controls[controlName].hasError(errorName)
     }
 }

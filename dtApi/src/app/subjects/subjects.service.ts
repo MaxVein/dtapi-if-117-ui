@@ -33,10 +33,7 @@ export class SubjectsService {
             .pipe(catchError(this.handleError))
     }
 
-    public create = (
-        route: string,
-        body: SubjectsRequest
-    ) => {
+    public create = (route: string, body: SubjectsRequest) => {
         return this.http
             .post<SubjectsResponse>(
                 `${entityURI}/${route}`,
@@ -46,10 +43,7 @@ export class SubjectsService {
             .pipe(catchError(this.handleError))
     }
 
-    public update = (
-        route: string,
-        body: SubjectsRequest
-    ) => {
+    public update = (route: string, body: SubjectsRequest) => {
         return this.http
             .post<SubjectsResponse>(
                 `${entityURI}/update/${route}`,

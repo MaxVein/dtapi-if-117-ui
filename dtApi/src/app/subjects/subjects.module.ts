@@ -23,7 +23,6 @@ import { SubjectsHomeComponent } from './subjects-home/subjects-home.component'
 import { SubjectsService } from './subjects.service'
 import { ModalComponent } from './modal/modal.component'
 
-
 @NgModule({
     declarations: [SubjectsHomeComponent, ModalComponent],
     imports: [

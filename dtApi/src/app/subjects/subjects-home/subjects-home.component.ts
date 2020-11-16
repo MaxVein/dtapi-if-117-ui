@@ -68,12 +68,12 @@ export class SubjectsHomeComponent implements OnInit, AfterViewInit {
 
     public openDialog(): void {
         const dialogRef = this.dialog.open(ModalComponent, {
-                height: '400px',
-                width: '500px',
+            height: '400px',
+            width: '500px',
         })
 
         dialogRef.afterClosed().subscribe((result: SubjectsRequest) => {
-            if (result) this.redirectToCreate(result);
+            if (result) this.redirectToCreate(result)
         })
     }
 
