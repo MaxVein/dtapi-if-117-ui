@@ -18,22 +18,22 @@ export class TestService {
     }
     createEntity(entity: string, payload): Observable<any> {
         return this.http.post(
-            `${environment.apiUrl}${entity}/insertData`,
+            `${environment.apiUrl}/${entity}/insertData`,
             payload
         )
     }
     deleteEntity(entity: string, id: number): Observable<any> {
-        return this.http.get(`${environment.apiUrl}${entity}/del/${id}`)
+        return this.http.delete(`${environment.apiUrl}/${entity}/del/${id}`)
     }
     updateEntity(entity: string, payload, id: number): Observable<any> {
         return this.http.post(
-            `${environment.apiUrl}${entity}/update/${id}`,
+            `${environment.apiUrl}/${entity}/update/${id}`,
             payload
         )
     }
 
     login() {
-        return this.http.post(`https://dtapi.if.ua/api/login`, {
+        return this.http.post(`${environment}/login`, {
             username: 'admin',
             password: 'dtapi_admin',
         })
