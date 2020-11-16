@@ -80,59 +80,58 @@ export class GroupsComponent implements OnInit {
     }
 
     changeGroup(group?): void {
-        if (group){
-        const dialogRef = this.dialog.open(GroupDialogComponent, {
-            width: '300px',
-            data: {
-                group_id: group.group_id,
-                group_name: group.group_name,
-                speciality_name: group.speciality_name,
-                faculty_name: group.faculty_name,
-                type:'edit'
-            },
-        })
-        dialogRef.afterClosed().subscribe((result) => {
-            if (result) {
-                this.editGroup(group.group_id, {
-                    group_name: result.group_name,
-                    speciality_id: parseInt(
-                        this.getSpecialityId(result.speciality_name),
-                        10
-                    ),
-                    faculty_id: parseInt(
-                        this.getFacultyId(result.faculty_name),
-                        10
-                    ),
-                })
-            }
-        })
-    }
-    else {
-        const dialogRef = this.dialog.open(GroupDialogComponent, {
-            width: '300px',
-            data: {
-                group_name: this.group_name,
-                speciality_name: this.speciality_name,
-                faculty_name: this.faculty_name,
-                type:'add'
-            },
-        })
-        dialogRef.afterClosed().subscribe((result) => {
-            if (result) {
-                this.addGroup({
-                    group_name: result.group_name,
-                    speciality_id: parseInt(
-                        this.getSpecialityId(result.speciality_name),
-                        10
-                    ),
-                    faculty_id: parseInt(
-                        this.getFacultyId(result.faculty_name),
-                        10
-                    ),
-                })
-            }
-        })
-    }
+        if (group) {
+            const dialogRef = this.dialog.open(GroupDialogComponent, {
+                width: '300px',
+                data: {
+                    group_id: group.group_id,
+                    group_name: group.group_name,
+                    speciality_name: group.speciality_name,
+                    faculty_name: group.faculty_name,
+                    type: 'edit',
+                },
+            })
+            dialogRef.afterClosed().subscribe((result) => {
+                if (result) {
+                    this.editGroup(group.group_id, {
+                        group_name: result.group_name,
+                        speciality_id: parseInt(
+                            this.getSpecialityId(result.speciality_name),
+                            10
+                        ),
+                        faculty_id: parseInt(
+                            this.getFacultyId(result.faculty_name),
+                            10
+                        ),
+                    })
+                }
+            })
+        } else {
+            const dialogRef = this.dialog.open(GroupDialogComponent, {
+                width: '300px',
+                data: {
+                    group_name: this.group_name,
+                    speciality_name: this.speciality_name,
+                    faculty_name: this.faculty_name,
+                    type: 'add',
+                },
+            })
+            dialogRef.afterClosed().subscribe((result) => {
+                if (result) {
+                    this.addGroup({
+                        group_name: result.group_name,
+                        speciality_id: parseInt(
+                            this.getSpecialityId(result.speciality_name),
+                            10
+                        ),
+                        faculty_id: parseInt(
+                            this.getFacultyId(result.faculty_name),
+                            10
+                        ),
+                    })
+                }
+            })
+        }
     }
 
     delCurrGroup(group): void {

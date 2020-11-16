@@ -12,7 +12,7 @@ import { GroupDialogComponent } from './group-dialog/group-dialog.component'
     declarations: [
         GroupsComponent,
         ConfirmDeleteComponent,
-        GroupDialogComponent
+        GroupDialogComponent,
     ],
     imports: [
         CommonModule,
