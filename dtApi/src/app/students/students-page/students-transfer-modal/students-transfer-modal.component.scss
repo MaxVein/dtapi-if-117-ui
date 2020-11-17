@@ -1,52 +1,52 @@
 .transfer {
-  width: 600px;
+    width: 600px;
 
-  &__header {
-    margin-top: 20px;
-    margin-bottom: 40px;
-    text-align: center;
-  }
+    &__header {
+        margin-top: 20px;
+        margin-bottom: 40px;
+        text-align: center;
+    }
 
-  &__title {
-    font-size: 30px;
-    font-weight: 500;
-  }
+    &__title {
+        font-size: 30px;
+        font-weight: 500;
+    }
 
-  &__content {
-    padding-top: 20px;
-  }
+    &__content {
+        padding-top: 20px;
+    }
 
-  &__container {
-    display: flex;
-    flex-direction: row;
-    padding-bottom: 50px;
-  }
+    &__container {
+        display: flex;
+        flex-direction: row;
+        padding-bottom: 50px;
+    }
 
-  &__faculty {
-    margin-left: -20px;
-    width: 50%;
-    display: flex;
-    justify-content: center;
-  }
+    &__faculty {
+        margin-left: -20px;
+        width: 50%;
+        display: flex;
+        justify-content: center;
+    }
 
-  &__group{
-    margin-right: -20px;
-    width: 50%;
-    display: flex;
-    justify-content: center;
-  }
+    &__group {
+        margin-right: -20px;
+        width: 50%;
+        display: flex;
+        justify-content: center;
+    }
 
-  &__selector {
-    font-size: 16px;
-  }
+    &__selector {
+        font-size: 16px;
+    }
 
-  &__btn {
-    font-size: 15px;
-    padding: 2px 20px 2px 20px;
-    margin-right: 10px;
-  }
+    &__btn {
+        font-size: 15px;
+        padding: 2px 20px 2px 20px;
+        margin-right: 10px;
+    }
 }
 
 mat-progress-spinner {
-  margin: 98px 250px;
+    margin: 98px 250px;
 }
