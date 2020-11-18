@@ -10,6 +10,7 @@
         "sourceType": "module"
     },
     "rules": {
+        "no-console": ["error", { "allow": ["warn", "error"] }],
         "@typescript-eslint/no-var-requires": 0,
         "@typescript-eslint/no-empty-function": "off"
     }
