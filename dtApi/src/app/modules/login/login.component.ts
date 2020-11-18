@@ -3,8 +3,7 @@ import { Router } from '@angular/router'
 import { trigger, style, animate, transition } from '@angular/animations'
 import { FormBuilder } from '@angular/forms'
 
-import { logoSrc } from './interfaces/interfaces'
-import { loginForm } from './interfaces/interfaces'
+import { logoSrc, loginForm } from './interfaces/interfaces'
 import { AuthService } from './services/auth.service'
 
 @Component({
@@ -48,7 +47,8 @@ export class LoginComponent implements OnInit {
     private userName: string
     private password: string
 
-    onSubmit() {
+    onSubmit(event) {
+        event.preventDefault()
         const formValue: loginForm = this.loginForm.value
         this.userName = formValue.userName
         this.password = formValue.password
@@ -56,7 +56,9 @@ export class LoginComponent implements OnInit {
         this.request.loginRequest(this.userName, this.password).subscribe({
             next: (res) => {
                 if (res.roles[1] === 'student') {
-                    this.router.navigate(['/student'])
+                    this.router.navigate(['/studentProfile'])
+                } else if (res.roles[1] === 'admin') {
+                    this.router.navigate(['/dashboard'])
                 }
             },
             error: (err) => {

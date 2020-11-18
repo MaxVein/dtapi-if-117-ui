@@ -1,15 +1,9 @@
 import { NgModule } from '@angular/core'
 import { Routes, RouterModule } from '@angular/router'
-import { from } from 'rxjs'
 
-import { LoginComponent } from './login/login.component'
-import { StudentComponent } from './student/student.component'
+import { DashboardComponent } from './modules/dashboard/dashboard.component'
 
-const routes: Routes = [
-    { path: 'login', component: LoginComponent },
-    { path: 'student', component: StudentComponent },
-    { path: '', redirectTo: '/login', pathMatch: 'full' },
-]
+const routes: Routes = [{ path: 'dashboard', component: DashboardComponent }]
 
 @NgModule({
     imports: [RouterModule.forRoot(routes)],
