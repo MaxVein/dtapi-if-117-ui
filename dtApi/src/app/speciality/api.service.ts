@@ -13,21 +13,21 @@ export class ApiService {
 
     getEntity(entity: string, id?: number): Observable<any> {
         return this.http.get(
-            `${environment.apiUrl}/${entity}/getRecords/${id ? id : ''}`
+            `${environment.BASEURL}/${entity}/getRecords/${id ? id : ''}`
         )
     }
     addEntity(entity: string, payload): Observable<any> {
         return this.http.post(
-            `${environment.apiUrl}/${entity}/insertData`,
+            `${environment.BASEURL}/${entity}/insertData`,
             payload
         )
     }
     delEntity(entity: string, id: number): Observable<any> {
-        return this.http.get(`${environment.apiUrl}/${entity}/del/${id}`)
+        return this.http.get(`${environment.BASEURL}/${entity}/del/${id}`)
     }
     updateEntity(entity: string, id: number, payload): Observable<any> {
         return this.http.post(
-            `${environment.apiUrl}/${entity}/update/${id}`,
+            `${environment.BASEURL}/${entity}/update/${id}`,
             payload
         )
     }
@@ -37,7 +37,7 @@ export class ApiService {
         })
     }
     login(): Observable<any> {
-        return this.http.post(`${environment.apiUrl}/Login/index`, {
+        return this.http.post(`${environment.BASEURL}/Login/index`, {
             username: 'admin',
             password: 'dtapi_admin',
         })

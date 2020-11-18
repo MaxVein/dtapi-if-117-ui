@@ -11,9 +11,9 @@ import { SpecialityModule } from './speciality/speciality.module'
 
 import { DashboardModule } from './modules/dashboard/dashboard.module'
 import { LoginComponent } from './login/login.component'
+import { GroupsModule } from './modules/groups/groups.module'
 
 @NgModule({
-
     declarations: [AppComponent, LoginComponent],
     imports: [
         BrowserModule,
@@ -24,6 +24,7 @@ import { LoginComponent } from './login/login.component'
         ReactiveFormsModule,
         HttpClientModule,
         DashboardModule,
+        GroupsModule,
     ],
     providers: [],
     exports: [AngularMaterialModule],

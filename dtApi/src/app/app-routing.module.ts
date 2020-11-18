@@ -7,12 +7,12 @@ import { DashboardComponent } from './modules/dashboard/dashboard.component'
 const routes: Routes = [
     { path: 'login', component: LoginComponent },
     { path: '', redirectTo: '/login', pathMatch: 'full' },
-    { path: 'dashboard', component: DashboardComponent},
+    { path: 'dashboard', component: DashboardComponent },
 ]
-
 
 @NgModule({
     imports: [RouterModule.forRoot(routes)],
     exports: [RouterModule],
+    declarations: [],
 })
 export class AppRoutingModule {}
