@@ -11,39 +11,39 @@ export class StudentsService {
 
     getByGroup(id: number): Observable<Student[]> {
         return this.http.get<Student[]>(
-            `${environment.apiURL}/Student/getStudentsByGroup/${id}`
+            `${environment.BASEURL}/Student/getStudentsByGroup/${id}`
         )
     }
 
     getById(id: string): Observable<Student[]> {
         return this.http.get<Student[]>(
-            `${environment.apiURL}/AdminUser/getRecords/${id}`
+            `${environment.BASEURL}/AdminUser/getRecords/${id}`
         )
     }
 
     create(student: Student): Observable<Student> {
         return this.http.post<Student>(
-            `${environment.apiURL}/Student/insertData`,
+            `${environment.BASEURL}/Student/insertData`,
             student
         )
     }
 
     update(id: string, student: Student): Observable<Student> {
         return this.http.patch<Student>(
-            `${environment.apiURL}/Student/update/${id}`,
+            `${environment.BASEURL}/Student/update/${id}`,
             student
         )
     }
 
     remove(id: string): Observable<Response> {
         return this.http.delete<Response>(
-            `${environment.apiURL}/Student/del/${id}`
+            `${environment.BASEURL}/Student/del/${id}`
         )
     }
 
     check(entity: string, check: string, value: string): Observable<Unique> {
         return this.http
-            .get<Check>(`${environment.apiURL}/${entity}/${check}/${value}`)
+            .get<Check>(`${environment.BASEURL}/${entity}/${check}/${value}`)
             .pipe(
                 map((result) => {
                     return result.response
