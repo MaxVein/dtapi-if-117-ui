@@ -8,10 +8,15 @@ const routes: Routes = [
     { path: 'login', component: LoginComponent },
     { path: '', redirectTo: '/login', pathMatch: 'full' },
     { path: 'dashboard', component: DashboardComponent },
-    {
-        path: '',
+  {
+    path: 'students/:id',
+    loadChildren: () =>
+      import('./students/students.module').then((m) => m.StudentsModule),
+  },
+  {
+        path: 'tests',
         loadChildren: () =>
-            import('./students/students.module').then((m) => m.StudentsModule),
+            import('./modules/test/test.module').then((m) => m.TestModule),
     },
     { path: '**', redirectTo: '/' },
 ]
@@ -19,5 +24,6 @@ const routes: Routes = [
 @NgModule({
     imports: [RouterModule.forRoot(routes)],
     exports: [RouterModule],
+    declarations: [],
 })
 export class AppRoutingModule {}
