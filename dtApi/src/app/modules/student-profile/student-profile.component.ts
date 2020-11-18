@@ -83,7 +83,6 @@ export class StudentProfileComponent implements OnInit {
                         this.photo = res.photo ? res.photo : this.defaultImage
                         this.groupId = res.group_id
                         this.gradebookId = res.gradebook_id
-                        console.log(`student`, this.groupId)
                         return this.student.getRecords('Group', this.groupId)
                     }
                 ),
@@ -126,7 +125,6 @@ export class StudentProfileComponent implements OnInit {
                 this.subjects = res
                 this.subjectId = res[0].subject_id
                 this.subjectName = res[0].subject_name
-                console.log(this.subjectId)
             })
     }
     getTestDetails(id: string) {
@@ -141,8 +139,6 @@ export class StudentProfileComponent implements OnInit {
                 )
             )
             .subscribe((res: testDate[]) => {
-                console.log(res)
-
                 this.testDetails = [...this.testsBySubject].map((test) => ({
                     ...test,
                     ...res[0],
@@ -164,6 +160,5 @@ export class StudentProfileComponent implements OnInit {
             ].id
         this.subjectName = event.target.value
         this.getTestDetails(this.subjectId)
-        console.log(event)
     }
 }
