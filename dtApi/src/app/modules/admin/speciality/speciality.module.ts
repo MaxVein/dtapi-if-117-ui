@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common'
 import { HttpClientModule } from '@angular/common/http'
 import { FormsModule, ReactiveFormsModule } from '@angular/forms'
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations'
-import { RouterModule } from '@angular/router'
+// import { RouterModule } from '@angular/router'
 
 import { MatTableModule } from '@angular/material/table'
 import { MatDialogModule } from '@angular/material/dialog'
@@ -37,9 +37,9 @@ import { ListTableComponent } from './list-table/list-table.component'
         MatPaginatorModule,
         MatDialogModule,
         BrowserAnimationsModule,
-        RouterModule.forChild([
-            { path: 'speciality', component: ListTableComponent },
-        ]),
+        // RouterModule.forChild([
+        //     { path: 'speciality', component: ListTableComponent },
+        // ]),
     ],
 })
 export class SpecialityModule {}

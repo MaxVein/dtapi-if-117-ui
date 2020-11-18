@@ -1,9 +1,9 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/ban-types */
 import { Component, OnInit } from '@angular/core'
-import { DashboardMetricsService } from '../../services/dashboard-metrics.service'
 import { BreakpointObserver } from '@angular/cdk/layout'
 import { CardsResponsiveOptions } from './CardsOptions'
+import { DashboardMetricsService } from '../dashboard/services/dashboard-metrics.service'
 
 @Component({
     selector: 'app-statistics',

@@ -7,14 +7,14 @@ import { ReactiveFormsModule } from '@angular/forms'
 import { AppRoutingModule } from './app-routing.module'
 import { AngularMaterialModule } from './shared/modules/angular-material/angular-material.module'
 
-import { SharedModule } from './shared/modules/shared.module'
 import { AppComponent } from './app.component'
 
-import { SpecialityModule } from './modules/admin/speciality/speciality.module'
 import { GroupsModule } from './modules/admin/groups/groups.module'
+import { LoginComponent } from './modules/login/login.component'
+import { SharedModule } from './shared/modules/shared.module'
+import { SpecialityModule } from './modules/admin/speciality/speciality.module'
 import { TestModule } from './modules/admin/test/test.module'
 import { DashboardModule } from './modules/admin/dashboard/dashboard.module'
-import { LoginComponent } from './modules/login/login.component'
 
 @NgModule({
     declarations: [AppComponent, LoginComponent],

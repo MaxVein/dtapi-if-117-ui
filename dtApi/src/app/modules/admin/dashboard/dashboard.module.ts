@@ -12,12 +12,15 @@ import { MatToolbarModule } from '@angular/material/toolbar'
 import { MatListModule } from '@angular/material/list'
 
 import { DashboardComponent } from './dashboard.component'
-import { StatisticsComponent } from './components/statistics/statistics.component'
+import { StatisticsComponent } from '../statistics/statistics.component'
+
+import { AppRoutingModule } from 'src/app/app-routing.module'
 
 @NgModule({
     declarations: [DashboardComponent, StatisticsComponent],
     imports: [
         CommonModule,
+        AppRoutingModule,
         MatSidenavModule,
         MatGridListModule,
         MatCardModule,
