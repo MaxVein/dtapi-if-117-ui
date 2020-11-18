@@ -1,0 +1,55 @@
+<div class="container">
+    <div *ngIf="logoSrc" class="logo">
+        <img src="{{ logoSrc }}" alt="logo" srcset="" />
+    </div>
+    <div class="form-wrap">
+        <p class="form-title">Authorization</p>
+        <form [formGroup]="loginForm" novalidate (submit)="onSubmit()">
+            <mat-form-field class="form-field" appearance="outline">
+                <mat-label> Login </mat-label>
+                <input
+                    formControlName="userName"
+                    matInput
+                    type="text"
+                    required
+                />
+                <span matPrefix class="material-icons"> login </span>
+            </mat-form-field>
+            <mat-form-field class="form-field" appearance="outline">
+                <mat-label> Password </mat-label>
+                <input
+                    minlength="8"
+                    formControlName="password"
+                    matInput
+                    [type]="hide ? 'password' : 'text'"
+                    required
+                />
+                <span matPrefix class="material-icons"> vpn_key </span>
+                <span
+                    class="form-showPassword"
+                    mat-icon-button
+                    matSuffix
+                    (click)="hide = !hide"
+                    [attr.aria-label]="'Hide password'"
+                    [attr.aria-pressed]="hide"
+                >
+                    <mat-icon
+                        >{{ hide ? 'visibility_off' : 'visibility' }}
+                    </mat-icon>
+                </span>
+                <mat-hint>Password must be at list 8 characters</mat-hint>
+            </mat-form-field>
+            <button
+                mat-raised-button
+                color="primary"
+                type="submit"
+                [disabled]="loginForm.invalid"
+            >
+                Log In
+            </button>
+        </form>
+    </div>
+    <div class="form-request-error" *ngIf="badRequest" [@inOutAnimation]>
+        <p>{{ errorMessage }}</p>
+    </div>
+</div>

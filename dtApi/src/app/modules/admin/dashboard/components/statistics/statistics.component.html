@@ -1,0 +1,224 @@
+<div class="grid-container">
+    <h1 class="mat-h1">Статистика</h1>
+    <mat-grid-list
+        [cols]="ResponsiveData.breakpoint"
+        [rowHeight]="ResponsiveData.rowHeight"
+    >
+        <mat-grid-tile>
+            <mat-card class="dashboard-card">
+                <mat-card-header>
+                    <mat-card-title> Факультети </mat-card-title>
+                </mat-card-header>
+                <mat-card-content class="dashboard-card-content">
+                    <div class="dashboard-card-content__container">
+                        <mat-icon class="dashboard-card-content__icon">
+                            account_balance
+                        </mat-icon>
+                        <a
+                            routerLink="/faculties"
+                            mat-fab
+                            color="primary"
+                            class="dashboard-card-content__count"
+                        >
+                            {{ facultiesAmount }}
+                        </a>
+                        <a
+                            routerLink="/faculties"
+                            mat-flat-button
+                            class="dashboard-card-content__link"
+                            color="primary"
+                            >Перейти</a
+                        >
+                    </div>
+                </mat-card-content>
+            </mat-card>
+        </mat-grid-tile>
+        <mat-grid-tile>
+            <mat-card class="dashboard-card">
+                <mat-card-header>
+                    <mat-card-title> Групи </mat-card-title>
+                </mat-card-header>
+                <mat-card-content class="dashboard-card-content">
+                    <div class="dashboard-card-content__container">
+                        <mat-icon class="dashboard-card-content__icon">
+                            groups
+                        </mat-icon>
+                        <a
+                            routerLink="/groups"
+                            mat-fab
+                            color="primary"
+                            class="dashboard-card-content__count"
+                        >
+                            {{ groupsAmount }}
+                        </a>
+                        <a
+                            routerLink="/groups"
+                            mat-flat-button
+                            class="dashboard-card-content__link"
+                            color="primary"
+                            >Перейти</a
+                        >
+                    </div>
+                </mat-card-content>
+            </mat-card>
+        </mat-grid-tile>
+        <mat-grid-tile>
+            <mat-card class="dashboard-card">
+                <mat-card-header>
+                    <mat-card-title> Спеціальності </mat-card-title>
+                </mat-card-header>
+                <mat-card-content class="dashboard-card-content">
+                    <div class="dashboard-card-content__container">
+                        <mat-icon class="dashboard-card-content__icon">
+                            dns
+                        </mat-icon>
+                        <a
+                            routerLink="/specialities"
+                            mat-fab
+                            color="primary"
+                            class="dashboard-card-content__count"
+                        >
+                            {{ specialitiesAmount }}
+                        </a>
+                        <a
+                            routerLink="/specialities"
+                            mat-flat-button
+                            class="dashboard-card-content__link"
+                            color="primary"
+                            >Перейти</a
+                        >
+                    </div>
+                </mat-card-content>
+            </mat-card>
+        </mat-grid-tile>
+        <mat-grid-tile>
+            <mat-card class="dashboard-card">
+                <mat-card-header>
+                    <mat-card-title> Предмети </mat-card-title>
+                </mat-card-header>
+                <mat-card-content class="dashboard-card-content">
+                    <div class="dashboard-card-content__container">
+                        <mat-icon class="dashboard-card-content__icon">
+                            collections_bookmark
+                        </mat-icon>
+                        <a
+                            routerLink="/subjects"
+                            mat-fab
+                            color="primary"
+                            class="dashboard-card-content__count"
+                        >
+                            {{ subjectsAmount }}
+                        </a>
+                        <a
+                            routerLink="/subjects"
+                            mat-flat-button
+                            class="dashboard-card-content__link"
+                            color="primary"
+                            >Перейти</a
+                        >
+                    </div>
+                </mat-card-content>
+            </mat-card>
+        </mat-grid-tile>
+        <mat-grid-tile>
+            <mat-card class="dashboard-card">
+                <mat-card-header>
+                    <mat-card-title> Cтуденти </mat-card-title>
+                </mat-card-header>
+                <mat-card-content class="dashboard-card-content">
+                    <div class="dashboard-card-content__container">
+                        <mat-icon class="dashboard-card-content__icon">
+                            how_to_reg
+                        </mat-icon>
+                        <a
+                            routerLink="/students"
+                            mat-fab
+                            color="primary"
+                            class="dashboard-card-content__count"
+                        >
+                            {{ studentsAmount }}
+                        </a>
+                        <a
+                            routerLink="/students"
+                            mat-flat-button
+                            class="dashboard-card-content__link"
+                            color="primary"
+                            >Перейти</a
+                        >
+                    </div>
+                </mat-card-content>
+            </mat-card>
+        </mat-grid-tile>
+        <mat-grid-tile>
+            <mat-card class="dashboard-card">
+                <mat-card-header>
+                    <mat-card-title> Адміни </mat-card-title>
+                </mat-card-header>
+                <mat-card-content class="dashboard-card-content">
+                    <div class="dashboard-card-content__container">
+                        <mat-icon class="dashboard-card-content__icon">
+                            supervised_user_circle
+                        </mat-icon>
+                        <a
+                            routerLink="/admins"
+                            mat-fab
+                            color="primary"
+                            class="dashboard-card-content__count"
+                        >
+                            {{ adminAmount }}
+                        </a>
+                        <a
+                            routerLink="/admins"
+                            mat-flat-button
+                            class="dashboard-card-content__link"
+                            color="primary"
+                            >Перейти</a
+                        >
+                    </div>
+                </mat-card-content>
+            </mat-card>
+        </mat-grid-tile>
+        <mat-grid-tile>
+            <mat-card class="dashboard-card">
+                <mat-card-header>
+                    <mat-card-title> Результати </mat-card-title>
+                </mat-card-header>
+                <mat-card-content class="dashboard-card-content">
+                    <div class="dashboard-card-content__container">
+                        <mat-icon class="dashboard-card-content__icon">
+                            insights
+                        </mat-icon>
+                        <a
+                            routerLink="/result"
+                            mat-flat-button
+                            class="dashboard-card-content__link"
+                            color="primary"
+                            >Перейти</a
+                        >
+                    </div>
+                </mat-card-content>
+            </mat-card>
+        </mat-grid-tile>
+        <mat-grid-tile>
+            <mat-card class="dashboard-card">
+                <mat-card-header>
+                    <mat-card-title> Протокол </mat-card-title>
+                </mat-card-header>
+                <mat-card-content class="dashboard-card-content">
+                    <div class="dashboard-card-content__container">
+                        <mat-icon class="dashboard-card-content__icon">
+                            contact_page
+                        </mat-icon>
+                        <a
+                            routerLink="/protocol"
+                            mat-flat-button
+                            class="dashboard-card-content__link"
+                            color="primary"
+                            >Перейти</a
+                        >
+                    </div>
+                </mat-card-content>
+            </mat-card>
+        </mat-grid-tile>
+    </mat-grid-list>
+</div>

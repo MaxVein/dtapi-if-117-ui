@@ -1,8 +1,8 @@
 import { NgModule } from '@angular/core'
 import { Routes, RouterModule } from '@angular/router'
 
-import { LoginComponent } from './login/login.component'
-import { DashboardComponent } from './modules/dashboard/dashboard.component'
+import { LoginComponent } from './modules/login/login.component'
+import { DashboardComponent } from './modules/admin/dashboard/dashboard.component'
 
 const routes: Routes = [
     { path: 'login', component: LoginComponent },
@@ -11,12 +11,16 @@ const routes: Routes = [
     {
         path: 'students/:id',
         loadChildren: () =>
-            import('./students/students.module').then((m) => m.StudentsModule),
+            import('./modules/admin//students/students.module').then(
+                (m) => m.StudentsModule
+            ),
     },
     {
         path: 'tests',
         loadChildren: () =>
-            import('./modules/test/test.module').then((m) => m.TestModule),
+            import('./modules/admin/test/test.module').then(
+                (m) => m.TestModule
+            ),
     },
     { path: '**', redirectTo: '/' },
 ]
