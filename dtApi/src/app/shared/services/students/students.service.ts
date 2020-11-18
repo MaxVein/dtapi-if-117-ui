@@ -1,8 +1,9 @@
 import { Injectable } from '@angular/core'
 import { HttpClient } from '@angular/common/http'
-import { Student } from '../../interfaces/students/interfaces'
+import { Check, Student, Unique } from '../../interfaces/students/interfaces'
 import { Observable } from 'rxjs'
 import { environment } from '../../../../environments/environment'
+import { map } from 'rxjs/operators'
 
 @Injectable()
 export class StudentsService {
@@ -38,5 +39,17 @@ export class StudentsService {
         return this.http.delete<Response>(
             `${environment.apiURL}/Student/del/${id}`
         )
+    }
+
+    check(entity: string, check: string, value: string): Observable<Unique> {
+        return this.http
+            .get<Check>(`${environment.apiURL}/${entity}/${check}/${value}`)
+            .pipe(
+                map((result) => {
+                    return result.response
+                        ? { propertyIsNotUnique: true }
+                        : null
+                })
+            )
     }
 }

@@ -12,3 +12,11 @@ export interface Student {
     photo: string | ArrayBuffer
     plain_password: string
 }
+
+export interface Check {
+    response: boolean
+}
+
+export interface Unique {
+    propertyIsNotUnique: boolean
+}

@@ -62,13 +62,22 @@
         [ngClass]="{invalid: form.get('gradebookID').touched && form.get('gradebookID').invalid}">
         <mat-form-field class="mat-form-field-gradebook">
           <mat-label for="gradebookID"><mat-icon>library_books</mat-icon>Номер залікової книжки</mat-label>
-          <input matInput formControlName="gradebookID" type="text" id="gradebookID" placeholder="IP-16-2">
+          <input matInput
+                 formControlName="gradebookID"
+                 type="text"
+                 id="gradebookID"
+                 placeholder="IP-16-2"
+                 name="gradebookID"
+                 appUnique="gradebookID">
           <mat-error
             *ngIf="form.get('gradebookID').touched && form.get('gradebookID').invalid"
             class="validation"
           >
             <small *ngIf="form.get('gradebookID').errors.required">
               Поле не заповнене! Будь-ласка введіть номер залікової книжки студента
+            </small>
+            <small *ngIf="form.get('gradebookID').errors.propertyIsNotUnique">
+              Користувач з таким номером залікової книжки вже існує
             </small>
           </mat-error>
         </mat-form-field>
@@ -79,13 +88,22 @@
         [ngClass]="{invalid: form.get('username').touched && form.get('username').invalid}">
         <mat-form-field class="mat-form-field-username">
           <mat-label for="username"><mat-icon>person_add</mat-icon>Системне ім'я користувача</mat-label>
-          <input matInput formControlName="username" type="text" id="username" placeholder="oleh-ip-20-1">
+          <input matInput
+                 formControlName="username"
+                 type="text"
+                 id="username"
+                 placeholder="oleh-ip-20-1"
+                 name="username"
+                 appUnique="username">
           <mat-error
             *ngIf="form.get('username').touched && form.get('username').invalid"
             class="validation"
           >
             <small *ngIf="form.get('username').errors.required">
               Поле не заповнене! Будь-ласка введіть системне ім'я користувача студента
+            </small>
+            <small *ngIf="form.get('username').errors.propertyIsNotUnique">
+              Користувач з таким ім'я уже існує
             </small>
           </mat-error>
         </mat-form-field>
@@ -96,7 +114,13 @@
         [ngClass]="{invalid: form.get('email').touched && form.get('email').invalid}">
         <mat-form-field class="mat-form-field-email">
           <mat-label for="email"><mat-icon>email</mat-icon>Електронна пошта</mat-label>
-          <input matInput formControlName="email" type="email" id="email" placeholder="Ex. pat@example.com">
+          <input matInput
+                 formControlName="email"
+                 type="email"
+                 id="email"
+                 placeholder="Ex. pat@example.com"
+                 name="email"
+                 appUnique="email">
           <mat-error
             *ngIf="form.get('email').touched && form.get('email').invalid"
             class="validation"
@@ -106,6 +130,9 @@
             </small>
             <small *ngIf="form.get('email').errors.email">
               Некоректні дані! Будь-ласка введіть коректну електронну пошту
+            </small>
+            <small *ngIf="form.get('email').errors.propertyIsNotUnique">
+              Користувач з такою електронною адресою вже існує
             </small>
           </mat-error>
         </mat-form-field>

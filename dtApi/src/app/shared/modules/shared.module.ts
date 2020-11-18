@@ -6,6 +6,7 @@ import { ConfirmComponent } from '../components/confirm/confirm.component'
 import { AlertComponent } from '../components/alert/alert.component'
 
 import { ConfirmDirective } from '../directives/students/confirm.directive'
+import { UniqueDirective } from '../directives/students/unique.directive'
 
 import { ModalService } from '../services/modal.service'
 
@@ -13,6 +14,7 @@ import { ModalService } from '../services/modal.service'
     declarations: [
         LoaderComponent,
         ConfirmDirective,
+        UniqueDirective,
         ConfirmComponent,
         AlertComponent,
     ],
@@ -23,6 +25,7 @@ import { ModalService } from '../services/modal.service'
         ConfirmDirective,
         ConfirmComponent,
         AlertComponent,
+        UniqueDirective,
     ],
     providers: [ModalService],
 })

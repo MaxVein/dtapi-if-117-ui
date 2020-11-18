@@ -15,7 +15,6 @@ export class StudentsModalComponent implements OnInit {
     submitted = false
     hide = true
     image: string | ArrayBuffer = ''
-    currentImage = true
     defaultImage = environment.defaultImage
     student: Student = this.data.student_data
 
