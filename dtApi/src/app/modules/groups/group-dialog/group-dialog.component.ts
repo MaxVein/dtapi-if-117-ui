@@ -37,8 +37,7 @@ export class GroupDialogComponent implements OnInit {
         this.sharedInfo = this.groupsSertvice.getsharedData()
         this.specialities = this.sharedInfo[0][0]
         this.faculties = this.sharedInfo[0][1]
-        this.groupsSertvice
-            .getData('Group', this.data.group_id)
+        this.groupsSertvice.getData('Group', this.data.group_id)
     }
 
     onNoClick(): void {

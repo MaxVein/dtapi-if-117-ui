@@ -4,9 +4,10 @@
 
 export const environment = {
     production: false,
-    BASEURL: 'https://dtapi.if.ua',
+    BASEURL: 'https://dtapi.if.ua/api/',
 }
 export const BASE_URL = 'https://dtapi.if.ua/api'
+
 /*
  * For easier debugging in development mode, you can import the following file
  * to ignore zone related error stack frames such as `zone.run`, `zoneDelegate.invokeTask`.
