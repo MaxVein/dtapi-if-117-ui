@@ -1,0 +1,97 @@
+<!-- <h3 mat-dialog-title>{{data.description.title}}</h3> -->
+<div mat-dialog-content>
+    <mat-form-field class="example-full-width">
+        <input
+            matInput
+            [(ngModel)]="data.data.test_name"
+            placeholder="Назва тесту"
+            #test_name="ngModel"
+            required
+        />
+        <mat-error *ngIf="test_name.invalid">
+            Слід <strong>обов'язково</strong> вказати назву тесту
+        </mat-error>
+    </mat-form-field>
+    <mat-form-field class="example-full-width">
+        <mat-label>Предмет</mat-label>
+        <mat-select
+            [(ngModel)]="data.data.subject_id"
+            name="subject_id"
+            #subject_id="ngModel"
+            required
+        >
+            <mat-option *ngFor="let item of subjects" [value]="item.subject_id">
+                {{ item.subject_name }}
+            </mat-option>
+        </mat-select>
+        <mat-error *ngIf="subject_id">
+            Слід <strong>обов'язково</strong> вибрати предмет
+        </mat-error>
+    </mat-form-field>
+    <mat-form-field class="example-full-width">
+        <mat-label>Кількість завдань</mat-label>
+        <input
+            matInput
+            type="number"
+            [(ngModel)]="data.data.tasks"
+            #tasks="ngModel"
+            required
+        />
+        <mat-error *ngIf="tasks.invalid">
+            Слід <strong>обов'язково</strong> вказати кількість завдань
+        </mat-error>
+    </mat-form-field>
+    <mat-form-field class="example-full-width">
+        <mat-label>Час (хв)</mat-label>
+        <input
+            matInput
+            type="number"
+            [(ngModel)]="data.data.time_for_test"
+            #time_for_test="ngModel"
+            required
+        />
+        <mat-error *ngIf="time_for_test.invalid">
+            Слід <strong>обов'язково</strong> вказати час виконання
+        </mat-error>
+    </mat-form-field>
+    <mat-form-field class="example-full-width">
+        <mat-label>Кількість спроб</mat-label>
+        <input
+            matInput
+            type="number"
+            [(ngModel)]="data.data.attempts"
+            #attempts="ngModel"
+            required
+        />
+        <mat-error *ngIf="attempts.invalid">
+            Слід <strong>обов'язково</strong> вказати кількість спроб
+        </mat-error>
+    </mat-form-field>
+    <label class="example-margin">Стан:</label>
+    <mat-radio-group [(ngModel)]="data.data.enabled">
+        <mat-radio-button value="1" class="radio-btn"
+            >Включений</mat-radio-button
+        >
+        <mat-radio-button value="0" class="radio-btn"
+            >Виключений</mat-radio-button
+        >
+    </mat-radio-group>
+</div>
+<div class="toolbar" mat-dialog-actions>
+    <button mat-raised-button mat-dialog-close>Відмінити</button>
+    <button
+        mat-raised-button
+        color="warn"
+        aria-label="save"
+        [mat-dialog-close]="data.data"
+        [disabled]="
+            test_name.invalid ||
+            time_for_test.invalid ||
+            tasks.invalid ||
+            attempts.invalid
+        "
+    >
+        Зберегти
+        <!--  {{data.description.action}} -->
+    </button>
+</div>

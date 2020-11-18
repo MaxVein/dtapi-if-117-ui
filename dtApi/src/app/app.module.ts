@@ -6,15 +6,15 @@ import { ReactiveFormsModule } from '@angular/forms'
 
 import { AppRoutingModule } from './app-routing.module'
 import { AngularMaterialModule } from './shared/modules/angular-material/angular-material.module'
-import { SpecialityModule } from './speciality/speciality.module'
-
-import { DashboardModule } from './modules/dashboard/dashboard.module'
-import { LoginComponent } from './login/login.component'
-import { GroupsModule } from './modules/groups/groups.module'
 
 import { SharedModule } from './shared/modules/shared.module'
-import { TestModule } from './modules/test/test.module'
 import { AppComponent } from './app.component'
+
+import { SpecialityModule } from './modules/admin/speciality/speciality.module'
+import { GroupsModule } from './modules/admin/groups/groups.module'
+import { TestModule } from './modules/admin/test/test.module'
+import { DashboardModule } from './modules/admin/dashboard/dashboard.module'
+import { LoginComponent } from './modules/login/login.component'
 
 @NgModule({
     declarations: [AppComponent, LoginComponent],
