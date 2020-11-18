@@ -9,6 +9,11 @@ const routes: Routes = [
     { path: '', redirectTo: '/login', pathMatch: 'full' },
     { path: 'dashboard', component: DashboardComponent },
     {
+        path: 'students/:id',
+        loadChildren: () =>
+            import('./students/students.module').then((m) => m.StudentsModule),
+    },
+    {
         path: 'tests',
         loadChildren: () =>
             import('./modules/test/test.module').then((m) => m.TestModule),

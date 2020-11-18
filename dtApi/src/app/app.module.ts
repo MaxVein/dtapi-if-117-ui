@@ -12,6 +12,7 @@ import { DashboardModule } from './modules/dashboard/dashboard.module'
 import { LoginComponent } from './login/login.component'
 import { GroupsModule } from './modules/groups/groups.module'
 
+import { SharedModule } from './shared/modules/shared.module'
 import { TestModule } from './modules/test/test.module'
 import { AppComponent } from './app.component'
 
@@ -20,14 +21,15 @@ import { AppComponent } from './app.component'
     imports: [
         BrowserModule,
         BrowserAnimationsModule,
-        AppRoutingModule,
+        ReactiveFormsModule,
         HttpClientModule,
+        AppRoutingModule,
         AngularMaterialModule,
         TestModule,
         GroupsModule,
-        DashboardModule,
         SpecialityModule,
-        ReactiveFormsModule,
+        DashboardModule,
+        SharedModule,
     ],
     providers: [],
     exports: [AngularMaterialModule],
