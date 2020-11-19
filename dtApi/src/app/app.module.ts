@@ -9,14 +9,19 @@ import { AngularMaterialModule } from './shared/modules/angular-material/angular
 import { LoginModule } from './modules/login/login.module'
 import { StudentPageModule } from './modules/student-profile/student-profileModule/student-profile.module'
 import { SharedModule } from './shared/modules/shared.module'
-import { AppComponent } from './app.component'
+
 import { SpecialityModule } from './modules/admin/speciality/speciality.module'
 import { GroupsModule } from './modules/admin/groups/groups.module'
 import { TestModule } from './modules/admin/test/test.module'
 import { DashboardModule } from './modules/admin/dashboard/dashboard.module'
+import { LoginComponent } from './modules/login/login.component'
+import { AdminModule } from './modules/admin/admin.module'
+import { NotFoundComponent } from './shared/components/not-found/not-found.component'
+
+import { AppComponent } from './app.component'
 
 @NgModule({
-    declarations: [AppComponent],
+    declarations: [AppComponent, NotFoundComponent],
     imports: [
         BrowserModule,
         BrowserAnimationsModule,

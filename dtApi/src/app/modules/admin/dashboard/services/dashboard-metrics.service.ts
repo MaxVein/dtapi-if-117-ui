@@ -12,39 +12,39 @@ export class DashboardMetricsService {
     private baseurl = environment.BASEURL
     constructor(private httpInstance: HttpClient) {}
     backendLogin(): Observable<any> {
-        return this.httpInstance.post(`${this.baseurl}/api/Login/index`, {
+        return this.httpInstance.post(`${this.baseurl}Login/index`, {
             username: 'admin',
             password: 'dtapi_admin',
         })
     }
     getFacultiesNumber(): Observable<any> {
         return this.httpInstance
-            .get(`${this.baseurl}/api/Faculty/countRecords`)
+            .get(`${this.baseurl}Faculty/countRecords`)
             .pipe(map((res: any) => res.numberOfRecords))
     }
     getGroupsNumber(): Observable<any> {
         return this.httpInstance
-            .get(`${this.baseurl}/api/Group/countRecords`)
+            .get(`${this.baseurl}Group/countRecords`)
             .pipe(map((res: any) => res.numberOfRecords))
     }
     getSpecialitiesNumber(): Observable<any> {
         return this.httpInstance
-            .get(`${this.baseurl}/api/Speciality/countRecords`)
+            .get(`${this.baseurl}Speciality/countRecords`)
             .pipe(map((res: any) => res.numberOfRecords))
     }
     getSubjectsNumber(): Observable<any> {
         return this.httpInstance
-            .get(`${this.baseurl}/api/Subject/countRecords`)
+            .get(`${this.baseurl}Subject/countRecords`)
             .pipe(map((res: any) => res.numberOfRecords))
     }
     getStudentsNumber(): Observable<any> {
         return this.httpInstance
-            .get(`${this.baseurl}/api/Student/countRecords`)
+            .get(`${this.baseurl}Student/countRecords`)
             .pipe(map((res: any) => res.numberOfRecords))
     }
     getAdminsNumber(): Observable<any> {
         return this.httpInstance
-            .get(`${this.baseurl}/api/AdminUser/countRecords`)
+            .get(`${this.baseurl}AdminUser/countRecords`)
             .pipe(map((res: any) => res.numberOfRecords))
     }
 }

@@ -15,6 +15,7 @@ const routes: Routes = [{ path: '', component: ListTableComponent }]
         ModalFormComponent,
         ConfirmDialogComponent,
     ],
+    exports: [ListTableComponent, ModalFormComponent],
     imports: [CommonModule, SharedModule, RouterModule.forChild(routes)],
 })
 export class SpecialityModule {}
