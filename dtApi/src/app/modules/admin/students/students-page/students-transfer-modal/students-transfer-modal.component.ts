@@ -1,9 +1,9 @@
 import { Component, Inject, OnInit } from '@angular/core'
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog'
-import { StudentsService } from '../../../shared/services/students/students.service'
-import { ModalService } from '../../../shared/services/modal.service'
-import { AlertComponent } from '../../../shared/components/alert/alert.component'
-import { Student } from '../../../shared/interfaces/students/interfaces'
+import { Student } from 'src/app/shared/interfaces/interfaces'
+import { AlertComponent } from 'src/app/shared/components/alert/alert.component'
+import { ModalService } from 'src/app/shared/services/modal.service'
+import { StudentsService } from 'src/app/modules/admin/students/students-page/students.service'
 
 @Component({
     selector: 'app-students-transfer-modal',

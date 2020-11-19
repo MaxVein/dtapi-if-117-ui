@@ -1,8 +1,8 @@
 import { Component, Inject, OnInit } from '@angular/core'
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog'
-import { StudentsService } from '../../../shared/services/students/students.service'
-import { Student } from '../../../shared/interfaces/students/interfaces'
-import { environment } from '../../../../environments/environment'
+import { StudentsService } from 'src/app/modules/admin/students/students-page/students.service'
+import { environment } from 'src/environments/environment'
+import { Student } from 'src/app/shared/interfaces/interfaces'
 
 @Component({
     selector: 'app-students-view-modal',

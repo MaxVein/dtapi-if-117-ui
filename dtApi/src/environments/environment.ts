@@ -8,7 +8,6 @@ export const environment = {
     defaultImage:
         'https://jeffjbutler.com/wp-content/uploads/2018/01/default-user.png',
 }
-
 /*
  * For easier debugging in development mode, you can import the following file
  * to ignore zone related error stack frames such as `zone.run`, `zoneDelegate.invokeTask`.

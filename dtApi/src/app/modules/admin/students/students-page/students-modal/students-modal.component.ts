@@ -1,9 +1,12 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/explicit-module-boundary-types */
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { Component, ElementRef, Inject, OnInit, ViewChild } from '@angular/core'
 import { FormControl, FormGroup, Validators } from '@angular/forms'
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog'
-import { StudentsService } from '../../../shared/services/students/students.service'
-import { Student } from '../../../shared/interfaces/students/interfaces'
-import { environment } from '../../../../environments/environment'
+import { Student } from 'src/app/shared/interfaces/interfaces'
+import { StudentsService } from 'src/app/modules/admin/students/students-page/students.service'
+import { environment } from 'src/environments/environment'
 
 @Component({
     selector: 'app-students-modal',

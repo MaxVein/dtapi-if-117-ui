@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import {
     AfterViewInit,
     Component,
@@ -9,13 +10,15 @@ import { ActivatedRoute, Router } from '@angular/router'
 import { Subscription } from 'rxjs'
 import { MatPaginator } from '@angular/material/paginator'
 import { MatTableDataSource } from '@angular/material/table'
-import { StudentsService } from '../../shared/services/students/students.service'
-import { ModalService } from '../../shared/services/modal.service'
+
+import { StudentsService } from 'src/app/modules/admin/students/students-page/students.service'
+
+import { ModalService } from 'src/app/shared/services/modal.service'
 import { StudentsModalComponent } from './students-modal/students-modal.component'
 import { StudentsViewModalComponent } from './students-view-modal/students-view-modal.component'
 import { StudentsTransferModalComponent } from './students-transfer-modal/students-transfer-modal.component'
-import { ConfirmComponent } from '../../shared/components/confirm/confirm.component'
-import { Student } from '../../shared/interfaces/students/interfaces'
+import { ConfirmComponent } from 'src/app/shared/components/confirm/confirm.component'
+import { Student } from 'src/app/shared/interfaces/interfaces'
 
 @Component({
     selector: 'app-students-page',
