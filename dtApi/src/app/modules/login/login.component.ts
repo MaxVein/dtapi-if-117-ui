@@ -25,17 +25,6 @@ import { AuthService } from './services/auth.service'
     styleUrls: ['./login.component.scss'],
 })
 export class LoginComponent implements OnInit {
-    ngOnInit(): void {
-        this.getLogo()
-    }
-    constructor(
-        private request: AuthService,
-        private router: Router,
-        private fb: FormBuilder
-    ) {
-        this.loginForm
-    }
-
     loginForm = this.fb.group({
         userName: [''],
         password: [''],
@@ -48,12 +37,27 @@ export class LoginComponent implements OnInit {
     private userName: string
     private password: string
 
+    constructor(
+        private request: AuthService,
+        private router: Router,
+        private fb: FormBuilder
+    ) {
+        this.loginForm
+    }
+
+    ngOnInit(): void {
+        this.getLogo()
+    }
+
     onSubmit() {
         const formValue: loginForm = this.loginForm.value
         this.userName = formValue.userName
         this.password = formValue.password
         this.loginForm.reset()
         this.request.loginRequest(this.userName, this.password).subscribe({
+            next: () => {
+                this.router.navigate(['admin'])
+            },
             error: (err) => {
                 this.handlerError(err)
             },

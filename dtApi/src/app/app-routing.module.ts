@@ -1,28 +1,21 @@
 import { NgModule } from '@angular/core'
 import { Routes, RouterModule } from '@angular/router'
-
-import { LoginComponent } from './modules/login/login.component'
-import { DashboardComponent } from './modules/admin/dashboard/dashboard.component'
+import { NotFoundPageComponent } from './shared/components/not-found-page/not-found-page.component'
 
 const routes: Routes = [
-    { path: 'login', component: LoginComponent },
+    {
+        path: 'login',
+        loadChildren: () =>
+            import('./modules/login/login.module').then((m) => m.LoginModule),
+    },
+    {
+        path: 'admin',
+        loadChildren: () =>
+            import('./modules/admin/admin.module').then((m) => m.AdminModule),
+    },
+    { path: '404', component: NotFoundPageComponent },
     { path: '', redirectTo: '/login', pathMatch: 'full' },
-    { path: 'dashboard', component: DashboardComponent },
-    {
-        path: 'students/:id',
-        loadChildren: () =>
-            import('./modules/admin//students/students.module').then(
-                (m) => m.StudentsModule
-            ),
-    },
-    {
-        path: 'tests',
-        loadChildren: () =>
-            import('./modules/admin/test/test.module').then(
-                (m) => m.TestModule
-            ),
-    },
-    { path: '**', redirectTo: '/' },
+    { path: '**', redirectTo: '/404' },
 ]
 
 @NgModule({
