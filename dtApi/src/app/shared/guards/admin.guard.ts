@@ -17,7 +17,7 @@ export class AdminGuard implements CanActivate {
             map((currentUser) => {
                 const allowed = currentUser.roles.includes('admin')
                 if (!allowed) {
-                    this.router.navigate(['login'])
+                    this.router.navigate(['404'])
                 }
                 return allowed
             })
