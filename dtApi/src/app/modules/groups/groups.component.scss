@@ -14,5 +14,18 @@ table {
     .add-group {
         margin-right: 1rem;
         margin-top: 1rem;
+        border:1px solid black
     }
+}
+.mat-form-field {
+    font-size: 14px;
+    width: 100%;
+  }
+
+.filter{
+    width:90%;
+    margin-left:5%;
+}
+.mat-elevation-z8{
+    background:#fafafa;
 }
