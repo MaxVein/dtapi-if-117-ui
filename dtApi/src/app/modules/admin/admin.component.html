@@ -18,6 +18,7 @@
             <a mat-list-item routerLink="">Протокол</a>
             <a mat-list-item routerLink="">Адміни</a>
             <a mat-list-item routerLink="">Про нас</a>
+            <a mat-list-item routerLink="" (click)="logOut()">Вихід</a>
         </mat-nav-list>
     </mat-sidenav>
     <mat-sidenav-content>
@@ -30,7 +31,7 @@
             <button mat-button [matMenuTriggerFor]="menu">Адмін</button>
             <mat-menu #menu="matMenu">
                 <!-- !На цю кнопку event binding на клік метод logout -->
-                <button mat-menu-item>Вийти</button>
+                <button mat-menu-item (click)="logOut()">Вийти</button>
             </mat-menu>
             <!-- !Language  -->
             <button mat-button [matMenuTriggerFor]="lang">Мова</button>

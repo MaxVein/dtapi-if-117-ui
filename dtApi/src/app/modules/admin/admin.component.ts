@@ -2,6 +2,7 @@ import { Component } from '@angular/core'
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout'
 import { Observable } from 'rxjs'
 import { map, shareReplay } from 'rxjs/operators'
+import { ApiService } from './speciality/api.service'
 
 @Component({
     selector: 'app-admin',
@@ -11,7 +12,13 @@ import { map, shareReplay } from 'rxjs/operators'
 export class AdminComponent {
     menuIcon = 'menu_open'
 
-    constructor(private breakpointObserver: BreakpointObserver) {}
+    constructor(
+        private apiService: ApiService,
+        private breakpointObserver: BreakpointObserver
+    ) {}
+    logOut() {
+        this.apiService.logout().subscribe()
+    }
 
     menuIconChange(): void {
         if (this.menuIcon === 'menu_open') {
