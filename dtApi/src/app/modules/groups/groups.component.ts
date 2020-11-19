@@ -2,7 +2,7 @@ import { Component, ViewChild, OnInit, ChangeDetectorRef } from '@angular/core'
 import { MatPaginator } from '@angular/material/paginator'
 import { MatTableDataSource, MatTable } from '@angular/material/table'
 import { MatDialog } from '@angular/material/dialog'
-import {MatSort} from '@angular/material/sort';
+import { MatSort } from '@angular/material/sort'
 
 import { GroupsService } from './groups.service'
 import { ConfirmDeleteComponent } from './confirm-delete/confirm-delete.component'
@@ -42,7 +42,7 @@ export class GroupsComponent implements OnInit {
 
     @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator
     @ViewChild('table', { static: true }) table: MatTable<GroupData>
-    @ViewChild(MatSort, {static: false}) sort: MatSort;
+    @ViewChild(MatSort, { static: false }) sort: MatSort
 
     res = []
     constructor(
@@ -52,7 +52,7 @@ export class GroupsComponent implements OnInit {
     ) {}
 
     ngOnInit() {
-        this.getGroups();
+        this.getGroups()
     }
     getGroups() {
         this.groupsSertvice.getData('Group').subscribe((data: any[]) => {
@@ -74,7 +74,7 @@ export class GroupsComponent implements OnInit {
             ELEMENT_DATA = data
             this.dataSource = new MatTableDataSource<GroupData>(ELEMENT_DATA)
             this.dataSource.paginator = this.paginator
-            this.dataSource.sort = this.sort;
+            this.dataSource.sort = this.sort
 
             this.sharedData
                 ? this.groupsSertvice.saveData(this.sharedData)
@@ -191,7 +191,7 @@ export class GroupsComponent implements OnInit {
         })
     }
     applyFilter(event: Event) {
-        const filterValue = (event.target as HTMLInputElement).value;
-        this.dataSource.filter = filterValue.trim().toLowerCase();
-      }
+        const filterValue = (event.target as HTMLInputElement).value
+        this.dataSource.filter = filterValue.trim().toLowerCase()
+    }
 }
