@@ -1,20 +1,19 @@
 import { NgModule } from '@angular/core'
 import { CommonModule } from '@angular/common'
 import { RouterModule } from '@angular/router'
-import { MAT_FORM_FIELD_DEFAULT_OPTIONS } from '@angular/material/form-field'
 
 import { AngularMaterialModule } from 'src/app/shared/modules/angular-material/angular-material.module'
-import { StudentProfileComponent } from '../student-profile.component'
+import { StudentPageComponent } from './student-page.component'
 
 @NgModule({
-    declarations: [StudentProfileComponent],
+    declarations: [StudentPageComponent],
     imports: [
         CommonModule,
         AngularMaterialModule,
         RouterModule.forChild([
-            { path: 'studentProfile', component: StudentProfileComponent },
+            { path: 'student-page', component: StudentPageComponent },
         ]),
     ],
-    exports: [StudentProfileComponent],
+    exports: [StudentPageComponent],
 })
-export class StudentProfileModule {}
+export class StudentPageModule {}

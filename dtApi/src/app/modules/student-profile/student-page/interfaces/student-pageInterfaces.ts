@@ -41,6 +41,7 @@ export interface testDetails {
     test_id: string
     test_name: string
     time_for_test: string
+    response?: string
 }
 
 export interface testDate {

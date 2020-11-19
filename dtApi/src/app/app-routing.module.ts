@@ -8,9 +8,16 @@ const routes: Routes = [
     {
         path: 'students/:id',
         loadChildren: () =>
-            import('./modules/admin//students/students.module').then(
+            import('./modules/admin/students/students.module').then(
                 (m) => m.StudentsModule
             ),
+    },
+    {
+        path: 'student-pag',
+        loadChildren: () =>
+            import(
+                './modules/student-profile/student-page/student-page.module'
+            ).then((m) => m.StudentPageModule),
     },
     {
         path: 'tests',
@@ -19,7 +26,6 @@ const routes: Routes = [
                 (m) => m.TestModule
             ),
     },
-    { path: '**', redirectTo: '/' },
 ]
 
 @NgModule({

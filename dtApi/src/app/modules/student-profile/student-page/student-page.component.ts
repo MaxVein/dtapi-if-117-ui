@@ -2,7 +2,7 @@ import { Component, OnInit, ViewChild } from '@angular/core'
 import { MatPaginator } from '@angular/material/paginator'
 import { MatTableDataSource } from '@angular/material/table'
 
-import { concatMap, map } from 'rxjs/operators'
+import { concatMap, map, delay } from 'rxjs/operators'
 import { Observable } from 'rxjs'
 
 import { environment } from 'src/environments/environment'
@@ -15,16 +15,16 @@ import {
     subjectDetails,
     testDetails,
     testDate,
-} from './interfaces/student-profileInterfaces'
-import { StudentService } from './services/student-profile.service'
-import { AuthService } from '../login/services/auth.service'
+} from './interfaces/student-pageInterfaces'
+import { StudentService } from './services/student-page.service'
+import { AuthService } from '../../login/services/auth.service'
 
 @Component({
-    selector: 'app-student-profile',
-    templateUrl: './student-profile.component.html',
-    styleUrls: ['./student-profile.component.scss'],
+    selector: 'app-student-page',
+    templateUrl: './student-page.component.html',
+    styleUrls: ['./student-page.component.scss'],
 })
-export class StudentProfileComponent implements OnInit {
+export class StudentPageComponent implements OnInit {
     constructor(private student: StudentService, private auth: AuthService) {}
 
     photo: string
@@ -62,12 +62,24 @@ export class StudentProfileComponent implements OnInit {
     @ViewChild(MatPaginator) paginator: MatPaginator
 
     ngOnInit(): void {
-        this.auth.isLogged().subscribe((res: isLoggedRes) => {
-            this.studentId = res.id
-            this.getSubject()
-            this.getAllData()
-        })
+        this.auth
+            .isLogged()
+            .pipe(
+                concatMap(
+                    (res: isLoggedRes): Observable<any> => {
+                        this.studentId = res.id
+                        return this.student.getRecords('Subject')
+                    }
+                )
+            )
+            .subscribe((res: subjectDetails[]) => {
+                this.subjects = res
+                this.subjectId = res[0].subject_id
+                this.subjectName = res[0].subject_name
+                this.getAllData()
+            })
     }
+
     getStudentInfo() {
         this.student
             .getRecords('Student', this.studentId)
@@ -86,9 +98,7 @@ export class StudentProfileComponent implements OnInit {
                         return this.student.getRecords('Group', this.groupId)
                     }
                 ),
-                map((res) => {
-                    return res[0]
-                })
+                map((res) => res[0])
             )
             .subscribe((res: groupDetails) => {
                 this.facultyId = res.faculty_id
@@ -96,7 +106,7 @@ export class StudentProfileComponent implements OnInit {
                 this.specialityId = res.speciality_id
                 this.getFaculty()
                 this.getSpeciality()
-                this.getTestDetails(this.subjectId)
+                this.getTestInfo()
             })
     }
 
@@ -118,34 +128,32 @@ export class StudentProfileComponent implements OnInit {
                 this.facultyName = res.faculty_name
             })
     }
-    getSubject() {
+
+    getTestInfo() {
         this.student
-            .getRecords('Subject')
-            .subscribe((res: subjectDetails[]) => {
-                this.subjects = res
-                this.subjectId = res[0].subject_id
-                this.subjectName = res[0].subject_name
-            })
-    }
-    getTestDetails(id: string) {
-        this.student
-            .getTestDate(id)
+            .getTestDate(this.subjectId)
             .pipe(
                 concatMap(
                     (res: testDetails[]): Observable<any> => {
                         this.testsBySubject = res
+                        console.log(res)
                         return this.student.getTestDetails(this.subjectId)
                     }
                 )
             )
-            .subscribe((res: testDate[]) => {
-                this.testDetails = [...this.testsBySubject].map((test) => ({
-                    ...test,
-                    ...res[0],
-                    subjectname: this.subjectName,
-                }))
-                this.dataSource = new MatTableDataSource(this.testDetails)
-                this.dataSource.paginator = this.paginator
+            .subscribe({
+                next: (res: testDate[]) => {
+                    this.testDetails = [...this.testsBySubject].map((test) => ({
+                        ...test,
+                        ...res[0],
+                        subjectname: this.subjectName,
+                    }))
+                    this.dataSource = new MatTableDataSource(this.testDetails)
+                    this.dataSource.paginator = this.paginator
+                },
+                error: (err) => {
+                    console.log(err)
+                },
             })
     }
 
@@ -159,6 +167,6 @@ export class StudentProfileComponent implements OnInit {
                 event.currentTarget.options.selectedIndex
             ].id
         this.subjectName = event.target.value
-        this.getTestDetails(this.subjectId)
+        this.getTestInfo()
     }
 }

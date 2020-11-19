@@ -2,6 +2,7 @@
     <div class="student-test-timeTable">
         <p class="student-test-title"><strong>Розклад тестування</strong></p>
         <p>
+            <label for="subject">Оберіть будь ласка предмет</label>
             <select name="subjects" id="" (change)="selectSubject($event)">
                 <option
                     *ngFor="let subject of subjects"
@@ -13,7 +14,11 @@
             </select>
         </p>
         <div class="mat-elevation-z8">
-            <table mat-table [dataSource]="dataSource" class="student-table mat-elevation-z8">
+            <table
+                mat-table
+                [dataSource]="dataSource"
+                class="student-table mat-elevation-z8"
+            >
                 <ng-container matColumnDef="Предмет">
                     <th mat-header-cell *matHeaderCellDef>Предмет</th>
                     <td mat-cell *matCellDef="let test">
@@ -29,7 +34,8 @@
                 <ng-container matColumnDef="Початок">
                     <th mat-header-cell *matHeaderCellDef>Початок</th>
                     <td mat-cell *matCellDef="let test">
-                        <span>{{ test.start_date }}</span> <br /> {{ test.start_time }}
+                        <span>{{ test.start_date }}</span> <br />
+                        {{ test.start_time }}
                     </td>
                 </ng-container>
                 <ng-container matColumnDef="Кінець">
@@ -61,26 +67,38 @@
                     </td>
                 </ng-container>
                 <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-                <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+                <tr
+                    mat-row
+                    *matRowDef="let row; columns: displayedColumns"
+                ></tr>
             </table>
-            <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
+            <mat-paginator
+                [pageSizeOptions]="[5, 10, 20]"
+                showFirstLastButtons
+            ></mat-paginator>
         </div>
     </div>
     <div class="student-info">
         <p class="student-info-title"><strong>Студент</strong></p>
         <mat-card>
-            <img mat-card-lg-image src="{{ photo }}" alt="{{ studentSurname }} {{ studentName }}" />
-            <mat-card-content><strong>
+            <img
+                mat-card-lg-image
+                src="{{ photo }}"
+                alt="{{ studentSurname }} {{ studentName }}"
+            />
+            <mat-card-content
+                ><strong>
                     {{ studentSurname }} {{ studentName }}
                     {{ studentFname }}</strong
                 ></mat-card-content
             >
             <p><strong>Факультет:</strong> {{ facultyName }}</p>
-                <p>
-                    <strong>Спеціальність:</strong> {{ specialityCode }} {{ specialityName }}
-                </p>
-                <p><strong>Група:</strong> {{ groupName }}</p>
-                <p><strong>Номер залікової:</strong> {{ gradebookId }}</p>
+            <p>
+                <strong>Спеціальність:</strong> {{ specialityCode }}
+                {{ specialityName }}
+            </p>
+            <p><strong>Група:</strong> {{ groupName }}</p>
+            <p><strong>Номер залікової:</strong> {{ gradebookId }}</p>
         </mat-card>
     </div>
 </div>

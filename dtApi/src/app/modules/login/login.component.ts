@@ -56,7 +56,7 @@ export class LoginComponent implements OnInit {
         this.request.loginRequest(this.userName, this.password).subscribe({
             next: (res) => {
                 if (res.roles[1] === 'student') {
-                    this.router.navigate(['/studentProfile'])
+                    this.router.navigate(['student-page'])
                 } else if (res.roles[1] === 'admin') {
                     this.router.navigate(['/dashboard'])
                 }

@@ -14,7 +14,7 @@ import { AngularMaterialModule } from '../../shared/modules/angular-material/ang
         AngularMaterialModule,
         RouterModule.forChild([
             { path: 'login', component: LoginComponent },
-            { path: '', redirectTo: '/login', pathMatch: 'full' },
+            { path: '', redirectTo: 'login', pathMatch: 'full' },
         ]),
     ],
     exports: [LoginComponent],
