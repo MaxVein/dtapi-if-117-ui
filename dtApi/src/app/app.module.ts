@@ -17,7 +17,7 @@ import { AppComponent } from './app.component'
 import { NotFoundPageComponent } from './shared/components/not-found-page/not-found-page.component'
 
 @NgModule({
-    declarations: [AppComponent, LoginComponent, NotFoundPageComponent],
+    declarations: [AppComponent, NotFoundPageComponent],
 
     imports: [
         BrowserModule,
@@ -25,7 +25,6 @@ import { NotFoundPageComponent } from './shared/components/not-found-page/not-fo
         HttpClientModule,
         AppRoutingModule,
         SharedModule,
-        AdminModule,
     ],
     providers: [],
     exports: [],

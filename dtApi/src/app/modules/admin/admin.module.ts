@@ -1,6 +1,4 @@
-import { ngModuleJitUrl } from '@angular/compiler'
 import { NgModule } from '@angular/core'
-import { NgModel } from '@angular/forms'
 import { Router, RouterModule, Routes } from '@angular/router'
 import { AdminGuard } from 'src/app/shared/guards/admin.guard'
 import { DashboardComponent } from './dashboard/dashboard.component'
@@ -37,7 +35,7 @@ const routes: Routes = [
     },
 ]
 @NgModule({
-    declarations: [],
+    declarations: [AdminComponent],
     imports: [
         CommonModule,
         SharedModule,
