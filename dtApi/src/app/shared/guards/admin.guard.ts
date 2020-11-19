@@ -1,14 +1,6 @@
 import { Route } from '@angular/compiler/src/core'
 import { Injectable } from '@angular/core'
-import {
-    ActivatedRouteSnapshot,
-    CanActivate,
-    CanLoad,
-    Router,
-    RouterStateSnapshot,
-    Routes,
-    UrlTree,
-} from '@angular/router'
+import { CanActivate, Router } from '@angular/router'
 import { Observable } from 'rxjs'
 import { map } from 'rxjs/operators'
 import { ApiService } from 'src/app/modules/admin/speciality/api.service'
@@ -25,7 +17,7 @@ export class AdminGuard implements CanActivate {
             map((currentUser) => {
                 const allowed = currentUser.roles.includes('admin')
                 if (!allowed) {
-                    this.router.navigate(['404'])
+                    this.router.navigate(['login'])
                 }
                 return allowed
             })
