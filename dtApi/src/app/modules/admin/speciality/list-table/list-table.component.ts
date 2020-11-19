@@ -6,7 +6,7 @@ import { MatTableDataSource } from '@angular/material/table'
 
 import { Observable } from 'rxjs'
 
-import { ApiService } from '../api.service'
+import { ApiService } from '../../../../shared/services/api.service'
 import { ModalFormComponent } from '../modal-form/modal-form.component'
 import { ConfirmDialogComponent } from '../confirm-dialog/confirm-dialog.component'
 import { DialogService } from '../dialog.service'

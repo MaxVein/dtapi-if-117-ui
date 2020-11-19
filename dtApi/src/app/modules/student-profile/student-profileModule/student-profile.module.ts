@@ -17,4 +17,4 @@ import { StudentProfileComponent } from '../student-profile.component'
     ],
     exports: [StudentProfileComponent],
 })
-export class StudentProfileModule {}
+export class StudentPageModule {}

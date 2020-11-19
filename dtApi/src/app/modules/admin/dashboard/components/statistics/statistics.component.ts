@@ -1,5 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
-/* eslint-disable @typescript-eslint/ban-types */
 import { Component, OnInit } from '@angular/core'
 import { DashboardMetricsService } from '../../services/dashboard-metrics.service'
 import { BreakpointObserver } from '@angular/cdk/layout'
@@ -34,35 +32,6 @@ export class StatisticsComponent implements OnInit {
         this.ResponsiveData.isMDScreen,
         this.ResponsiveData.isSMScreen,
     ])
-    layoutChange(result: object): void {
-        for (const item in result) {
-            if (
-                item == this.ResponsiveData.isXLScreen &&
-                result[item] === true
-            ) {
-                this.ResponsiveData.breakpoint = 4
-                this.ResponsiveData.rowHeight = 400
-            } else if (
-                item == this.ResponsiveData.isLGScreen &&
-                result[item] === true
-            ) {
-                this.ResponsiveData.breakpoint = 3
-                this.ResponsiveData.rowHeight = 400
-            } else if (
-                item == this.ResponsiveData.isMDScreen &&
-                result[item] === true
-            ) {
-                this.ResponsiveData.breakpoint = 2
-                this.ResponsiveData.rowHeight = 350
-            } else if (
-                item == this.ResponsiveData.isSMScreen &&
-                result[item] === true
-            ) {
-                this.ResponsiveData.breakpoint = 1
-                this.ResponsiveData.rowHeight = 300
-            }
-        }
-    }
 
     constructor(
         private breakpointObserver: BreakpointObserver,
@@ -100,5 +69,35 @@ export class StatisticsComponent implements OnInit {
         this.infoservice
             .getAdminsNumber()
             .subscribe((adminsInfo) => (this.adminAmount = adminsInfo))
+    }
+
+    layoutChange(result: any): void {
+        for (const item in result) {
+            if (
+                item == this.ResponsiveData.isXLScreen &&
+                result[item] === true
+            ) {
+                this.ResponsiveData.breakpoint = 4
+                this.ResponsiveData.rowHeight = 400
+            } else if (
+                item == this.ResponsiveData.isLGScreen &&
+                result[item] === true
+            ) {
+                this.ResponsiveData.breakpoint = 3
+                this.ResponsiveData.rowHeight = 400
+            } else if (
+                item == this.ResponsiveData.isMDScreen &&
+                result[item] === true
+            ) {
+                this.ResponsiveData.breakpoint = 2
+                this.ResponsiveData.rowHeight = 350
+            } else if (
+                item == this.ResponsiveData.isSMScreen &&
+                result[item] === true
+            ) {
+                this.ResponsiveData.breakpoint = 1
+                this.ResponsiveData.rowHeight = 300
+            }
+        }
     }
 }

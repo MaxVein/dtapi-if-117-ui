@@ -4,7 +4,7 @@ import { MatSnackBar } from '@angular/material/snack-bar'
 import { config } from 'process'
 import { Observable } from 'rxjs'
 
-import { ApiService } from '../api.service'
+import { ApiService } from '../../../../shared/services/api.service'
 import { DialogService } from '../dialog.service'
 
 @Component({
