@@ -15,9 +15,11 @@ import { GroupsModule } from './modules/admin/groups/groups.module'
 import { TestModule } from './modules/admin/test/test.module'
 import { DashboardModule } from './modules/admin/dashboard/dashboard.module'
 import { LoginComponent } from './modules/login/login.component'
+import { AdminModule } from './modules/admin/admin.module'
+import { NotFoundComponent } from './shared/components/not-found/not-found.component'
 
 @NgModule({
-    declarations: [AppComponent, LoginComponent],
+    declarations: [AppComponent, LoginComponent, NotFoundComponent],
     imports: [
         BrowserModule,
         BrowserAnimationsModule,
@@ -30,6 +32,7 @@ import { LoginComponent } from './modules/login/login.component'
         SpecialityModule,
         DashboardModule,
         SharedModule,
+        AdminModule,
     ],
     providers: [],
     exports: [AngularMaterialModule],

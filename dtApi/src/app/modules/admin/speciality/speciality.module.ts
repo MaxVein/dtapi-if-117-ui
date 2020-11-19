@@ -37,9 +37,6 @@ import { ListTableComponent } from './list-table/list-table.component'
         MatPaginatorModule,
         MatDialogModule,
         BrowserAnimationsModule,
-        RouterModule.forChild([
-            { path: 'speciality', component: ListTableComponent },
-        ]),
     ],
 })
 export class SpecialityModule {}

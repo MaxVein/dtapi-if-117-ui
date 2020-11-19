@@ -6,6 +6,7 @@ import { FormBuilder } from '@angular/forms'
 import { logoSrc } from './interfaces/interfaces'
 import { loginForm } from './interfaces/interfaces'
 import { AuthService } from './services/auth.service'
+import { ApiService } from '../admin/speciality/api.service'
 
 @Component({
     animations: [
@@ -31,7 +32,8 @@ export class LoginComponent implements OnInit {
     constructor(
         private request: AuthService,
         private router: Router,
-        private fb: FormBuilder
+        private fb: FormBuilder,
+        private apiService: ApiService
     ) {
         this.loginForm
     }
@@ -53,11 +55,24 @@ export class LoginComponent implements OnInit {
         this.userName = formValue.userName
         this.password = formValue.password
         this.loginForm.reset()
-        this.request.loginRequest(this.userName, this.password).subscribe({
-            error: (err) => {
-                this.handlerError(err)
+
+        this.apiService.login(this.userName, this.password).subscribe({
+            next: (res) => {
+                const goTo = res.roles.includes('admin') ? 'admin' : 'student'
+                this.router.navigate([goTo])
+            },
+            error: (error) => {
+                this.handlerError(error)
             },
         })
+        // this.request.loginRequest(this.userName, this.password).subscribe({
+        //     next: () => {
+        //         this.router.navigate(['/dashboard'])
+        //     },
+        //     error: (err) => {
+        //         this.handlerError(err)
+        //     },
+        // })
     }
 
     handlerError(err) {

@@ -4,6 +4,8 @@ import { Component } from '@angular/core'
 import { Breakpoints, BreakpointObserver } from '@angular/cdk/layout'
 import { map, shareReplay } from 'rxjs/operators'
 import { Observable } from 'rxjs'
+import { ApiService } from '../speciality/api.service'
+import { Router } from '@angular/router'
 
 @Component({
     selector: 'app-dashboard',
@@ -25,5 +27,17 @@ export class DashboardComponent {
             map((result) => result.matches),
             shareReplay()
         )
-    constructor(private breakpointObserver: BreakpointObserver) {}
+    constructor(
+        private breakpointObserver: BreakpointObserver,
+        private apiService: ApiService,
+        private router: Router
+    ) {}
+
+    logOut() {
+        this.apiService.logout().subscribe({
+            error: () => {
+                console.log('error')
+            },
+        })
+    }
 }
