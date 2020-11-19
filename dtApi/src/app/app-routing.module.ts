@@ -4,14 +4,12 @@ import { NotFoundPageComponent } from './shared/components/not-found-page/not-fo
 
 const routes: Routes = [
     {
-        path: 'login',
+        path: '',
         loadChildren: () =>
-            import('./modules/admin/students/students.module').then(
-                (m) => m.StudentsModule
-            ),
+            import('./modules/login/login.module').then((m) => m.LoginModule),
     },
     {
-        path: 'student-pag',
+        path: 'student-page',
         loadChildren: () =>
             import(
                 './modules/student-profile/student-page/student-page.module'
