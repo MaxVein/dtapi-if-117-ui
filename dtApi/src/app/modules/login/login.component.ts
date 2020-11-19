@@ -26,18 +26,6 @@ import { ApiService } from '../admin/speciality/api.service'
     styleUrls: ['./login.component.scss'],
 })
 export class LoginComponent implements OnInit {
-    ngOnInit(): void {
-        this.getLogo()
-    }
-    constructor(
-        private request: AuthService,
-        private router: Router,
-        private fb: FormBuilder,
-        private apiService: ApiService
-    ) {
-        this.loginForm
-    }
-
     loginForm = this.fb.group({
         userName: [''],
         password: [''],
@@ -49,6 +37,19 @@ export class LoginComponent implements OnInit {
 
     private userName: string
     private password: string
+
+    constructor(
+        private request: AuthService,
+        private router: Router,
+        private fb: FormBuilder,
+        private apiService: ApiService
+    ) {
+        this.loginForm
+    }
+
+    ngOnInit(): void {
+        this.getLogo()
+    }
 
     onSubmit() {
         const formValue: loginForm = this.loginForm.value

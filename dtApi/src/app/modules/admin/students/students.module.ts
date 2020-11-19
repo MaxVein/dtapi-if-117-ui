@@ -1,14 +1,19 @@
 import { NgModule } from '@angular/core'
 import { StudentsPageComponent } from './students-page/students-page.component'
-import { RouterModule } from '@angular/router'
+import { RouterModule, Routes } from '@angular/router'
 import { CommonModule } from '@angular/common'
-import { FormsModule, ReactiveFormsModule } from '@angular/forms'
+import { SharedModule } from 'src/app/shared/modules/shared.module'
 
 import { StudentsModalComponent } from './students-page/students-modal/students-modal.component'
 import { StudentsViewModalComponent } from './students-page/students-view-modal/students-view-modal.component'
 import { StudentsTransferModalComponent } from './students-page/students-transfer-modal/students-transfer-modal.component'
+
 import { StudentsService } from 'src/app/modules/admin/students/students-page/students.service'
-import { SharedModule } from 'src/app/shared/modules/shared.module'
+
+import { ConfirmDirective } from '../../../shared/directives/students/confirm.directive'
+import { UniqueDirective } from '../../../shared/directives/students/unique.directive'
+
+const routes: Routes = [{ path: '', component: StudentsPageComponent }]
 
 @NgModule({
     declarations: [
@@ -16,19 +21,10 @@ import { SharedModule } from 'src/app/shared/modules/shared.module'
         StudentsModalComponent,
         StudentsViewModalComponent,
         StudentsTransferModalComponent,
+        ConfirmDirective,
+        UniqueDirective,
     ],
-    imports: [
-        CommonModule,
-        RouterModule.forChild([
-            {
-                path: 'Students/:id',
-                component: StudentsPageComponent,
-            },
-        ]),
-        FormsModule,
-        ReactiveFormsModule,
-        SharedModule,
-    ],
+    imports: [CommonModule, SharedModule, RouterModule.forChild(routes)],
     providers: [StudentsService],
 })
 export class StudentsModule {}

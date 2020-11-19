@@ -1,5 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
-/* eslint-disable @typescript-eslint/ban-types */
 import { Component } from '@angular/core'
 import { Breakpoints, BreakpointObserver } from '@angular/cdk/layout'
 import { map, shareReplay } from 'rxjs/operators'
