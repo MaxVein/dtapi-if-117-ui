@@ -34,10 +34,6 @@ export class DashboardComponent {
     ) {}
 
     logOut() {
-        this.apiService.logout().subscribe({
-            error: () => {
-                console.log('error')
-            },
-        })
+        this.apiService.logout().subscribe()
     }
 }
