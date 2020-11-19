@@ -30,8 +30,8 @@ export class SubjectsHomeComponent implements OnInit, AfterViewInit {
         'update',
         'delete',
     ]
-    public dataSource = new MatTableDataSource<SubjectsResponse>();
-    public singleRecordData: SubjectsResponse;
+    public dataSource = new MatTableDataSource<SubjectsResponse>()
+    public singleRecordData: SubjectsResponse
 
     @ViewChild(MatSort) sort: MatSort
     @ViewChild(MatPaginator) paginator: MatPaginator
@@ -40,7 +40,7 @@ export class SubjectsHomeComponent implements OnInit, AfterViewInit {
         private subjectsService: SubjectsService,
         public dialog: MatDialog
     ) {
-        this.getSubjects();
+        this.getSubjects()
     }
 
     ngOnInit() {}
@@ -51,7 +51,9 @@ export class SubjectsHomeComponent implements OnInit, AfterViewInit {
     }
 
     public getSubjects() {
-        this.subjectsService.getData().subscribe((response) => this.dataSource.data = response)
+        this.subjectsService
+            .getData()
+            .subscribe((response) => (this.dataSource.data = response))
     }
 
     public redirectToCreate = (data: SubjectsRequest) => {
@@ -72,24 +74,23 @@ export class SubjectsHomeComponent implements OnInit, AfterViewInit {
             width: '500px',
         })
 
-           dialogRef.afterClosed().subscribe((result: SubjectsResponse) => {
+        dialogRef.afterClosed().subscribe((result: SubjectsResponse) => {
             if (result) {
-                    this.redirectToCreate(result)
+                this.redirectToCreate(result)
             }
         })
     }
 
     public onEdit(element: SubjectsResponse): void {
-
         const dialogRef = this.dialog.open(ModalComponent, {
             height: '400px',
             width: '500px',
-            data: element
+            data: element,
         })
 
-           dialogRef.afterClosed().subscribe((result: SubjectsResponse) => {
+        dialogRef.afterClosed().subscribe((result: SubjectsResponse) => {
             if (result) {
-                this.redirectToUpdate(result.subject_id, result);
+                this.redirectToUpdate(result.subject_id, result)
                 this.getSubjects()
             }
         })

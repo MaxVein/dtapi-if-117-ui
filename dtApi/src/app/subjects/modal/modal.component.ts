@@ -1,8 +1,5 @@
 import { Component, OnInit, Inject } from '@angular/core'
-import {
-    MatDialogRef,
-    MAT_DIALOG_DATA,
-} from '@angular/material/dialog'
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog'
 import { FormControl, FormGroup, Validators } from '@angular/forms'
 
 interface SubjectsResponse {
@@ -26,9 +23,7 @@ export class ModalComponent implements OnInit {
             this.data ? this.data.subject_description : '',
             [Validators.required, Validators.pattern('[а-яА-ЯіІїЄє ]*')]
         ),
-        subject_id: new FormControl(
-            this.data ? this.data.subject_id : '',
-        )
+        subject_id: new FormControl(this.data ? this.data.subject_id : ''),
     })
 
     constructor(
@@ -36,8 +31,7 @@ export class ModalComponent implements OnInit {
         @Inject(MAT_DIALOG_DATA) public data: SubjectsResponse
     ) {}
 
-    ngOnInit(): void {
-    }
+    ngOnInit(): void {}
 
     public onSubmit() {
         if (this.subjectForm.valid) {
@@ -46,7 +40,7 @@ export class ModalComponent implements OnInit {
     }
 
     public onClose(): void {
-        this.dialogRef.close();
+        this.dialogRef.close()
     }
 
     hasError = (controlName: string, errorName: string) => {
