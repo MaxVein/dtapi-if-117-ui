@@ -136,7 +136,7 @@ export class StudentPageComponent implements OnInit {
                 concatMap(
                     (res: testDetails[]): Observable<any> => {
                         this.testsBySubject = res
-                        console.log(res)
+                        ///console.log(res)
                         return this.student.getTestDetails(this.subjectId)
                     }
                 )
@@ -152,7 +152,7 @@ export class StudentPageComponent implements OnInit {
                     this.dataSource.paginator = this.paginator
                 },
                 error: (err) => {
-                    console.log(err)
+                    //console.log(err)
                 },
             })
     }
