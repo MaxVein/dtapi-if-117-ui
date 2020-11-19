@@ -6,11 +6,9 @@ import { ReactiveFormsModule } from '@angular/forms'
 
 import { MatTabsModule } from '@angular/material/tabs'
 import { MatSortModule } from '@angular/material/sort'
-
-import { AngularMaterialModule } from '../../../shared/modules/angular-material/angular-material.module'
+import { SharedModule } from '../../../shared/modules/shared.module'
 
 import { SubjectsHomeComponent } from './subjects-home/subjects-home.component'
-import { SubjectsService } from './subjects.service'
 import { ModalComponent } from './modal/modal.component'
 
 const routes: Routes = [{ path: '', component: SubjectsHomeComponent }]
@@ -23,10 +21,9 @@ const routes: Routes = [{ path: '', component: SubjectsHomeComponent }]
         MatTabsModule,
         MatSortModule,
         ReactiveFormsModule,
-        AngularMaterialModule,
+        SharedModule,
         RouterModule.forChild(routes),
     ],
     exports: [SubjectsHomeComponent, ModalComponent],
-    providers: [SubjectsService],
 })
 export class SubjectsModule {}

@@ -11,7 +11,6 @@ import { SharedModule } from '../../shared/modules/shared.module'
 import { CommonModule } from '@angular/common'
 
 import { SubjectsHomeComponent } from './subjects/subjects-home/subjects-home.component'
-import { SubjectsModule } from './subjects/subjects.module'
 
 const routes: Routes = [
     {

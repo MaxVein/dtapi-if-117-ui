@@ -15,6 +15,7 @@ import { AdminModule } from './modules/admin/admin.module'
 import { NotFoundComponent } from './shared/components/not-found/not-found.component'
 import { AppComponent } from './app.component'
 import { NotFoundPageComponent } from './shared/components/not-found-page/not-found-page.component'
+import { SubjectsModule } from './modules/admin/subjects/subjects.module'
 
 @NgModule({
     declarations: [AppComponent, NotFoundPageComponent],
