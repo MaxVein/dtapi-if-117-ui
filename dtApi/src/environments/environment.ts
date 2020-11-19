@@ -4,8 +4,10 @@
 
 export const environment = {
     production: false,
+    BASEURL: 'https://dtapi.if.ua/api/',
+    defaultImage:
+        'https://jeffjbutler.com/wp-content/uploads/2018/01/default-user.png',
 }
-
 /*
  * For easier debugging in development mode, you can import the following file
  * to ignore zone related error stack frames such as `zone.run`, `zoneDelegate.invokeTask`.

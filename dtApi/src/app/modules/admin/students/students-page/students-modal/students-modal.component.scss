@@ -1,0 +1,57 @@
+.modal {
+    width: 600px;
+    height: 850px;
+
+    &__header {
+        margin-top: 25px;
+        text-align: center;
+        margin-bottom: 15px;
+
+        & h3 {
+            font-size: 30px;
+            font-weight: 500;
+        }
+    }
+
+    &__form {
+        margin: 50px auto 50px auto;
+        padding: 2% 5%;
+
+        & mat-icon {
+            vertical-align: bottom;
+            font-size: 20px;
+            margin-right: 5px;
+        }
+
+        & mat-form-field {
+            width: 100%;
+            font-size: 16px;
+            margin-bottom: 20px;
+        }
+
+        & .image-form-control {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            margin-bottom: 30px;
+
+            & .preview-image {
+                width: 300px;
+                height: 300px;
+            }
+
+            & .form-upload-btn {
+                margin-top: 20px;
+                font-size: 16px;
+                padding: 5px 25px 5px 25px;
+            }
+        }
+    }
+
+    &__btn {
+        margin: 20px 20px auto auto;
+        font-size: 16px;
+        padding: 5px 25px 5px 25px;
+    }
+}
