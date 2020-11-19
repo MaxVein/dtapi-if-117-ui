@@ -1,12 +1,11 @@
-<form (ngSubmit)='save()' [formGroup]='subjectForm'  class="subjectForm">
-  <h3 mat-dialog-title>Додати новий предмет</h3>
-  
+<form (ngSubmit)='onSubmit()' [formGroup]='subjectForm'  class="example-form">
+  <h3 mat-dialog-title>{{ !data ? "Додати новий" : "Редагувати" }} предмет</h3>
     <div mat-dialog-content>
       <mat-form-field appearance="outline">
         <input matInput placeholder="Назва Предмету" formControlName="subject_name">
         <mat-error *ngIf="hasError('subject_name', 'required')">Це поле є обов'язковим</mat-error>
         <mat-error *ngIf="hasError('subject_name', 'pattern')">Використовуйте українські літери</mat-error>
-      </mat-form-field>
+      </mat-form-field>`
     </div>
 
     <div mat-dialog-content>
@@ -17,7 +16,8 @@
       </mat-form-field>
     </div>
     <div mat-dialog-actions>
-      <button mat-stroked-button color="primary" cdkFocusInitial (click)='save()'>Додати</button>
-      <button mat-flat-button color="warn" (click)='onNoClick()'>Відмінити</button>
+      <button mat-raised-button color="primary" cdkFocusInitial (click)='onSubmit()'>{{ !data ? "Додати" : "Редагувати" }}</button>
+      <button mat-raised-button color="warn" (click)='onClose()'>Відмінити</button>
     </div>
+
 </form>

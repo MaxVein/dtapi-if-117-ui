@@ -27,11 +27,11 @@ export class SubjectsHomeComponent implements OnInit, AfterViewInit {
         '№',
         'subject_name',
         'subject_description',
-        'details',
         'update',
         'delete',
     ]
-    public dataSource = new MatTableDataSource<SubjectsResponse>()
+    public dataSource = new MatTableDataSource<SubjectsResponse>();
+    public singleRecordData: SubjectsResponse;
 
     @ViewChild(MatSort) sort: MatSort
     @ViewChild(MatPaginator) paginator: MatPaginator
@@ -40,9 +40,7 @@ export class SubjectsHomeComponent implements OnInit, AfterViewInit {
         private subjectsService: SubjectsService,
         public dialog: MatDialog
     ) {
-        this.subjectsService.getData('getRecords').subscribe((response) => {
-            this.dataSource.data = response
-        })
+        this.getSubjects();
     }
 
     ngOnInit() {}
@@ -52,28 +50,48 @@ export class SubjectsHomeComponent implements OnInit, AfterViewInit {
         this.dataSource.paginator = this.paginator
     }
 
+    public getSubjects() {
+        this.subjectsService.getData().subscribe((response) => this.dataSource.data = response)
+    }
+
     public redirectToCreate = (data: SubjectsRequest) => {
-        this.subjectsService.create('insertData', data).subscribe()
+        this.subjectsService.create(data).subscribe()
     }
 
-    public redirectToDetails = (id: string) => {}
-
-    public redirectToUpdate = (id: string, data) => {
-        this.subjectsService.update(id, data).subscribe()
+    public redirectToUpdate = (id: number, body: any) => {
+        this.subjectsService.update(id, body).subscribe()
     }
 
-    public redirectToDelete = (id: string) => {
+    public redirectToDelete = (id: number) => {
         this.subjectsService.delete(id).subscribe()
     }
 
-    public openDialog(): void {
+    public onCreate(): void {
         const dialogRef = this.dialog.open(ModalComponent, {
             height: '400px',
             width: '500px',
         })
 
-        dialogRef.afterClosed().subscribe((result: SubjectsRequest) => {
-            if (result) this.redirectToCreate(result)
+           dialogRef.afterClosed().subscribe((result: SubjectsResponse) => {
+            if (result) {
+                    this.redirectToCreate(result)
+            }
+        })
+    }
+
+    public onEdit(element: SubjectsResponse): void {
+
+        const dialogRef = this.dialog.open(ModalComponent, {
+            height: '400px',
+            width: '500px',
+            data: element
+        })
+
+           dialogRef.afterClosed().subscribe((result: SubjectsResponse) => {
+            if (result) {
+                this.redirectToUpdate(result.subject_id, result);
+                this.getSubjects()
+            }
         })
     }
 

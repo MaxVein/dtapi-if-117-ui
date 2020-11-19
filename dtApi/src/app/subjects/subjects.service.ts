@@ -27,35 +27,35 @@ interface SubjectsRequest {
 export class SubjectsService {
     constructor(private http: HttpClient) {}
 
-    public getData(route: string) {
+    public getData(id?: string) {
         return this.http
-            .get<SubjectsResponse[]>(`${entityURI}/${route}`)
+            .get<SubjectsResponse[]>(`${entityURI}/getRecords/${id}`)
             .pipe(catchError(this.handleError))
     }
 
-    public create = (route: string, body: SubjectsRequest) => {
+    public create = (body: SubjectsRequest) => {
         return this.http
             .post<SubjectsResponse>(
-                `${entityURI}/${route}`,
+                `${entityURI}/insertData`,
                 body,
                 this.generateHeaders()
             )
             .pipe(catchError(this.handleError))
     }
 
-    public update = (route: string, body: SubjectsRequest) => {
+    public update = (id: number, body: SubjectsRequest) => {
         return this.http
             .post<SubjectsResponse>(
-                `${entityURI}/update/${route}`,
+                `${entityURI}/update/${id}`,
                 body,
                 this.generateHeaders()
             )
             .pipe(catchError(this.handleError))
     }
 
-    public delete = (route: string) => {
+    public delete = (id: number) => {
         return this.http
-            .delete(`${entityURI}/del/${route}`)
+            .delete(`${entityURI}/del/${id}`)
             .pipe(catchError(this.handleError))
     }
 

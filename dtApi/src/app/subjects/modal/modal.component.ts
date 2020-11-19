@@ -1,12 +1,12 @@
 import { Component, OnInit, Inject } from '@angular/core'
 import {
-    MatDialog,
     MatDialogRef,
     MAT_DIALOG_DATA,
 } from '@angular/material/dialog'
 import { FormControl, FormGroup, Validators } from '@angular/forms'
 
-interface Subjects {
+interface SubjectsResponse {
+    subject_id: number
     subject_name: string
     subject_description: string
 }
@@ -26,24 +26,27 @@ export class ModalComponent implements OnInit {
             this.data ? this.data.subject_description : '',
             [Validators.required, Validators.pattern('[а-яА-ЯіІїЄє ]*')]
         ),
+        subject_id: new FormControl(
+            this.data ? this.data.subject_id : '',
+        )
     })
 
     constructor(
         public dialogRef: MatDialogRef<ModalComponent>,
-        @Inject(MAT_DIALOG_DATA) public data: Subjects
+        @Inject(MAT_DIALOG_DATA) public data: SubjectsResponse
     ) {}
 
-    ngOnInit(): void {}
-
-    onNoClick(): void {
-        this.dialogRef.close()
+    ngOnInit(): void {
     }
 
-    save() {
-        if (this.subjectForm.invalid) {
-            return true
+    public onSubmit() {
+        if (this.subjectForm.valid) {
+            this.dialogRef.close(this.subjectForm.value)
         }
-        this.dialogRef.close(this.subjectForm.value)
+    }
+
+    public onClose(): void {
+        this.dialogRef.close();
     }
 
     hasError = (controlName: string, errorName: string) => {
