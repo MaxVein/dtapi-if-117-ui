@@ -1,5 +1,7 @@
 import { Injectable } from '@angular/core'
 import { HttpClient } from '@angular/common/http'
+import { Observable } from 'rxjs'
+import { map } from 'rxjs/operators'
 import {
     Check,
     Faculty,
@@ -8,9 +10,7 @@ import {
     Student,
     Unique,
 } from '../../../../shared/interfaces/interfaces'
-import { Observable } from 'rxjs'
 import { environment } from '../../../../../environments/environment'
-import { map } from 'rxjs/operators'
 
 @Injectable()
 export class StudentsService {

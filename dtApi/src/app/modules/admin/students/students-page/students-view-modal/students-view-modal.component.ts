@@ -1,9 +1,10 @@
-import { Component, Inject, OnInit } from '@angular/core'
+import { Component, Inject, OnDestroy, OnInit } from '@angular/core'
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog'
 import { AlertComponent } from '../../../../../shared/components/alert/alert.component'
 import { StudentsService } from 'src/app/modules/admin/students/students-page/students.service'
 import { ModalService } from '../../../../../shared/services/modal.service'
 import { Student } from 'src/app/shared/interfaces/interfaces'
+import { Subscription } from 'rxjs'
 import { environment } from 'src/environments/environment'
 
 @Component({
@@ -11,11 +12,12 @@ import { environment } from 'src/environments/environment'
     templateUrl: './students-view-modal.component.html',
     styleUrls: ['./students-view-modal.component.scss'],
 })
-export class StudentsViewModalComponent implements OnInit {
+export class StudentsViewModalComponent implements OnInit, OnDestroy {
     loading = false
     defaultImage = environment.defaultImage
     groupID = this.data.group_id
     student: Student = this.data.student_data
+    studentSubscription: Subscription
     groupName: string
     facultyName: string
     specialityName: string
@@ -34,75 +36,100 @@ export class StudentsViewModalComponent implements OnInit {
     }
 
     getStudentInfo(): void {
-        this.studentsService
+        this.studentSubscription = this.studentsService
             .getById(this.student.user_id)
-            .subscribe((response) => {
-                this.student.username = response[0].username
-                this.student.email = response[0].email
-            })
+            .subscribe(
+                (response) => {
+                    this.student.username = response[0].username
+                    this.student.email = response[0].email
+                },
+                () => {
+                    const message = 'Сталася помилка. Спробуйте знову'
+                    const title = 'Помилка'
+                    this.closeModal(title)
+                    this.modalService.openModal(AlertComponent, {
+                        data: {
+                            message,
+                            title,
+                        },
+                    })
+                }
+            )
     }
 
     getGroupInfo(): void {
-        this.studentsService.getGroupData(this.groupID).subscribe(
-            (response) => {
-                this.groupName = response[0].group_name
-                this.getFacultyInfo(response[0].faculty_id)
-                this.getSpecialityInfo(response[0].speciality_id)
-            },
-            () => {
-                const message = 'Сталася помилка. Спробуйте знову'
-                const title = 'Помилка'
-                this.closeModal('Закрито через помилку')
-                this.modalService.openModal(AlertComponent, {
-                    data: {
-                        message,
-                        title,
-                    },
-                })
-            }
-        )
+        this.studentSubscription = this.studentsService
+            .getGroupData(this.groupID)
+            .subscribe(
+                (response) => {
+                    this.groupName = response[0].group_name
+                    this.getFacultyInfo(response[0].faculty_id)
+                    this.getSpecialityInfo(response[0].speciality_id)
+                },
+                () => {
+                    const message = 'Сталася помилка. Спробуйте знову'
+                    const title = 'Помилка'
+                    this.closeModal(title)
+                    this.modalService.openModal(AlertComponent, {
+                        data: {
+                            message,
+                            title,
+                        },
+                    })
+                }
+            )
     }
 
     getFacultyInfo(id: string): void {
-        this.studentsService.getFacultyData(id).subscribe(
-            (response) => {
-                this.facultyName = response[0].faculty_name
-            },
-            () => {
-                const message = 'Сталася помилка. Спробуйте знову'
-                const title = 'Помилка'
-                this.closeModal('Закрито через помилку')
-                this.modalService.openModal(AlertComponent, {
-                    data: {
-                        message,
-                        title,
-                    },
-                })
-            }
-        )
+        this.studentSubscription = this.studentsService
+            .getFacultyData(id)
+            .subscribe(
+                (response) => {
+                    this.facultyName = response[0].faculty_name
+                },
+                () => {
+                    const message = 'Сталася помилка. Спробуйте знову'
+                    const title = 'Помилка'
+                    this.closeModal(title)
+                    this.modalService.openModal(AlertComponent, {
+                        data: {
+                            message,
+                            title,
+                        },
+                    })
+                }
+            )
     }
 
     getSpecialityInfo(id: string): void {
-        this.studentsService.getSpecialityData(id).subscribe(
-            (response) => {
-                this.specialityName = response[0].speciality_name
-                this.loading = false
-            },
-            () => {
-                const message = 'Сталася помилка. Спробуйте знову'
-                const title = 'Помилка'
-                this.closeModal('Закрито через помилку')
-                this.modalService.openModal(AlertComponent, {
-                    data: {
-                        message,
-                        title,
-                    },
-                })
-            }
-        )
+        this.studentSubscription = this.studentsService
+            .getSpecialityData(id)
+            .subscribe(
+                (response) => {
+                    this.specialityName = response[0].speciality_name
+                    this.loading = false
+                },
+                () => {
+                    const message = 'Сталася помилка. Спробуйте знову'
+                    const title = 'Помилка'
+                    this.closeModal(title)
+                    this.modalService.openModal(AlertComponent, {
+                        data: {
+                            message,
+                            title,
+                        },
+                    })
+                }
+            )
     }
 
     closeModal(dialogResult = 'Закрито'): void {
         this.dialogRef.close(dialogResult)
+    }
+
+    ngOnDestroy(): void {
+        if (this.studentSubscription) {
+            this.studentSubscription.unsubscribe()
+        }
     }
 }
