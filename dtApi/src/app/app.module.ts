@@ -10,10 +10,11 @@ import { LoginModule } from './modules/login/login.module'
 import { StudentPageModule } from './modules/student-profile/student-profileModule/student-profile.module'
 import { SharedModule } from './shared/modules/shared.module'
 
+import { NotFoundPageComponent } from './shared/components/not-found-page/not-found-page.component'
 import { AppComponent } from './app.component'
 
 @NgModule({
-    declarations: [AppComponent],
+    declarations: [AppComponent, NotFoundPageComponent],
     imports: [
         BrowserModule,
         BrowserAnimationsModule,
