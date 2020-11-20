@@ -18,6 +18,13 @@ const routes: Routes = [
         loadChildren: () =>
             import('./modules/login/login.module').then((m) => m.LoginModule),
     },
+    {
+        path: 'student-page',
+        loadChildren: () =>
+            import(
+                './modules/student-profile/student-page/student-page.module'
+            ).then((m) => m.StudentPageModule),
+    },
     { path: '404', component: NotFoundPageComponent },
     { path: '**', redirectTo: '/404' },
 ]
