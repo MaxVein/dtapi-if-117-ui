@@ -13,7 +13,7 @@ export class NotFoundPageComponent implements OnInit {
         if (role === 'admin') {
             this.link = '/admin/dashboard'
         } else {
-            this.link = '/student/home'
+            this.link = '/student'
         }
     }
 }
