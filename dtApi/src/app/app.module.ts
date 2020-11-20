@@ -1,33 +1,26 @@
-import { BrowserModule } from '@angular/platform-browser'
 import { NgModule } from '@angular/core'
-import { HttpClientModule } from '@angular/common/http'
-import { ReactiveFormsModule } from '@angular/forms'
+
+import { BrowserModule } from '@angular/platform-browser'
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations'
+import { HttpClientModule } from '@angular/common/http'
 
 import { AppRoutingModule } from './app-routing.module'
+import { SharedModule } from './shared/modules/shared.module'
 import { AppComponent } from './app.component'
-import { AngularMaterialModule } from './shared/modules/angular-material/angular-material.module'
-import { SpecialityModule } from './speciality/speciality.module'
-
-import { DashboardModule } from './modules/dashboard/dashboard.module'
-import { LoginComponent } from './login/login.component'
-import { GroupsModule } from './modules/groups/groups.module'
+import { NotFoundPageComponent } from './shared/components/not-found-page/not-found-page.component'
 
 @NgModule({
-    declarations: [AppComponent, LoginComponent],
+    declarations: [AppComponent, NotFoundPageComponent],
+
     imports: [
         BrowserModule,
-        AppRoutingModule,
-        AngularMaterialModule,
-        SpecialityModule,
         BrowserAnimationsModule,
-        ReactiveFormsModule,
         HttpClientModule,
-        DashboardModule,
-        GroupsModule,
+        AppRoutingModule,
+        SharedModule,
     ],
     providers: [],
-    exports: [AngularMaterialModule],
+    exports: [],
     bootstrap: [AppComponent],
 })
 export class AppModule {}
