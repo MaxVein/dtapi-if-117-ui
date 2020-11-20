@@ -76,7 +76,6 @@ export class GroupsComponent implements OnInit {
             ELEMENT_DATA = data
             this.dataSource = new MatTableDataSource<GroupData>(ELEMENT_DATA)
             this.dataSource.paginator = this.paginator
-            this.dataSource.sort = this.sort
 
             this.sharedData
                 ? this.groupsSertvice.saveData(this.sharedData)
@@ -85,6 +84,7 @@ export class GroupsComponent implements OnInit {
         setTimeout(() => {
             this.loading = false
         }, 500)
+        this.dataSource.sort = this.sort
     }
 
     changeGroup(group?): void {
