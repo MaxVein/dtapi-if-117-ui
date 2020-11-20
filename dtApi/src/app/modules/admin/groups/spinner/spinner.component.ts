@@ -8,10 +8,10 @@ import { Component, Input } from '@angular/core'
 export class SpinnerComponent {
     constructor() {}
 
-    @Input() value: number = 100
-    @Input() diameter: number = 100
-    @Input() mode: string = 'indeterminate'
-    @Input() strokeWidth: number = 10
-    @Input() overlay: boolean = false
-    @Input() color: string = 'primary'
+    @Input() value = 100
+    @Input() diameter = 100
+    @Input() mode = 'indeterminate'
+    @Input() strokeWidth = 10
+    @Input() overlay = false
+    @Input() color = 'primary'
 }

@@ -156,7 +156,7 @@ export class GroupsComponent implements OnInit {
         this.groupsSertvice
             .insertData('Group', group)
             .subscribe((result: any) => {
-                let newItem = {
+                const newItem = {
                     group_id: result.group_id,
                     group_name: result.group_name,
                     faculty_name: this.groupsSertvice
