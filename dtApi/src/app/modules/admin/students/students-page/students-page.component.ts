@@ -52,6 +52,7 @@ export class StudentsPageComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     ngAfterViewInit(): void {
+        this.paginator._intl.itemsPerPageLabel = 'Рядків у таблиці'
         this.dataSource.paginator = this.paginator
     }
 

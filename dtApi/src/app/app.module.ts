@@ -1,6 +1,6 @@
+import { NgModule } from '@angular/core'
 import { BrowserModule } from '@angular/platform-browser'
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations'
-import { NgModule } from '@angular/core'
 import { HttpClientModule } from '@angular/common/http'
 import { ReactiveFormsModule } from '@angular/forms'
 
@@ -9,13 +9,12 @@ import { AngularMaterialModule } from './shared/modules/angular-material/angular
 import { SharedModule } from './shared/modules/shared.module'
 import { SpecialityModule } from './modules/admin/speciality/speciality.module'
 import { GroupsModule } from './modules/admin/groups/groups.module'
-import { NotFoundComponent } from './shared/components/not-found/not-found.component'
 import { StudentPageModule } from './modules/student-profile/student-page/student-page.module'
-
+import { NotFoundPageComponent } from './shared/components/not-found-page/not-found-page.component'
 import { AppComponent } from './app.component'
 
 @NgModule({
-    declarations: [AppComponent, NotFoundComponent],
+    declarations: [AppComponent, NotFoundPageComponent],
     imports: [
         BrowserModule,
         StudentPageModule,
@@ -26,6 +25,7 @@ import { AppComponent } from './app.component'
         AngularMaterialModule,
         GroupsModule,
         SpecialityModule,
+        StudentPageModule,
         SharedModule,
     ],
     providers: [],
