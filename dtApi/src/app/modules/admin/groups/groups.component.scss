@@ -24,4 +24,10 @@
             margin-top: 1rem;
         }
     }
+    .mat-icon {
+        cursor: pointer;
+        &:hover {
+            color: #3f51b5;
+        }
+    }
 }

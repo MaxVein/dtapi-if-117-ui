@@ -41,8 +41,8 @@ export class GroupsComponent implements OnInit {
     ]
     dataSource = new MatTableDataSource<GroupData>(ELEMENT_DATA)
 
-    @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator
-    @ViewChild('table', { static: true }) table: MatTable<GroupData>
+    @ViewChild(MatPaginator, { static: false }) paginator: MatPaginator
+    @ViewChild('table', { static: false }) table: MatTable<GroupData>
     @ViewChild(MatSort, { static: false }) sort: MatSort
 
     res = []
@@ -75,7 +75,6 @@ export class GroupsComponent implements OnInit {
             this.sharedData.push(this.specialities, this.faculties)
             ELEMENT_DATA = data
             this.dataSource = new MatTableDataSource<GroupData>(ELEMENT_DATA)
-            this.dataSource.paginator = this.paginator
 
             this.sharedData
                 ? this.groupsSertvice.saveData(this.sharedData)
@@ -84,7 +83,10 @@ export class GroupsComponent implements OnInit {
         setTimeout(() => {
             this.loading = false
         }, 500)
-        this.dataSource.sort = this.sort
+        setTimeout(() => {
+            this.dataSource.paginator = this.paginator
+            this.dataSource.sort = this.sort
+        }, 500)
     }
 
     changeGroup(group?): void {

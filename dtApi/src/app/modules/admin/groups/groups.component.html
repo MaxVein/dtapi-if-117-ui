@@ -24,72 +24,78 @@
             #input
         />
     </mat-form-field>
-    <div class="mat-elevation-z8" *ngIf="!loading; else spinner">
-        <table mat-table [dataSource]="dataSource" matSort>
-            <ng-container matColumnDef="group_id">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header>No.</th>
-                <td mat-cell *matCellDef="let element">
-                    {{ element.group_id }}
-                </td>
-            </ng-container>
+    <div>
+        <div class="mat-elevation-z8" *ngIf="!loading; else spinner">
+            <table #table mat-table [dataSource]="dataSource" matSort>
+                <ng-container matColumnDef="group_id">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                        No.
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+                        {{ element.group_id }}
+                    </td>
+                </ng-container>
 
-            <ng-container matColumnDef="group_name">
-                <th mat-header-cell *matHeaderCellDef>Шифр групи</th>
-                <td mat-cell *matCellDef="let element">
-                    {{ element.group_name }}
-                </td>
-            </ng-container>
+                <ng-container matColumnDef="group_name">
+                    <th mat-header-cell *matHeaderCellDef>Шифр групи</th>
+                    <td mat-cell *matCellDef="let element">
+                        {{ element.group_name }}
+                    </td>
+                </ng-container>
 
-            <ng-container matColumnDef="speciality_name">
-                <th mat-header-cell *matHeaderCellDef>Факультет</th>
-                <td mat-cell *matCellDef="let element">
-                    {{ element.speciality_name }}
-                </td>
-            </ng-container>
+                <ng-container matColumnDef="speciality_name">
+                    <th mat-header-cell *matHeaderCellDef>Факультет</th>
+                    <td mat-cell *matCellDef="let element">
+                        {{ element.speciality_name }}
+                    </td>
+                </ng-container>
 
-            <ng-container matColumnDef="faculty_name">
-                <th mat-header-cell *matHeaderCellDef>спеціальність</th>
-                <td mat-cell *matCellDef="let element">
-                    {{ element.faculty_name }}
-                </td>
-            </ng-container>
+                <ng-container matColumnDef="faculty_name">
+                    <th mat-header-cell *matHeaderCellDef>спеціальність</th>
+                    <td mat-cell *matCellDef="let element">
+                        {{ element.faculty_name }}
+                    </td>
+                </ng-container>
 
-            <ng-container matColumnDef="actions">
-                <th mat-header-cell *matHeaderCellDef>Дії</th>
-                <td mat-cell *matCellDef="let group">
-                    <mat-icon
-                        aria-hidden="false"
-                        aria-label="supervisor_account
-          "
-                        matTooltip="Список студентів"
-                        >supervisor_account
-                    </mat-icon>
-                    <mat-icon
-                        aria-hidden="false"
-                        aria-label="edit"
-                        matTooltip="Редагувати групу"
-                        (click)="changeGroup(group)"
-                        >edit</mat-icon
-                    >
-                    <mat-icon
-                        aria-hidden="false"
-                        aria-label="delete"
-                        matTooltip="Видалити групу"
-                        (click)="delCurrGroup(group)"
-                        >delete</mat-icon
-                    >
-                </td>
-            </ng-container>
+                <ng-container matColumnDef="actions">
+                    <th mat-header-cell *matHeaderCellDef>Дії</th>
+                    <td mat-cell *matCellDef="let group">
+                        <mat-icon
+                            aria-hidden="false"
+                            aria-label="supervisor_account"
+                            matTooltip="Список студентів"
+                            >supervisor_account</mat-icon
+                        >
+                        <mat-icon
+                            aria-hidden="false"
+                            aria-label="edit"
+                            matTooltip="Редагувати групу"
+                            (click)="changeGroup(group)"
+                            >edit</mat-icon
+                        >
+                        <mat-icon
+                            aria-hidden="false"
+                            aria-label="delete"
+                            matTooltip="Видалити групу"
+                            (click)="delCurrGroup(group)"
+                            >delete</mat-icon
+                        >
+                    </td>
+                </ng-container>
 
-            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-            <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
-        </table>
-        <mat-paginator
-            [length]="25"
-            [pageSize]="5"
-            [pageSizeOptions]="[5, 10, 25]"
-            showFirstLastButtons
-        ></mat-paginator>
+                <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                <tr
+                    mat-row
+                    *matRowDef="let row; columns: displayedColumns"
+                ></tr>
+            </table>
+            <mat-paginator
+                [length]="25"
+                [pageSize]="5"
+                [pageSizeOptions]="[5, 10, 25]"
+                showFirstLastButtons
+            ></mat-paginator>
+        </div>
     </div>
     <ng-template #spinner>
         <app-loader></app-loader>
