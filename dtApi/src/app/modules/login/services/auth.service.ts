@@ -1,13 +1,17 @@
 import { HttpClient } from '@angular/common/http'
 import { Injectable } from '@angular/core'
-import { Observable } from 'rxjs'
 import { Router } from '@angular/router'
+import { Observable, of } from 'rxjs'
+import { tap } from 'rxjs/operators'
+
 import { environment } from 'src/environments/environment'
 
 @Injectable({
     providedIn: 'root',
 })
 export class AuthService {
+    currentUser: string = null
+
     constructor(private http: HttpClient, private router: Router) {}
 
     loginRequest(userName: string, password: string): Observable<any> {
@@ -16,7 +20,11 @@ export class AuthService {
             username: userName,
             password: password,
         }
-        return this.http.post(`${environment.BASEURL}${url}`, body)
+        return this.http.post(`${environment.BASEURL}${url}`, body).pipe(
+            tap((data) => {
+                this.currentUser = data
+            })
+        )
     }
 
     logOutRequest() {
@@ -33,6 +41,20 @@ export class AuthService {
                     console.error(err)
                 }
             )
+    }
+    getCurrentUser() {
+        if (this.currentUser) {
+            return of(this.currentUser)
+        }
+        return this.http.get(`${environment.BASEURL}login/isLogged`).pipe(
+            tap((data: any) => {
+                if (data.response === 'non logged') {
+                    this.currentUser = null
+                    return this.router.navigate(['/login'])
+                }
+                this.currentUser = data
+            })
+        )
     }
 
     isLogged() {

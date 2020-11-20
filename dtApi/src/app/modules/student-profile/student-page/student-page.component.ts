@@ -1,9 +1,10 @@
 import { Component, OnInit, ViewChild } from '@angular/core'
 import { MatPaginator } from '@angular/material/paginator'
 import { MatTableDataSource } from '@angular/material/table'
+import { MatSnackBar } from '@angular/material/snack-bar'
 
-import { concatMap, map, delay } from 'rxjs/operators'
-import { Observable } from 'rxjs'
+import { concatMap, map } from 'rxjs/operators'
+import { Observable, throwError } from 'rxjs'
 
 import { environment } from 'src/environments/environment'
 import {
@@ -25,7 +26,11 @@ import { AuthService } from '../../login/services/auth.service'
     styleUrls: ['./student-page.component.scss'],
 })
 export class StudentPageComponent implements OnInit {
-    constructor(private student: StudentService, private auth: AuthService) {}
+    constructor(
+        private student: StudentService,
+        private auth: AuthService,
+        private snackBar: MatSnackBar
+    ) {}
 
     photo: string
     gradebookId: string
@@ -136,23 +141,35 @@ export class StudentPageComponent implements OnInit {
                 concatMap(
                     (res: testDetails[]): Observable<any> => {
                         this.testsBySubject = res
-                        ///console.log(res)
-                        return this.student.getTestDetails(this.subjectId)
+                        if (!Array.isArray(res)) {
+                            this.openSnackBar('Дані відсутні', 'X')
+                            return throwError(new Error('No data found...'))
+                        } else {
+                            return this.student.getTestDetails(this.subjectId)
+                        }
                     }
-                )
+                ),
+                map((res) => res[0])
             )
             .subscribe({
-                next: (res: testDate[]) => {
+                next: (res: testDate) => {
+                    let testDate = res
+                    if (testDate === undefined) {
+                        testDate = {
+                            end_date: 'Дані відсутні',
+                            start_date: 'Дані відсутні',
+                        }
+                    }
                     this.testDetails = [...this.testsBySubject].map((test) => ({
                         ...test,
-                        ...res[0],
+                        ...testDate,
                         subjectname: this.subjectName,
                     }))
                     this.dataSource = new MatTableDataSource(this.testDetails)
                     this.dataSource.paginator = this.paginator
                 },
                 error: (err) => {
-                    //console.log(err)
+                    this.dataSource = null
                 },
             })
     }
@@ -168,5 +185,13 @@ export class StudentPageComponent implements OnInit {
             ].id
         this.subjectName = event.target.value
         this.getTestInfo()
+    }
+    logOut() {
+        this.auth.logOutRequest()
+    }
+    openSnackBar(message: string, action: string) {
+        this.snackBar.open(message, action, {
+            duration: 2000,
+        })
     }
 }

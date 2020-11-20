@@ -14,23 +14,16 @@ const routes: Routes = [
         canActivate: [AdminGuard],
     },
     {
+        path: 'login',
+        loadChildren: () =>
+            import('./modules/login/login.module').then((m) => m.LoginModule),
+    },
+    {
         path: 'student-page',
         loadChildren: () =>
             import(
                 './modules/student-profile/student-page/student-page.module'
             ).then((m) => m.StudentPageModule),
-    },
-    {
-        path: 'tests',
-        loadChildren: () =>
-            import('./modules/admin/test/test.module').then(
-                (m) => m.TestModule
-            ),
-    },
-    {
-        path: 'login',
-        loadChildren: () =>
-            import('./modules/login/login.module').then((m) => m.LoginModule),
     },
     { path: '404', component: NotFoundPageComponent },
     { path: '**', redirectTo: '/404' },

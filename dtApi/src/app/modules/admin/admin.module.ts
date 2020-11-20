@@ -28,7 +28,7 @@ const routes: Routes = [
                 component: GroupsComponent,
             },
             {
-                path: 'sstudents',
+                path: 'students',
                 component: StudentsPageComponent,
             },
         ],

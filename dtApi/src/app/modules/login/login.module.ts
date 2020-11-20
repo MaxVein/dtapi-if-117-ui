@@ -12,10 +12,7 @@ import { AngularMaterialModule } from '../../shared/modules/angular-material/ang
         CommonModule,
         ReactiveFormsModule,
         AngularMaterialModule,
-        RouterModule.forChild([
-            { path: 'login', component: LoginComponent },
-            { path: '', redirectTo: 'login', pathMatch: 'full' },
-        ]),
+        RouterModule.forChild([{ path: '', component: LoginComponent }]),
     ],
     exports: [LoginComponent],
 })

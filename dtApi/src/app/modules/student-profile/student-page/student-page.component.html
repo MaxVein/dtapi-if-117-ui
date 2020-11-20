@@ -1,9 +1,31 @@
+<mat-toolbar color="primary" class="student-toolbar">
+    <p><span>DT-API</span></p>
+    <p>
+        <button mat-button [matMenuTriggerFor]="menu">
+            {{ studentSurname }} {{ studentName }}
+        </button>
+        <mat-menu #menu="matMenu">
+            <button mat-menu-item (click)="logOut()">Вийти</button>
+        </mat-menu>
+        <button mat-button [matMenuTriggerFor]="lang">Мова</button>
+        <mat-menu #lang="matMenu">
+            <button mat-menu-item>ENG</button>
+            <button mat-menu-item>UKR</button>
+        </mat-menu>
+    </p>
+</mat-toolbar>
+
 <div class="student-container">
     <div class="student-test-timeTable">
         <p class="student-test-title"><strong>Розклад тестування</strong></p>
-        <p>
-            <label for="subject">Оберіть будь ласка предмет</label>
-            <select name="subjects" id="" (change)="selectSubject($event)">
+        <p class="student-test-options">
+            <label for="subjects">Оберіть будь ласка предмет</label>
+            <select
+                name="subjects"
+                id=""
+                (change)="selectSubject($event)"
+                class="student-select"
+            >
                 <option
                     *ngFor="let subject of subjects"
                     id="{{ subject.subject_id }}"
@@ -13,7 +35,7 @@
                 </option>
             </select>
         </p>
-        <div class="mat-elevation-z8">
+        <div class="mat-elevation-z8 student-table-test">
             <table
                 mat-table
                 [dataSource]="dataSource"

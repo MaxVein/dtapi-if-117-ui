@@ -41,15 +41,19 @@ export interface testDetails {
     test_id: string
     test_name: string
     time_for_test: string
-    response?: string
+    response: string
+}
+export interface testDetailsErorr {
+    response: string
 }
 
 export interface testDate {
     end_date: string
-    end_time: string
-    group_id: string
+    end_time?: string
+    group_id?: string
     start_date: string
-    start_time: string
-    subject_id: string
-    timetable_id: string
+    start_time?: string
+    subject_id?: string
+    timetable_id?: string
+    response?: string
 }
