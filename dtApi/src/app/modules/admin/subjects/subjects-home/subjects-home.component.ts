@@ -39,11 +39,11 @@ export class SubjectsHomeComponent implements OnInit, AfterViewInit {
     constructor(
         private subjectsService: SubjectsService,
         public dialog: MatDialog
-    ) {
+    ) {}
+
+    ngOnInit() {
         this.getSubjects()
     }
-
-    ngOnInit() {}
 
     ngAfterViewInit(): void {
         this.dataSource.sort = this.sort
@@ -74,7 +74,7 @@ export class SubjectsHomeComponent implements OnInit, AfterViewInit {
             width: '500px',
         })
 
-        dialogRef.afterClosed().subscribe((result: SubjectsResponse) => {
+        dialogRef.afterClosed().subscribe((result: SubjectsRequest) => {
             if (result) {
                 this.redirectToCreate(result)
             }

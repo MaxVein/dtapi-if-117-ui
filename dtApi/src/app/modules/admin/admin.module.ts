@@ -33,10 +33,6 @@ const routes: Routes = [
                 path: 'sstudents',
                 component: StudentsPageComponent,
             },
-            {
-                path: 'subjects',
-                component: SubjectsHomeComponent,
-            },
         ],
     },
 ]
