@@ -1,18 +1,27 @@
-table {
-    width: 100%;
-    th {
-        text-align: left;
-    }
-}
-.mat-typography {
-    display: flex;
-    justify-content: space-between;
-    .mat-h2 {
+.container {
+    .groups__nav {
+        display: flex;
+        align-items: center;
         margin-left: 1rem;
         margin-top: 1rem;
     }
-    .add-group {
-        margin-right: 1rem;
-        margin-top: 1rem;
+    table {
+        width: 100%;
+        th {
+            text-align: left;
+        }
+    }
+    .mat-typography {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 1rem;
+        .mat-h2 {
+            margin-left: 1rem;
+            margin-top: 1rem;
+        }
+        .add-group {
+            margin-right: 1rem;
+            margin-top: 1rem;
+        }
     }
 }

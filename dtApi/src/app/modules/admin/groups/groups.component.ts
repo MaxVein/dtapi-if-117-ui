@@ -10,8 +10,8 @@ import { GroupDialogComponent } from './group-dialog/group-dialog.component'
 export interface GroupData {
     group_id: string
     group_name: string
-    speciality_id: string
-    faculty_id: string
+    speciality_name: any
+    faculty_name: any
 }
 
 let ELEMENT_DATA: GroupData[]
@@ -22,6 +22,7 @@ let ELEMENT_DATA: GroupData[]
     styleUrls: ['./groups.component.scss'],
 })
 export class GroupsComponent implements OnInit {
+    loading: boolean
     specialities: any = []
     faculties: any = []
     sharedData: any = []
@@ -39,8 +40,8 @@ export class GroupsComponent implements OnInit {
     ]
     dataSource = new MatTableDataSource<GroupData>(ELEMENT_DATA)
 
-    @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator
-    @ViewChild('table', { static: true }) table: MatTable<GroupData>
+    @ViewChild(MatPaginator, { static: false }) paginator: MatPaginator
+    @ViewChild('table', { static: false }) table: MatTable<GroupData>
 
     res = []
     constructor(
@@ -50,6 +51,7 @@ export class GroupsComponent implements OnInit {
     ) {}
 
     ngOnInit() {
+        this.loading = true
         this.getGroups()
     }
     getGroups() {
@@ -77,6 +79,9 @@ export class GroupsComponent implements OnInit {
                 ? this.groupsSertvice.saveData(this.sharedData)
                 : false
         })
+        setTimeout(() => {
+            this.loading = false
+        }, 500)
     }
 
     changeGroup(group?): void {
@@ -150,10 +155,19 @@ export class GroupsComponent implements OnInit {
     addGroup(group) {
         this.groupsSertvice
             .insertData('Group', group)
-            .subscribe((result: GroupData) => {
-                this.dataSource.paginator = this.paginator
-                this.dataSource.data.push(result[0])
+            .subscribe((result: any) => {
+                let newItem = {
+                    group_id: result.group_id,
+                    group_name: result.group_name,
+                    faculty_name: this.groupsSertvice
+                        .getData('Faculty', result.faculty_id)
+                        .subscribe((data) => data[0].faculty_name),
+                    speciality_name: this.groupsSertvice
+                        .getData('Speciality', result.speciality_id)
+                        .subscribe((data) => data[0].speciality_name),
+                }
                 this.ngOnInit()
+                this.groupsSertvice.snackBarOpen('Групу додано')
             })
     }
     editGroup(id, group) {
@@ -164,6 +178,7 @@ export class GroupsComponent implements OnInit {
                     : false
             })
             this.ngOnInit()
+            this.groupsSertvice.snackBarOpen('Групу відредаговано')
         })
     }
 
@@ -185,6 +200,7 @@ export class GroupsComponent implements OnInit {
                 (item) => (item.group_id! = id)
             )
             this.ngOnInit()
+            this.groupsSertvice.snackBarOpen('Групу видалено')
         })
     }
 }
