@@ -2,6 +2,9 @@ import { Injectable } from '@angular/core'
 import { HttpClient } from '@angular/common/http'
 import {
     Check,
+    Faculty,
+    Group,
+    Speciality,
     Student,
     Unique,
 } from '../../../../shared/interfaces/interfaces'
@@ -55,5 +58,23 @@ export class StudentsService {
                         : null
                 })
             )
+    }
+
+    getGroupData(id: string): Observable<Group> {
+        return this.http.get<Group>(
+            `${environment.BASEURL}/Group/getRecords/${id}`
+        )
+    }
+
+    getFacultyData(id: string): Observable<Faculty> {
+        return this.http.get<Faculty>(
+            `${environment.BASEURL}/Faculty/getRecords/${id}`
+        )
+    }
+
+    getSpecialityData(id: string): Observable<Speciality> {
+        return this.http.get<Speciality>(
+            `${environment.BASEURL}/Speciality/getRecords/${id}`
+        )
     }
 }

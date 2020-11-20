@@ -60,6 +60,7 @@ export class LoginComponent implements OnInit {
         this.apiService.login(this.userName, this.password).subscribe({
             next: (res) => {
                 const goTo = res.roles.includes('admin') ? 'admin' : 'student'
+                localStorage.setItem('role', goTo)
                 this.router.navigate([goTo])
             },
             error: (error) => {
