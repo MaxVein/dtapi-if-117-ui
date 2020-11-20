@@ -80,7 +80,7 @@ export class SubjectsHomeComponent implements OnInit, AfterViewInit {
         dialogRef.afterClosed().subscribe((result: SubjectsRequest) => {
             if (result) {
                 const updResult = { ...result }
-                for (let k in updResult) {
+                for (const k in updResult) {
                     if (!updResult[k]) delete updResult[k]
                 }
                 this.redirectToCreate(updResult)
