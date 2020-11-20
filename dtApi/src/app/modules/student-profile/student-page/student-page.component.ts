@@ -142,7 +142,7 @@ export class StudentPageComponent implements OnInit {
                     (res: testDetails[]): Observable<any> => {
                         this.testsBySubject = res
                         if (!Array.isArray(res)) {
-                            //this.openSnackBar('Дані відсутні', 'X')
+                            this.openSnackBar('Дані відсутні', 'X')
                             return throwError(new Error('No data found...'))
                         } else {
                             return this.student.getTestDetails(this.subjectId)
@@ -188,5 +188,10 @@ export class StudentPageComponent implements OnInit {
     }
     logOut() {
         this.auth.logOutRequest()
+    }
+    openSnackBar(message: string, action: string) {
+        this.snackBar.open(message, action, {
+            duration: 2000,
+        })
     }
 }
