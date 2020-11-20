@@ -77,4 +77,16 @@ export class StudentsService {
             `${environment.BASEURL}/Speciality/getRecords/${id}`
         )
     }
+
+    getEntityFaculty(): Observable<Faculty[]> {
+        return this.http.get<Faculty[]>(
+            `${environment.BASEURL}/Faculty/getRecords`
+        )
+    }
+
+    getEntityGroupsByFaculty(id: string): Observable<Group[]> {
+        return this.http.get<Group[]>(
+            `${environment.BASEURL}/group/getGroupsByFaculty/${id}`
+        )
+    }
 }

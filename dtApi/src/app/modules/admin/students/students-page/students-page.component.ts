@@ -6,18 +6,16 @@ import {
     ViewChild,
 } from '@angular/core'
 import { ActivatedRoute, Router } from '@angular/router'
-import { Subscription } from 'rxjs'
 import { MatPaginator } from '@angular/material/paginator'
 import { MatTableDataSource } from '@angular/material/table'
-
-import { StudentsService } from 'src/app/modules/admin/students/students-page/students.service'
-
-import { ModalService } from 'src/app/shared/services/modal.service'
 import { StudentsModalComponent } from './students-modal/students-modal.component'
 import { StudentsViewModalComponent } from './students-view-modal/students-view-modal.component'
 import { StudentsTransferModalComponent } from './students-transfer-modal/students-transfer-modal.component'
 import { ConfirmComponent } from 'src/app/shared/components/confirm/confirm.component'
+import { StudentsService } from 'src/app/modules/admin/students/students-page/students.service'
+import { ModalService } from 'src/app/shared/services/modal.service'
 import { Student } from 'src/app/shared/interfaces/interfaces'
+import { Subscription } from 'rxjs'
 
 @Component({
     selector: 'app-students-page',
@@ -156,7 +154,18 @@ export class StudentsPageComponent implements OnInit, AfterViewInit, OnDestroy {
                 },
             },
             (result) => {
-                if (result) {
+                if (!result) {
+                    this.modalService.showSnackBar(
+                        'Сталася помилка! Спробуйте знову'
+                    )
+                } else if (result.response === 'ok') {
+                    this.loading = true
+                    this.getStudentsByGroup()
+                    this.modalService.showSnackBar('Студента переведено')
+                    setTimeout(() => {
+                        this.loading = false
+                    }, 500)
+                } else if (result === 'Скасовано') {
                     this.modalService.showSnackBar('Скасовано')
                 }
             }

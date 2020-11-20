@@ -12,12 +12,15 @@
                     <mat-form-field class="faculty">
                         <mat-label>Виберіть Факультат/Інститут</mat-label>
                         <mat-select
-                            #faculty
                             required
                             placeholder="Факультет/Інститут"
+                            (selectionChange)="getGroups($event)"
                         >
-                            <mat-option>
-                                Інститут інформаційних технологій
+                            <mat-option
+                                *ngFor="let faculty of faculties"
+                                [value]="faculty.faculty_id"
+                            >
+                                {{ faculty.faculty_name }}
                             </mat-option>
                         </mat-select>
                     </mat-form-field>
@@ -28,8 +31,17 @@
                 <div class="transfer__selector">
                     <mat-form-field class="faculty">
                         <mat-label>Виберіть Групу</mat-label>
-                        <mat-select #group required placeholder="Група">
-                            <mat-option> ІПмз-20-1 </mat-option>
+                        <mat-select
+                            required
+                            placeholder="Група"
+                            (selectionChange)="getGroup($event)"
+                        >
+                            <mat-option
+                                *ngFor="let group of groups"
+                                [value]="group.group_id"
+                            >
+                                {{ group.group_name }}
+                            </mat-option>
                         </mat-select>
                     </mat-form-field>
                 </div>
@@ -48,7 +60,13 @@
                 Закрити
             </button>
 
-            <button mat-flat-button color="accent" class="transfer__btn">
+            <button
+                mat-flat-button
+                color="accent"
+                class="transfer__btn"
+                (click)="submit()"
+                [disabled]="!submitted"
+            >
                 Перевести
             </button>
         </div>
