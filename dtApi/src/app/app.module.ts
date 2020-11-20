@@ -5,8 +5,8 @@ import { HttpClientModule } from '@angular/common/http'
 
 import { AppRoutingModule } from './app-routing.module'
 import { SharedModule } from './shared/modules/shared.module'
-import { AppComponent } from './app.component'
 import { NotFoundPageComponent } from './shared/components/not-found-page/not-found-page.component'
+import { AppComponent } from './app.component'
 
 @NgModule({
     declarations: [AppComponent, NotFoundPageComponent],
