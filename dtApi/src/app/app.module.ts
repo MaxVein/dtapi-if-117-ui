@@ -1,5 +1,4 @@
 import { NgModule } from '@angular/core'
-
 import { BrowserModule } from '@angular/platform-browser'
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations'
 import { HttpClientModule } from '@angular/common/http'
@@ -11,7 +10,6 @@ import { NotFoundPageComponent } from './shared/components/not-found-page/not-fo
 
 @NgModule({
     declarations: [AppComponent, NotFoundPageComponent],
-
     imports: [
         BrowserModule,
         BrowserAnimationsModule,

@@ -9,31 +9,27 @@
     >
         <mat-toolbar>Навігація</mat-toolbar>
         <mat-nav-list>
-            <a mat-list-item routerLink="">Головна</a>
-            <a mat-list-item routerLink="">Факультети</a>
-            <a mat-list-item routerLink="groups">Групи</a>
-            <a mat-list-item routerLink="">Спеціальності</a>
-            <a mat-list-item routerLink="">Предмети</a>
-            <a mat-list-item routerLink="">Результати</a>
-            <a mat-list-item routerLink="">Протокол</a>
-            <a mat-list-item routerLink="">Адміни</a>
-            <a mat-list-item routerLink="">Про нас</a>
-            <a mat-list-item routerLink="" (click)="logOut()">Вихід</a>
+            <a mat-list-item routerLink="/admin/dashboard">Головна</a>
+            <a mat-list-item routerLink="/admin/faculties">Факультети</a>
+            <a mat-list-item routerLink="/admin/group">Групи</a>
+            <a mat-list-item routerLink="/admin/speciality">Спеціальності</a>
+            <a mat-list-item routerLink="/admin/subjects">Предмети</a>
+            <a mat-list-item routerLink="/admin/results">Результати</a>
+            <a mat-list-item routerLink="/admin/protocol">Протокол</a>
+            <a mat-list-item routerLink="/admin/admins">Адміни</a>
+            <a mat-list-item routerLink="/admin/about">Про нас</a>
+            <a mat-list-item (click)="logOut()">Вихід</a>
         </mat-nav-list>
     </mat-sidenav>
     <mat-sidenav-content>
         <mat-toolbar color="primary">
-            <span>DT-API</span>
+            <span>D-TESTER</span>
             <span class="toolbar-spacer"></span>
-
             <span class="toolbar-spacer"></span>
-            <!-- !Login/Logout  -->
             <button mat-button [matMenuTriggerFor]="menu">Адмін</button>
             <mat-menu #menu="matMenu">
-                <!-- !На цю кнопку event binding на клік метод logout -->
                 <button mat-menu-item (click)="logOut()">Вийти</button>
             </mat-menu>
-            <!-- !Language  -->
             <button mat-button [matMenuTriggerFor]="lang">Мова</button>
             <mat-menu #lang="matMenu">
                 <button mat-menu-item>ENG</button>
@@ -48,6 +44,7 @@
                 <mat-icon>{{ menuIcon }}</mat-icon>
             </button>
         </mat-toolbar>
+
         <router-outlet></router-outlet>
     </mat-sidenav-content>
 </mat-sidenav-container>
