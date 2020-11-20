@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core'
 import { MatSnackBar } from '@angular/material/snack-bar'
 import { Router } from '@angular/router'
 import { Observable, of } from 'rxjs'
-import { first, tap } from 'rxjs/operators'
+import { tap } from 'rxjs/operators'
 
 import { environment } from 'src/environments/environment'
 
@@ -43,6 +43,7 @@ export class ApiService {
             duration: 1500,
         })
     }
+
     login(username, password): Observable<any> {
         const body = {
             username,
@@ -70,7 +71,11 @@ export class ApiService {
             tap((data: any) => {
                 if (data.response === 'non logged') {
                     this.currentUser = null
-                    return this.route.navigate(['/login'])
+                    return this.route.navigate(['/login'], {
+                        queryParams: {
+                            notLogin: true,
+                        },
+                    })
                 }
                 this.currentUser = data
             })
