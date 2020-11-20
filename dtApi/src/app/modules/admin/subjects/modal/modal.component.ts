@@ -34,13 +34,17 @@ export class ModalComponent implements OnInit {
     ngOnInit(): void {}
 
     public onSubmit() {
-        if (this.subjectForm.valid) {
+        if (
+            this.subjectForm.valid &&
+            this.subjectForm.touched &&
+            this.subjectForm.dirty
+        ) {
             this.dialogRef.close(this.subjectForm.value)
         }
     }
 
     public onClose(): void {
-        this.dialogRef.close()
+        this.dialogRef.close(false)
     }
 
     hasError = (controlName: string, errorName: string) => {

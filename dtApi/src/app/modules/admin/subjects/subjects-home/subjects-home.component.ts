@@ -31,7 +31,6 @@ export class SubjectsHomeComponent implements OnInit, AfterViewInit {
         'delete',
     ]
     public dataSource = new MatTableDataSource<SubjectsResponse>()
-    public singleRecordData: SubjectsResponse
 
     @ViewChild(MatSort) sort: MatSort
     @ViewChild(MatPaginator) paginator: MatPaginator
@@ -60,12 +59,16 @@ export class SubjectsHomeComponent implements OnInit, AfterViewInit {
         this.subjectsService.create(data).subscribe()
     }
 
-    public redirectToUpdate = (id: number, body: any) => {
+    public redirectToUpdate = (id: number, body: SubjectsResponse) => {
         this.subjectsService.update(id, body).subscribe()
     }
 
     public redirectToDelete = (id: number) => {
-        this.subjectsService.delete(id).subscribe()
+        this.subjectsService.delete(id).subscribe(() => {
+            this.dataSource.data = this.dataSource.data.filter(
+                (item) => item.subject_id !== id
+            )
+        })
     }
 
     public onCreate(): void {
@@ -76,7 +79,12 @@ export class SubjectsHomeComponent implements OnInit, AfterViewInit {
 
         dialogRef.afterClosed().subscribe((result: SubjectsRequest) => {
             if (result) {
-                this.redirectToCreate(result)
+                const updResult = { ...result }
+                for (let k in updResult) {
+                    if (!updResult[k]) delete updResult[k]
+                }
+                this.redirectToCreate(updResult)
+                this.getSubjects()
             }
         })
     }
