@@ -14,6 +14,7 @@ import { MatDialogModule } from '@angular/material/dialog'
 import { MatFormFieldModule } from '@angular/material/form-field'
 import { MatInputModule } from '@angular/material/input'
 import { MatSelectModule } from '@angular/material/select'
+import { MatSortModule } from '@angular/material/sort'
 import { MatRadioModule } from '@angular/material/radio'
 import { MatSidenavModule } from '@angular/material/sidenav'
 import { MatGridListModule } from '@angular/material/grid-list'
@@ -41,6 +42,7 @@ import { MatListModule } from '@angular/material/list'
         MatSnackBarModule,
         MatDividerModule,
         MatSelectModule,
+        MatSortModule,
         MatRadioModule,
         MatSidenavModule,
         MatGridListModule,
@@ -64,6 +66,7 @@ import { MatListModule } from '@angular/material/list'
         MatSnackBarModule,
         MatDividerModule,
         MatSelectModule,
+        MatSortModule,
         MatRadioModule,
         MatSidenavModule,
         MatGridListModule,
