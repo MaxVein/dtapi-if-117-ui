@@ -2,8 +2,8 @@ import { NgModule } from '@angular/core'
 import { Routes, RouterModule } from '@angular/router'
 
 import { AdminGuard } from './shared/guards/admin.guard'
-
 import { NotFoundPageComponent } from './shared/components/not-found-page/not-found-page.component'
+import { StudentPageComponent } from './modules/student-profile/student-page/student-page.component'
 
 const routes: Routes = [
     { path: '', redirectTo: '/login', pathMatch: 'full' },

@@ -10,9 +10,7 @@ import { StudentPageComponent } from './student-page.component'
     imports: [
         CommonModule,
         SharedModule,
-        RouterModule.forChild([
-            { path: 'student-page', component: StudentPageComponent },
-        ]),
+        RouterModule.forChild([{ path: '', component: StudentPageComponent }]),
     ],
     exports: [StudentPageComponent],
 })
