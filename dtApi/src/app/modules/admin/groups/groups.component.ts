@@ -220,4 +220,11 @@ export class GroupsComponent implements OnInit {
     goToStudents(id: string) {
         this.router.navigate(['admin/group/students/', id])
     }
+    applyFilter(event: Event) {
+        const filterValue = (event.target as HTMLInputElement).value
+        this.dataSource.filter = filterValue.trim().toLowerCase()
+    }
+    goToStudents(id: string) {
+        this.router.navigate(['admin/group/students/', id])
+    }
 }
