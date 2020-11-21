@@ -57,9 +57,8 @@ export class LoginComponent implements OnInit {
 
         this.request.loginRequest(this.userName, this.password).subscribe({
             next: (res) => {
-                const goTo = res.roles.includes('admin')
-                    ? 'admin'
-                    : 'student-page'
+                const goTo = res.roles.includes('admin') ? 'admin' : 'student'
+                localStorage.setItem('role', goTo)
                 this.router.navigate([goTo])
             },
             error: (error) => {

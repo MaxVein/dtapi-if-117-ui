@@ -2,6 +2,8 @@ import { Component, ViewChild, OnInit, ChangeDetectorRef } from '@angular/core'
 import { MatPaginator } from '@angular/material/paginator'
 import { MatTableDataSource, MatTable } from '@angular/material/table'
 import { MatDialog } from '@angular/material/dialog'
+import { MatSort } from '@angular/material/sort'
+import { Router } from '@angular/router'
 
 import { GroupsService } from './groups.service'
 import { ConfirmDeleteComponent } from './confirm-delete/confirm-delete.component'
@@ -42,12 +44,14 @@ export class GroupsComponent implements OnInit {
 
     @ViewChild(MatPaginator, { static: false }) paginator: MatPaginator
     @ViewChild('table', { static: false }) table: MatTable<GroupData>
+    @ViewChild(MatSort, { static: false }) sort: MatSort
 
     res = []
     constructor(
         private groupsSertvice: GroupsService,
         public dialog: MatDialog,
-        private changeDetectorRefs: ChangeDetectorRef
+        private changeDetectorRefs: ChangeDetectorRef,
+        private router: Router
     ) {}
 
     ngOnInit() {
@@ -73,7 +77,6 @@ export class GroupsComponent implements OnInit {
             this.sharedData.push(this.specialities, this.faculties)
             ELEMENT_DATA = data
             this.dataSource = new MatTableDataSource<GroupData>(ELEMENT_DATA)
-            this.dataSource.paginator = this.paginator
 
             this.sharedData
                 ? this.groupsSertvice.saveData(this.sharedData)
@@ -81,6 +84,10 @@ export class GroupsComponent implements OnInit {
         })
         setTimeout(() => {
             this.loading = false
+        }, 500)
+        setTimeout(() => {
+            this.dataSource.paginator = this.paginator
+            this.dataSource.sort = this.sort
         }, 500)
     }
 
@@ -202,5 +209,12 @@ export class GroupsComponent implements OnInit {
             this.ngOnInit()
             this.groupsSertvice.snackBarOpen('Групу видалено')
         })
+    }
+    applyFilter(event: Event) {
+        const filterValue = (event.target as HTMLInputElement).value
+        this.dataSource.filter = filterValue.trim().toLowerCase()
+    }
+    goToStudents(id: string) {
+        this.router.navigate(['admin/group/students/', id])
     }
 }

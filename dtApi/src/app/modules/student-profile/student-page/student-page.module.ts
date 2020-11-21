@@ -1,8 +1,8 @@
 import { NgModule } from '@angular/core'
-import { CommonModule } from '@angular/common'
 import { RouterModule } from '@angular/router'
-
+import { CommonModule } from '@angular/common'
 import { SharedModule } from 'src/app/shared/modules/shared.module'
+
 import { StudentPageComponent } from './student-page.component'
 
 @NgModule({
@@ -10,10 +10,7 @@ import { StudentPageComponent } from './student-page.component'
     imports: [
         CommonModule,
         SharedModule,
-        RouterModule.forChild([
-            { path: 'student-page', component: StudentPageComponent },
-        ]),
+        RouterModule.forChild([{ path: '', component: StudentPageComponent }]),
     ],
-    exports: [StudentPageComponent],
 })
 export class StudentPageModule {}

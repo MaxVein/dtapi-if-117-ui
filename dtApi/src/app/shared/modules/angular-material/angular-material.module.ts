@@ -14,6 +14,7 @@ import { MatDialogModule } from '@angular/material/dialog'
 import { MatFormFieldModule } from '@angular/material/form-field'
 import { MatInputModule } from '@angular/material/input'
 import { MatSelectModule } from '@angular/material/select'
+import { MatSortModule } from '@angular/material/sort'
 import { MatRadioModule } from '@angular/material/radio'
 import { MatSidenavModule } from '@angular/material/sidenav'
 import { MatGridListModule } from '@angular/material/grid-list'
@@ -22,6 +23,7 @@ import { MatMenuModule } from '@angular/material/menu'
 import { LayoutModule } from '@angular/cdk/layout'
 import { MatToolbarModule } from '@angular/material/toolbar'
 import { MatListModule } from '@angular/material/list'
+import { MatTabsModule } from '@angular/material/tabs'
 
 @NgModule({
     declarations: [],
@@ -41,6 +43,7 @@ import { MatListModule } from '@angular/material/list'
         MatSnackBarModule,
         MatDividerModule,
         MatSelectModule,
+        MatSortModule,
         MatRadioModule,
         MatSidenavModule,
         MatGridListModule,
@@ -49,6 +52,7 @@ import { MatListModule } from '@angular/material/list'
         LayoutModule,
         MatToolbarModule,
         MatListModule,
+        MatTabsModule,
     ],
     exports: [
         MatIconModule,
@@ -64,6 +68,7 @@ import { MatListModule } from '@angular/material/list'
         MatSnackBarModule,
         MatDividerModule,
         MatSelectModule,
+        MatSortModule,
         MatRadioModule,
         MatSidenavModule,
         MatGridListModule,
@@ -72,6 +77,7 @@ import { MatListModule } from '@angular/material/list'
         LayoutModule,
         MatToolbarModule,
         MatListModule,
+        MatTabsModule,
     ],
 })
 export class AngularMaterialModule {}
