@@ -9,8 +9,8 @@ import {
     Speciality,
     Student,
     Unique,
-} from '../../../../shared/interfaces/interfaces'
-import { environment } from '../../../../../environments/environment'
+} from '../../../shared/interfaces/interfaces'
+import { environment } from '../../../../environments/environment'
 
 @Injectable()
 export class StudentsService {

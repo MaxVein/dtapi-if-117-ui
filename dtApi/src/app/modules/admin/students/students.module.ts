@@ -8,7 +8,7 @@ import { StudentsModalComponent } from './students-page/students-modal/students-
 import { StudentsViewModalComponent } from './students-page/students-view-modal/students-view-modal.component'
 import { StudentsTransferModalComponent } from './students-page/students-transfer-modal/students-transfer-modal.component'
 
-import { StudentsService } from 'src/app/modules/admin/students/students-page/students.service'
+import { StudentsService } from 'src/app/modules/admin/students/students.service'
 
 import { ConfirmDirective } from '../../../shared/directives/students/confirm.directive'
 

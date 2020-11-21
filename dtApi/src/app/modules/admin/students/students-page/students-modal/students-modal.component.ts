@@ -6,14 +6,19 @@ import {
     OnInit,
     ViewChild,
 } from '@angular/core'
-import { FormControl, FormGroup, Validators } from '@angular/forms'
-import { uniqueValidator } from '../../../../../shared/validators/unique.validator'
+import {
+    AsyncValidatorFn,
+    FormControl,
+    FormGroup,
+    ValidationErrors,
+    Validators,
+} from '@angular/forms'
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog'
 import { AlertComponent } from '../../../../../shared/components/alert/alert.component'
-import { StudentsService } from 'src/app/modules/admin/students/students-page/students.service'
+import { StudentsService } from 'src/app/modules/admin/students/students.service'
 import { ModalService } from '../../../../../shared/services/modal.service'
 import { Student } from 'src/app/shared/interfaces/interfaces'
-import { Subscription } from 'rxjs'
+import { Observable, of, Subscription } from 'rxjs'
 import { environment } from 'src/environments/environment'
 
 @Component({
@@ -63,17 +68,29 @@ export class StudentsModalComponent implements OnInit, OnDestroy {
             gradebookID: new FormControl(
                 this.student ? this.student.gradebook_id : '',
                 [Validators.required],
-                [uniqueValidator(this.studentsService, 'gradebookID')]
+                [
+                    this.uniqueValidator(
+                        'Student',
+                        'checkGradebookID',
+                        'gradebook_id'
+                    ),
+                ]
             ),
             username: new FormControl(
                 null,
                 [Validators.required],
-                [uniqueValidator(this.studentsService, 'username')]
+                [this.uniqueValidator('AdminUser', 'checkUserName', 'username')]
             ),
             email: new FormControl(
                 null,
                 [Validators.required, Validators.email],
-                [uniqueValidator(this.studentsService, 'email')]
+                [
+                    this.uniqueValidator(
+                        'AdminUser',
+                        'checkEmailAddress',
+                        'email'
+                    ),
+                ]
             ),
             password: new FormControl(
                 this.student ? this.student.plain_password : '',
@@ -97,6 +114,8 @@ export class StudentsModalComponent implements OnInit, OnDestroy {
                 .getById(studentID)
                 .subscribe(
                     (response) => {
+                        this.student.username = response[0].username
+                        this.student.email = response[0].email
                         this.form.get('username').setValue(response[0].username)
                         this.form.get('email').setValue(response[0].email)
                     },
@@ -112,6 +131,19 @@ export class StudentsModalComponent implements OnInit, OnDestroy {
                         })
                     }
                 )
+        }
+    }
+
+    uniqueValidator(entity, method, check): AsyncValidatorFn {
+        return (
+            control: FormControl
+        ):
+            | Promise<ValidationErrors | null>
+            | Observable<ValidationErrors | null> => {
+            if (this.student && this.student[check] === control.value) {
+                return of(null)
+            }
+            return this.studentsService.check(entity, method, control.value)
         }
     }
 

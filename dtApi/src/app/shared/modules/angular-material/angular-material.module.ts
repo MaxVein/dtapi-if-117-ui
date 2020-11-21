@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common'
 
 import { MatIconModule } from '@angular/material/icon'
 import { MatButtonModule } from '@angular/material/button'
+import { MatTableModule } from '@angular/material/table'
 import { MatPaginatorModule } from '@angular/material/paginator'
 import { MatSnackBarModule } from '@angular/material/snack-bar'
 import { MatDividerModule } from '@angular/material/divider'
@@ -27,8 +28,9 @@ import { MatSortModule } from '@angular/material/sort'
     declarations: [],
     imports: [
         CommonModule,
-        MatPaginatorModule,
+        MatTableModule,
         MatIconModule,
+        MatPaginatorModule,
         MatButtonModule,
         MatDialogModule,
         MatFormFieldModule,
@@ -42,7 +44,6 @@ import { MatSortModule } from '@angular/material/sort'
         MatRadioModule,
         MatSidenavModule,
         MatGridListModule,
-        MatCardModule,
         MatMenuModule,
         LayoutModule,
         MatToolbarModule,
@@ -51,13 +52,13 @@ import { MatSortModule } from '@angular/material/sort'
         MatSortModule,
     ],
     exports: [
+        MatTableModule,
         MatIconModule,
         MatButtonModule,
         MatDialogModule,
         MatFormFieldModule,
         MatInputModule,
         MatPaginatorModule,
-        MatCardModule,
         MatTooltipModule,
         MatProgressSpinnerModule,
         MatSnackBarModule,

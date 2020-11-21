@@ -2,10 +2,10 @@ import { Component, Inject, OnDestroy, OnInit } from '@angular/core'
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog'
 import { MatSelectChange } from '@angular/material/select'
 import { AlertComponent } from 'src/app/shared/components/alert/alert.component'
-import { StudentsService } from 'src/app/modules/admin/students/students-page/students.service'
+import { StudentsService } from 'src/app/modules/admin/students/students.service'
 import { ModalService } from 'src/app/shared/services/modal.service'
-import { Faculty, Group, Student } from 'src/app/shared/interfaces/interfaces'
 import { Subscription } from 'rxjs'
+import { Faculty, Group, Student } from 'src/app/shared/interfaces/interfaces'
 
 @Component({
     selector: 'app-students-transfer-modal',
