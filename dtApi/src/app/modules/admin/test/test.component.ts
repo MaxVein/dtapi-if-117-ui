@@ -7,7 +7,6 @@ import { MatDialog } from '@angular/material/dialog'
 import { TestService } from './services/test.service'
 import { Test } from './models/Test'
 import { TestModalComponent } from './test-modal/test-modal.component'
-import { element } from 'protractor'
 
 @Component({
     selector: 'app-tests',
@@ -64,6 +63,7 @@ export class TestComponent implements OnInit {
     openAddDialog() {
         const test = {}
         const dialogRef = this.dialog.open(TestModalComponent, {
+            width: '600px',
             data: {
                 data: test,
             },
@@ -86,6 +86,7 @@ export class TestComponent implements OnInit {
 
     editTest(test: any) {
         const dialogRef = this.dialog.open(TestModalComponent, {
+            width: '600px',
             data: {
                 data: test,
             },
