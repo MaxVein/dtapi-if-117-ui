@@ -7,30 +7,14 @@
 
     & mat-paginator {
         margin-top: 20px;
-    }
-
-    &__breadcrumb {
-        & span {
-            font-size: 22px;
-        }
-
-        & mat-icon {
-            vertical-align: bottom;
-            font-size: 40px;
-            margin: auto 20px 8px 10px;
-        }
-
-        & .active_prev {
-            color: gray;
-        }
-
-        & .active {
-            color: #3f51b5;
-        }
+        background-color: #fafafa;
+        border: none;
+        font-size: 13px;
+        color: black;
     }
 
     &__header {
-        margin: 50px auto;
+        margin: 60px auto;
         display: flex;
         flex-direction: row;
         justify-content: space-between;
@@ -40,12 +24,18 @@
             font-weight: 500;
         }
 
+        & .header-icon {
+            vertical-align: top;
+            font-size: 45px;
+            margin: -5px 20px auto auto;
+        }
+
         & button {
             font-size: 16px;
             padding: 5px 30px;
         }
 
-        & mat-icon {
+        & .btn-icon {
             vertical-align: bottom;
             font-size: 25px;
             margin: auto 10px 6.5px -5px;

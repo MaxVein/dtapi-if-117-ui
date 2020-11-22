@@ -1,1 +1,29 @@
-<p>not-found-page works!</p>
+<div class="not-found-page">
+    <div class="not-found-page__container">
+        <div class="not-found-page__content">
+            <div class="not-found-page__number">
+                <h1>404</h1>
+            </div>
+            <div class="not-found-page__text">
+                <h2>Такого ресурсу не знайдено</h2>
+            </div>
+            <mat-divider></mat-divider>
+            <div class="not-found-page__action">
+                <h3>
+                    Щоб повернутися на головну сторінку
+                    <br />
+                    натисніть на кнопку нижче
+                </h3>
+                <button
+                    class="not-found-page__btn"
+                    type="button"
+                    mat-flat-button
+                    color="accent"
+                    [routerLink]="link"
+                >
+                    Головна
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

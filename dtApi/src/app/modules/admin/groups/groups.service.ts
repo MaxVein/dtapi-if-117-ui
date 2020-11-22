@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core'
 import { HttpClient } from '@angular/common/http'
 import { environment } from 'src/environments/environment'
+import { MatSnackBar } from '@angular/material/snack-bar'
 
 @Injectable({
     providedIn: 'root',
@@ -8,7 +9,7 @@ import { environment } from 'src/environments/environment'
 export class GroupsService {
     sharingData = []
 
-    constructor(private http: HttpClient) {}
+    constructor(private http: HttpClient, private snackBar: MatSnackBar) {}
     public saveData(data: any) {
         this.sharingData.push(data)
     }
@@ -23,24 +24,29 @@ export class GroupsService {
     }
     public getData(entity, id?) {
         return this.http.get(
-            `${environment.BASEURL}/api/${entity}/getRecords/${id ? id : ''}`
+            `${environment.BASEURL}${entity}/getRecords/${id ? id : ''}`
         )
     }
     public delData(entity, id?) {
         return this.http.get(
-            `${environment.BASEURL}/api/${entity}/del/${id ? id : ''}`
+            `${environment.BASEURL}${entity}/del/${id ? id : ''}`
         )
     }
     public insertData(entity, payload) {
         return this.http.post(
-            `${environment.BASEURL}/api/${entity}/insertData`,
+            `${environment.BASEURL}${entity}/insertData`,
             payload
         )
     }
     public updateData(entity, id, payload) {
         return this.http.post(
-            `${environment.BASEURL}/api/${entity}/update/${id}`,
+            `${environment.BASEURL}${entity}/update/${id}`,
             payload
         )
+    }
+    snackBarOpen(payload: string): any {
+        return this.snackBar.open(payload, '', {
+            duration: 1500,
+        })
     }
 }

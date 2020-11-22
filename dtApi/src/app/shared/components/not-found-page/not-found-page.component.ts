@@ -6,7 +6,14 @@ import { Component, OnInit } from '@angular/core'
     styleUrls: ['./not-found-page.component.scss'],
 })
 export class NotFoundPageComponent implements OnInit {
-    constructor() {}
+    link: string
 
-    ngOnInit(): void {}
+    ngOnInit(): void {
+        const role = localStorage.getItem('role')
+        if (role === 'admin') {
+            this.link = '/admin/dashboard'
+        } else {
+            this.link = '/student'
+        }
+    }
 }

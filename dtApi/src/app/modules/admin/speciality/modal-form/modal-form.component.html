@@ -40,7 +40,8 @@
                     form.get('speciality_code').errors.maxlength.actualLength
                 }}</small
             >
-            <small *ngIf="form.get('speciality_code').errors.isNum">
+
+            <small *ngIf="form.get('speciality_code').errors.pattern">
                 Поле може містити тільки числа
             </small>
         </div> </mat-form-field

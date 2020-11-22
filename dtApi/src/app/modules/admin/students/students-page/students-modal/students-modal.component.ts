@@ -1,8 +1,24 @@
-import { Component, ElementRef, Inject, OnInit, ViewChild } from '@angular/core'
-import { FormControl, FormGroup, Validators } from '@angular/forms'
+import {
+    Component,
+    ElementRef,
+    Inject,
+    OnDestroy,
+    OnInit,
+    ViewChild,
+} from '@angular/core'
+import {
+    AsyncValidatorFn,
+    FormControl,
+    FormGroup,
+    ValidationErrors,
+    Validators,
+} from '@angular/forms'
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog'
+import { AlertComponent } from '../../../../../shared/components/alert/alert.component'
+import { StudentsService } from 'src/app/modules/admin/students/students.service'
+import { ModalService } from '../../../../../shared/services/modal.service'
 import { Student } from 'src/app/shared/interfaces/interfaces'
-import { StudentsService } from 'src/app/modules/admin/students/students-page/students.service'
+import { Observable, of, Subscription } from 'rxjs'
 import { environment } from 'src/environments/environment'
 
 @Component({
@@ -10,23 +26,27 @@ import { environment } from 'src/environments/environment'
     templateUrl: './students-modal.component.html',
     styleUrls: ['./students-modal.component.scss'],
 })
-export class StudentsModalComponent implements OnInit {
+export class StudentsModalComponent implements OnInit, OnDestroy {
     form: FormGroup
+    loading = false
     submitted = false
     hide = true
     image: string | ArrayBuffer = ''
     defaultImage = environment.defaultImage
     student: Student = this.data.student_data
+    studentSubscription: Subscription
 
     @ViewChild('imageFile') inputRef: ElementRef
 
     constructor(
         public dialogRef: MatDialogRef<StudentsModalComponent>,
         private studentsService: StudentsService,
+        private modalService: ModalService,
         @Inject(MAT_DIALOG_DATA) public data: any
     ) {}
 
     ngOnInit(): void {
+        this.loading = true
         this.initForm()
         this.getStudentInfo()
     }
@@ -47,13 +67,31 @@ export class StudentsModalComponent implements OnInit {
             ),
             gradebookID: new FormControl(
                 this.student ? this.student.gradebook_id : '',
-                [Validators.required]
+                [Validators.required],
+                [
+                    this.uniqueValidator(
+                        'Student',
+                        'checkGradebookID',
+                        'gradebook_id'
+                    ),
+                ]
             ),
-            username: new FormControl(null, [Validators.required]),
-            email: new FormControl(null, [
-                Validators.required,
-                Validators.email,
-            ]),
+            username: new FormControl(
+                null,
+                [Validators.required],
+                [this.uniqueValidator('AdminUser', 'checkUserName', 'username')]
+            ),
+            email: new FormControl(
+                null,
+                [Validators.required, Validators.email],
+                [
+                    this.uniqueValidator(
+                        'AdminUser',
+                        'checkEmailAddress',
+                        'email'
+                    ),
+                ]
+            ),
             password: new FormControl(
                 this.student ? this.student.plain_password : '',
                 [Validators.required, Validators.minLength(8)]
@@ -66,12 +104,46 @@ export class StudentsModalComponent implements OnInit {
     }
 
     getStudentInfo(): void {
+        setTimeout(() => {
+            this.loading = false
+        }, 300)
+
         if (this.data.student_data) {
             const studentID = this.student.user_id
-            this.studentsService.getById(studentID).subscribe((response) => {
-                this.form.get('username').setValue(response[0].username)
-                this.form.get('email').setValue(response[0].email)
-            })
+            this.studentSubscription = this.studentsService
+                .getById(studentID)
+                .subscribe(
+                    (response) => {
+                        this.student.username = response[0].username
+                        this.student.email = response[0].email
+                        this.form.get('username').setValue(response[0].username)
+                        this.form.get('email').setValue(response[0].email)
+                    },
+                    () => {
+                        const message = 'Сталася помилка. Спробуйте знову'
+                        const title = 'Помилка'
+                        this.closeModal(title)
+                        this.modalService.openModal(AlertComponent, {
+                            data: {
+                                message,
+                                title,
+                            },
+                        })
+                    }
+                )
+        }
+    }
+
+    uniqueValidator(entity, method, check): AsyncValidatorFn {
+        return (
+            control: FormControl
+        ):
+            | Promise<ValidationErrors | null>
+            | Observable<ValidationErrors | null> => {
+            if (this.student && this.student[check] === control.value) {
+                return of(null)
+            }
+            return this.studentsService.check(entity, method, control.value)
         }
     }
 
@@ -82,6 +154,7 @@ export class StudentsModalComponent implements OnInit {
 
         this.form.disable()
         this.submitted = true
+        this.loading = true
 
         const newStudent: Student = {
             email: this.form.value.email,
@@ -102,28 +175,50 @@ export class StudentsModalComponent implements OnInit {
         }
 
         if (this.data.isUpdateData) {
-            this.studentsService
+            this.studentSubscription = this.studentsService
                 .update(this.student.user_id, newStudent)
                 .subscribe(
                     (data) => {
+                        this.loading = false
                         this.form.enable()
                         this.dialogRef.close(data)
                     },
-                    (error) => this.dialogRef.close(error)
+                    () => {
+                        const message = 'Сталася помилка. Спробуйте знову'
+                        const title = 'Помилка'
+                        this.loading = false
+                        this.closeModal(title)
+                        this.modalService.openModal(AlertComponent, {
+                            data: {
+                                message,
+                                title,
+                            },
+                        })
+                    }
                 )
         } else {
-            this.studentsService.create(newStudent).subscribe(
-                (data) => {
-                    this.form.enable()
-                    this.dialogRef.close(data)
-                },
-                (error) => this.dialogRef.close(error)
-            )
+            this.studentSubscription = this.studentsService
+                .create(newStudent)
+                .subscribe(
+                    (data) => {
+                        this.loading = false
+                        this.form.enable()
+                        this.dialogRef.close(data)
+                    },
+                    () => {
+                        const message = 'Сталася помилка. Спробуйте знову'
+                        const title = 'Помилка'
+                        this.loading = false
+                        this.closeModal(title)
+                        this.modalService.openModal(AlertComponent, {
+                            data: {
+                                message,
+                                title,
+                            },
+                        })
+                    }
+                )
         }
-    }
-
-    closeModal(): void {
-        this.dialogRef.close('Скасовано')
     }
 
     fileInput(): void {
@@ -137,5 +232,15 @@ export class StudentsModalComponent implements OnInit {
             this.image = reader.result
         }
         reader.readAsDataURL(file)
+    }
+
+    closeModal(dialogResult = 'Скасовано'): void {
+        this.dialogRef.close(dialogResult)
+    }
+
+    ngOnDestroy(): void {
+        if (this.studentSubscription) {
+            this.studentSubscription.unsubscribe()
+        }
     }
 }

@@ -1,16 +1,12 @@
 <section class="students">
     <div class="container">
-        <div class="students__breadcrumb">
-            <span class="active_prev">Головна</span>
-            <mat-icon>keyboard_arrow_right</mat-icon>
-            <span class="active_prev">Групи</span>
-            <mat-icon>keyboard_arrow_right</mat-icon>
-            <span class="active">Студенти</span>
-        </div>
         <div class="students__header">
-            <h1>Студенти</h1>
+            <h1>
+                <mat-icon class="header-icon">how_to_reg</mat-icon>
+                Студенти групи {{ groupName }}
+            </h1>
             <button mat-flat-button color="primary" (click)="add()">
-                <mat-icon>add</mat-icon>
+                <mat-icon class="btn-icon">add</mat-icon>
                 Додати студента
             </button>
         </div>
@@ -20,7 +16,7 @@
                 *ngIf="dataSource.data.length > 0; else empty"
             >
                 <mat-form-field>
-                    <mat-label>Фільтер</mat-label>
+                    <mat-label>Фільтр</mat-label>
                     <input
                         matInput
                         (keyup)="applyFilter($event)"
