@@ -12,7 +12,7 @@ export class TestService {
 
     getEntity(entity: string, id?: number): Observable<any> {
         if (id === undefined) {
-            return this.http.get(`${environment.BASEURL}/${entity}/getRecords`)
+            return this.http.get(`${environment.BASEURL}${entity}/getRecords`)
         }
         return this.http.get(`${environment.BASEURL}${entity}/getRecords/${id}`)
     }
