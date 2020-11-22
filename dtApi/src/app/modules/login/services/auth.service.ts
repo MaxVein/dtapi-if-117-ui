@@ -34,6 +34,7 @@ export class AuthService {
             .subscribe(
                 (response) => {
                     if (response.status === 200) {
+                        this.currentUser = null
                         this.router.navigate(['/login'])
                     }
                 },
