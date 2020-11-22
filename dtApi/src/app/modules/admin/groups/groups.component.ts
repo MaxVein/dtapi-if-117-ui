@@ -217,7 +217,11 @@ export class GroupsComponent implements OnInit {
         const filterValue = (event.target as HTMLInputElement).value
         this.dataSource.filter = filterValue.trim().toLowerCase()
     }
-    goToStudents(id: string) {
-        this.router.navigate(['admin/group/students/', id])
+    goToStudents(id: string, groupName: string) {
+        this.router.navigate(['admin/group/students/', id], {
+            queryParams: {
+                groupName: groupName,
+            },
+        })
     }
 }

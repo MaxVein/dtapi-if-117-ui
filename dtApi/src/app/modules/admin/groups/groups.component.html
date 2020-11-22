@@ -1,21 +1,28 @@
 <div class="container">
     <section class="mat-typography">
-        <h2 class="mat-h2">Групи і студенти</h2>
+        <h2 class="mat-h1">
+            <mat-icon class="header-icon"> groups </mat-icon>
+            Групи і студенти
+        </h2>
         <button
             mat-raised-button
             color="primary"
             class="add-group"
             (click)="changeGroup()"
         >
+            <mat-icon class="btn-icon">add</mat-icon>
             Додати групу
         </button>
     </section>
-    <mat-form-field class="filter">
-        <mat-label>Filter</mat-label>
+    <mat-form-field
+        [class.hide]="loading || !dataSource.data.length"
+        class="filter"
+    >
+        <mat-label>Фільтр</mat-label>
         <input
             matInput
             (keyup)="applyFilter($event)"
-            placeholder="Type here"
+            placeholder="Здійснюйте фільтрацію по всіх колонках таблиці"
             #input
         />
     </mat-form-field>
@@ -65,7 +72,9 @@
                             aria-hidden="false"
                             aria-label="supervisor_account"
                             matTooltip="Список студентів"
-                            (click)="goToStudents(group.group_id)"
+                            (click)="
+                                goToStudents(group.group_id, group.group_name)
+                            "
                             >supervisor_account</mat-icon
                         >
                         <mat-icon

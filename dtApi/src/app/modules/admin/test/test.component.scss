@@ -12,3 +12,11 @@ table {
     display: flex;
     justify-content: space-between;
 }
+
+mat-icon {
+    cursor: pointer;
+
+    &:hover {
+        color: orange;
+    }
+}

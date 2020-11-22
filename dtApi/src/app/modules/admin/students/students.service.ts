@@ -1,13 +1,16 @@
 import { Injectable } from '@angular/core'
 import { HttpClient } from '@angular/common/http'
+import { Observable } from 'rxjs'
+import { map } from 'rxjs/operators'
 import {
     Check,
+    Faculty,
+    Group,
+    Speciality,
     Student,
     Unique,
-} from '../../../../shared/interfaces/interfaces'
-import { Observable } from 'rxjs'
-import { environment } from '../../../../../environments/environment'
-import { map } from 'rxjs/operators'
+} from '../../../shared/interfaces/interfaces'
+import { environment } from '../../../../environments/environment'
 
 @Injectable()
 export class StudentsService {
@@ -55,5 +58,35 @@ export class StudentsService {
                         : null
                 })
             )
+    }
+
+    getGroupData(id: string): Observable<Group> {
+        return this.http.get<Group>(
+            `${environment.BASEURL}/Group/getRecords/${id}`
+        )
+    }
+
+    getFacultyData(id: string): Observable<Faculty> {
+        return this.http.get<Faculty>(
+            `${environment.BASEURL}/Faculty/getRecords/${id}`
+        )
+    }
+
+    getSpecialityData(id: string): Observable<Speciality> {
+        return this.http.get<Speciality>(
+            `${environment.BASEURL}/Speciality/getRecords/${id}`
+        )
+    }
+
+    getEntityFaculty(): Observable<Faculty[]> {
+        return this.http.get<Faculty[]>(
+            `${environment.BASEURL}/Faculty/getRecords`
+        )
+    }
+
+    getEntityGroupsByFaculty(id: string): Observable<Group[]> {
+        return this.http.get<Group[]>(
+            `${environment.BASEURL}/group/getGroupsByFaculty/${id}`
+        )
     }
 }
