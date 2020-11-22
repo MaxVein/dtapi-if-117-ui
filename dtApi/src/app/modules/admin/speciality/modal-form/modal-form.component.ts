@@ -31,7 +31,7 @@ export class ModalFormComponent implements OnInit {
                 [
                     Validators.required,
                     Validators.maxLength(5),
-                    IsNumValidators.isNum,
+                    Validators.pattern('^[0-9]*$'),
                 ],
             ],
         })

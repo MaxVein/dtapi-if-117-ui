@@ -8,10 +8,9 @@ import { StudentsModalComponent } from './students-page/students-modal/students-
 import { StudentsViewModalComponent } from './students-page/students-view-modal/students-view-modal.component'
 import { StudentsTransferModalComponent } from './students-page/students-transfer-modal/students-transfer-modal.component'
 
-import { StudentsService } from 'src/app/modules/admin/students/students-page/students.service'
+import { StudentsService } from 'src/app/modules/admin/students/students.service'
 
 import { ConfirmDirective } from '../../../shared/directives/students/confirm.directive'
-import { UniqueDirective } from '../../../shared/directives/students/unique.directive'
 
 const routes: Routes = [{ path: '', component: StudentsPageComponent }]
 
@@ -22,7 +21,6 @@ const routes: Routes = [{ path: '', component: StudentsPageComponent }]
         StudentsViewModalComponent,
         StudentsTransferModalComponent,
         ConfirmDirective,
-        UniqueDirective,
     ],
     imports: [CommonModule, SharedModule, RouterModule.forChild(routes)],
     providers: [StudentsService],
