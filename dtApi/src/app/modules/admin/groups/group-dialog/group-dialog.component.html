@@ -4,15 +4,15 @@
         <mat-form-field>
             <mat-label>Group name</mat-label>
             <input matInput formControlName="group_name" />
-            <div
+
+            <mat-error
                 class="validation"
                 *ngIf="
                     form.get('group_name').invalid &&
                     form.get('group_name').touched
                 "
+                >Це поле є обов'язковим</mat-error
             >
-                <span>Поле не може бути пустим</span>
-            </div>
         </mat-form-field>
 
         <mat-form-field>
@@ -24,15 +24,14 @@
                     >{{ item[0].speciality_name }}</mat-option
                 >
             </mat-select>
-            <div
+            <mat-error
                 class="validation"
                 *ngIf="
-                    form.get('speciality_name').invalid &&
-                    form.get('speciality_name').touched
+                    form.get('group_name').invalid &&
+                    form.get('group_name').touched
                 "
+                >Це поле є обов'язковим</mat-error
             >
-                <span>Поле не може бути пустим</span>
-            </div>
         </mat-form-field>
 
         <mat-form-field>
@@ -44,15 +43,14 @@
                     >{{ item[0].faculty_name }}</mat-option
                 >
             </mat-select>
-            <div
+            <mat-error
                 class="validation"
                 *ngIf="
-                    form.get('faculty_name').invalid &&
-                    form.get('faculty_name').touched
+                    form.get('group_name').invalid &&
+                    form.get('group_name').touched
                 "
+                >Це поле є обов'язковим</mat-error
             >
-                <span>Поле не може бути пустим</span>
-            </div>
         </mat-form-field>
     </div>
     <div mat-dialog-actions>

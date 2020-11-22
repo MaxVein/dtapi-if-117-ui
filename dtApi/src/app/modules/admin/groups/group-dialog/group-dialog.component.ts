@@ -45,7 +45,12 @@ export class GroupDialogComponent implements OnInit {
         this.form = this.formBuilder.group({
             group_name: [
                 this.data ? this.data.group_name : '',
-                [Validators.required],
+                [
+                    Validators.required,
+                    Validators.pattern(
+                        '[А-Я\u0406]{1,4}[мз]?-[0-9]{2}-[0-9]{1}'
+                    ),
+                ],
             ],
             speciality_name: [
                 this.data ? this.data.speciality_name : '',
