@@ -3,6 +3,7 @@ import { Component, ViewChild, OnInit } from '@angular/core'
 import { TestService } from './services/test.service'
 import { Test } from './models/Test'
 import { TestModalComponent } from './test-modal/test-modal.component'
+import { ModalService } from './services/modal.service'
 
 import { MatPaginator } from '@angular/material/paginator'
 import { MatTableDataSource, MatTable } from '@angular/material/table'
@@ -33,7 +34,11 @@ export class TestComponent implements OnInit {
     @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator
     @ViewChild(MatSort, { static: true }) sort: MatSort
 
-    constructor(private testService: TestService, public dialog: MatDialog) {
+    constructor(
+        private testService: TestService,
+        public dialog: MatDialog,
+        private modalService: ModalService
+    ) {
         this.testService.getEntity('test').subscribe((data: Test[]) => {
             this.dataSource.data = data
         })
@@ -102,10 +107,17 @@ export class TestComponent implements OnInit {
     }
 
     removeTest(obj: Test) {
-        this.testService.deleteEntity('test', obj.test_id).subscribe(() => {
-            this.dataSource.data = this.dataSource.data.filter(
-                (test) => test.test_id !== obj.test_id
-            )
-        })
+        this.testService.deleteEntity('test', obj.test_id).subscribe(
+            () => {
+                this.modalService.openConfirmModal('Видалити тест?', () => {
+                    this.dataSource.data = this.dataSource.data.filter(
+                        (test) => test.test_id !== obj.test_id
+                    )
+                })
+            },
+            (error) => {
+                this.modalService.openErrorModal('Помилка при видаленні')
+            }
+        )
     }
 }

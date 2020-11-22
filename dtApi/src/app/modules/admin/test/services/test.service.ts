@@ -14,22 +14,20 @@ export class TestService {
         if (id === undefined) {
             return this.http.get(`${environment.BASEURL}/${entity}/getRecords`)
         }
-        return this.http.get(
-            `${environment.BASEURL}/${entity}/getRecords/${id}`
-        )
+        return this.http.get(`${environment.BASEURL}${entity}/getRecords/${id}`)
     }
     createEntity(entity: string, payload): Observable<any> {
         return this.http.post(
-            `${environment.BASEURL}/${entity}/insertData`,
+            `${environment.BASEURL}${entity}/insertData`,
             payload
         )
     }
     deleteEntity(entity: string, id: number): Observable<any> {
-        return this.http.delete(`${environment.BASEURL}/${entity}/del/${id}`)
+        return this.http.delete(`${environment.BASEURL}${entity}/del/${id}`)
     }
     updateEntity(entity: string, payload, id: number): Observable<any> {
         return this.http.post(
-            `${environment.BASEURL}/${entity}/update/${id}`,
+            `${environment.BASEURL}${entity}/update/${id}`,
             payload
         )
     }
