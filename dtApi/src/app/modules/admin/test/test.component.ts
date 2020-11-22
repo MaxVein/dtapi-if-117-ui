@@ -1,13 +1,16 @@
 import { Component, ViewChild, OnInit } from '@angular/core'
+import { Observable } from 'rxjs'
+
+import { TestService } from './services/test.service'
+import { Test } from './models/Test'
+import { Subject } from './models/Subject'
+import { TestModalComponent } from './test-modal/test-modal.component'
+import { ModalService } from './services/modal.service'
+
 import { MatPaginator } from '@angular/material/paginator'
 import { MatTableDataSource, MatTable } from '@angular/material/table'
 import { MatSort } from '@angular/material/sort'
 import { MatDialog } from '@angular/material/dialog'
-
-import { TestService } from './services/test.service'
-import { Test } from './models/Test'
-import { TestModalComponent } from './test-modal/test-modal.component'
-import { element } from 'protractor'
 
 @Component({
     selector: 'app-tests',
@@ -16,54 +19,62 @@ import { element } from 'protractor'
 })
 export class TestComponent implements OnInit {
     tests: Test[] = []
-    test: Test
+    subjects: Subject[] = []
 
     displayedColumns: string[] = [
         'test_id',
         'test_name',
-        'subject_id',
+        'subject',
         'tasks',
         'time_for_test',
         'attempts',
         'actions',
     ]
+
     dataSource = new MatTableDataSource<Test>()
 
     @ViewChild('table', { static: true }) table: MatTable<Test>
     @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator
-    @ViewChild(MatSort) sort: MatSort
+    @ViewChild(MatSort, { static: true }) sort: MatSort
 
-    constructor(private testService: TestService, public dialog: MatDialog) {
-        this.testService.getEntity('test').subscribe((data: Test[]) => {
-            this.dataSource.data = data
-        })
-    }
+    constructor(
+        private testService: TestService,
+        private modalService: ModalService,
+        public dialog: MatDialog
+    ) {}
 
     ngOnInit() {
-        this.tests = []
-        this.dataSource.data = this.tests
-        this.dataSource.sort = this.sort
-        this.dataSource.paginator = this.paginator
-    }
-
-    getTests(): any {
-        this.testService.getEntity('test').subscribe((data: Test[]) => {
-            this.dataSource.data = data
+        this.getTests().subscribe((data: Test[]) => {
+            this.tests = data
+            this.dataSource.data = this.tests
         })
+        this.getSubjects().subscribe(
+            (data: Subject[]) => (this.subjects = data)
+        )
+
+        this.dataSource.paginator = this.paginator
+        this.dataSource.sort = this.sort
     }
 
-    applyFilter(event: Event) {
+    getTests(): Observable<Test[]> {
+        return this.testService.getEntity('test')
+    }
+
+    getSubjects(): Observable<Subject[]> {
+        return this.testService.getEntity('subject')
+    }
+
+    applyFilter(event: Event): void {
         const filterValue = (event.target as HTMLInputElement).value
         this.dataSource.filter = filterValue.trim().toLowerCase()
 
-        if (this.dataSource.paginator) {
-            this.dataSource.paginator.firstPage()
-        }
+        if (this.dataSource.paginator) this.dataSource.paginator.firstPage()
     }
 
-    openAddDialog() {
+    openAddDialog(): void {
         const test = {}
         const dialogRef = this.dialog.open(TestModalComponent, {
+            width: '600px',
             data: {
                 data: test,
             },
@@ -74,7 +85,16 @@ export class TestComponent implements OnInit {
         })
     }
 
-    addTest(test: Test) {
+    getSubjectNameById(subjectId: number): string {
+        const subject = this.subjects.find(
+            (subjectItem) => subjectItem.subject_id === subjectId
+        )
+
+        if (subject) return subject.subject_name
+        return 'Undefined'
+    }
+
+    addTest(test: Test): void {
         this.testService
             .createEntity('test', test)
             .subscribe((result: Test[]) => {
@@ -84,8 +104,9 @@ export class TestComponent implements OnInit {
             })
     }
 
-    editTest(test: any) {
+    editTest(test: Test): void {
         const dialogRef = this.dialog.open(TestModalComponent, {
+            width: '600px',
             data: {
                 data: test,
             },
@@ -99,11 +120,20 @@ export class TestComponent implements OnInit {
         })
     }
 
-    removeTest(obj: Test) {
-        this.testService.deleteEntity('test', obj.test_id).subscribe(() => {
-            this.dataSource.data = this.dataSource.data.filter(
-                (test) => test.test_id !== obj.test_id
-            )
-        })
+    removeTest(test: Test): void {
+        this.testService.deleteEntity('test', test.test_id).subscribe(
+            () =>
+                this.modalService.openConfirmModal(
+                    'Видалити тест?',
+                    () =>
+                        (this.dataSource.data = this.dataSource.data.filter(
+                            (t) => t.test_id !== test.test_id
+                        ))
+                ),
+            (error) =>
+                this.modalService.openErrorModal(
+                    'Спочатку видаліть всі деталі тесту'
+                )
+        )
     }
 }
