@@ -22,7 +22,6 @@ import { LayoutModule } from '@angular/cdk/layout'
 import { MatToolbarModule } from '@angular/material/toolbar'
 import { MatListModule } from '@angular/material/list'
 import { MatTabsModule } from '@angular/material/tabs'
-import { MatSortModule } from '@angular/material/sort'
 
 @NgModule({
     declarations: [],
@@ -49,7 +48,6 @@ import { MatSortModule } from '@angular/material/sort'
         MatToolbarModule,
         MatListModule,
         MatTabsModule,
-        MatSortModule,
     ],
     exports: [
         MatTableModule,
