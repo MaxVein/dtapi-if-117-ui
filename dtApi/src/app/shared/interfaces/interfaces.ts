@@ -20,3 +20,9 @@ export interface Check {
 export interface Unique {
     propertyIsNotUnique: boolean
 }
+
+export interface Faculty {
+    faculty_id?: number
+    faculty_name: string
+    faculty_description: string
+}
