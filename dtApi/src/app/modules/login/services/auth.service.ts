@@ -10,7 +10,7 @@ import { environment } from 'src/environments/environment'
     providedIn: 'root',
 })
 export class AuthService {
-    currentUser: string = null
+    currentUser = null
 
     constructor(private http: HttpClient, private router: Router) {}
 
@@ -28,20 +28,11 @@ export class AuthService {
     }
 
     logOutRequest() {
-        const url = 'login/logout'
-        return this.http
-            .get(`${environment.BASEURL}${url}`, { observe: 'response' })
-            .subscribe(
-                (response) => {
-                    if (response.status === 200) {
-                        this.currentUser = null
-                        this.router.navigate(['/login'])
-                    }
-                },
-                (err) => {
-                    console.error(err)
-                }
-            )
+        return this.http.get(`${environment.BASEURL}login/logout`).pipe(
+            tap(() => {
+                this.currentUser = null
+            })
+        )
     }
     getCurrentUser() {
         if (this.currentUser) {
@@ -51,7 +42,11 @@ export class AuthService {
             tap((data: any) => {
                 if (data.response === 'non logged') {
                     this.currentUser = null
-                    return this.router.navigate(['/login'])
+                    return this.router.navigate(['/login'], {
+                        queryParams: {
+                            notLogin: true,
+                        },
+                    })
                 }
                 this.currentUser = data
             })
