@@ -1,0 +1,36 @@
+.confirm {
+    width: 350px;
+}
+
+.confirm mat-divider {
+    margin-top: 20px;
+}
+
+.confirm__title {
+    text-align: center;
+    font-weight: 500;
+    font-size: 20px;
+}
+
+.confirm button {
+    width: calc(50% - 10px);
+}
+
+.confirm button:first-of-type {
+    margin-right: 10px;
+}
+
+.confirm__content {
+    margin: 10px auto;
+    text-align: center;
+    font-size: 16px;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -ms-flex-pack: distribute;
+    justify-content: space-around;
+}
+
+.confirm__buttons {
+    width: 100%;
+}

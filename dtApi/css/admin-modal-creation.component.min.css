@@ -4,9 +4,7 @@
 }
 .modal-field {
     width: 100%;
+    -webkit-box-pack: center;
+    -ms-flex-pack: center;
     justify-content: center;
-}
-.modal-entity-input {
-    display: flex;
-    align-items: center;
 }

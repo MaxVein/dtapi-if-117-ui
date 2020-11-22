@@ -1,0 +1,111 @@
+.students {
+    margin: 50px 0 50px 0;
+}
+
+.students .hide {
+    opacity: 0;
+}
+
+.students mat-paginator {
+    margin-top: 20px;
+}
+
+.students__breadcrumb span {
+    font-size: 22px;
+}
+
+.students__breadcrumb mat-icon {
+    vertical-align: bottom;
+    font-size: 40px;
+    margin: auto 20px 8px 10px;
+}
+
+.students__breadcrumb .active_prev {
+    color: gray;
+}
+
+.students__breadcrumb .active {
+    color: #3f51b5;
+}
+
+.students__header {
+    margin: 50px auto;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-orient: horizontal;
+    -webkit-box-direction: normal;
+    -ms-flex-direction: row;
+    flex-direction: row;
+    -webkit-box-pack: justify;
+    -ms-flex-pack: justify;
+    justify-content: space-between;
+}
+
+.students__header h1 {
+    font-size: 40px;
+    font-weight: 500;
+}
+
+.students__header button {
+    font-size: 16px;
+    padding: 5px 30px;
+}
+
+.students__header mat-icon {
+    vertical-align: bottom;
+    font-size: 25px;
+    margin: auto 10px 6.5px -5px;
+}
+
+.students__table mat-form-field {
+    font-size: 16px;
+    width: 100%;
+}
+
+.students__table table {
+    width: 100%;
+}
+
+.students__table th {
+    font-size: 14px;
+    padding-top: 5px;
+}
+
+.students__table mat-icon {
+    cursor: pointer;
+    padding: 5px 10px 0 10px;
+}
+
+.students__table mat-icon:hover:nth-child(1) {
+    color: #69f0ae;
+}
+
+.students__table mat-icon:hover:nth-child(2) {
+    color: #ff4081;
+}
+
+.students__table mat-icon:hover:nth-child(3) {
+    color: #fceb6f;
+}
+
+.students__table mat-icon:hover:nth-child(4) {
+    color: #f44336;
+}
+
+.students__table .empty-data {
+    display: inline-block;
+    top: 45%;
+    left: 43%;
+    position: absolute;
+    text-align: center;
+}
+
+.students__table .empty-data h1 {
+    border-radius: 4px;
+    font-size: 28px;
+    font-weight: 500;
+    color: #f4f4f4;
+    background: #3f51b5;
+    padding: 10px 15px 10px 15px;
+}

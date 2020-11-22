@@ -32,4 +32,9 @@ export class AdminsCrudService {
             `${this.baseurl}${this.entity}/del/${id}`
         )
     }
+    checkAdminName(username: string): Observable<any> {
+        return this.httpInstance.get(
+            `${this.baseurl}${this.entity}/checkUserName/${username}`
+        )
+    }
 }

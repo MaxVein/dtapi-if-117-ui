@@ -4,9 +4,14 @@ export interface Admins {
     username: string
 }
 export interface AdminsCreation {
-    title?: string
+    id?: string
     email: string
     username: string
     password: string
     password_confirm: string
+}
+
+export interface ModalData {
+    title?: string
+    user?: AdminsCreation
 }

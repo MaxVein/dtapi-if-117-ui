@@ -1,0 +1,22 @@
+table {
+    width: 100%;
+}
+table th {
+    text-align: left;
+}
+.mat-typography {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-pack: justify;
+    -ms-flex-pack: justify;
+    justify-content: space-between;
+}
+.mat-typography .mat-h2 {
+    margin-left: 1rem;
+    margin-top: 1rem;
+}
+.mat-typography .add-group {
+    margin-right: 1rem;
+    margin-top: 1rem;
+}
