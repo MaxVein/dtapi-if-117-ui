@@ -25,6 +25,7 @@ import { Student } from 'src/app/shared/interfaces/interfaces'
 })
 export class StudentsPageComponent implements OnInit, AfterViewInit, OnDestroy {
     groupID: number
+    groupName: string
     loading = false
     isUpdateData = false
     studentSubscription: Subscription
@@ -36,7 +37,7 @@ export class StudentsPageComponent implements OnInit, AfterViewInit, OnDestroy {
     ]
     dataSource = new MatTableDataSource<Student>()
 
-    @ViewChild(MatPaginator, { static: false }) paginator: MatPaginator
+    @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator
 
     constructor(
         private studentsService: StudentsService,
@@ -45,6 +46,9 @@ export class StudentsPageComponent implements OnInit, AfterViewInit, OnDestroy {
     ) {}
 
     ngOnInit(): void {
+        this.route.queryParams.subscribe((param) => {
+            this.groupName = param['groupName']
+        })
         this.loading = true
         this.getStudentsByGroup()
     }

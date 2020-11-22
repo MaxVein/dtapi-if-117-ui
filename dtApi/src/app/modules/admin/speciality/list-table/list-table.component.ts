@@ -1,16 +1,12 @@
 import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core'
-import { HttpClient } from '@angular/common/http'
 import { MatPaginator } from '@angular/material/paginator'
-import { MatDialog, MatDialogRef } from '@angular/material/dialog'
+import { MatDialogRef } from '@angular/material/dialog'
 import { MatTableDataSource } from '@angular/material/table'
-
-import { Observable } from 'rxjs'
 
 import { ApiService } from '../../../../shared/services/api.service'
 import { ModalFormComponent } from '../modal-form/modal-form.component'
 import { ConfirmDialogComponent } from '../confirm-dialog/confirm-dialog.component'
 import { DialogService } from '../dialog.service'
-import { MatSnackBar } from '@angular/material/snack-bar'
 
 export interface ListTableItem {
     speciality_id?: number

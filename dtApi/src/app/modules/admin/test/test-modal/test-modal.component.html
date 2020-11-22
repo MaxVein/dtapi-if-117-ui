@@ -9,7 +9,7 @@
             required
         />
         <mat-error *ngIf="test_name.invalid">
-            Слід <strong>обов'язково</strong> вказати назву тесту
+            Поле не має бути пустим
         </mat-error>
     </mat-form-field>
     <mat-form-field class="example-full-width">
@@ -24,9 +24,7 @@
                 {{ item.subject_name }}
             </mat-option>
         </mat-select>
-        <mat-error *ngIf="subject_id">
-            Слід <strong>обов'язково</strong> вибрати предмет
-        </mat-error>
+        <mat-error *ngIf="subject_id"> Поле не має бути пустим </mat-error>
     </mat-form-field>
     <mat-form-field class="example-full-width">
         <mat-label>Кількість завдань</mat-label>
@@ -37,9 +35,7 @@
             #tasks="ngModel"
             required
         />
-        <mat-error *ngIf="tasks.invalid">
-            Слід <strong>обов'язково</strong> вказати кількість завдань
-        </mat-error>
+        <mat-error *ngIf="tasks.invalid"> Поле не має бути пустим </mat-error>
     </mat-form-field>
     <mat-form-field class="example-full-width">
         <mat-label>Час (хв)</mat-label>
@@ -51,7 +47,7 @@
             required
         />
         <mat-error *ngIf="time_for_test.invalid">
-            Слід <strong>обов'язково</strong> вказати час виконання
+            Поле не має бути пустим
         </mat-error>
     </mat-form-field>
     <mat-form-field class="example-full-width">
@@ -64,16 +60,16 @@
             required
         />
         <mat-error *ngIf="attempts.invalid">
-            Слід <strong>обов'язково</strong> вказати кількість спроб
+            Поле не має бути пустим
         </mat-error>
     </mat-form-field>
     <label class="example-margin">Стан:</label>
     <mat-radio-group [(ngModel)]="data.data.enabled">
         <mat-radio-button value="1" class="radio-btn"
-            >Включений</mat-radio-button
+            >Доступний</mat-radio-button
         >
         <mat-radio-button value="0" class="radio-btn"
-            >Виключений</mat-radio-button
+            >Недоступний</mat-radio-button
         >
     </mat-radio-group>
 </div>

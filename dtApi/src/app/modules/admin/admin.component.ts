@@ -3,6 +3,8 @@ import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout'
 import { Observable } from 'rxjs'
 import { map, shareReplay } from 'rxjs/operators'
 import { ApiService } from './speciality/api.service'
+import { AuthService } from '../login/services/auth.service'
+import { Router } from '@angular/router'
 
 @Component({
     selector: 'app-admin',
@@ -13,11 +15,14 @@ export class AdminComponent {
     menuIcon = 'menu_open'
 
     constructor(
-        private apiService: ApiService,
+        private apiService: AuthService,
+        private router: Router,
         private breakpointObserver: BreakpointObserver
     ) {}
     logOut() {
-        this.apiService.logout().subscribe()
+        this.apiService.logOutRequest().subscribe({
+            next: () => this.router.navigate(['/login']),
+        })
     }
 
     menuIconChange(): void {

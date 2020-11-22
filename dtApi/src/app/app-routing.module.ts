@@ -5,6 +5,7 @@ import { AdminGuard } from './shared/guards/admin.guard'
 import { StudentGuard } from './shared/guards/student.guard'
 
 import { NotFoundPageComponent } from './shared/components/not-found-page/not-found-page.component'
+import { LoggedGuard } from './shared/guards/logged.guard'
 
 const routes: Routes = [
     { path: '', redirectTo: '/login', pathMatch: 'full' },
@@ -12,6 +13,7 @@ const routes: Routes = [
         path: 'login',
         loadChildren: () =>
             import('./modules/login/login.module').then((m) => m.LoginModule),
+        canActivate: [LoggedGuard],
     },
     {
         path: 'admin',
