@@ -23,23 +23,23 @@ export class GroupsService {
     }
     public getData(entity, id?) {
         return this.http.get(
-            `${environment.BASEURL}/api/${entity}/getRecords/${id ? id : ''}`
+            `${environment.BASEURL}${entity}/getRecords/${id ? id : ''}`
         )
     }
     public delData(entity, id?) {
         return this.http.get(
-            `${environment.BASEURL}/api/${entity}/del/${id ? id : ''}`
+            `${environment.BASEURL}${entity}/del/${id ? id : ''}`
         )
     }
     public insertData(entity, payload) {
         return this.http.post(
-            `${environment.BASEURL}/api/${entity}/insertData`,
+            `${environment.BASEURL}${entity}/insertData`,
             payload
         )
     }
     public updateData(entity, id, payload) {
         return this.http.post(
-            `${environment.BASEURL}/api/${entity}/update/${id}`,
+            `${environment.BASEURL}${entity}/update/${id}`,
             payload
         )
     }
