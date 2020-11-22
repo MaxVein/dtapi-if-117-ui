@@ -5,7 +5,6 @@ import { MatIconModule } from '@angular/material/icon'
 import { MatButtonModule } from '@angular/material/button'
 import { MatTableModule } from '@angular/material/table'
 import { MatPaginatorModule } from '@angular/material/paginator'
-
 import { MatSnackBarModule } from '@angular/material/snack-bar'
 import { MatDividerModule } from '@angular/material/divider'
 import { MatTooltipModule } from '@angular/material/tooltip'
@@ -22,19 +21,20 @@ import { MatMenuModule } from '@angular/material/menu'
 import { LayoutModule } from '@angular/cdk/layout'
 import { MatToolbarModule } from '@angular/material/toolbar'
 import { MatListModule } from '@angular/material/list'
+import { MatTabsModule } from '@angular/material/tabs'
+import { MatSortModule } from '@angular/material/sort'
 
 @NgModule({
     declarations: [],
     imports: [
         CommonModule,
         MatTableModule,
-        MatPaginatorModule,
         MatIconModule,
+        MatPaginatorModule,
         MatButtonModule,
         MatDialogModule,
         MatFormFieldModule,
         MatInputModule,
-        MatTableModule,
         MatCardModule,
         MatTooltipModule,
         MatProgressSpinnerModule,
@@ -44,21 +44,21 @@ import { MatListModule } from '@angular/material/list'
         MatRadioModule,
         MatSidenavModule,
         MatGridListModule,
-        MatCardModule,
         MatMenuModule,
         LayoutModule,
         MatToolbarModule,
         MatListModule,
+        MatTabsModule,
+        MatSortModule,
     ],
     exports: [
+        MatTableModule,
         MatIconModule,
         MatButtonModule,
         MatDialogModule,
         MatFormFieldModule,
         MatInputModule,
-        MatTableModule,
         MatPaginatorModule,
-        MatCardModule,
         MatTooltipModule,
         MatProgressSpinnerModule,
         MatSnackBarModule,
@@ -72,6 +72,8 @@ import { MatListModule } from '@angular/material/list'
         LayoutModule,
         MatToolbarModule,
         MatListModule,
+        MatTabsModule,
+        MatSortModule,
     ],
 })
 export class AngularMaterialModule {}
