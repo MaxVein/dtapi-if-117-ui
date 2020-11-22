@@ -9,18 +9,21 @@ import { AuthService } from 'src/app/modules/login/services/auth.service'
 @Injectable({
     providedIn: 'root',
 })
-export class AdminGuard implements CanActivate {
+export class LoggedGuard implements CanActivate {
     constructor(private apiService: AuthService, private router: Router) {}
     canActivate(
         route: Route
     ): Observable<boolean> | Promise<boolean> | boolean {
-        return this.apiService.getCurrentUser().pipe(
-            map((currentUser) => {
-                const allowed = currentUser.roles.includes('admin')
-                if (!allowed) {
-                    this.router.navigate(['student'])
+        return this.apiService.isLogged().pipe(
+            map((data: any) => {
+                if (data.response === 'non logged') {
+                    return true
+                } else {
+                    const goTo = data.roles.includes('admin')
+                        ? 'admin'
+                        : 'student'
+                    this.router.navigate([goTo])
                 }
-                return allowed
             })
         )
     }

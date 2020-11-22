@@ -19,6 +19,7 @@ import {
 } from './interfaces/student-pageInterfaces'
 import { StudentService } from './services/student-page.service'
 import { AuthService } from '../../login/services/auth.service'
+import { Router } from '@angular/router'
 
 @Component({
     selector: 'app-student-page',
@@ -29,7 +30,8 @@ export class StudentPageComponent implements OnInit {
     constructor(
         private student: StudentService,
         private auth: AuthService,
-        private snackBar: MatSnackBar
+        private snackBar: MatSnackBar,
+        private router: Router
     ) {}
 
     photo: string
@@ -187,7 +189,11 @@ export class StudentPageComponent implements OnInit {
         this.getTestInfo()
     }
     logOut() {
-        this.auth.logOutRequest()
+        this.auth.logOutRequest().subscribe({
+            next: () => {
+                this.router.navigate(['/login'])
+            },
+        })
     }
     openSnackBar(message: string, action: string) {
         this.snackBar.open(message, action, {

@@ -16,7 +16,7 @@ export class StudentGuard implements CanActivate {
             map((currentUser) => {
                 const allowed = currentUser.roles.includes('student')
                 if (!allowed) {
-                    this.router.navigate(['404'])
+                    this.router.navigate(['admin'])
                 }
                 return allowed
             })

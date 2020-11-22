@@ -1,27 +1,46 @@
 .container {
-    .groups__nav {
-        display: flex;
-        align-items: center;
-        margin-left: 1rem;
-        margin-top: 1rem;
+    & .hide {
+        opacity: 0;
     }
+
+    & mat-form-field {
+        font-size: 16px;
+        width: 100%;
+    }
+
     table {
         width: 100%;
         th {
             text-align: left;
         }
     }
+
     .mat-typography {
+        margin: 60px auto;
         display: flex;
+        flex-direction: row;
         justify-content: space-between;
-        margin-bottom: 1rem;
-        .mat-h2 {
-            margin-left: 1rem;
-            margin-top: 1rem;
+
+        .mat-h1 {
+            font-size: 40px;
+            font-weight: 500;
         }
+
+        & .header-icon {
+            vertical-align: top;
+            font-size: 45px;
+            margin: -5px 25px auto auto;
+        }
+
         .add-group {
-            margin-right: 1rem;
-            margin-top: 1rem;
+            font-size: 16px;
+            padding: 5px 30px;
+        }
+
+        & .btn-icon {
+            vertical-align: bottom;
+            font-size: 25px;
+            margin: auto 10px 6.5px -5px;
         }
     }
     .mat-icon {

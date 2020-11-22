@@ -22,7 +22,20 @@ export interface Unique {
 }
 
 export interface Faculty {
-    faculty_id?: number
+    faculty_id: number
     faculty_name: string
     faculty_description: string
+}
+
+export interface Group {
+    group_id: string
+    group_name: string
+    speciality_id: string
+    faculty_id: string
+}
+
+export interface Speciality {
+    speciality_id: number
+    speciality_code: string
+    speciality_name: string
 }
