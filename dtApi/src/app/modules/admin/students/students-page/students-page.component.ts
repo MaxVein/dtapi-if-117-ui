@@ -5,18 +5,17 @@ import {
     OnInit,
     ViewChild,
 } from '@angular/core'
-import { ActivatedRoute, Router } from '@angular/router'
-import { Subscription } from 'rxjs'
+import { ActivatedRoute } from '@angular/router'
 import { MatPaginator } from '@angular/material/paginator'
 import { MatTableDataSource } from '@angular/material/table'
-
-import { StudentsService } from 'src/app/modules/admin/students/students-page/students.service'
-
-import { ModalService } from 'src/app/shared/services/modal.service'
 import { StudentsModalComponent } from './students-modal/students-modal.component'
 import { StudentsViewModalComponent } from './students-view-modal/students-view-modal.component'
 import { StudentsTransferModalComponent } from './students-transfer-modal/students-transfer-modal.component'
 import { ConfirmComponent } from 'src/app/shared/components/confirm/confirm.component'
+import { AlertComponent } from '../../../../shared/components/alert/alert.component'
+import { StudentsService } from 'src/app/modules/admin/students/students.service'
+import { ModalService } from 'src/app/shared/services/modal.service'
+import { Subscription } from 'rxjs'
 import { Student } from 'src/app/shared/interfaces/interfaces'
 
 @Component({
@@ -42,7 +41,6 @@ export class StudentsPageComponent implements OnInit, AfterViewInit, OnDestroy {
     constructor(
         private studentsService: StudentsService,
         private route: ActivatedRoute,
-        private router: Router,
         public modalService: ModalService
     ) {}
 
@@ -66,15 +64,15 @@ export class StudentsPageComponent implements OnInit, AfterViewInit, OnDestroy {
                     this.loading = false
                     this.modalService.showSnackBar('Студентів завантажено')
                 },
-                (error) => {
-                    if (error.status === 403) {
-                        this.modalService.showSnackBar('Ви не авторизовані')
-                        this.router.navigate(['/login'])
-                    } else {
-                        this.modalService.showSnackBar(
-                            'Проблеми із сервером! Перезавантажте сторінку'
-                        )
-                    }
+                () => {
+                    const message = 'Сталася помилка. Спробуйте знову'
+                    const title = 'Помилка'
+                    this.modalService.openModal(AlertComponent, {
+                        data: {
+                            message,
+                            title,
+                        },
+                    })
                 }
             )
     }
@@ -96,10 +94,8 @@ export class StudentsPageComponent implements OnInit, AfterViewInit, OnDestroy {
                 },
             },
             (result) => {
-                if (!result) {
-                    this.modalService.showSnackBar(
-                        'Сталася помилка! Спробуйте знову'
-                    )
+                if (result === 'Помилка') {
+                    this.modalService.showSnackBar('Закрито через помилку')
                 } else if (result.response === 'ok') {
                     this.loading = true
                     this.getStudentsByGroup()
@@ -127,10 +123,8 @@ export class StudentsPageComponent implements OnInit, AfterViewInit, OnDestroy {
                 },
             },
             (result) => {
-                if (!result) {
-                    this.modalService.showSnackBar(
-                        'Сталася помилка! Спробуйте знову'
-                    )
+                if (result === 'Помилка') {
+                    this.modalService.showSnackBar('Закрито через помилку')
                 } else if (result.response === 'ok') {
                     this.loading = true
                     this.getStudentsByGroup()
@@ -156,7 +150,16 @@ export class StudentsPageComponent implements OnInit, AfterViewInit, OnDestroy {
                 },
             },
             (result) => {
-                if (result) {
+                if (result === 'Помилка') {
+                    this.modalService.showSnackBar('Закрито через помилку')
+                } else if (result.response === 'ok') {
+                    this.loading = true
+                    this.getStudentsByGroup()
+                    this.modalService.showSnackBar('Студента переведено')
+                    setTimeout(() => {
+                        this.loading = false
+                    }, 500)
+                } else if (result === 'Скасовано') {
                     this.modalService.showSnackBar('Скасовано')
                 }
             }
@@ -176,6 +179,8 @@ export class StudentsPageComponent implements OnInit, AfterViewInit, OnDestroy {
             (result) => {
                 if (result) {
                     this.modalService.showSnackBar('Закрито')
+                } else if (result === 'Помилка') {
+                    this.modalService.showSnackBar('Закрито через помилку')
                 }
             }
         )
@@ -192,16 +197,31 @@ export class StudentsPageComponent implements OnInit, AfterViewInit, OnDestroy {
             },
             (result) => {
                 if (result) {
-                    this.studentsService.remove(id).subscribe((data) => {
-                        if (data) {
-                            this.dataSource.data = this.dataSource.data.filter(
-                                (s) => s.user_id !== id
-                            )
-                            this.modalService.showSnackBar(
-                                'Студента було видалено'
-                            )
-                        }
-                    })
+                    this.studentSubscription = this.studentsService
+                        .remove(id)
+                        .subscribe(
+                            (data) => {
+                                if (data) {
+                                    this.dataSource.data = this.dataSource.data.filter(
+                                        (s) => s.user_id !== id
+                                    )
+                                    this.modalService.showSnackBar(
+                                        'Студента було видалено'
+                                    )
+                                }
+                            },
+                            () => {
+                                const message =
+                                    'Сталася помилка. Спробуйте знову'
+                                const title = 'Помилка'
+                                this.modalService.openModal(AlertComponent, {
+                                    data: {
+                                        message,
+                                        title,
+                                    },
+                                })
+                            }
+                        )
                 }
             }
         )

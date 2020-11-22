@@ -1,4 +1,4 @@
-<div class="modal">
+<div class="modal" *ngIf="!loading; else loader">
     <div class="modal__header">
         <h3 mat-dialog-title class="modal__title">
             {{
@@ -128,8 +128,6 @@
                         type="text"
                         id="gradebookID"
                         placeholder="IP-16-2"
-                        name="gradebookID"
-                        appUnique="gradebookID"
                     />
                     <mat-error
                         *ngIf="
@@ -174,8 +172,6 @@
                         type="text"
                         id="username"
                         placeholder="oleh-ip-20-1"
-                        name="username"
-                        appUnique="username"
                     />
                     <mat-error
                         *ngIf="
@@ -216,8 +212,6 @@
                         type="email"
                         id="email"
                         placeholder="Ex. pat@example.com"
-                        name="email"
-                        appUnique="email"
                     />
                     <mat-error
                         *ngIf="
@@ -476,3 +470,10 @@
         </form>
     </div>
 </div>
+
+<ng-template #loader>
+    <mat-progress-spinner
+        mode="indeterminate"
+        color="accent"
+    ></mat-progress-spinner>
+</ng-template>
