@@ -1,12 +1,13 @@
 import { Component, ViewChild, OnInit } from '@angular/core'
-import { MatPaginator } from '@angular/material/paginator'
-import { MatTableDataSource, MatTable } from '@angular/material/table'
-import { MatSort } from '@angular/material/sort'
-import { MatDialog } from '@angular/material/dialog'
 
 import { TestService } from './services/test.service'
 import { Test } from './models/Test'
 import { TestModalComponent } from './test-modal/test-modal.component'
+
+import { MatPaginator } from '@angular/material/paginator'
+import { MatTableDataSource, MatTable } from '@angular/material/table'
+import { MatSort } from '@angular/material/sort'
+import { MatDialog } from '@angular/material/dialog'
 
 @Component({
     selector: 'app-tests',
@@ -30,7 +31,7 @@ export class TestComponent implements OnInit {
 
     @ViewChild('table', { static: true }) table: MatTable<Test>
     @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator
-    @ViewChild(MatSort) sort: MatSort
+    @ViewChild(MatSort, { static: true }) sort: MatSort
 
     constructor(private testService: TestService, public dialog: MatDialog) {
         this.testService.getEntity('test').subscribe((data: Test[]) => {
@@ -41,8 +42,8 @@ export class TestComponent implements OnInit {
     ngOnInit() {
         this.tests = []
         this.dataSource.data = this.tests
-        this.dataSource.sort = this.sort
         this.dataSource.paginator = this.paginator
+        this.dataSource.sort = this.sort
     }
 
     getTests(): any {
