@@ -1,0 +1,23 @@
+.confirm-button {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-pack: center;
+    -ms-flex-pack: center;
+    justify-content: center;
+    color: white;
+}
+.confirm-button .decline {
+    width: 40%;
+    background-color: #cfcfcf;
+}
+.confirm-button .decline:hover {
+    background-color: #f03535;
+}
+.confirm-button .agree {
+    width: 40%;
+    background-color: #07f;
+}
+.confirm-button .agree:hover {
+    background-color: #2ebdff;
+}

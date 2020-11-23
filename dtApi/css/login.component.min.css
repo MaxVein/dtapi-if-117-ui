@@ -1,0 +1,89 @@
+.container {
+    position: relative;
+    height: 100%;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    -webkit-box-pack: center;
+    -ms-flex-pack: center;
+    justify-content: center;
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+    -ms-flex-direction: column;
+    flex-direction: column;
+}
+.container .logo {
+    padding: 20px;
+}
+.container .form-wrap {
+    position: relative;
+    border-radius: 10px;
+    -webkit-box-shadow: 0 0 20px rgba(0, 0, 0, 0.7);
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.7);
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+    -ms-flex-direction: column;
+    flex-direction: column;
+    -webkit-box-pack: center;
+    -ms-flex-pack: center;
+    justify-content: center;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    border: 1px solid rgba(0, 0, 0, 0.4);
+    padding: 20px;
+}
+.container .form-wrap .form-title {
+    font-size: 24px;
+    padding: 25px 0 35px 0;
+    text-shadow: 1px 2px 12px black;
+}
+.container .form-wrap form,
+.container .form-wrap .form-title {
+    max-width: 300px;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+    -ms-flex-direction: column;
+    flex-direction: column;
+}
+.container .form-wrap form .material-icons,
+.container .form-wrap .form-title .material-icons {
+    font-size: 20px;
+    padding-right: 5px;
+}
+.container .form-wrap .form-field {
+    padding-bottom: 15px;
+}
+.container .project-logo {
+    font-size: 50px;
+}
+.container .form-showPassword {
+    cursor: pointer;
+}
+.form-request-error {
+    -webkit-box-shadow: 0 0 10px rgba(0, 0, 0, 0.7);
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.7);
+    width: 300px;
+    border: 1px solid rgba(0, 0, 0, 0.7);
+    border-radius: 3px;
+    position: absolute;
+    bottom: 4%;
+    left: calc(50%-150px);
+    text-align: center;
+    background-color: #ffffff !important;
+}
+.form-request-error p {
+    background-color: #ffffff !important;
+    color: red;
+    padding: 10px 3px;
+    margin: 0;
+}
