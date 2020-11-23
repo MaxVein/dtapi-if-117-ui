@@ -1,16 +1,19 @@
+.confirm-dialog {
+    text-align: center;
+}
 .confirm-button {
     display: flex;
-    justify-content: center;
     color: white;
+    justify-content: center;
     & .decline {
-        width: 40%;
+        min-width: 120px;
         background-color: rgb(207, 207, 207);
         &:hover {
             background-color: rgb(240, 53, 53);
         }
     }
     & .agree {
-        width: 40%;
+        min-width: 120px;
         background-color: rgb(0, 119, 255);
         &:hover {
             background-color: rgb(46, 189, 255);
