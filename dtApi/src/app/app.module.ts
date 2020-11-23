@@ -9,7 +9,6 @@ import { AngularMaterialModule } from './shared/modules/angular-material/angular
 import { LoginModule } from './modules/login/login.module'
 import { StudentPageModule } from './modules/student-profile/student-profileModule/student-profile.module'
 import { SharedModule } from './shared/modules/shared.module'
-
 import { AppComponent } from './app.component'
 import { NotFoundPageComponent } from './shared/components/not-found-page/not-found-page.component'
 
