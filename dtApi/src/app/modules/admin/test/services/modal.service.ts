@@ -12,7 +12,6 @@ export class ModalService {
 
     openAlertModal(msg: string, title: string): void {
         const dialogRef = this.dialog.open(AlertComponent, {
-            width: '400px',
             data: {
                 message: msg,
                 title: title,
@@ -22,7 +21,6 @@ export class ModalService {
 
     openConfirmModal(msg: string, callbackFunction: () => void): void {
         const dialogRef = this.dialog.open(ConfirmComponent, {
-            width: '400px',
             data: {
                 message: msg,
             },
