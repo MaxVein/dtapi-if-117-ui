@@ -1,29 +1,34 @@
 .transfer {
-    width: 600px;
+    width: 450px;
 
     &__header {
-        margin-top: 20px;
-        margin-bottom: 40px;
+        margin-top: 10px;
+        margin-bottom: 30px;
         text-align: center;
+
+        & .header-icon {
+            vertical-align: middle;
+            font-size: 30px;
+            margin: -9px 10px auto auto;
+        }
     }
 
     &__title {
-        font-size: 30px;
+        font-size: 22px;
         font-weight: 500;
     }
 
     &__content {
-        padding-top: 20px;
+        padding-top: 5px;
     }
 
     &__container {
         display: flex;
         flex-direction: row;
-        padding-bottom: 50px;
+        padding-bottom: 25px;
     }
 
     &__faculty {
-        margin-left: -20px;
         width: 50%;
         display: flex;
         justify-content: center;
@@ -38,15 +43,30 @@
 
     &__selector {
         font-size: 16px;
+
+        & .select-icon {
+            vertical-align: middle;
+            font-size: 20px;
+            margin: -3px 5px auto auto;
+        }
     }
 
-    &__btn {
-        font-size: 15px;
-        padding: 2px 20px 2px 20px;
-        margin-right: 10px;
+    &__buttons {
+        width: 100%;
+        justify-content: center;
+
+        & button {
+            width: calc(50% - 10px);
+            padding: 3px 0;
+
+            &:first-of-type {
+                margin-right: 10px;
+                background: #e1e1e1;
+            }
+        }
     }
 }
 
 mat-progress-spinner {
-    margin: 98px 250px;
+    margin: 53px 175px;
 }
