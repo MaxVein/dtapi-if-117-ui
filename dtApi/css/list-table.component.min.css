@@ -1,0 +1,57 @@
+table {
+    width: 80%;
+    margin: 20px auto;
+}
+form {
+    text-align: center;
+}
+.form-control {
+    padding: 10px;
+}
+.add-speciality-btn {
+    padding: 10px;
+    margin-top: 10px;
+    background-color: #07f;
+    border: none;
+    color: #fff;
+}
+.add-speciality-btn:hover {
+    background-color: #2ebdff;
+    color: white;
+    cursor: pointer;
+}
+.add-speciality-btn:disabled {
+    cursor: not-allowed;
+}
+input.ng-invalid.ng-touched {
+    border: 1px solid red;
+}
+input.ng-valid {
+    border: 1px solid green;
+}
+small {
+    color: red;
+}
+.cont-head {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-pack: justify;
+    -ms-flex-pack: justify;
+    justify-content: space-between;
+    margin-right: 10%;
+    margin-left: 10%;
+}
+.paginator {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-pack: end;
+    -ms-flex-pack: end;
+    justify-content: flex-end;
+    margin-right: 10%;
+}
+a:hover {
+    color: red;
+    cursor: pointer;
+}

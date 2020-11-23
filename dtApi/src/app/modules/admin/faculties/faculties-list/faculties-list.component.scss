@@ -1,0 +1,56 @@
+table {
+    width: 100%;
+}
+
+form {
+    text-align: center;
+}
+
+.form-control {
+    padding: 10px;
+}
+.add-faculty-btn {
+    padding: 10px;
+    margin-top: 10px;
+    background-color: rgb(0, 119, 255);
+    border: none;
+    color: rgb(255, 255, 255);
+    &:hover {
+        background-color: rgb(46, 189, 255);
+        color: white;
+        cursor: pointer;
+    }
+    &:disabled {
+        cursor: not-allowed;
+    }
+}
+
+input {
+    &.ng-invalid.ng-touched {
+        border: 1px solid red;
+    }
+    &.ng-valid {
+        border: 1px solid green;
+    }
+}
+small {
+    color: red;
+}
+
+.container__head {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin: 20px 10px;
+}
+.paginator {
+    display: flex;
+    justify-content: flex-end;
+}
+
+a {
+    &:hover {
+        color: red;
+        cursor: pointer;
+    }
+}
