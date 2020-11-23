@@ -64,9 +64,17 @@ export class StudentsPageComponent implements OnInit, AfterViewInit, OnDestroy {
             .getByGroup(this.groupID)
             .subscribe(
                 (response) => {
-                    this.dataSource.data = response
-                    this.loading = false
-                    this.modalService.showSnackBar('Студентів завантажено')
+                    if (response.length) {
+                        this.dataSource.data = response
+                        this.loading = false
+                        this.modalService.showSnackBar('Студентів завантажено')
+                    } else {
+                        this.dataSource.data = []
+                        this.loading = false
+                        this.modalService.showSnackBar(
+                            'У вибраній групі відсутні студенти'
+                        )
+                    }
                 },
                 () => {
                     const message = 'Сталася помилка. Спробуйте знову'
@@ -196,6 +204,7 @@ export class StudentsPageComponent implements OnInit, AfterViewInit, OnDestroy {
             ConfirmComponent,
             {
                 data: {
+                    icon: 'person_remove',
                     message,
                 },
             },

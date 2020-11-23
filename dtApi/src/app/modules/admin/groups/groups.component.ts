@@ -92,6 +92,7 @@ export class GroupsComponent implements OnInit {
     }
 
     changeGroup(group?): void {
+        this.loading = true
         if (group) {
             const dialogRef = this.dialog.open(GroupDialogComponent, {
                 width: '300px',
@@ -160,33 +161,34 @@ export class GroupsComponent implements OnInit {
         })
     }
     addGroup(group) {
-        this.groupsSertvice
-            .insertData('Group', group)
-            .subscribe((result: any) => {
-                const newItem = {
-                    group_id: result.group_id,
-                    group_name: result.group_name,
-                    faculty_name: this.groupsSertvice
-                        .getData('Faculty', result.faculty_id)
-                        .subscribe((data) => data[0].faculty_name),
-                    speciality_name: this.groupsSertvice
-                        .getData('Speciality', result.speciality_id)
-                        .subscribe((data) => data[0].speciality_name),
-                }
-                this.ngOnInit()
+        this.groupsSertvice.insertData('Group', group).subscribe(
+            (result: any) => {
+                this.getGroups()
                 this.groupsSertvice.snackBarOpen('Групу додано')
-            })
+            },
+            (error) => {
+                this.groupsSertvice.snackBarOpen('Можливо така група вже існує')
+                this.loading = false
+            }
+        )
     }
     editGroup(id, group) {
-        this.groupsSertvice.updateData('Group', id, group).subscribe(() => {
-            this.dataSource.data.map((item) => {
-                item.group_id === id
-                    ? (item = { group_id: id, ...group })
-                    : false
-            })
-            this.ngOnInit()
-            this.groupsSertvice.snackBarOpen('Групу відредаговано')
-        })
+        this.loading = true
+        this.groupsSertvice.updateData('Group', id, group).subscribe(
+            (res) => {
+                this.dataSource.data.map((item) => {
+                    item.group_id === id
+                        ? (item = { group_id: id, ...group })
+                        : false
+                })
+                this.getGroups()
+                this.groupsSertvice.snackBarOpen('Групу відредаговано')
+            },
+            (error) => {
+                this.groupsSertvice.snackBarOpen('Можливо така група вже існує')
+                this.loading = false
+            }
+        )
     }
 
     getSpecialityId(spec: string) {
@@ -202,13 +204,20 @@ export class GroupsComponent implements OnInit {
         return currentSpec[0][0].faculty_id
     }
     delGroup(id) {
-        this.groupsSertvice.delData('Group', id).subscribe(() => {
-            this.dataSource.data = this.dataSource.data.filter(
-                (item) => (item.group_id! = id)
-            )
-            this.ngOnInit()
-            this.groupsSertvice.snackBarOpen('Групу видалено')
-        })
+        this.loading = true
+        this.groupsSertvice.delData('Group', id).subscribe(
+            (res) => {
+                this.dataSource.data = this.dataSource.data.filter(
+                    (item) => (item.group_id! = id)
+                )
+                this.getGroups()
+                this.groupsSertvice.snackBarOpen('Групу видалено')
+            },
+            (error) => {
+                this.groupsSertvice.snackBarOpen('Спочатку видаліть студентів')
+                this.loading = false
+            }
+        )
     }
     applyFilter(event: Event) {
         const filterValue = (event.target as HTMLInputElement).value

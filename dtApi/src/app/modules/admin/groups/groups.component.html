@@ -1,19 +1,15 @@
 <div class="container">
-    <section class="mat-typography">
-        <h2 class="mat-h1">
-            <mat-icon class="header-icon"> groups </mat-icon>
-            Групи і студенти
-        </h2>
-        <button
-            mat-raised-button
-            color="primary"
-            class="add-group"
-            (click)="changeGroup()"
-        >
-            <mat-icon class="btn-icon">add</mat-icon>
-            Додати групу
+    <section class="entity_container">
+        <h1 class="mat-h1 entity-title">
+            <mat-icon class="admins-title-icon">groups </mat-icon>Групи і
+            студенти
+        </h1>
+        <button mat-raised-button color="primary" (click)="changeGroup()">
+            <mat-icon class="btn-icon">add_circle</mat-icon>
+            Додати Адміна
         </button>
     </section>
+
     <mat-form-field
         [class.hide]="loading || !dataSource.data.length"
         class="filter"
@@ -39,21 +35,27 @@
                 </ng-container>
 
                 <ng-container matColumnDef="group_name">
-                    <th mat-header-cell *matHeaderCellDef>Шифр групи</th>
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                        Шифр групи
+                    </th>
                     <td mat-cell *matCellDef="let element">
                         {{ element.group_name }}
                     </td>
                 </ng-container>
 
                 <ng-container matColumnDef="speciality_name">
-                    <th mat-header-cell *matHeaderCellDef>Факультет</th>
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                        Факультет
+                    </th>
                     <td mat-cell *matCellDef="let element">
                         {{ element.speciality_name }}
                     </td>
                 </ng-container>
 
                 <ng-container matColumnDef="faculty_name">
-                    <th mat-header-cell *matHeaderCellDef>спеціальність</th>
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                        спеціальність
+                    </th>
                     <td mat-cell *matCellDef="let element">
                         {{ element.faculty_name }}
                     </td>
@@ -62,29 +64,47 @@
                 <ng-container matColumnDef="actions">
                     <th mat-header-cell *matHeaderCellDef>Дії</th>
                     <td mat-cell *matCellDef="let group">
-                        <mat-icon
-                            aria-hidden="false"
-                            aria-label="supervisor_account"
-                            matTooltip="Список студентів"
+                        <button
+                            class="operation-button"
+                            mat-flat-button
+                            color="primary"
                             (click)="
                                 goToStudents(group.group_id, group.group_name)
                             "
-                            >supervisor_account</mat-icon
                         >
-                        <mat-icon
-                            aria-hidden="false"
-                            aria-label="edit"
-                            matTooltip="Редагувати групу"
+                            <mat-icon
+                                aria-hidden="false"
+                                aria-label="supervisor_account"
+                                matTooltip="Список студентів"
+                                >supervisor_account</mat-icon
+                            >
+                        </button>
+                        <button
+                            class="operation-button"
+                            mat-flat-button
+                            color="primary"
                             (click)="changeGroup(group)"
-                            >edit</mat-icon
                         >
-                        <mat-icon
-                            aria-hidden="false"
-                            aria-label="delete"
-                            matTooltip="Видалити групу"
+                            <mat-icon
+                                aria-hidden="false"
+                                aria-label="edit"
+                                matTooltip="Редагувати групу"
+                                >edit</mat-icon
+                            >
+                        </button>
+                        <button
+                            class="operation-button"
+                            mat-flat-button
+                            color="primary"
                             (click)="delCurrGroup(group)"
-                            >delete</mat-icon
                         >
+                            <mat-icon
+                                aria-hidden="false"
+                                aria-label="delete"
+                                matTooltip="Видалити групу"
+                                >delete</mat-icon
+                            >
+                        </button>
                     </td>
                 </ng-container>
 
