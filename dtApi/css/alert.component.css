@@ -1,0 +1,36 @@
+.alert {
+    width: 350px;
+}
+
+.alert mat-divider {
+    margin-top: 20px;
+}
+
+.alert__title {
+    text-align: center;
+    font-weight: 500;
+    font-size: 20px;
+}
+
+.alert button {
+    width: calc(50% - 10px);
+}
+
+.alert button:first-of-type {
+    margin-right: 10px;
+}
+
+.alert__content {
+    margin: 10px auto;
+    text-align: center;
+    font-size: 16px;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -ms-flex-pack: distribute;
+    justify-content: space-around;
+}
+
+.alert__buttons {
+    width: 100%;
+}

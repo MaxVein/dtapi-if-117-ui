@@ -1,0 +1,44 @@
+small {
+    color: red;
+}
+.example-form {
+    min-width: 350px;
+    max-width: 500px;
+    width: 100%;
+}
+.example-full-width {
+    width: 100%;
+}
+.confirm-dialog {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-pack: center;
+    -ms-flex-pack: center;
+    justify-content: center;
+}
+.confirm-dialog .decline {
+    margin-right: 3px;
+    width: 40%;
+    background-color: #cfcfcf;
+    color: white;
+}
+.confirm-dialog .decline:hover {
+    background-color: #f03535;
+    color: white;
+}
+.confirm-dialog .agree {
+    margin-left: 3px;
+    width: 40%;
+    background-color: #07f;
+    color: white;
+}
+.confirm-dialog .agree:hover {
+    background-color: #2ebdff;
+    color: white;
+}
+.confirm-dialog .agree:disabled {
+    background-color: #2ebdff;
+    color: white;
+    cursor: not-allowed;
+}

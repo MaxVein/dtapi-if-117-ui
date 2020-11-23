@@ -1,0 +1,65 @@
+.transfer {
+    width: 600px;
+}
+
+.transfer__header {
+    margin-top: 20px;
+    margin-bottom: 40px;
+    text-align: center;
+}
+
+.transfer__title {
+    font-size: 30px;
+    font-weight: 500;
+}
+
+.transfer__content {
+    padding-top: 20px;
+}
+
+.transfer__container {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-orient: horizontal;
+    -webkit-box-direction: normal;
+    -ms-flex-direction: row;
+    flex-direction: row;
+    padding-bottom: 50px;
+}
+
+.transfer__faculty {
+    margin-left: -20px;
+    width: 50%;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-pack: center;
+    -ms-flex-pack: center;
+    justify-content: center;
+}
+
+.transfer__group {
+    margin-right: -20px;
+    width: 50%;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-pack: center;
+    -ms-flex-pack: center;
+    justify-content: center;
+}
+
+.transfer__selector {
+    font-size: 16px;
+}
+
+.transfer__btn {
+    font-size: 15px;
+    padding: 2px 20px 2px 20px;
+    margin-right: 10px;
+}
+
+mat-progress-spinner {
+    margin: 98px 250px;
+}
