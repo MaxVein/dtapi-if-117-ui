@@ -1,6 +1,9 @@
 <div class="modal" *ngIf="!loading; else loader">
     <div class="modal__header">
-        <h3 mat-dialog-title class="modal__title">Інформація про студента</h3>
+        <h3 mat-dialog-title class="modal__title">
+            <mat-icon class="header-icon">info</mat-icon>
+            Інформація про студента
+        </h3>
     </div>
     <mat-dialog-content class="modal__content" *ngIf="this.student; else empty">
         <div class="modal__container">
@@ -117,7 +120,7 @@
             <button
                 mat-flat-button
                 (click)="closeModal()"
-                color="warn"
+                type="reset"
                 mat-dialog-close
                 class="modal__btn"
             >
@@ -130,6 +133,6 @@
 <ng-template #loader>
     <mat-progress-spinner
         mode="indeterminate"
-        color="accent"
+        color="primary"
     ></mat-progress-spinner>
 </ng-template>
