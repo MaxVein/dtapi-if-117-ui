@@ -68,8 +68,7 @@ export class FacultiesListComponent implements OnInit {
                 (res) => {
                     if (res === 'ok') {
                         this.dataSource.data = this.dataSource.data.filter(
-                            (Faculty) =>
-                                Faculty.faculty_id !== data.faculty_id
+                            (Faculty) => Faculty.faculty_id !== data.faculty_id
                         )
                     }
                 },

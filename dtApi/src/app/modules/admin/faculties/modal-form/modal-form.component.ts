@@ -50,14 +50,12 @@ export class ModalFormComponent implements OnInit {
                     )
                 break
             case 'add':
-                this.apiService
-                    .addEntity('Faculty', this.form.value)
-                    .subscribe(
-                        (res) => this.dialogRef.close(res),
-                        (error) => {
-                            this.apiService.snackBarOpen()
-                        }
-                    )
+                this.apiService.addEntity('Faculty', this.form.value).subscribe(
+                    (res) => this.dialogRef.close(res),
+                    (error) => {
+                        this.apiService.snackBarOpen()
+                    }
+                )
         }
     }
     onCancel(): void {
