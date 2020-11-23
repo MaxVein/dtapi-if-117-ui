@@ -1,34 +1,42 @@
 .alert {
-    width: 350px;
-
-    & mat-divider {
-        margin-top: 20px;
-    }
+    width: 300px;
 
     &__title {
         text-align: center;
         font-weight: 500;
-        font-size: 24px;
+    }
+
+    &__content {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+    }
+
+    &__icon {
+        width: auto;
+        height: auto;
+        font-size: 3rem;
+        color: #3f51b5;
+    }
+
+    &__message {
+        margin: 10px auto;
+        text-align: center;
+        font-weight: 500;
+    }
+
+    & mat-divider {
+        margin-top: 10px;
     }
 
     & button {
         width: calc(50% - 10px);
-
-        &:first-of-type {
-            margin-right: 10px;
-        }
-    }
-
-    &__content {
-        margin: 10px auto;
-        text-align: center;
-        font-size: 17px;
-        display: flex;
-        justify-content: space-around;
     }
 
     &__buttons {
         width: 100%;
+        justify-content: center;
 
         & button {
             width: 100%;
