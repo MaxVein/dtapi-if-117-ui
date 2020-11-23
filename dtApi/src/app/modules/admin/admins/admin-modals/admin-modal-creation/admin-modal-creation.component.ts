@@ -88,8 +88,7 @@ export class AdminModalCreationComponent implements OnInit {
                                                 )
                                                 .subscribe((res) => {
                                                     if (res.response === 'ok') {
-                                                        console.warn(res)
-                                                        // window.location.reload()
+                                                        window.location.reload()
                                                     }
                                                 })
                                         }
@@ -99,8 +98,7 @@ export class AdminModalCreationComponent implements OnInit {
                                     .updateAdmin(changedValues, data.user.id)
                                     .subscribe((res) => {
                                         if (res.response === 'ok') {
-                                            console.warn(res)
-                                            // window.location.reload()
+                                            window.location.reload()
                                         }
                                     })
                             }
