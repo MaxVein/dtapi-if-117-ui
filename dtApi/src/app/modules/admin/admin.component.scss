@@ -1,5 +1,3 @@
-$Primary-color: #3f51b5;
-
 .toolbar-spacer {
     flex: 1 1 auto;
 }
@@ -16,4 +14,7 @@ $Primary-color: #3f51b5;
     position: sticky;
     top: 0;
     z-index: 1;
+}
+.admin-content-wrapper {
+    padding: 2rem 2rem;
 }

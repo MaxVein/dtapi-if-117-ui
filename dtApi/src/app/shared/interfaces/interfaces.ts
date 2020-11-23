@@ -21,6 +21,12 @@ export interface Unique {
     propertyIsNotUnique: boolean
 }
 
+export interface Faculty {
+    faculty_id: number
+    faculty_name: string
+    faculty_description: string
+}
+
 export interface Group {
     group_id: string
     group_name: string
@@ -32,10 +38,4 @@ export interface Speciality {
     speciality_id: number
     speciality_code: string
     speciality_name: string
-}
-
-export interface Faculty {
-    faculty_id: number
-    faculty_name: string
-    faculty_description: string
 }

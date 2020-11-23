@@ -1,12 +1,15 @@
 <div class="modal" *ngIf="!loading; else loader">
     <div class="modal__header">
-        <h3 mat-dialog-title class="modal__title">
+        <h1 mat-dialog-title class="modal__title">
+            <mat-icon class="header-icon">
+                {{ data.isUpdateData ? 'edit' : 'person_add' }}
+            </mat-icon>
             {{
                 data.isUpdateData
                     ? 'Редагувати дані студента'
                     : 'Додати нового студента'
             }}
-        </h3>
+        </h1>
     </div>
     <div class="modal__form">
         <form class="add-form" [formGroup]="form" (ngSubmit)="submit()">
@@ -435,7 +438,9 @@
                         color="primary"
                         type="button"
                     >
-                        <mat-icon>cloud_upload</mat-icon>
+                        <mat-icon class="file-input-icon"
+                            >cloud_upload</mat-icon
+                        >
                         Завантажити фото
                     </button>
                     <input
@@ -448,25 +453,30 @@
                 </div>
             </div>
 
-            <button
-                mat-flat-button
-                (click)="closeModal()"
-                color="warn"
-                mat-dialog-close
-                class="modal__btn"
-            >
-                Скасувати
-            </button>
+            <div class="modal__buttons">
+                <button
+                    mat-flat-button
+                    (click)="closeModal()"
+                    type="reset"
+                    mat-dialog-close
+                    class="modal__btn-close"
+                >
+                    Скасувати
+                </button>
 
-            <button
-                mat-flat-button
-                color="accent"
-                type="submit"
-                class="modal__btn"
-                [disabled]="form.invalid || submitted"
-            >
-                {{ data.isUpdateData ? 'Редагувати дані' : 'Додати студента' }}
-            </button>
+                <button
+                    mat-flat-button
+                    type="submit"
+                    class="modal__btn-save"
+                    [disabled]="form.invalid || submitted"
+                >
+                    {{
+                        data.isUpdateData
+                            ? 'Редагувати дані'
+                            : 'Додати студента'
+                    }}
+                </button>
+            </div>
         </form>
     </div>
 </div>
@@ -474,6 +484,6 @@
 <ng-template #loader>
     <mat-progress-spinner
         mode="indeterminate"
-        color="accent"
+        color="primary"
     ></mat-progress-spinner>
 </ng-template>

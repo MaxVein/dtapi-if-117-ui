@@ -1,8 +1,8 @@
 <div class="transfer" *ngIf="!loading; else loader">
     <div class="transfer__header">
         <h3 mat-dialog-title class="transfer__title">
-            Виберіть групу для переведення <br />
-            студента
+            <mat-icon class="header-icon">compare_arrows</mat-icon>
+            Переведення студента
         </h3>
     </div>
 
@@ -11,7 +11,10 @@
             <div class="transfer__faculty">
                 <div class="transfer__selector">
                     <mat-form-field class="faculty">
-                        <mat-label>Виберіть Факультат/Інститут</mat-label>
+                        <mat-label>
+                            <mat-icon class="select-icon">school</mat-icon>
+                            Виберіть Факультат/Інститут
+                        </mat-label>
                         <mat-select
                             required
                             placeholder="Факультет/Інститут"
@@ -31,7 +34,10 @@
             <div class="transfer__group">
                 <div class="transfer__selector">
                     <mat-form-field class="faculty">
-                        <mat-label>Виберіть Групу</mat-label>
+                        <mat-label>
+                            <mat-icon class="select-icon">group</mat-icon>
+                            Виберіть Групу
+                        </mat-label>
                         <mat-select
                             required
                             placeholder="Група"
@@ -54,7 +60,7 @@
             <button
                 mat-flat-button
                 (click)="closeModal()"
-                color="warn"
+                type="reset"
                 mat-dialog-close
                 class="transfer__btn"
             >
@@ -62,8 +68,8 @@
             </button>
 
             <button
+                type="submit"
                 mat-flat-button
-                color="accent"
                 class="transfer__btn"
                 (click)="submit()"
                 [disabled]="!submitted"
@@ -77,6 +83,6 @@
 <ng-template #loader>
     <mat-progress-spinner
         mode="indeterminate"
-        color="accent"
+        color="primary"
     ></mat-progress-spinner>
 </ng-template>
