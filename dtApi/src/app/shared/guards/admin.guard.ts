@@ -1,9 +1,10 @@
 import { Route } from '@angular/compiler/src/core'
 import { Injectable } from '@angular/core'
 import { CanActivate, Router } from '@angular/router'
+
 import { Observable } from 'rxjs'
 import { map } from 'rxjs/operators'
-import { ApiService } from 'src/app/modules/admin/speciality/api.service'
+
 import { AuthService } from 'src/app/modules/login/services/auth.service'
 
 @Injectable({
