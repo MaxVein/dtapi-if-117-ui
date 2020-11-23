@@ -92,6 +92,7 @@ export class GroupsComponent implements OnInit {
     }
 
     changeGroup(group?): void {
+        this.loading = true
         if (group) {
             const dialogRef = this.dialog.open(GroupDialogComponent, {
                 width: '300px',
