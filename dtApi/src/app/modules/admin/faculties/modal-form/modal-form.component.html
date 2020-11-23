@@ -1,0 +1,57 @@
+<form
+    class="example-form"
+    [formGroup]="form"
+    (ngSubmit)="addFaculty(data ? 'update' : 'add')"
+>
+    <h1>{{ data ? 'Редагувати факультет' : 'Додати факультет' }}</h1>
+    <mat-form-field class="example-full-width">
+        <mat-label>Name</mat-label>
+        <input matInput placeholder="Name" formControlName="faculty_name" />
+        <div
+            class="validation"
+            *ngIf="
+                form.get('faculty_name').invalid &&
+                form.get('faculty_name').touched
+            "
+        >
+            <small>Поле не може бути порожнім</small>
+        </div>
+    </mat-form-field>
+    <br />
+    <mat-form-field class="example-full-width">
+        <mat-label>Description</mat-label>
+        <input
+            matInput
+            placeholder="Description"
+            formControlName="faculty_description"
+        />
+        <div
+            class="validation"
+            *ngIf="
+                form.get('faculty_description').invalid &&
+                form.get('faculty_description').touched
+            "
+        >
+            <small>Поле не може бути порожнім</small>
+        </div>
+    </mat-form-field>
+    <br />
+    <div class="confirm-dialog">
+        <button
+            mat-raised-button
+            type="button"
+            (click)="onCancel()"
+            class="decline"
+        >
+            Відмінити
+        </button>
+        <button
+            mat-raised-button
+            class="agree"
+            type="submit"
+            [disabled]="form.invalid"
+        >
+            {{ data ? 'Редагувати' : 'Додати' }}
+        </button>
+    </div>
+</form>

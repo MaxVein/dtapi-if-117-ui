@@ -3,9 +3,9 @@ import { Routes, RouterModule } from '@angular/router'
 
 import { AdminGuard } from './shared/guards/admin.guard'
 import { StudentGuard } from './shared/guards/student.guard'
+import { LoggedGuard } from './shared/guards/logged.guard'
 
 import { NotFoundPageComponent } from './shared/components/not-found-page/not-found-page.component'
-import { LoggedGuard } from './shared/guards/logged.guard'
 
 const routes: Routes = [
     { path: '', redirectTo: '/login', pathMatch: 'full' },
@@ -34,7 +34,9 @@ const routes: Routes = [
 ]
 
 @NgModule({
-    imports: [RouterModule.forRoot(routes)],
+    imports: [
+        RouterModule.forRoot(routes, { relativeLinkResolution: 'legacy' }),
+    ],
     exports: [RouterModule],
     declarations: [],
 })
