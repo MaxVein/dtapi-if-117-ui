@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core'
 import { HttpClient } from '@angular/common/http'
 import { environment } from 'src/environments/environment'
 import { MatSnackBar } from '@angular/material/snack-bar'
+import { Observable } from 'rxjs'
 
 @Injectable({
     providedIn: 'root',
@@ -22,29 +23,29 @@ export class GroupsService {
             password: 'dtapi_admin',
         })
     }
-    public getData(entity, id?) {
+    public getData(entity, id?): Observable<any> {
         return this.http.get(
             `${environment.BASEURL}${entity}/getRecords/${id ? id : ''}`
         )
     }
-    public delData(entity, id?) {
+    public delData(entity, id?): Observable<any> {
         return this.http.get(
             `${environment.BASEURL}${entity}/del/${id ? id : ''}`
         )
     }
-    public insertData(entity, payload) {
+    public insertData(entity, payload): Observable<any> {
         return this.http.post(
             `${environment.BASEURL}${entity}/insertData`,
             payload
         )
     }
-    public updateData(entity, id, payload) {
+    public updateData(entity, id, payload): Observable<any> {
         return this.http.post(
             `${environment.BASEURL}${entity}/update/${id}`,
             payload
         )
     }
-    snackBarOpen(payload: string): any {
+    public snackBarOpen(payload: string): any {
         return this.snackBar.open(payload, '', {
             duration: 1500,
         })
