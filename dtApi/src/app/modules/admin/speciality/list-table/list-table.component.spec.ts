@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing'
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing'
 import { NoopAnimationsModule } from '@angular/platform-browser/animations'
 import { MatPaginatorModule } from '@angular/material/paginator'
 import { MatSortModule } from '@angular/material/sort'
@@ -10,17 +10,19 @@ describe('ListTableComponent', () => {
     let component: ListTableComponent
     let fixture: ComponentFixture<ListTableComponent>
 
-    beforeEach(async(() => {
-        TestBed.configureTestingModule({
-            declarations: [ListTableComponent],
-            imports: [
-                NoopAnimationsModule,
-                MatPaginatorModule,
-                MatSortModule,
-                MatTableModule,
-            ],
-        }).compileComponents()
-    }))
+    beforeEach(
+        waitForAsync(() => {
+            TestBed.configureTestingModule({
+                declarations: [ListTableComponent],
+                imports: [
+                    NoopAnimationsModule,
+                    MatPaginatorModule,
+                    MatSortModule,
+                    MatTableModule,
+                ],
+            }).compileComponents()
+        })
+    )
 
     beforeEach(() => {
         fixture = TestBed.createComponent(ListTableComponent)
