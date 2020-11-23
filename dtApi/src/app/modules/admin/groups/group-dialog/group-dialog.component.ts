@@ -1,5 +1,6 @@
 import { Component, OnInit, Inject } from '@angular/core'
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog'
+import { FormBuilder, FormGroup, Validators } from '@angular/forms'
 
 import { GroupsService } from '../groups.service'
 
@@ -22,7 +23,10 @@ export class GroupDialogComponent implements OnInit {
     faculties: any
     groupInfo: []
     title: string
+    form: FormGroup
+
     constructor(
+        private formBuilder: FormBuilder,
         private groupsSertvice: GroupsService,
         public dialogRef: MatDialogRef<GroupDialogComponent>,
         @Inject(MAT_DIALOG_DATA) public data: DialogData
@@ -38,8 +42,29 @@ export class GroupDialogComponent implements OnInit {
         this.specialities = this.sharedInfo[0][0]
         this.faculties = this.sharedInfo[0][1]
         this.groupsSertvice.getData('Group', this.data.group_id)
+        this.form = this.formBuilder.group({
+            group_name: [
+                this.data ? this.data.group_name : '',
+                [
+                    Validators.required,
+                    Validators.pattern(
+                        '[А-Я\u0406]{1,4}[мз]?-[0-9]{2}-[0-9]{1}'
+                    ),
+                ],
+            ],
+            speciality_name: [
+                this.data ? this.data.speciality_name : '',
+                [Validators.required],
+            ],
+            faculty_name: [
+                this.data ? this.data.faculty_name : '',
+                [Validators.required],
+            ],
+        })
     }
-
+    addGroup() {
+        this.dialogRef.close(this.form.value)
+    }
     onNoClick(): void {
         this.dialogRef.close()
     }
