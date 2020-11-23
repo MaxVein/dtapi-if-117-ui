@@ -118,6 +118,9 @@ export class GroupsComponent implements OnInit {
                         ),
                     })
                 }
+                setTimeout(() => {
+                    this.loading = false
+                }, 300)
             })
         } else {
             const dialogRef = this.dialog.open(GroupDialogComponent, {
@@ -142,6 +145,14 @@ export class GroupsComponent implements OnInit {
                             10
                         ),
                     })
+                } else {
+                    setTimeout(() => {
+                        this.loading = false
+                    }, 300)
+                    setTimeout(() => {
+                        this.dataSource.paginator = this.paginator
+                        this.dataSource.sort = this.sort
+                    }, 300)
                 }
             })
         }
@@ -157,10 +168,19 @@ export class GroupsComponent implements OnInit {
         dialogRef.afterClosed().subscribe((result) => {
             if (result) {
                 this.delGroup(group.group_id)
+            } else {
+                setTimeout(() => {
+                    this.loading = false
+                }, 300)
+                setTimeout(() => {
+                    this.dataSource.paginator = this.paginator
+                    this.dataSource.sort = this.sort
+                }, 300)
             }
         })
     }
     addGroup(group) {
+        this.loading = true
         this.groupsSertvice.insertData('Group', group).subscribe(
             (result: any) => {
                 this.getGroups()
