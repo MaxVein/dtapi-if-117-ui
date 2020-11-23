@@ -10,7 +10,11 @@ import { ConfirmDialogComponent } from './confirm-dialog/confirm-dialog.componen
 const routes: Routes = [{ path: '', component: FacultiesListComponent }]
 
 @NgModule({
-    declarations: [FacultiesListComponent, ModalFormComponent, ConfirmDialogComponent,],
+    declarations: [
+        FacultiesListComponent,
+        ModalFormComponent,
+        ConfirmDialogComponent,
+    ],
     imports: [CommonModule, SharedModule, RouterModule.forChild(routes)],
     exports: [FacultiesListComponent],
 })

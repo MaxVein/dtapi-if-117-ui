@@ -16,16 +16,13 @@ export class ConfirmDialogComponent {
     ) {}
 
     agreeBtn(): void {
-        this.apiService
-            .delEntity('Faculty', this.data.faculty_id)
-            .subscribe(
-                (res) => {
-                    if (res.response === 'ok')
-                        this.dialogRef.close(res.response)
-                },
-                (error) => {
-                    this.apiService.snackBarOpen()
-                }
-            )
+        this.apiService.delEntity('Faculty', this.data.faculty_id).subscribe(
+            (res) => {
+                if (res.response === 'ok') this.dialogRef.close(res.response)
+            },
+            (error) => {
+                this.apiService.snackBarOpen()
+            }
+        )
     }
 }
