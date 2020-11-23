@@ -92,6 +92,7 @@ export class GroupsComponent implements OnInit {
     }
 
     changeGroup(group?): void {
+        this.loading = true
         if (group) {
             const dialogRef = this.dialog.open(GroupDialogComponent, {
                 width: '300px',
@@ -162,15 +163,17 @@ export class GroupsComponent implements OnInit {
     addGroup(group) {
         this.groupsSertvice.insertData('Group', group).subscribe(
             (result: any) => {
-                this.ngOnInit()
+                this.getGroups()
                 this.groupsSertvice.snackBarOpen('Групу додано')
             },
             (error) => {
                 this.groupsSertvice.snackBarOpen('Можливо така група вже існує')
+                this.loading = false
             }
         )
     }
     editGroup(id, group) {
+        this.loading = true
         this.groupsSertvice.updateData('Group', id, group).subscribe(
             (res) => {
                 this.dataSource.data.map((item) => {
@@ -178,11 +181,12 @@ export class GroupsComponent implements OnInit {
                         ? (item = { group_id: id, ...group })
                         : false
                 })
-                this.ngOnInit()
+                this.getGroups()
                 this.groupsSertvice.snackBarOpen('Групу відредаговано')
             },
             (error) => {
                 this.groupsSertvice.snackBarOpen('Можливо така група вже існує')
+                this.loading = false
             }
         )
     }
@@ -200,16 +204,18 @@ export class GroupsComponent implements OnInit {
         return currentSpec[0][0].faculty_id
     }
     delGroup(id) {
+        this.loading = true
         this.groupsSertvice.delData('Group', id).subscribe(
             (res) => {
                 this.dataSource.data = this.dataSource.data.filter(
                     (item) => (item.group_id! = id)
                 )
-                this.ngOnInit()
+                this.getGroups()
                 this.groupsSertvice.snackBarOpen('Групу видалено')
             },
             (error) => {
                 this.groupsSertvice.snackBarOpen('Спочатку видаліть студентів')
+                this.loading = false
             }
         )
     }
