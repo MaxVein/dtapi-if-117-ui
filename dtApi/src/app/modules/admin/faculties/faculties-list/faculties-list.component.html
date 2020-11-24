@@ -1,11 +1,8 @@
-<div>
-    <div class="speciality-head">
-        <h1 class="mat-h1 entity-title">
-            <mat-icon class="speciality-title-icon">bubble_chart </mat-icon
-            >Спеціальності
-        </h1>
-        <button mat-raised-button color="primary" (click)="openModal()">
-            <mat-icon>add_circle</mat-icon> Додати спеціальність
+<div class="container">
+    <div class="container__head">
+        <h1>Факультети</h1>
+        <button class="add-faculty-btn" (click)="openModal()">
+            Додати Факультет
         </button>
     </div>
     <div class="mat-elevation-z8">
@@ -13,28 +10,28 @@
             <ng-container matColumnDef="id">
                 <th mat-header-cell *matHeaderCellDef>ID</th>
                 <td mat-cell *matCellDef="let element">
-                    {{ element.speciality_id }}
+                    {{ element.faculty_id }}
                 </td>
             </ng-container>
             <ng-container matColumnDef="name">
                 <th mat-header-cell *matHeaderCellDef>Назва</th>
                 <td mat-cell *matCellDef="let element">
-                    {{ element.speciality_name }}
+                    {{ element.faculty_name }}
                 </td>
             </ng-container>
-            <ng-container matColumnDef="code">
-                <th mat-header-cell *matHeaderCellDef>Код</th>
+            <ng-container matColumnDef="description">
+                <th mat-header-cell *matHeaderCellDef>Опис</th>
                 <td mat-cell *matCellDef="let element">
-                    {{ element.speciality_code }}
+                    {{ element.faculty_description }}
                 </td>
             </ng-container>
             <ng-container matColumnDef="buttons">
                 <th mat-header-cell *matHeaderCellDef>Дія</th>
                 <td mat-cell *matCellDef="let element" class="action-link">
-                    <a (click)="editSpeciality(element)"
+                    <a (click)="editFaculty(element)"
                         ><i class="material-icons edit"> edit </i></a
                     >
-                    <a (click)="deleteSpeciality(element)"
+                    <a (click)="deleteFaculty(element)"
                         ><i class="material-icons delete"> delete </i></a
                     >
                 </td>

@@ -2,8 +2,9 @@ small {
     color: red;
 }
 .example-form {
+    min-width: 350px;
     max-width: 500px;
-    text-align: center;
+    width: 100%;
 }
 
 .example-full-width {
@@ -13,8 +14,8 @@ small {
     display: flex;
     justify-content: center;
     & .decline {
-        margin: 3px;
-        min-width: 120px;
+        margin-right: 3px;
+        width: 40%;
         background-color: rgb(207, 207, 207);
         color: white;
         &:hover {
@@ -23,8 +24,8 @@ small {
         }
     }
     & .agree {
-        margin: 3px;
-        min-width: 120px;
+        margin-left: 3px;
+        width: 40%;
         background-color: rgb(0, 119, 255);
         color: white;
         &:hover {

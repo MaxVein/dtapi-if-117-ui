@@ -2,10 +2,16 @@ table {
     width: 100%;
 }
 
-.add-speciality-btn {
+form {
+    text-align: center;
+}
+
+.form-control {
+    padding: 10px;
+}
+.add-faculty-btn {
     padding: 10px;
     margin-top: 10px;
-    margin-bottom: 10px;
     background-color: rgb(0, 119, 255);
     border: none;
     color: rgb(255, 255, 255);
@@ -31,10 +37,11 @@ small {
     color: red;
 }
 
-.speciality-head {
+.container__head {
     display: flex;
     justify-content: space-between;
-    margin-bottom: 20px;
+    align-items: baseline;
+    margin: 20px 10px;
 }
 .paginator {
     display: flex;
@@ -45,17 +52,5 @@ a {
     &:hover {
         color: red;
         cursor: pointer;
-    }
-}
-.entity-title {
-    display: flex;
-    align-items: center;
-    .mat-icon {
-        width: auto;
-        height: auto;
-    }
-    .speciality-title-icon {
-        font-size: 2rem;
-        margin-right: 0.5rem;
     }
 }
