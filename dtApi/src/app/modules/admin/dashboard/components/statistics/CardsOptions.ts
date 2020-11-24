@@ -5,4 +5,5 @@ export interface CardsResponsiveOptions {
     isLGScreen: string
     isMDScreen: string
     isSMScreen: string
+    isMSScreen: string
 }

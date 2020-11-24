@@ -20,15 +20,15 @@
             <mat-select formControlName="speciality_name">
                 <mat-option
                     *ngFor="let item of specialities"
-                    [value]="item[0].speciality_name"
-                    >{{ item[0].speciality_name }}</mat-option
+                    [value]="item.speciality_name"
+                    >{{ item.speciality_name }}</mat-option
                 >
             </mat-select>
             <mat-error
                 class="validation"
                 *ngIf="
-                    form.get('group_name').invalid &&
-                    form.get('group_name').touched
+                    form.get('speciality_name').invalid &&
+                    form.get('speciality_name').touched
                 "
                 >Це поле є обов'язковим</mat-error
             >
@@ -39,15 +39,15 @@
             <mat-select formControlName="faculty_name">
                 <mat-option
                     *ngFor="let item of faculties"
-                    [value]="item[0].faculty_name"
-                    >{{ item[0].faculty_name }}</mat-option
+                    [value]="item.faculty_name"
+                    >{{ item.faculty_name }}</mat-option
                 >
             </mat-select>
             <mat-error
                 class="validation"
                 *ngIf="
-                    form.get('group_name').invalid &&
-                    form.get('group_name').touched
+                    form.get('faculty_name').invalid &&
+                    form.get('faculty_name').touched
                 "
                 >Це поле є обов'язковим</mat-error
             >

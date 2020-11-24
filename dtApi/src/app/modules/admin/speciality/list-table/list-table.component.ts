@@ -3,7 +3,7 @@ import { MatPaginator } from '@angular/material/paginator'
 import { MatDialogRef } from '@angular/material/dialog'
 import { MatTableDataSource } from '@angular/material/table'
 
-import { ApiService } from '../../../../shared/services/api.service'
+import { ApiService } from '../api.service'
 import { ModalFormComponent } from '../modal-form/modal-form.component'
 import { ConfirmDialogComponent } from '../confirm-dialog/confirm-dialog.component'
 import { DialogService } from '../dialog.service'
@@ -48,12 +48,29 @@ export class ListTableComponent implements OnInit, AfterViewInit {
         )
     }
 
-    openModal(data?: ListTableItem[]): void {
+    openModal(data?): void {
         this.dialogService
             .createModal(data ? data : '')
             .afterClosed()
             .subscribe(
-                (res) => (res ? this.getSpeciality() : ''),
+                (res?) => {
+                    if (!res) return
+
+                    switch (res.str) {
+                        case 'upd':
+                            const index = this.dataSource.data.findIndex(
+                                (s) => s.speciality_id === data.speciality_id
+                            )
+                            this.dataSource.data[index] = res.res[0]
+                            this.dataSource.data = this.dataSource.data
+                            break
+                        case 'added':
+                            const length = this.dataSource.data.length
+                            this.dataSource.data[length] = res.res[0]
+                            this.dataSource.data = this.dataSource.data
+                            break
+                    }
+                },
                 (error) => {
                     this.apiService.snackBarOpen()
                 }

@@ -36,10 +36,4 @@ export class ApiService {
             duration: 1500,
         })
     }
-    login(): Observable<any> {
-        return this.http.post(`${environment.BASEURL}/Login/index`, {
-            username: 'admin',
-            password: 'dtapi_admin',
-        })
-    }
 }

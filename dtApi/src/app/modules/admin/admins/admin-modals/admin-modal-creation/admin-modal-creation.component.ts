@@ -1,12 +1,14 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
-import { Component, Inject, OnInit } from '@angular/core'
-import { ModalData } from '../../admin-model/Admins'
+import { Component, Inject, Input, OnInit } from '@angular/core'
+import { Admins, ModalData } from '../../admin-model/Admins'
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog'
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms'
 import { MustMatch } from '../../validators/password-match.validator'
 import { AdminsCrudService } from '../../admin-services/admins-crud.service'
+import { MatSnackBar } from '@angular/material/snack-bar'
+import { MatTableDataSource } from '@angular/material/table'
 
 @Component({
     selector: 'app-admin-modal-creation',
@@ -18,7 +20,8 @@ export class AdminModalCreationComponent implements OnInit {
         public dialogRef: MatDialogRef<AdminModalCreationComponent>,
         @Inject(MAT_DIALOG_DATA) public data: ModalData,
         private formBuilder: FormBuilder,
-        private admincrud: AdminsCrudService
+        private admincrud: AdminsCrudService,
+        private snackBar: MatSnackBar
     ) {}
 
     hide = true
@@ -28,8 +31,14 @@ export class AdminModalCreationComponent implements OnInit {
     ngOnInit(): void {
         this.AdminForm = this.formBuilder.group(
             {
-                username: new FormControl(null, Validators.required),
-                email: new FormControl(null, Validators.email),
+                username: new FormControl(
+                    this.data.user ? this.data.user.username : null,
+                    Validators.required
+                ),
+                email: new FormControl(
+                    this.data.user ? this.data.user.email : null,
+                    Validators.email
+                ),
                 password: new FormControl(
                     null,
                     Validators.pattern(
@@ -58,7 +67,14 @@ export class AdminModalCreationComponent implements OnInit {
                     if (formValue) {
                         this.admincrud.addAdmin(formValue).subscribe((res) => {
                             if (res) {
-                                window.location.reload()
+                                Object.assign(data.user, res)
+                                this.snackBar.open(
+                                    'Адміна успішно додано',
+                                    'Закрити',
+                                    {
+                                        duration: 3000,
+                                    }
+                                )
                             }
                         })
                     }
@@ -70,8 +86,9 @@ export class AdminModalCreationComponent implements OnInit {
                                 delete formValue[item]
                             }
                         }
-                        const changedValues = JSON.stringify(formValue)
-                        if (changedValues !== '{}') {
+                        const changedValues = formValue
+                        const changedValuesJSON = JSON.stringify(formValue)
+                        if (changedValuesJSON !== '{}') {
                             if (this.AdminForm.get('username')) {
                                 this.admincrud
                                     .checkAdminName(
@@ -79,33 +96,67 @@ export class AdminModalCreationComponent implements OnInit {
                                     )
                                     .subscribe((res) => {
                                         if (res.response === true) {
-                                            alert("Таке ім'я вже існує")
+                                            this.snackBar.open(
+                                                "Таке ім'я вже існує",
+                                                'Закрити',
+                                                {
+                                                    duration: 3000,
+                                                }
+                                            )
                                         } else if (res.response === false) {
                                             this.admincrud
                                                 .updateAdmin(
-                                                    changedValues,
+                                                    changedValuesJSON,
                                                     data.user.id
                                                 )
-                                                .subscribe((res) => {
-                                                    if (res.response === 'ok') {
-                                                        console.warn(res)
-                                                        // window.location.reload()
+                                                .subscribe(
+                                                    (res) => {
+                                                        data.newUser = changedValues
+                                                        this.snackBar.open(
+                                                            'Адміна успішно відредаговано',
+                                                            'Закрити',
+                                                            {
+                                                                duration: 3000,
+                                                            }
+                                                        )
+                                                    },
+                                                    (err) => {
+                                                        this.snackBar.open(
+                                                            `${JSON.stringify(
+                                                                err
+                                                            )}`,
+                                                            'Закрити',
+                                                            {
+                                                                duration: 3000,
+                                                            }
+                                                        )
                                                     }
-                                                })
+                                                )
                                         }
                                     })
                             } else {
                                 this.admincrud
-                                    .updateAdmin(changedValues, data.user.id)
+                                    .updateAdmin(
+                                        changedValuesJSON,
+                                        data.user.id
+                                    )
                                     .subscribe((res) => {
                                         if (res.response === 'ok') {
-                                            console.warn(res)
-                                            // window.location.reload()
+                                            data.newUser = changedValues
+                                            this.snackBar.open(
+                                                'Адміна успішно відредаговано',
+                                                'Закрити',
+                                                {
+                                                    duration: 3000,
+                                                }
+                                            )
                                         }
                                     })
                             }
                         } else {
-                            alert('Введіть значення')
+                            this.snackBar.open('Веддіть значення', 'Закрити', {
+                                duration: 3000,
+                            })
                         }
                     }
             }

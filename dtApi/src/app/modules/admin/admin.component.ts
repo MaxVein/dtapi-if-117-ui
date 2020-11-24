@@ -2,7 +2,6 @@ import { Component } from '@angular/core'
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout'
 import { Observable } from 'rxjs'
 import { map, shareReplay } from 'rxjs/operators'
-import { ApiService } from './speciality/api.service'
 import { AuthService } from '../login/services/auth.service'
 import { Router } from '@angular/router'
 
