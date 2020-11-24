@@ -3,6 +3,7 @@ import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core'
 import { MatPaginator } from '@angular/material/paginator'
 import { MatDialog, MatDialogRef } from '@angular/material/dialog'
 import { MatTableDataSource } from '@angular/material/table'
+import { MatSort } from '@angular/material/sort'
 
 import { Faculty } from '../../../../shared/interfaces/interfaces'
 import { ApiService } from '../../../../shared/services/api.service'
@@ -21,7 +22,8 @@ export class FacultiesListComponent implements OnInit {
     fileNameDialogRef: MatDialogRef<ModalFormComponent>
     confirmDialogRef: MatDialogRef<ConfirmDialogComponent>
 
-    @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator
+    @ViewChild(MatPaginator) paginator: MatPaginator
+    @ViewChild(MatSort) sort: MatSort
 
     constructor(
         private apiService: ApiService,
@@ -37,7 +39,11 @@ export class FacultiesListComponent implements OnInit {
 
     getFaculty(): void {
         this.apiService.getEntity('Faculty').subscribe(
-            (response: Faculty[]) => (this.dataSource.data = response),
+            (response: Faculty[]) => {
+                this.dataSource.data = response
+                this.dataSource.paginator = this.paginator
+                this.dataSource.sort = this.sort
+            },
             (error) => {
                 this.apiService.snackBarOpen()
             }
