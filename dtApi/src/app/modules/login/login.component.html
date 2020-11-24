@@ -5,9 +5,14 @@
     <div class="form-wrap">
         <p class="form-title">Authorization</p>
         <form [formGroup]="loginForm" novalidate (submit)="onSubmit($event)">
-            <mat-form-field class="form-field" appearance="outline">
+            <mat-form-field
+                class="form-field"
+                appearance="outline"
+                #outlineFieldRef
+            >
                 <mat-label> Login </mat-label>
                 <input
+                    (focus)="fixOutlineStyle(outlineFieldRef)"
                     formControlName="userName"
                     name="username"
                     matInput
@@ -15,10 +20,16 @@
                     required
                 />
                 <span matPrefix class="material-icons"> login </span>
+                <!-- <span *ngIf="userName.errors?.forbiddenValidator">Такого логіна немає в системі</span> -->
             </mat-form-field>
-            <mat-form-field class="form-field" appearance="outline">
+            <mat-form-field
+                class="form-field"
+                appearance="outline"
+                #outlineFieldPas
+            >
                 <mat-label> Password </mat-label>
                 <input
+                    (focus)="fixOutlineStyle(outlineFieldPas)"
                     name="password"
                     minlength="8"
                     formControlName="password"

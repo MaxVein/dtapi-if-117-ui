@@ -16,6 +16,29 @@
 </mat-toolbar>
 
 <div class="student-container">
+    <div class="student-info">
+        <p class="student-info-title"><strong>Профіль студента</strong></p>
+        <mat-card>
+            <img
+                mat-card-lg-image
+                src="{{ photo }}"
+                alt="{{ studentSurname }} {{ studentName }}"
+            />
+            <mat-card-content
+                ><strong>
+                    {{ studentSurname }} {{ studentName }}
+                    {{ studentFname }}</strong
+                ></mat-card-content
+            >
+            <p><strong>Факультет:</strong> {{ facultyName }}</p>
+            <p>
+                <strong>Спеціальність:</strong> {{ specialityCode }}
+                {{ specialityName }}
+            </p>
+            <p><strong>Група:</strong> {{ groupName }}</p>
+            <p><strong>Номер залікової:</strong> {{ gradebookId }}</p>
+        </mat-card>
+    </div>
     <div class="student-test-timeTable">
         <p class="student-test-title"><strong>Розклад тестування</strong></p>
         <p class="student-test-options">
@@ -99,28 +122,5 @@
                 showFirstLastButtons
             ></mat-paginator>
         </div>
-    </div>
-    <div class="student-info">
-        <p class="student-info-title"><strong>Студент</strong></p>
-        <mat-card>
-            <img
-                mat-card-lg-image
-                src="{{ photo }}"
-                alt="{{ studentSurname }} {{ studentName }}"
-            />
-            <mat-card-content
-                ><strong>
-                    {{ studentSurname }} {{ studentName }}
-                    {{ studentFname }}</strong
-                ></mat-card-content
-            >
-            <p><strong>Факультет:</strong> {{ facultyName }}</p>
-            <p>
-                <strong>Спеціальність:</strong> {{ specialityCode }}
-                {{ specialityName }}
-            </p>
-            <p><strong>Група:</strong> {{ groupName }}</p>
-            <p><strong>Номер залікової:</strong> {{ gradebookId }}</p>
-        </mat-card>
     </div>
 </div>

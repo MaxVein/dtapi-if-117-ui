@@ -44,4 +44,8 @@ export class AuthService {
         const url = 'welcome/logo'
         return this.http.get(`${environment.BASEURL}${url}`)
     }
+    getUserName(userName) {
+        const url = `AdminUser/checkUserName/${userName}`
+        return this.http.get(`${environment.BASEURL}${url}`)
+    }
 }

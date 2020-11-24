@@ -5,3 +5,6 @@ export interface loginForm {
 export interface logoSrc {
     logo: string
 }
+export interface Responce {
+    response: boolean
+}
