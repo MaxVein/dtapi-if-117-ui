@@ -10,6 +10,10 @@
                     <mat-card-title> Факультети </mat-card-title>
                 </mat-card-header>
                 <mat-card-content class="dashboard-card-content">
+                    <a
+                        routerLink="/admin/faculties"
+                        class="dashboard-card-link"
+                    ></a>
                     <div class="dashboard-card-content__container">
                         <mat-icon class="dashboard-card-content__icon">
                             account_balance
@@ -39,12 +43,16 @@
                     <mat-card-title> Групи </mat-card-title>
                 </mat-card-header>
                 <mat-card-content class="dashboard-card-content">
+                    <a
+                        routerLink="/admin/group"
+                        class="dashboard-card-link"
+                    ></a>
                     <div class="dashboard-card-content__container">
                         <mat-icon class="dashboard-card-content__icon">
                             groups
                         </mat-icon>
                         <a
-                            routerLink="/groups"
+                            routerLink="admins/group"
                             mat-fab
                             color="primary"
                             class="dashboard-card-content__count"
@@ -52,7 +60,7 @@
                             {{ groupsAmount }}
                         </a>
                         <a
-                            routerLink="/groups"
+                            routerLink="admins/group"
                             mat-flat-button
                             class="dashboard-card-content__link"
                             color="primary"
@@ -68,12 +76,16 @@
                     <mat-card-title> Спеціальності </mat-card-title>
                 </mat-card-header>
                 <mat-card-content class="dashboard-card-content">
+                    <a
+                        routerLink="/admin/speciality"
+                        class="dashboard-card-link"
+                    ></a>
                     <div class="dashboard-card-content__container">
                         <mat-icon class="dashboard-card-content__icon">
                             dns
                         </mat-icon>
                         <a
-                            routerLink="/specialities"
+                            routerLink="/admin/speciality"
                             mat-fab
                             color="primary"
                             class="dashboard-card-content__count"
@@ -81,7 +93,7 @@
                             {{ specialitiesAmount }}
                         </a>
                         <a
-                            routerLink="/specialities"
+                            routerLink="/admin/speciality"
                             mat-flat-button
                             class="dashboard-card-content__link"
                             color="primary"
@@ -97,12 +109,16 @@
                     <mat-card-title> Предмети </mat-card-title>
                 </mat-card-header>
                 <mat-card-content class="dashboard-card-content">
+                    <a
+                        routerLink="/admin/subjects"
+                        class="dashboard-card-link"
+                    ></a>
                     <div class="dashboard-card-content__container">
                         <mat-icon class="dashboard-card-content__icon">
                             collections_bookmark
                         </mat-icon>
                         <a
-                            routerLink="/subjects"
+                            routerLink="/admin/subjects"
                             mat-fab
                             color="primary"
                             class="dashboard-card-content__count"
@@ -110,7 +126,7 @@
                             {{ subjectsAmount }}
                         </a>
                         <a
-                            routerLink="/subjects"
+                            routerLink="/admin/subjects"
                             mat-flat-button
                             class="dashboard-card-content__link"
                             color="primary"
@@ -126,12 +142,16 @@
                     <mat-card-title> Cтуденти </mat-card-title>
                 </mat-card-header>
                 <mat-card-content class="dashboard-card-content">
+                    <a
+                        routerLink="/admin/group"
+                        class="dashboard-card-link"
+                    ></a>
                     <div class="dashboard-card-content__container">
                         <mat-icon class="dashboard-card-content__icon">
                             how_to_reg
                         </mat-icon>
                         <a
-                            routerLink="/students"
+                            routerLink="/admin/group"
                             mat-fab
                             color="primary"
                             class="dashboard-card-content__count"
@@ -139,7 +159,7 @@
                             {{ studentsAmount }}
                         </a>
                         <a
-                            routerLink="/students"
+                            routerLink="/admin/group"
                             mat-flat-button
                             class="dashboard-card-content__link"
                             color="primary"
@@ -155,12 +175,16 @@
                     <mat-card-title> Адміни </mat-card-title>
                 </mat-card-header>
                 <mat-card-content class="dashboard-card-content">
+                    <a
+                        routerLink="/admin/admins"
+                        class="dashboard-card-link"
+                    ></a>
                     <div class="dashboard-card-content__container">
                         <mat-icon class="dashboard-card-content__icon">
                             supervised_user_circle
                         </mat-icon>
                         <a
-                            routerLink="/admins"
+                            routerLink="/admin/admins"
                             mat-fab
                             color="primary"
                             class="dashboard-card-content__count"
@@ -168,7 +192,7 @@
                             {{ adminAmount }}
                         </a>
                         <a
-                            routerLink="/admins"
+                            routerLink="/admin/admins"
                             mat-flat-button
                             class="dashboard-card-content__link"
                             color="primary"
@@ -184,12 +208,16 @@
                     <mat-card-title> Результати </mat-card-title>
                 </mat-card-header>
                 <mat-card-content class="dashboard-card-content">
+                    <a
+                        routerLink="/admin/result"
+                        class="dashboard-card-link"
+                    ></a>
                     <div class="dashboard-card-content__container">
                         <mat-icon class="dashboard-card-content__icon">
                             insights
                         </mat-icon>
                         <a
-                            routerLink="/result"
+                            routerLink="/admin/result"
                             mat-flat-button
                             class="dashboard-card-content__link"
                             color="primary"
@@ -205,12 +233,16 @@
                     <mat-card-title> Протокол </mat-card-title>
                 </mat-card-header>
                 <mat-card-content class="dashboard-card-content">
+                    <a
+                        routerLink="/admin/protocol"
+                        class="dashboard-card-link"
+                    ></a>
                     <div class="dashboard-card-content__container">
                         <mat-icon class="dashboard-card-content__icon">
                             contact_page
                         </mat-icon>
                         <a
-                            routerLink="/protocol"
+                            routerLink="admin/protocol"
                             mat-flat-button
                             class="dashboard-card-content__link"
                             color="primary"

@@ -24,13 +24,15 @@ export class StatisticsComponent implements OnInit {
         isXLScreen: '(min-width: 1250px)',
         isLGScreen: '(max-width: 1250px)',
         isMDScreen: '(max-width: 1000px)',
-        isSMScreen: '(max-width: 700px)',
+        isSMScreen: '(max-width: 760px)',
+        isMSScreen: '(max-width: 460px)',
     }
     layoutChangesMedia = this.breakpointObserver.observe([
         this.ResponsiveData.isXLScreen,
         this.ResponsiveData.isLGScreen,
         this.ResponsiveData.isMDScreen,
         this.ResponsiveData.isSMScreen,
+        this.ResponsiveData.isMSScreen,
     ])
 
     constructor(
@@ -42,10 +44,6 @@ export class StatisticsComponent implements OnInit {
         this.layoutChangesMedia.subscribe((result) => {
             this.layoutChange(result.breakpoints)
         })
-        // this.infoservice
-        //     .backendLogin()
-        //     .subscribe((info) => (this.logininfo = info))
-
         this.infoservice
             .getFacultiesNumber()
             .subscribe(
@@ -78,25 +76,31 @@ export class StatisticsComponent implements OnInit {
                 result[item] === true
             ) {
                 this.ResponsiveData.breakpoint = 4
-                this.ResponsiveData.rowHeight = 400
+                this.ResponsiveData.rowHeight = 380
             } else if (
                 item == this.ResponsiveData.isLGScreen &&
                 result[item] === true
             ) {
                 this.ResponsiveData.breakpoint = 3
-                this.ResponsiveData.rowHeight = 400
+                this.ResponsiveData.rowHeight = 320
             } else if (
                 item == this.ResponsiveData.isMDScreen &&
                 result[item] === true
             ) {
-                this.ResponsiveData.breakpoint = 2
-                this.ResponsiveData.rowHeight = 350
+                this.ResponsiveData.breakpoint = 3
+                this.ResponsiveData.rowHeight = 280
             } else if (
                 item == this.ResponsiveData.isSMScreen &&
                 result[item] === true
             ) {
+                this.ResponsiveData.breakpoint = 2
+                this.ResponsiveData.rowHeight = 230
+            } else if (
+                item == this.ResponsiveData.isMSScreen &&
+                result[item] === true
+            ) {
                 this.ResponsiveData.breakpoint = 1
-                this.ResponsiveData.rowHeight = 300
+                this.ResponsiveData.rowHeight = 230
             }
         }
     }
