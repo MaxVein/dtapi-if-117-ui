@@ -27,8 +27,7 @@ export class SubjectsHomeComponent implements OnInit, AfterViewInit {
         '№',
         'subject_name',
         'subject_description',
-        'update',
-        'delete',
+        'operations',
     ]
     public dataSource = new MatTableDataSource<SubjectsResponse>()
 
@@ -73,8 +72,7 @@ export class SubjectsHomeComponent implements OnInit, AfterViewInit {
 
     public onCreate(): void {
         const dialogRef = this.dialog.open(ModalComponent, {
-            height: '400px',
-            width: '500px',
+            width: '300px',
         })
 
         dialogRef.afterClosed().subscribe((result: SubjectsRequest) => {
@@ -91,8 +89,7 @@ export class SubjectsHomeComponent implements OnInit, AfterViewInit {
 
     public onEdit(element: SubjectsResponse): void {
         const dialogRef = this.dialog.open(ModalComponent, {
-            height: '400px',
-            width: '500px',
+            width: '300px',
             data: element,
         })
 

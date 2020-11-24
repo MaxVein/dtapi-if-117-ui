@@ -65,18 +65,36 @@ export class AdminModalCreationComponent implements OnInit {
             switch (data.title) {
                 case 'Додати адміна':
                     if (formValue) {
-                        this.admincrud.addAdmin(formValue).subscribe((res) => {
-                            if (res) {
-                                Object.assign(data.user, res)
+                        this.admincrud.addAdmin(formValue).subscribe(
+                            (res) => {
+                                console.warn('Результат запиту', res)
+                                if (res !== {}) {
+                                    Object.assign(data.user, res)
+                                    this.snackBar.open(
+                                        'Адміна успішно додано',
+                                        'Закрити',
+                                        {
+                                            duration: 3000,
+                                        }
+                                    )
+                                    this.dialogRef.close()
+                                } else {
+                                    data.user = undefined
+                                    this.dialogRef.close()
+                                }
+                            },
+                            (err) => {
+                                data.user = undefined
                                 this.snackBar.open(
-                                    'Адміна успішно додано',
+                                    'Адмін з такими даними існує',
                                     'Закрити',
                                     {
                                         duration: 3000,
                                     }
                                 )
+                                this.dialogRef.close()
                             }
-                        })
+                        )
                     }
                     break
                 case 'Редагувати адміна':
@@ -111,14 +129,20 @@ export class AdminModalCreationComponent implements OnInit {
                                                 )
                                                 .subscribe(
                                                     (res) => {
-                                                        data.newUser = changedValues
-                                                        this.snackBar.open(
-                                                            'Адміна успішно відредаговано',
-                                                            'Закрити',
-                                                            {
-                                                                duration: 3000,
-                                                            }
-                                                        )
+                                                        if (
+                                                            res.response ===
+                                                            'ok'
+                                                        ) {
+                                                            this.dialogRef.close()
+                                                            data.newUser = changedValues
+                                                            this.snackBar.open(
+                                                                'Адміна успішно відредаговано',
+                                                                'Закрити',
+                                                                {
+                                                                    duration: 3000,
+                                                                }
+                                                            )
+                                                        }
                                                     },
                                                     (err) => {
                                                         this.snackBar.open(
@@ -142,6 +166,7 @@ export class AdminModalCreationComponent implements OnInit {
                                     )
                                     .subscribe((res) => {
                                         if (res.response === 'ok') {
+                                            this.dialogRef.close()
                                             data.newUser = changedValues
                                             this.snackBar.open(
                                                 'Адміна успішно відредаговано',

@@ -1,21 +1,21 @@
 <form (ngSubmit)="onSubmit()" [formGroup]="subjectForm" class="example-form">
-    <h3 mat-dialog-title>
+    <h1 mat-dialog-title class="modal-title">
         {{ !data ? 'Додати новий' : 'Редагувати' }} предмет
-    </h3>
+    </h1>
     <div mat-dialog-content>
-        <mat-form-field appearance="outline">
-            <input
-                matInput
-                placeholder="Назва Предмету"
-                formControlName="subject_name"
-            />
+        <mat-form-field class="modal-field">
+            <mat-label class="modal-entity-input"
+                ><mat-icon>collections_bookmark</mat-icon> Назва
+                Предмету</mat-label
+            >
+            <input matInput formControlName="subject_name" />
             <mat-error *ngIf="hasError('subject_name', 'required')"
                 >Це поле є обов'язковим</mat-error
             >
             <mat-error *ngIf="hasError('subject_name', 'pattern')"
                 >Використовуйте українські літери</mat-error
-            > </mat-form-field
-        >`
+            >
+        </mat-form-field>
     </div>
 
     <div mat-dialog-content>
@@ -35,17 +35,15 @@
             >
         </mat-form-field>
     </div>
-    <div mat-dialog-actions>
+    <div mat-dialog-actions class="modal-field">
+        <button mat-button type="reset" (click)="onClose()">Відмінити</button>
         <button
-            mat-raised-button
-            color="primary"
+            mat-button
             cdkFocusInitial
+            [disabled]="!subjectForm.valid"
             (click)="onSubmit()"
         >
             {{ !data ? 'Додати' : 'Редагувати' }}
-        </button>
-        <button mat-raised-button color="warn" (click)="onClose()">
-            Відмінити
         </button>
     </div>
 </form>

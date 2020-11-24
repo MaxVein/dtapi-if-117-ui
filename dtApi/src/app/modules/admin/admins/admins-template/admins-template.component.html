@@ -1,6 +1,6 @@
-<div class="admins-header">
+<div class="entity-header">
     <h1 class="mat-h1 entity-title">
-        <mat-icon class="admins-title-icon">supervised_user_circle </mat-icon
+        <mat-icon class="entity-title-icon">supervised_user_circle </mat-icon
         >Адміни
     </h1>
     <button mat-raised-button color="primary" (click)="openModal('Add')">
@@ -15,7 +15,7 @@
     <input
         matInput
         (keyup)="applyFilter($event)"
-        placeholder="Введіть ім'я"
+        placeholder="Введіть характеристику"
         #input
     />
 </mat-form-field>
