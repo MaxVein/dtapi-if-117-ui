@@ -113,10 +113,6 @@ export class StudentsModalComponent implements OnInit, OnDestroy {
     }
 
     getStudentInfo(): void {
-        setTimeout(() => {
-            this.loading = false
-        }, 300)
-
         if (this.data.student_data) {
             const studentID = this.student.user_id
             this.studentSubscription = this.studentsService
@@ -127,6 +123,7 @@ export class StudentsModalComponent implements OnInit, OnDestroy {
                         this.student.email = response[0].email
                         this.form.get('username').setValue(response[0].username)
                         this.form.get('email').setValue(response[0].email)
+                        this.getStudentPhoto(studentID)
                     },
                     () => {
                         const message = 'Сталася помилка. Спробуйте знову'
@@ -140,7 +137,37 @@ export class StudentsModalComponent implements OnInit, OnDestroy {
                         })
                     }
                 )
+        } else {
+            setTimeout(() => {
+                this.loading = false
+            }, 300)
         }
+    }
+
+    getStudentPhoto(id: string): void {
+        this.studentSubscription = this.studentsService
+            .getByGroup(this.student.group_id, false)
+            .subscribe(
+                (response) => {
+                    const index = response.findIndex((s) => s.user_id === id)
+                    const currentStudent = response[index]
+                    const student = Object.assign(this.student, currentStudent)
+                    this.student = student
+                    this.loading = false
+                },
+                () => {
+                    const message = 'Сталася помилка. Спробуйте знову'
+                    const title = 'Помилка'
+                    this.loading = false
+                    this.closeModal(title)
+                    this.modalService.openModal(AlertComponent, {
+                        data: {
+                            message,
+                            title,
+                        },
+                    })
+                }
+            )
     }
 
     uniqueValidator(entity, method, check): AsyncValidatorFn {

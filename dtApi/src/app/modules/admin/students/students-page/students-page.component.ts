@@ -61,7 +61,7 @@ export class StudentsPageComponent implements OnInit, AfterViewInit, OnDestroy {
     getStudentsByGroup(): void {
         this.groupID = this.route.snapshot.params['id']
         this.studentSubscription = this.studentsService
-            .getByGroup(this.groupID)
+            .getByGroup(this.groupID, true)
             .subscribe(
                 (response) => {
                     if (response.length) {
@@ -183,7 +183,6 @@ export class StudentsPageComponent implements OnInit, AfterViewInit, OnDestroy {
             {
                 disableClose: true,
                 data: {
-                    group_id: this.groupID,
                     student_data: student,
                 },
             },

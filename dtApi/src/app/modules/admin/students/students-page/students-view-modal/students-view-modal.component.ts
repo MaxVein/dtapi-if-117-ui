@@ -15,7 +15,6 @@ import { environment } from 'src/environments/environment'
 export class StudentsViewModalComponent implements OnInit, OnDestroy {
     loading = false
     defaultImage = environment.defaultImage
-    groupID = this.data.group_id
     student: Student = this.data.student_data
     studentSubscription: Subscription
     groupName: string
@@ -42,6 +41,7 @@ export class StudentsViewModalComponent implements OnInit, OnDestroy {
                 (response) => {
                     this.student.username = response[0].username
                     this.student.email = response[0].email
+                    this.getStudentPhoto()
                 },
                 () => {
                     const message = 'Сталася помилка. Спробуйте знову'
@@ -57,9 +57,37 @@ export class StudentsViewModalComponent implements OnInit, OnDestroy {
             )
     }
 
+    getStudentPhoto(): void {
+        this.studentSubscription = this.studentsService
+            .getByGroup(this.student.group_id, false)
+            .subscribe(
+                (response) => {
+                    const index = response.findIndex(
+                        (s) => s.user_id === this.student.user_id
+                    )
+                    const currentStudent = response[index]
+                    const student = Object.assign(this.student, currentStudent)
+                    this.student = student
+                    this.loading = false
+                },
+                () => {
+                    const message = 'Сталася помилка. Спробуйте знову'
+                    const title = 'Помилка'
+                    this.loading = false
+                    this.closeModal(title)
+                    this.modalService.openModal(AlertComponent, {
+                        data: {
+                            message,
+                            title,
+                        },
+                    })
+                }
+            )
+    }
+
     getGroupInfo(): void {
         this.studentSubscription = this.studentsService
-            .getGroupData(this.groupID)
+            .getGroupData(this.student.group_id)
             .subscribe(
                 (response) => {
                     this.groupName = response[0].group_name
@@ -107,7 +135,6 @@ export class StudentsViewModalComponent implements OnInit, OnDestroy {
             .subscribe(
                 (response) => {
                     this.specialityName = response[0].speciality_name
-                    this.loading = false
                 },
                 () => {
                     const message = 'Сталася помилка. Спробуйте знову'
