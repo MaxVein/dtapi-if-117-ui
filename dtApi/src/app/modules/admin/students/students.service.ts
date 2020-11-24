@@ -16,9 +16,11 @@ import { environment } from '../../../../environments/environment'
 export class StudentsService {
     constructor(private http: HttpClient) {}
 
-    getByGroup(id: number): Observable<Student[]> {
+    getByGroup(id: number, notPhotos?: boolean): Observable<Student[]> {
         return this.http.get<Student[]>(
-            `${environment.BASEURL}Student/getStudentsByGroup/${id}`
+            `${environment.BASEURL}Student/getStudentsByGroup/${id}/${
+                notPhotos ? 'withoutPhoto' : ''
+            }`
         )
     }
 

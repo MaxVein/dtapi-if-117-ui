@@ -109,12 +109,12 @@ export class StudentsPageComponent implements OnInit, AfterViewInit, OnDestroy {
                 if (result === 'Помилка') {
                     this.modalService.showSnackBar('Закрито через помилку')
                 } else if (result.response === 'ok') {
-                    this.loading = true
-                    this.getStudentsByGroup()
+                    delete result.response
+                    result.user_id = result.id
+                    delete result.id
+                    this.dataSource.data.push(result)
+                    this.dataSource.data = this.dataSource.data
                     this.modalService.showSnackBar('Студента додано')
-                    setTimeout(() => {
-                        this.loading = false
-                    }, 500)
                 } else if (result === 'Скасовано') {
                     this.modalService.showSnackBar('Скасовано')
                 }
@@ -138,12 +138,13 @@ export class StudentsPageComponent implements OnInit, AfterViewInit, OnDestroy {
                 if (result === 'Помилка') {
                     this.modalService.showSnackBar('Закрито через помилку')
                 } else if (result.response === 'ok') {
-                    this.loading = true
-                    this.getStudentsByGroup()
+                    const index = this.dataSource.data.findIndex(
+                        (s) => s.user_id === result.user_id
+                    )
+                    delete result.response
+                    this.dataSource.data[index] = result
+                    this.dataSource.data = this.dataSource.data
                     this.modalService.showSnackBar('Дані студента оновлено')
-                    setTimeout(() => {
-                        this.loading = false
-                    }, 500)
                 } else if (result === 'Скасовано') {
                     this.modalService.showSnackBar('Скасовано')
                 }
@@ -165,12 +166,10 @@ export class StudentsPageComponent implements OnInit, AfterViewInit, OnDestroy {
                 if (result === 'Помилка') {
                     this.modalService.showSnackBar('Закрито через помилку')
                 } else if (result.response === 'ok') {
-                    this.loading = true
-                    this.getStudentsByGroup()
+                    this.dataSource.data = this.dataSource.data.filter(
+                        (s) => s.user_id !== result.user_id
+                    )
                     this.modalService.showSnackBar('Студента переведено')
-                    setTimeout(() => {
-                        this.loading = false
-                    }, 500)
                 } else if (result === 'Скасовано') {
                     this.modalService.showSnackBar('Скасовано')
                 }
@@ -235,6 +234,8 @@ export class StudentsPageComponent implements OnInit, AfterViewInit, OnDestroy {
                                 })
                             }
                         )
+                } else if (!result) {
+                    this.modalService.showSnackBar('Скасовано')
                 }
             }
         )

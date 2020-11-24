@@ -123,7 +123,7 @@ export class StudentsViewModalComponent implements OnInit, OnDestroy {
             )
     }
 
-    closeModal(dialogResult = 'Закрито'): void {
+    closeModal(dialogResult: any = 'Закрито'): void {
         this.dialogRef.close(dialogResult)
     }
 

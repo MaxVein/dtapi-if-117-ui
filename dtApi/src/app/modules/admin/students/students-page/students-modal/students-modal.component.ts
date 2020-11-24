@@ -67,31 +67,40 @@ export class StudentsModalComponent implements OnInit, OnDestroy {
             ),
             gradebookID: new FormControl(
                 this.student ? this.student.gradebook_id : '',
-                [Validators.required],
-                [
+                {
+                    validators: [Validators.required],
+                    updateOn: 'blur',
+                    asyncValidators: [
+                        this.uniqueValidator(
+                            'Student',
+                            'checkGradebookID',
+                            'gradebook_id'
+                        ),
+                    ],
+                }
+            ),
+            username: new FormControl(null, {
+                validators: [Validators.required],
+                updateOn: 'blur',
+                asyncValidators: [
                     this.uniqueValidator(
-                        'Student',
-                        'checkGradebookID',
-                        'gradebook_id'
+                        'AdminUser',
+                        'checkUserName',
+                        'username'
                     ),
-                ]
-            ),
-            username: new FormControl(
-                null,
-                [Validators.required],
-                [this.uniqueValidator('AdminUser', 'checkUserName', 'username')]
-            ),
-            email: new FormControl(
-                null,
-                [Validators.required, Validators.email],
-                [
+                ],
+            }),
+            email: new FormControl(null, {
+                validators: [Validators.required, Validators.email],
+                updateOn: 'blur',
+                asyncValidators: [
                     this.uniqueValidator(
                         'AdminUser',
                         'checkEmailAddress',
                         'email'
                     ),
-                ]
-            ),
+                ],
+            }),
             password: new FormControl(
                 this.student ? this.student.plain_password : '',
                 [Validators.required, Validators.minLength(8)]
@@ -142,8 +151,9 @@ export class StudentsModalComponent implements OnInit, OnDestroy {
             | Observable<ValidationErrors | null> => {
             if (this.student && this.student[check] === control.value) {
                 return of(null)
+            } else {
+                return this.studentsService.check(entity, method, control.value)
             }
-            return this.studentsService.check(entity, method, control.value)
         }
     }
 
@@ -170,7 +180,7 @@ export class StudentsModalComponent implements OnInit, OnDestroy {
             plain_password: this.form.value.password,
         }
 
-        if (this.image === '') {
+        if (this.image === '' && this.data.isUpdateData) {
             newStudent.photo = this.student.photo
         }
 
@@ -181,7 +191,9 @@ export class StudentsModalComponent implements OnInit, OnDestroy {
                     (data) => {
                         this.loading = false
                         this.form.enable()
-                        this.dialogRef.close(data)
+                        const student = Object.assign(data, newStudent)
+                        student.user_id = this.student.user_id
+                        this.closeModal(student)
                     },
                     () => {
                         const message = 'Сталася помилка. Спробуйте знову'
@@ -203,7 +215,8 @@ export class StudentsModalComponent implements OnInit, OnDestroy {
                     (data) => {
                         this.loading = false
                         this.form.enable()
-                        this.dialogRef.close(data)
+                        const student = Object.assign(data, newStudent)
+                        this.closeModal(student)
                     },
                     () => {
                         const message = 'Сталася помилка. Спробуйте знову'
@@ -234,7 +247,7 @@ export class StudentsModalComponent implements OnInit, OnDestroy {
         reader.readAsDataURL(file)
     }
 
-    closeModal(dialogResult = 'Скасовано'): void {
+    closeModal(dialogResult: any = 'Скасовано'): void {
         this.dialogRef.close(dialogResult)
     }
 

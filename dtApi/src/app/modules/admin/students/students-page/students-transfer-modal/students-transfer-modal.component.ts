@@ -114,7 +114,9 @@ export class StudentsTransferModalComponent implements OnInit, OnDestroy {
             .subscribe(
                 (response) => {
                     this.loading = false
-                    this.dialogRef.close(response)
+                    const data = Object.assign({}, response)
+                    data.user_id = this.data.student_data.user_id
+                    this.dialogRef.close(data)
                 },
                 () => {
                     const message = 'Сталася помилка. Спробуйте знову'
@@ -131,7 +133,7 @@ export class StudentsTransferModalComponent implements OnInit, OnDestroy {
             )
     }
 
-    closeModal(dialogResult = 'Скасовано'): void {
+    closeModal(dialogResult: any = 'Скасовано'): void {
         this.dialogRef.close(dialogResult)
     }
 
