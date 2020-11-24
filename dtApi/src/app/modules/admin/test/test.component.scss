@@ -2,21 +2,32 @@ table {
     width: 100%;
 }
 
-.container {
-    margin: 0 auto;
-    padding: 20px;
-    max-width: 1440px;
+th:nth-child(3),
+td:nth-child(3) {
+    width: 25%;
 }
 
-.toolbar {
+th,
+td {
+    width: 10%;
+}
+
+.paginator {
     display: flex;
-    justify-content: space-between;
+    justify-content: flex-end;
 }
 
-mat-icon {
-    cursor: pointer;
-
+.mat-icon {
     &:hover {
-        color: orange;
+        color: red;
+        cursor: pointer;
+    }
+}
+.entity-title {
+    display: flex;
+    align-items: center;
+    .mat-icon {
+        width: auto;
+        height: auto;
     }
 }
