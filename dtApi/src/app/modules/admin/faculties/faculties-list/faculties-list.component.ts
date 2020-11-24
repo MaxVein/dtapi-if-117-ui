@@ -34,7 +34,14 @@ export class FacultiesListComponent implements OnInit {
     ngAfterViewInit(): void {
         this.dataSource.paginator = this.paginator
     }
+    applyFilter(event: Event): void {
+        const filterValue = (event.target as HTMLInputElement).value
+        this.dataSource.filter = filterValue.trim().toLowerCase()
 
+        if (this.dataSource.paginator) {
+            this.dataSource.paginator.firstPage()
+        }
+    }
     getFaculty(): void {
         this.apiService.getEntity('Faculty').subscribe(
             (response: Faculty[]) => (this.dataSource.data = response),

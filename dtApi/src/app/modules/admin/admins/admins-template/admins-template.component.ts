@@ -1,10 +1,10 @@
 /* eslint-disable @typescript-eslint/ban-types */
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core'
+import { Component, OnInit, ViewChild } from '@angular/core'
 import { MatDialog } from '@angular/material/dialog'
 import { MatPaginator } from '@angular/material/paginator'
 import { MatSort } from '@angular/material/sort'
-import { MatTable, MatTableDataSource } from '@angular/material/table'
+import { MatTableDataSource } from '@angular/material/table'
 import { AdminModalCreationComponent } from '../admin-modals/admin-modal-creation/admin-modal-creation.component'
 import { DeleteConfirmModalComponent } from '../admin-modals/delete-confirm-modal/delete-confirm-modal.component'
 import { Admins, AdminsCreation } from '../admin-model/Admins'
@@ -48,11 +48,17 @@ export class AdminsTemplateComponent implements OnInit {
                     },
                 })
                 dialog.afterClosed().subscribe((res) => {
-                    this.dataSource = new MatTableDataSource(
-                        this.adminsArray.concat(res.user)
-                    )
-                    this.dataSource.paginator = this.paginator
-                    this.dataSource.sort = this.sort
+                    if (res !== undefined) {
+                        setTimeout(() => {
+                            if (res.user !== undefined) {
+                                this.dataSource = new MatTableDataSource(
+                                    this.adminsArray.concat(res.user)
+                                )
+                                this.dataSource.paginator = this.paginator
+                                this.dataSource.sort = this.sort
+                            }
+                        }, 500)
+                    }
                 })
                 break
             case 'Update':
@@ -65,26 +71,29 @@ export class AdminsTemplateComponent implements OnInit {
                     },
                 })
                 dialog.afterClosed().subscribe((res) => {
-                    setTimeout(() => {
-                        if (res.newUser !== {}) {
-                            const userIndex = this.dataSource.data.indexOf(
-                                res.user
-                            )
-                            const oldUser = this.dataSource.data.find(
-                                (item, index) => index === userIndex
-                            )
-                            for (const oldItem in oldUser) {
-                                for (const newItem in res.newUser) {
-                                    if (oldItem === newItem) {
-                                        oldUser[oldItem] = res.newUser[newItem]
-                                        this.dataSource.data = this.dataSource.data
+                    if (res !== undefined) {
+                        setTimeout(() => {
+                            if (res.newUser !== {}) {
+                                const userIndex = this.dataSource.data.indexOf(
+                                    res.user
+                                )
+                                const oldUser = this.dataSource.data.find(
+                                    (item, index) => index === userIndex
+                                )
+                                for (const oldItem in oldUser) {
+                                    for (const newItem in res.newUser) {
+                                        if (oldItem === newItem) {
+                                            oldUser[oldItem] =
+                                                res.newUser[newItem]
+                                            this.dataSource.data = this.dataSource.data
+                                        }
                                     }
                                 }
+                                this.dataSource.paginator = this.paginator
+                                this.dataSource.sort = this.sort
                             }
-                            this.dataSource.paginator = this.paginator
-                            this.dataSource.sort = this.sort
-                        }
-                    }, 500)
+                        }, 500)
+                    }
                 })
                 break
             case 'Delete':
@@ -96,11 +105,15 @@ export class AdminsTemplateComponent implements OnInit {
                     },
                 })
                 dialog.afterClosed().subscribe((res) => {
-                    const elementIndex = this.dataSource.data.indexOf(user)
-                    this.dataSource.data.splice(elementIndex, 1)
-                    this.dataSource.data = this.dataSource.data
-                    this.dataSource.paginator = this.paginator
-                    this.dataSource.sort = this.sort
+                    if (res !== undefined) {
+                        const elementIndex = this.dataSource.data.indexOf(
+                            res.user
+                        )
+                        this.dataSource.data.splice(elementIndex, 1)
+                        this.dataSource.data = this.dataSource.data
+                        this.dataSource.paginator = this.paginator
+                        this.dataSource.sort = this.sort
+                    }
                 })
                 break
         }

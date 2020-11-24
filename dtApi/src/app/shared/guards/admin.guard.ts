@@ -4,7 +4,6 @@ import { CanActivate, Router } from '@angular/router'
 
 import { Observable } from 'rxjs'
 import { map } from 'rxjs/operators'
-
 import { AuthService } from 'src/app/modules/login/services/auth.service'
 
 @Injectable({
@@ -15,13 +14,17 @@ export class AdminGuard implements CanActivate {
     canActivate(
         route: Route
     ): Observable<boolean> | Promise<boolean> | boolean {
-        return this.apiService.getCurrentUser().pipe(
-            map((currentUser) => {
-                const allowed = currentUser.roles.includes('admin')
-                if (!allowed) {
-                    this.router.navigate(['student'])
+        return this.apiService.isLogged().pipe(
+            map((data: any) => {
+                if (data.response === 'non logged') {
+                    this.router.navigate(['/login'])
+                } else {
+                    const goTo = data.roles.includes('admin')
+                    if (!goTo) {
+                        this.router.navigate(['student'])
+                    }
+                    return goTo
                 }
-                return allowed
             })
         )
     }

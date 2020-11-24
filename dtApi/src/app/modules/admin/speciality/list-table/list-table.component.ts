@@ -31,7 +31,14 @@ export class ListTableComponent implements OnInit, AfterViewInit {
         private apiService: ApiService,
         private dialogService: DialogService
     ) {}
+    applyFilter(event: Event): void {
+        const filterValue = (event.target as HTMLInputElement).value
+        this.dataSource.filter = filterValue.trim().toLowerCase()
 
+        if (this.dataSource.paginator) {
+            this.dataSource.paginator.firstPage()
+        }
+    }
     ngOnInit(): void {
         this.getSpeciality()
     }
