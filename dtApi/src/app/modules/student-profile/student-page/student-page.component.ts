@@ -83,7 +83,7 @@ export class StudentPageComponent implements OnInit {
                 this.subjects = res
                 this.subjectId = res[0].subject_id
                 this.subjectName = res[0].subject_name
-                this.getAllData()
+                this.getStudentInfo()
             })
     }
 
@@ -111,15 +111,15 @@ export class StudentPageComponent implements OnInit {
                 this.facultyId = res.faculty_id
                 this.groupName = res.group_name
                 this.specialityId = res.speciality_id
-                this.getFaculty()
-                this.getSpeciality()
+                this.getFaculty(res.faculty_id)
+                this.getSpeciality(res.speciality_id)
                 this.getTestInfo()
             })
     }
 
-    getSpeciality() {
+    getSpeciality(specialityId: string) {
         this.student
-            .getRecords('Speciality', this.specialityId)
+            .getRecords('Speciality', specialityId)
             .pipe(map((res) => res[0]))
             .subscribe((res: specialityDetails) => {
                 this.specialityCode = res.speciality_code
@@ -127,9 +127,9 @@ export class StudentPageComponent implements OnInit {
             })
     }
 
-    getFaculty() {
+    getFaculty(facultyId: string) {
         this.student
-            .getRecords('Faculty', this.facultyId)
+            .getRecords('Faculty', facultyId)
             .pipe(map((res) => res[0]))
             .subscribe((res: facultyDetails) => {
                 this.facultyName = res.faculty_name
@@ -172,12 +172,9 @@ export class StudentPageComponent implements OnInit {
                 },
                 error: (err) => {
                     this.dataSource = null
+                    console.error(err)
                 },
             })
-    }
-
-    getAllData() {
-        this.getStudentInfo()
     }
 
     selectSubject(event) {
