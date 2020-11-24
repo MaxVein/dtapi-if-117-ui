@@ -85,6 +85,20 @@ export class TestComponent implements OnInit {
         })
     }
 
+    openEditDialog(test: Test): void {
+        const dialogRef = this.dialog.open(TestModalComponent, {
+            width: '600px',
+            data: {
+                data: test,
+            },
+        })
+        dialogRef.afterClosed().subscribe((result) => {
+            if (result) {
+                this.editTest(result)
+            }
+        })
+    }
+
     getSubjectNameById(subjectId: number): string {
         const subject = this.subjects.find(
             (subjectItem) => subjectItem.subject_id === subjectId
@@ -105,19 +119,9 @@ export class TestComponent implements OnInit {
     }
 
     editTest(test: Test): void {
-        const dialogRef = this.dialog.open(TestModalComponent, {
-            width: '600px',
-            data: {
-                data: test,
-            },
-        })
-        dialogRef.afterClosed().subscribe((data: Test) => {
-            if (data) {
-                data.test_id = test.test_id
-                return this.testService.updateEntity('test', data, test.test_id)
-            }
-            this.getTests()
-        })
+        this.testService
+            .updateEntity('test', test, test.test_id)
+            .subscribe(() => (this.dataSource.data = this.tests))
     }
 
     removeTest(test: Test): void {
