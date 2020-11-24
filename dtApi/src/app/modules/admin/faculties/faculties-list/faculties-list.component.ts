@@ -50,6 +50,15 @@ export class FacultiesListComponent implements OnInit {
         )
     }
 
+    applyFilter(event: Event): void {
+        const filterValue = (event.target as HTMLInputElement).value
+        this.dataSource.filter = filterValue.trim().toLowerCase()
+
+        if (this.dataSource.paginator) {
+            this.dataSource.paginator.firstPage()
+        }
+    }
+
     openModal(data?: Faculty[]): void {
         this.dialogService
             .createModal(data ? data : '')

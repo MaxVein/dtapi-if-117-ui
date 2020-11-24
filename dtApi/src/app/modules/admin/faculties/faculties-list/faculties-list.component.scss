@@ -9,21 +9,6 @@ form {
 .form-control {
     padding: 10px;
 }
-.add-faculty-btn {
-    padding: 10px;
-    margin-top: 10px;
-    background-color: rgb(0, 119, 255);
-    border: none;
-    color: rgb(255, 255, 255);
-    &:hover {
-        background-color: rgb(46, 189, 255);
-        color: white;
-        cursor: pointer;
-    }
-    &:disabled {
-        cursor: not-allowed;
-    }
-}
 
 input {
     &.ng-invalid.ng-touched {
@@ -37,12 +22,36 @@ small {
     color: red;
 }
 
-.container__head {
+.head {
     display: flex;
     justify-content: space-between;
-    align-items: baseline;
-    margin: 20px 10px;
+    .mat-icon {
+        width: auto;
+        height: auto;
+    }
+    &__title {
+        display: flex;
+    }
+    &__icon {
+        font-size: 2rem;
+        line-height: 2rem;
+        margin-right: 1rem;
+    }
 }
+
+.entity-search {
+    width: 100%;
+    font-size: 1.2rem;
+    .mat-icon {
+        width: auto;
+        height: auto;
+    }
+    &__label {
+        display: flex;
+        align-items: center;
+    }
+}
+
 .paginator {
     display: flex;
     justify-content: flex-end;
@@ -52,5 +61,26 @@ a {
     &:hover {
         color: red;
         cursor: pointer;
+    }
+}
+
+.operation-button {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.2rem;
+    height: 2.2rem;
+    min-width: 30px;
+    margin: 0 0.5rem 0 0;
+    padding: 0 0.4rem;
+    &:last-child {
+        margin: 0 0 0 0;
+    }
+    .mat-icon {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.2rem;
     }
 }
