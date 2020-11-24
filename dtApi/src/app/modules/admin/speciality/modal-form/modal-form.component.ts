@@ -2,8 +2,7 @@ import { Component, Inject, OnInit } from '@angular/core'
 import { FormBuilder, FormGroup, Validators } from '@angular/forms'
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog'
 
-import { IsNumValidators } from '../isnum.validators'
-import { ApiService } from '../../../../shared/services/api.service'
+import { ApiService } from '../api.service'
 
 @Component({
     selector: 'app-modal-form',

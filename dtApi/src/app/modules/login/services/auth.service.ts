@@ -34,24 +34,6 @@ export class AuthService {
             })
         )
     }
-    getCurrentUser() {
-        if (this.currentUser) {
-            return of(this.currentUser)
-        }
-        return this.http.get(`${environment.BASEURL}login/isLogged`).pipe(
-            tap((data: any) => {
-                if (data.response === 'non logged') {
-                    this.currentUser = null
-                    return this.router.navigate(['/login'], {
-                        queryParams: {
-                            notLogin: true,
-                        },
-                    })
-                }
-                this.currentUser = data
-            })
-        )
-    }
 
     isLogged() {
         const url = 'login/isLogged'

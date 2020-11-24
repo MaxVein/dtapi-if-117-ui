@@ -14,13 +14,17 @@ export class StudentGuard implements CanActivate {
     canActivate(
         route: ActivatedRouteSnapshot
     ): Observable<boolean> | Promise<boolean> | boolean {
-        return this.authService.getCurrentUser().pipe(
-            map((currentUser) => {
-                const allowed = currentUser.roles.includes('student')
-                if (!allowed) {
-                    this.router.navigate(['admin'])
+        return this.authService.isLogged().pipe(
+            map((data: any) => {
+                if (data.response === 'non logged') {
+                    this.router.navigate(['/login'])
+                } else {
+                    const goTo = data.roles.includes('student')
+                    if (!goTo) {
+                        this.router.navigate(['admin'])
+                    }
+                    return goTo
                 }
-                return allowed
             })
         )
     }
