@@ -100,4 +100,7 @@ export class LoginComponent implements OnInit {
             this.logoSrc = res.logo
         })
     }
+    fixOutlineStyle(input) {
+        input.updateOutlineGap()
+    }
 }
