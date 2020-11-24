@@ -48,7 +48,7 @@ export class GroupDialogComponent implements OnInit {
                 [
                     Validators.required,
                     Validators.pattern(
-                        '[А-Я\u0406]{1,4}[мз]?-[0-9]{2}-[0-9]{1}'
+                        '[А-Я\u0406]{1,4}[мз]?-[0-9]{2}-[0-9]{1}[к]?'
                     ),
                 ],
             ],
