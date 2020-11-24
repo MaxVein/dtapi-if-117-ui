@@ -47,7 +47,8 @@ export class ModalFormComponent implements OnInit {
                     )
                     .subscribe(
                         (res) => {
-                            this.dialogRef.close(res)
+                            const result = { res, str: 'upd' }
+                            this.dialogRef.close(result)
                         },
                         (error) => {
                             this.apiService.snackBarOpen()
@@ -58,7 +59,10 @@ export class ModalFormComponent implements OnInit {
                 this.apiService
                     .addEntity('Speciality', this.form.value)
                     .subscribe(
-                        (res) => this.dialogRef.close(res),
+                        (res) => {
+                            const result = { res, str: 'added' }
+                            this.dialogRef.close(result)
+                        },
                         (error) => {
                             this.apiService.snackBarOpen()
                         }
