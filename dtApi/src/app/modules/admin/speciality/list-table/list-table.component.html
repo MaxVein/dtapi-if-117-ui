@@ -1,12 +1,15 @@
-<div class="container">
-    <div class="cont-head">
-        <h1>Спеціальності</h1>
-        <button class="add-speciality-btn" (click)="openModal()">
-            Добавити спеціальність
+<div>
+    <div class="speciality-head">
+        <h1 class="mat-h1 entity-title">
+            <mat-icon class="speciality-title-icon">bubble_chart </mat-icon
+            >Спеціальності
+        </h1>
+        <button mat-raised-button color="primary" (click)="openModal()">
+            <mat-icon>add_circle</mat-icon> Додати спеціальність
         </button>
     </div>
-    <div>
-        <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+    <div class="mat-elevation-z8">
+        <table mat-table [dataSource]="dataSource">
             <ng-container matColumnDef="id">
                 <th mat-header-cell *matHeaderCellDef>ID</th>
                 <td mat-cell *matCellDef="let element">
