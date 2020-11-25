@@ -6,8 +6,10 @@ import {
     Check,
     Faculty,
     Group,
+    Response,
     Speciality,
     Student,
+    StudentInfo,
     Unique,
 } from '../../../shared/interfaces/interfaces'
 import { environment } from '../../../../environments/environment'
@@ -24,9 +26,9 @@ export class StudentsService {
         )
     }
 
-    getById(id: string): Observable<Student[]> {
-        return this.http.get<Student[]>(
-            `${environment.BASEURL}AdminUser/getRecords/${id}`
+    getById(entity: string, id: string): Observable<Student[] | StudentInfo[]> {
+        return this.http.get<Student[] | StudentInfo[]>(
+            `${environment.BASEURL}${entity}/getRecords/${id}`
         )
     }
 
@@ -44,7 +46,7 @@ export class StudentsService {
         )
     }
 
-    remove(id: string): Observable<Response> {
+    remove(id: string): Observable<any> {
         return this.http.delete<Response>(
             `${environment.BASEURL}Student/del/${id}`
         )
@@ -62,20 +64,20 @@ export class StudentsService {
             )
     }
 
-    getGroupData(id: number): Observable<Group> {
-        return this.http.get<Group>(
+    getGroupData(id: number): Observable<Group[]> {
+        return this.http.get<Group[]>(
             `${environment.BASEURL}Group/getRecords/${id}`
         )
     }
 
-    getFacultyData(id: string): Observable<Faculty> {
-        return this.http.get<Faculty>(
+    getFacultyData(id: string): Observable<Faculty[]> {
+        return this.http.get<Faculty[]>(
             `${environment.BASEURL}Faculty/getRecords/${id}`
         )
     }
 
-    getSpecialityData(id: string): Observable<Speciality> {
-        return this.http.get<Speciality>(
+    getSpecialityData(id: string): Observable<Speciality[]> {
+        return this.http.get<Speciality[]>(
             `${environment.BASEURL}Speciality/getRecords/${id}`
         )
     }
