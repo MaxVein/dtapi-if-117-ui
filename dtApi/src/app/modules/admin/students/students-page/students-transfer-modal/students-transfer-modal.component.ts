@@ -1,11 +1,18 @@
-import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { MatSelectChange } from '@angular/material/select';
-import { AlertComponent } from 'src/app/shared/components/alert/alert.component';
-import { StudentsService } from 'src/app/modules/admin/students/students.service';
-import { ModalService } from 'src/app/shared/services/modal.service';
-import { Subscription } from 'rxjs';
-import { Faculty, Group, Student } from 'src/app/shared/interfaces/interfaces';
+import { Component, Inject, OnDestroy, OnInit } from '@angular/core'
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog'
+import { MatSelectChange } from '@angular/material/select'
+import { AlertComponent } from 'src/app/shared/components/alert/alert.component'
+import { StudentsService } from 'src/app/modules/admin/students/students.service'
+import { ModalService } from 'src/app/shared/services/modal.service'
+import { Subscription } from 'rxjs'
+import {
+    DialogResult,
+    Faculty,
+    Group,
+    Response,
+    Student,
+    StudentInfo,
+} from 'src/app/shared/interfaces/interfaces'
 
 @Component({
     selector: 'app-students-transfer-modal',
@@ -13,13 +20,14 @@ import { Faculty, Group, Student } from 'src/app/shared/interfaces/interfaces';
     styleUrls: ['./students-transfer-modal.component.scss'],
 })
 export class StudentsTransferModalComponent implements OnInit, OnDestroy {
-    loading = false;
-    student: Student = this.data.student_data;
-    studentSubscription: Subscription;
-    faculties: Faculty[] = [];
-    groups: Group[] = [];
-    selectedGroupID: string;
-    submitted = false;
+    loading = false
+    submitted = false
+    student: Student = this.data.STUDENT_DATA
+    studentInfo: StudentInfo
+    faculties: Faculty[] = []
+    groups: Group[] = []
+    selectedGroupID: number
+    studentSubscription: Subscription
 
     constructor(
         @Inject(MAT_DIALOG_DATA) public data: any,
@@ -36,21 +44,25 @@ export class StudentsTransferModalComponent implements OnInit, OnDestroy {
 
     getStudentInfo(): void {
         this.studentSubscription = this.studentsService
-            .getById(this.student.user_id)
+            .getById('AdminUser', this.student.user_id)
             .subscribe(
-                (response) => {
-                    this.student.username = response[0].username;
-                    this.student.email = response[0].email;
-                    this.loading = false;
+                (response: StudentInfo[]) => {
+                    this.studentInfo = {
+                        username: response[0].username,
+                        email: response[0].email,
+                    }
+                    this.loading = false
                 },
-                () => {
-                    const message = 'Сталася помилка. Спробуйте знову';
-                    const title = 'Помилка';
-                    this.closeModal(title);
+                (error: Response) => {
+                    const message = 'Сталася помилка. Спробуйте знову'
+                    const title = 'Помилка'
+                    this.loading = false
+                    this.closeModal({ message: title })
                     this.modalService.openModal(AlertComponent, {
                         data: {
                             message,
                             title,
+                            error,
                         },
                     });
                 }
@@ -61,17 +73,19 @@ export class StudentsTransferModalComponent implements OnInit, OnDestroy {
         this.studentSubscription = this.studentsService
             .getEntityFaculty()
             .subscribe(
-                (response) => {
-                    this.faculties = response;
+                (response: Faculty[]) => {
+                    this.faculties = response
                 },
-                () => {
-                    const message = 'Сталася помилка. Спробуйте знову';
-                    const title = 'Помилка';
-                    this.closeModal(title);
+                (error: Response) => {
+                    const message = 'Сталася помилка. Спробуйте знову'
+                    const title = 'Помилка'
+                    this.loading = false
+                    this.closeModal({ message: title })
                     this.modalService.openModal(AlertComponent, {
                         data: {
                             message,
                             title,
+                            error,
                         },
                     });
                 }
@@ -79,21 +93,21 @@ export class StudentsTransferModalComponent implements OnInit, OnDestroy {
     }
 
     getGroups(event: MatSelectChange): void {
-        const facultyID = event.value;
         this.studentSubscription = this.studentsService
-            .getEntityGroupsByFaculty(facultyID)
+            .getEntityGroupsByFaculty(event.value)
             .subscribe(
-                (response) => {
-                    this.groups = response;
+                (response: Group[]) => {
+                    this.groups = response
                 },
-                () => {
-                    const message = 'Сталася помилка. Спробуйте знову';
-                    const title = 'Помилка';
-                    this.closeModal(title);
+                (error: Response) => {
+                    const message = 'Сталася помилка. Спробуйте знову'
+                    const title = 'Помилка'
+                    this.closeModal({ message: title })
                     this.modalService.openModal(AlertComponent, {
                         data: {
                             message,
                             title,
+                            error,
                         },
                     });
                 }
@@ -106,35 +120,37 @@ export class StudentsTransferModalComponent implements OnInit, OnDestroy {
     }
 
     submit(): void {
-        this.loading = true;
-        const newStudent = Object.assign({}, this.data.student_data);
-        newStudent.group_id = this.selectedGroupID;
+        this.loading = true
+        this.student.group_id = this.selectedGroupID
+        const updateStudent = Object.assign({}, this.student, this.studentInfo)
         this.studentSubscription = this.studentsService
-            .update(this.data.student_data.user_id, newStudent)
+            .update(this.student.user_id, updateStudent)
             .subscribe(
-                (response) => {
-                    this.loading = false;
-                    const data = Object.assign({}, response);
-                    data.user_id = this.data.student_data.user_id;
-                    this.dialogRef.close(data);
+                (response: Response) => {
+                    this.loading = false
+                    this.closeModal({
+                        message: response,
+                        id: this.student.user_id,
+                    })
                 },
-                () => {
-                    const message = 'Сталася помилка. Спробуйте знову';
-                    const title = 'Помилка';
-                    this.loading = false;
-                    this.closeModal(title);
+                (error: Response) => {
+                    const message = 'Сталася помилка. Спробуйте знову'
+                    const title = 'Помилка'
+                    this.loading = false
+                    this.closeModal({ message: title })
                     this.modalService.openModal(AlertComponent, {
                         data: {
                             message,
                             title,
+                            error,
                         },
                     });
                 }
             );
     }
 
-    closeModal(dialogResult: any = 'Скасовано'): void {
-        this.dialogRef.close(dialogResult);
+    closeModal(dialogResult: DialogResult = { message: 'Скасовано' }): void {
+        this.dialogRef.close(dialogResult)
     }
 
     ngOnDestroy(): void {

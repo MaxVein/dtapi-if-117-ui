@@ -2,10 +2,10 @@
     <div class="modal__header">
         <h1 mat-dialog-title class="modal__title">
             <mat-icon class="header-icon">
-                {{ data.isUpdateData ? 'edit' : 'person_add' }}
+                {{ data.IS_UPDATE_DATA ? 'edit' : 'person_add' }}
             </mat-icon>
             {{
-                data.isUpdateData
+                data.IS_UPDATE_DATA
                     ? 'Редагувати дані студента'
                     : 'Додати нового студента'
             }}
@@ -368,7 +368,7 @@
             </div>
 
             <div class="image-form-control">
-                <div class="image" *ngIf="!this.data.isUpdateData">
+                <div class="image" *ngIf="!this.data.IS_UPDATE_DATA">
                     <img
                         class="preview-image"
                         *ngIf="image"
@@ -385,7 +385,9 @@
 
                 <div
                     class="image"
-                    *ngIf="this.data.isUpdateData && this.student.photo !== ''"
+                    *ngIf="
+                        this.data.IS_UPDATE_DATA && this.student.photo !== ''
+                    "
                 >
                     <img
                         class="preview-image"
@@ -409,7 +411,9 @@
 
                 <div
                     class="image"
-                    *ngIf="this.data.isUpdateData && this.student.photo === ''"
+                    *ngIf="
+                        this.data.IS_UPDATE_DATA && this.student.photo === ''
+                    "
                 >
                     <img
                         class="preview-image"
@@ -428,7 +432,7 @@
                 <div class="file-input">
                     <button
                         [matTooltip]="
-                            this.data.isUpdateData
+                            this.data.IS_UPDATE_DATA
                                 ? 'Нажміть, щоб оновити фото'
                                 : 'Нажміть, щоб завантажити фото'
                         "
@@ -471,7 +475,7 @@
                     [disabled]="form.invalid || submitted"
                 >
                     {{
-                        data.isUpdateData
+                        data.IS_UPDATE_DATA
                             ? 'Редагувати дані'
                             : 'Додати студента'
                     }}
