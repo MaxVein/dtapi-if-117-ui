@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core'
+import { Component, Input } from '@angular/core';
 
 @Component({
     selector: 'app-spinner',
@@ -8,10 +8,10 @@ import { Component, Input } from '@angular/core'
 export class SpinnerComponent {
     constructor() {}
 
-    @Input() value = 100
-    @Input() diameter = 100
-    @Input() mode = 'indeterminate'
-    @Input() strokeWidth = 10
-    @Input() overlay = false
-    @Input() color = 'primary'
+    @Input() value = 100;
+    @Input() diameter = 100;
+    @Input() mode = 'indeterminate';
+    @Input() strokeWidth = 10;
+    @Input() overlay = false;
+    @Input() color = 'primary';
 }

@@ -5,21 +5,21 @@ import {
     OnDestroy,
     OnInit,
     ViewChild,
-} from '@angular/core'
+} from '@angular/core';
 import {
     AsyncValidatorFn,
     FormControl,
     FormGroup,
     ValidationErrors,
     Validators,
-} from '@angular/forms'
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog'
-import { AlertComponent } from '../../../../../shared/components/alert/alert.component'
-import { StudentsService } from 'src/app/modules/admin/students/students.service'
-import { ModalService } from '../../../../../shared/services/modal.service'
-import { Observable, of, Subscription } from 'rxjs'
-import { Student } from 'src/app/shared/interfaces/interfaces'
-import { environment } from 'src/environments/environment'
+} from '@angular/forms';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { AlertComponent } from '../../../../../shared/components/alert/alert.component';
+import { StudentsService } from 'src/app/modules/admin/students/students.service';
+import { ModalService } from '../../../../../shared/services/modal.service';
+import { Observable, of, Subscription } from 'rxjs';
+import { Student } from 'src/app/shared/interfaces/interfaces';
+import { environment } from 'src/environments/environment';
 
 @Component({
     selector: 'app-students-modal',
@@ -27,16 +27,16 @@ import { environment } from 'src/environments/environment'
     styleUrls: ['./students-modal.component.scss'],
 })
 export class StudentsModalComponent implements OnInit, OnDestroy {
-    form: FormGroup
-    loading = false
-    submitted = false
-    hide = true
-    image: string | ArrayBuffer = ''
-    defaultImage = environment.defaultImage
-    student: Student = this.data.student_data
-    studentSubscription: Subscription
+    form: FormGroup;
+    loading = false;
+    submitted = false;
+    hide = true;
+    image: string | ArrayBuffer = '';
+    defaultImage = environment.defaultImage;
+    student: Student = this.data.student_data;
+    studentSubscription: Subscription;
 
-    @ViewChild('imageFile') inputRef: ElementRef
+    @ViewChild('imageFile') inputRef: ElementRef;
 
     constructor(
         public dialogRef: MatDialogRef<StudentsModalComponent>,
@@ -46,9 +46,9 @@ export class StudentsModalComponent implements OnInit, OnDestroy {
     ) {}
 
     ngOnInit(): void {
-        this.loading = true
-        this.initForm()
-        this.getStudentInfo()
+        this.loading = true;
+        this.initForm();
+        this.getStudentInfo();
     }
 
     initForm(): void {
@@ -109,38 +109,40 @@ export class StudentsModalComponent implements OnInit, OnDestroy {
                 this.student ? this.student.plain_password : '',
                 [Validators.required]
             ),
-        })
+        });
     }
 
     getStudentInfo(): void {
         if (this.data.student_data) {
-            const studentID = this.student.user_id
+            const studentID = this.student.user_id;
             this.studentSubscription = this.studentsService
                 .getById(studentID)
                 .subscribe(
                     (response) => {
-                        this.student.username = response[0].username
-                        this.student.email = response[0].email
-                        this.form.get('username').setValue(response[0].username)
-                        this.form.get('email').setValue(response[0].email)
-                        this.getStudentPhoto(studentID)
+                        this.student.username = response[0].username;
+                        this.student.email = response[0].email;
+                        this.form
+                            .get('username')
+                            .setValue(response[0].username);
+                        this.form.get('email').setValue(response[0].email);
+                        this.getStudentPhoto(studentID);
                     },
                     () => {
-                        const message = 'Сталася помилка. Спробуйте знову'
-                        const title = 'Помилка'
-                        this.closeModal(title)
+                        const message = 'Сталася помилка. Спробуйте знову';
+                        const title = 'Помилка';
+                        this.closeModal(title);
                         this.modalService.openModal(AlertComponent, {
                             data: {
                                 message,
                                 title,
                             },
-                        })
+                        });
                     }
-                )
+                );
         } else {
             setTimeout(() => {
-                this.loading = false
-            }, 300)
+                this.loading = false;
+            }, 300);
         }
     }
 
@@ -149,25 +151,25 @@ export class StudentsModalComponent implements OnInit, OnDestroy {
             .getByGroup(this.student.group_id, false)
             .subscribe(
                 (response) => {
-                    const index = response.findIndex((s) => s.user_id === id)
-                    const currentStudent = response[index]
-                    const student = Object.assign(this.student, currentStudent)
-                    this.student = student
-                    this.loading = false
+                    const index = response.findIndex((s) => s.user_id === id);
+                    const currentStudent = response[index];
+                    const student = Object.assign(this.student, currentStudent);
+                    this.student = student;
+                    this.loading = false;
                 },
                 () => {
-                    const message = 'Сталася помилка. Спробуйте знову'
-                    const title = 'Помилка'
-                    this.loading = false
-                    this.closeModal(title)
+                    const message = 'Сталася помилка. Спробуйте знову';
+                    const title = 'Помилка';
+                    this.loading = false;
+                    this.closeModal(title);
                     this.modalService.openModal(AlertComponent, {
                         data: {
                             message,
                             title,
                         },
-                    })
+                    });
                 }
-            )
+            );
     }
 
     uniqueValidator(entity, method, check): AsyncValidatorFn {
@@ -177,21 +179,25 @@ export class StudentsModalComponent implements OnInit, OnDestroy {
             | Promise<ValidationErrors | null>
             | Observable<ValidationErrors | null> => {
             if (this.student && this.student[check] === control.value) {
-                return of(null)
+                return of(null);
             } else {
-                return this.studentsService.check(entity, method, control.value)
+                return this.studentsService.check(
+                    entity,
+                    method,
+                    control.value
+                );
             }
-        }
+        };
     }
 
     submit(): void {
         if (this.form.invalid) {
-            return
+            return;
         }
 
-        this.form.disable()
-        this.submitted = true
-        this.loading = true
+        this.form.disable();
+        this.submitted = true;
+        this.loading = true;
 
         const newStudent: Student = {
             email: this.form.value.email,
@@ -205,10 +211,10 @@ export class StudentsModalComponent implements OnInit, OnDestroy {
             group_id: this.data.group_id,
             photo: this.image,
             plain_password: this.form.value.password,
-        }
+        };
 
         if (this.image === '' && this.data.isUpdateData) {
-            newStudent.photo = this.student.photo
+            newStudent.photo = this.student.photo;
         }
 
         if (this.data.isUpdateData) {
@@ -216,71 +222,71 @@ export class StudentsModalComponent implements OnInit, OnDestroy {
                 .update(this.student.user_id, newStudent)
                 .subscribe(
                     (data) => {
-                        this.loading = false
-                        this.form.enable()
-                        const student = Object.assign(data, newStudent)
-                        student.user_id = this.student.user_id
-                        this.closeModal(student)
+                        this.loading = false;
+                        this.form.enable();
+                        const student = Object.assign(data, newStudent);
+                        student.user_id = this.student.user_id;
+                        this.closeModal(student);
                     },
                     () => {
-                        const message = 'Сталася помилка. Спробуйте знову'
-                        const title = 'Помилка'
-                        this.loading = false
-                        this.closeModal(title)
+                        const message = 'Сталася помилка. Спробуйте знову';
+                        const title = 'Помилка';
+                        this.loading = false;
+                        this.closeModal(title);
                         this.modalService.openModal(AlertComponent, {
                             data: {
                                 message,
                                 title,
                             },
-                        })
+                        });
                     }
-                )
+                );
         } else {
             this.studentSubscription = this.studentsService
                 .create(newStudent)
                 .subscribe(
                     (data) => {
-                        this.loading = false
-                        this.form.enable()
-                        const student = Object.assign(data, newStudent)
-                        this.closeModal(student)
+                        this.loading = false;
+                        this.form.enable();
+                        const student = Object.assign(data, newStudent);
+                        this.closeModal(student);
                     },
                     () => {
-                        const message = 'Сталася помилка. Спробуйте знову'
-                        const title = 'Помилка'
-                        this.loading = false
-                        this.closeModal(title)
+                        const message = 'Сталася помилка. Спробуйте знову';
+                        const title = 'Помилка';
+                        this.loading = false;
+                        this.closeModal(title);
                         this.modalService.openModal(AlertComponent, {
                             data: {
                                 message,
                                 title,
                             },
-                        })
+                        });
                     }
-                )
+                );
         }
     }
 
     fileInput(): void {
-        this.inputRef.nativeElement.click()
+        this.inputRef.nativeElement.click();
     }
 
     fileUpload(event: any): void {
-        const file = event.target.files[0]
-        const reader = new FileReader()
+        const file = event.target.files[0];
+        const reader = new FileReader();
         reader.onload = () => {
-            this.image = reader.result
-        }
-        reader.readAsDataURL(file)
+            this.image = reader.result;
+        };
+        reader.readAsDataURL(file);
     }
 
     closeModal(dialogResult: any = 'Скасовано'): void {
-        this.dialogRef.close(dialogResult)
+        this.dialogRef.close(dialogResult);
     }
 
     ngOnDestroy(): void {
         if (this.studentSubscription) {
-            this.studentSubscription.unsubscribe()
+            this.studentSubscription.unsubscribe();
         }
     }
 }

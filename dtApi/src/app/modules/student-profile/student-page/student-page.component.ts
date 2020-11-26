@@ -1,12 +1,12 @@
-import { Component, OnInit, ViewChild } from '@angular/core'
-import { MatPaginator } from '@angular/material/paginator'
-import { MatTableDataSource } from '@angular/material/table'
-import { MatSnackBar } from '@angular/material/snack-bar'
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { MatPaginator } from '@angular/material/paginator';
+import { MatTableDataSource } from '@angular/material/table';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
-import { concatMap, map } from 'rxjs/operators'
-import { Observable, throwError } from 'rxjs'
+import { concatMap, map } from 'rxjs/operators';
+import { Observable, throwError } from 'rxjs';
 
-import { environment } from 'src/environments/environment'
+import { environment } from 'src/environments/environment';
 import {
     isLoggedRes,
     studentDetails,
@@ -16,10 +16,10 @@ import {
     subjectDetails,
     testDetails,
     testDate,
-} from './interfaces/student-pageInterfaces'
-import { StudentService } from './services/student-page.service'
-import { AuthService } from '../../login/services/auth.service'
-import { Router } from '@angular/router'
+} from './interfaces/student-pageInterfaces';
+import { StudentService } from './services/student-page.service';
+import { AuthService } from '../../login/services/auth.service';
+import { Router } from '@angular/router';
 
 @Component({
     selector: 'app-student-page',
@@ -34,20 +34,20 @@ export class StudentPageComponent implements OnInit {
         private router: Router
     ) {}
 
-    photo: string
-    gradebookId: string
-    studentFname: string
-    studentName: string
-    studentSurname: string
-    groupName: string
-    facultyName: string
-    specialityCode: string
-    specialityName: string
-    testsBySubject: testDetails[]
-    subjectName: string
-    subjects: subjectDetails[]
-    testDetails
-    dataSource
+    photo: string;
+    gradebookId: string;
+    studentFname: string;
+    studentName: string;
+    studentSurname: string;
+    groupName: string;
+    facultyName: string;
+    specialityCode: string;
+    specialityName: string;
+    testsBySubject: testDetails[];
+    subjectName: string;
+    subjects: subjectDetails[];
+    testDetails;
+    dataSource;
     displayedColumns: string[] = [
         'Предмет',
         'Тест',
@@ -57,16 +57,16 @@ export class StudentPageComponent implements OnInit {
         'Тривалість тесту',
         'Кількість спроб',
         'Почати тестування',
-    ]
-    defaultImage: string = environment.defaultImage
+    ];
+    defaultImage: string = environment.defaultImage;
 
-    private studentId: string
-    private groupId: string
-    private facultyId: string
-    private specialityId: string
-    private subjectId: string
+    private studentId: string;
+    private groupId: string;
+    private facultyId: string;
+    private specialityId: string;
+    private subjectId: string;
 
-    @ViewChild(MatPaginator) paginator: MatPaginator
+    @ViewChild(MatPaginator) paginator: MatPaginator;
 
     ngOnInit(): void {
         this.auth
@@ -74,17 +74,17 @@ export class StudentPageComponent implements OnInit {
             .pipe(
                 concatMap(
                     (res: isLoggedRes): Observable<any> => {
-                        this.studentId = res.id
-                        return this.student.getRecords('Subject')
+                        this.studentId = res.id;
+                        return this.student.getRecords('Subject');
                     }
                 )
             )
             .subscribe((res: subjectDetails[]) => {
-                this.subjects = res
-                this.subjectId = res[0].subject_id
-                this.subjectName = res[0].subject_name
-                this.getStudentInfo()
-            })
+                this.subjects = res;
+                this.subjectId = res[0].subject_id;
+                this.subjectName = res[0].subject_name;
+                this.getStudentInfo();
+            });
     }
 
     getStudentInfo() {
@@ -92,29 +92,29 @@ export class StudentPageComponent implements OnInit {
             .getRecords('Student', this.studentId)
             .pipe(
                 map((res) => {
-                    return res[0]
+                    return res[0];
                 }),
                 concatMap(
                     (res: studentDetails): Observable<any> => {
-                        this.studentName = res.student_name
-                        this.studentSurname = res.student_surname
-                        this.studentFname = res.student_fname
-                        this.photo = res.photo ? res.photo : this.defaultImage
-                        this.groupId = res.group_id
-                        this.gradebookId = res.gradebook_id
-                        return this.student.getRecords('Group', this.groupId)
+                        this.studentName = res.student_name;
+                        this.studentSurname = res.student_surname;
+                        this.studentFname = res.student_fname;
+                        this.photo = res.photo ? res.photo : this.defaultImage;
+                        this.groupId = res.group_id;
+                        this.gradebookId = res.gradebook_id;
+                        return this.student.getRecords('Group', this.groupId);
                     }
                 ),
                 map((res) => res[0])
             )
             .subscribe((res: groupDetails) => {
-                this.facultyId = res.faculty_id
-                this.groupName = res.group_name
-                this.specialityId = res.speciality_id
-                this.getFaculty(res.faculty_id)
-                this.getSpeciality(res.speciality_id)
-                this.getTestInfo()
-            })
+                this.facultyId = res.faculty_id;
+                this.groupName = res.group_name;
+                this.specialityId = res.speciality_id;
+                this.getFaculty(res.faculty_id);
+                this.getSpeciality(res.speciality_id);
+                this.getTestInfo();
+            });
     }
 
     getSpeciality(specialityId: string) {
@@ -122,9 +122,9 @@ export class StudentPageComponent implements OnInit {
             .getRecords('Speciality', specialityId)
             .pipe(map((res) => res[0]))
             .subscribe((res: specialityDetails) => {
-                this.specialityCode = res.speciality_code
-                this.specialityName = res.speciality_name
-            })
+                this.specialityCode = res.speciality_code;
+                this.specialityName = res.speciality_name;
+            });
     }
 
     getFaculty(facultyId: string) {
@@ -132,8 +132,8 @@ export class StudentPageComponent implements OnInit {
             .getRecords('Faculty', facultyId)
             .pipe(map((res) => res[0]))
             .subscribe((res: facultyDetails) => {
-                this.facultyName = res.faculty_name
-            })
+                this.facultyName = res.faculty_name;
+            });
     }
 
     getTestInfo() {
@@ -142,12 +142,12 @@ export class StudentPageComponent implements OnInit {
             .pipe(
                 concatMap(
                     (res: testDetails[]): Observable<any> => {
-                        this.testsBySubject = res
+                        this.testsBySubject = res;
                         if (!Array.isArray(res)) {
-                            this.openSnackBar('Дані відсутні', 'X')
-                            return throwError(new Error('No data found...'))
+                            this.openSnackBar('Дані відсутні', 'X');
+                            return throwError(new Error('No data found...'));
                         } else {
-                            return this.student.getTestDetails(this.subjectId)
+                            return this.student.getTestDetails(this.subjectId);
                         }
                     }
                 ),
@@ -155,46 +155,46 @@ export class StudentPageComponent implements OnInit {
             )
             .subscribe({
                 next: (res: testDate) => {
-                    let testDate = res
+                    let testDate = res;
                     if (testDate === undefined) {
                         testDate = {
                             end_date: 'Дані відсутні',
                             start_date: 'Дані відсутні',
-                        }
+                        };
                     }
                     this.testDetails = [...this.testsBySubject].map((test) => ({
                         ...test,
                         ...testDate,
                         subjectname: this.subjectName,
-                    }))
-                    this.dataSource = new MatTableDataSource(this.testDetails)
-                    this.dataSource.paginator = this.paginator
+                    }));
+                    this.dataSource = new MatTableDataSource(this.testDetails);
+                    this.dataSource.paginator = this.paginator;
                 },
                 error: (err) => {
-                    this.dataSource = null
-                    console.error(err)
+                    this.dataSource = null;
+                    console.error(err);
                 },
-            })
+            });
     }
 
     selectSubject(event) {
         this.subjectId =
             event.currentTarget.options[
                 event.currentTarget.options.selectedIndex
-            ].id
-        this.subjectName = event.target.value
-        this.getTestInfo()
+            ].id;
+        this.subjectName = event.target.value;
+        this.getTestInfo();
     }
     logOut() {
         this.auth.logOutRequest().subscribe({
             next: () => {
-                this.router.navigate(['/login'])
+                this.router.navigate(['/login']);
             },
-        })
+        });
     }
     openSnackBar(message: string, action: string) {
         this.snackBar.open(message, action, {
             duration: 2000,
-        })
+        });
     }
 }

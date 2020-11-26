@@ -1,9 +1,9 @@
-import { AbstractControl, AsyncValidator } from '@angular/forms'
-import { Injectable } from '@angular/core'
-import { Observable, of } from 'rxjs'
-import { map, catchError } from 'rxjs/operators'
-import { AuthService } from '../services/auth.service'
-import { Responce } from '../interfaces/interfaces'
+import { AbstractControl, AsyncValidator } from '@angular/forms';
+import { Injectable } from '@angular/core';
+import { Observable, of } from 'rxjs';
+import { map, catchError } from 'rxjs/operators';
+import { AuthService } from '../services/auth.service';
+import { Responce } from '../interfaces/interfaces';
 
 @Injectable({ providedIn: 'root' })
 export class ForbiddenValidator implements AsyncValidator {
@@ -14,6 +14,6 @@ export class ForbiddenValidator implements AsyncValidator {
                 forbidden.response ? null : { forbiddenValidator: true }
             ),
             catchError(() => of(null))
-        )
+        );
     }
 }

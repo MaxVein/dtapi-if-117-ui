@@ -1,11 +1,11 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { Component, Inject } from '@angular/core'
-import { NgForm } from '@angular/forms'
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog'
-import { MatSnackBar } from '@angular/material/snack-bar'
-import { ModalData } from '../../admin-model/Admins'
-import { AdminsCrudService } from '../../admin-services/admins-crud.service'
-import { AdminModalCreationComponent } from '../admin-modal-creation/admin-modal-creation.component'
+import { Component, Inject } from '@angular/core';
+import { NgForm } from '@angular/forms';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { ModalData } from '../../admin-model/Admins';
+import { AdminsCrudService } from '../../admin-services/admins-crud.service';
+import { AdminModalCreationComponent } from '../admin-modal-creation/admin-modal-creation.component';
 
 @Component({
     selector: 'app-delete-confirm-modal',
@@ -26,14 +26,14 @@ export class DeleteConfirmModalComponent {
                 if (res.response === 'ok') {
                     this.snackBar.open('Адміна успішно видалено', 'Закрити', {
                         duration: 3000,
-                    })
+                    });
                 }
-            })
+            });
         } else {
-            this.onNoClick()
+            this.onNoClick();
         }
     }
     onNoClick(): void {
-        this.dialogRef.close()
+        this.dialogRef.close();
     }
 }

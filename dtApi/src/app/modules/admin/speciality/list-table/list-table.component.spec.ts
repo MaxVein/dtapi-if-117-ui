@@ -1,14 +1,14 @@
-import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing'
-import { NoopAnimationsModule } from '@angular/platform-browser/animations'
-import { MatPaginatorModule } from '@angular/material/paginator'
-import { MatSortModule } from '@angular/material/sort'
-import { MatTableModule } from '@angular/material/table'
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+import { NoopAnimationsModule } from '@angular/platform-browser/animations';
+import { MatPaginatorModule } from '@angular/material/paginator';
+import { MatSortModule } from '@angular/material/sort';
+import { MatTableModule } from '@angular/material/table';
 
-import { ListTableComponent } from './list-table.component'
+import { ListTableComponent } from './list-table.component';
 
 describe('ListTableComponent', () => {
-    let component: ListTableComponent
-    let fixture: ComponentFixture<ListTableComponent>
+    let component: ListTableComponent;
+    let fixture: ComponentFixture<ListTableComponent>;
 
     beforeEach(
         waitForAsync(() => {
@@ -20,17 +20,17 @@ describe('ListTableComponent', () => {
                     MatSortModule,
                     MatTableModule,
                 ],
-            }).compileComponents()
+            }).compileComponents();
         })
-    )
+    );
 
     beforeEach(() => {
-        fixture = TestBed.createComponent(ListTableComponent)
-        component = fixture.componentInstance
-        fixture.detectChanges()
-    })
+        fixture = TestBed.createComponent(ListTableComponent);
+        component = fixture.componentInstance;
+        fixture.detectChanges();
+    });
 
     it('should compile', () => {
-        expect(component).toBeTruthy()
-    })
-})
+        expect(component).toBeTruthy();
+    });
+});

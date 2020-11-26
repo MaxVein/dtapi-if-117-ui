@@ -1,11 +1,11 @@
-import { Component, Inject, OnDestroy, OnInit } from '@angular/core'
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog'
-import { AlertComponent } from '../../../../../shared/components/alert/alert.component'
-import { StudentsService } from 'src/app/modules/admin/students/students.service'
-import { ModalService } from '../../../../../shared/services/modal.service'
-import { Subscription } from 'rxjs'
-import { Student } from 'src/app/shared/interfaces/interfaces'
-import { environment } from 'src/environments/environment'
+import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { AlertComponent } from '../../../../../shared/components/alert/alert.component';
+import { StudentsService } from 'src/app/modules/admin/students/students.service';
+import { ModalService } from '../../../../../shared/services/modal.service';
+import { Subscription } from 'rxjs';
+import { Student } from 'src/app/shared/interfaces/interfaces';
+import { environment } from 'src/environments/environment';
 
 @Component({
     selector: 'app-students-view-modal',
@@ -13,13 +13,13 @@ import { environment } from 'src/environments/environment'
     styleUrls: ['./students-view-modal.component.scss'],
 })
 export class StudentsViewModalComponent implements OnInit, OnDestroy {
-    loading = false
-    defaultImage = environment.defaultImage
-    student: Student = this.data.student_data
-    studentSubscription: Subscription
-    groupName: string
-    facultyName: string
-    specialityName: string
+    loading = false;
+    defaultImage = environment.defaultImage;
+    student: Student = this.data.student_data;
+    studentSubscription: Subscription;
+    groupName: string;
+    facultyName: string;
+    specialityName: string;
 
     constructor(
         @Inject(MAT_DIALOG_DATA) public data: any,
@@ -29,9 +29,9 @@ export class StudentsViewModalComponent implements OnInit, OnDestroy {
     ) {}
 
     ngOnInit(): void {
-        this.loading = true
-        this.getStudentInfo()
-        this.getGroupInfo()
+        this.loading = true;
+        this.getStudentInfo();
+        this.getGroupInfo();
     }
 
     getStudentInfo(): void {
@@ -39,22 +39,22 @@ export class StudentsViewModalComponent implements OnInit, OnDestroy {
             .getById(this.student.user_id)
             .subscribe(
                 (response) => {
-                    this.student.username = response[0].username
-                    this.student.email = response[0].email
-                    this.getStudentPhoto()
+                    this.student.username = response[0].username;
+                    this.student.email = response[0].email;
+                    this.getStudentPhoto();
                 },
                 () => {
-                    const message = 'Сталася помилка. Спробуйте знову'
-                    const title = 'Помилка'
-                    this.closeModal(title)
+                    const message = 'Сталася помилка. Спробуйте знову';
+                    const title = 'Помилка';
+                    this.closeModal(title);
                     this.modalService.openModal(AlertComponent, {
                         data: {
                             message,
                             title,
                         },
-                    })
+                    });
                 }
-            )
+            );
     }
 
     getStudentPhoto(): void {
@@ -64,25 +64,25 @@ export class StudentsViewModalComponent implements OnInit, OnDestroy {
                 (response) => {
                     const index = response.findIndex(
                         (s) => s.user_id === this.student.user_id
-                    )
-                    const currentStudent = response[index]
-                    const student = Object.assign(this.student, currentStudent)
-                    this.student = student
-                    this.loading = false
+                    );
+                    const currentStudent = response[index];
+                    const student = Object.assign(this.student, currentStudent);
+                    this.student = student;
+                    this.loading = false;
                 },
                 () => {
-                    const message = 'Сталася помилка. Спробуйте знову'
-                    const title = 'Помилка'
-                    this.loading = false
-                    this.closeModal(title)
+                    const message = 'Сталася помилка. Спробуйте знову';
+                    const title = 'Помилка';
+                    this.loading = false;
+                    this.closeModal(title);
                     this.modalService.openModal(AlertComponent, {
                         data: {
                             message,
                             title,
                         },
-                    })
+                    });
                 }
-            )
+            );
     }
 
     getGroupInfo(): void {
@@ -90,22 +90,22 @@ export class StudentsViewModalComponent implements OnInit, OnDestroy {
             .getGroupData(this.student.group_id)
             .subscribe(
                 (response) => {
-                    this.groupName = response[0].group_name
-                    this.getFacultyInfo(response[0].faculty_id)
-                    this.getSpecialityInfo(response[0].speciality_id)
+                    this.groupName = response[0].group_name;
+                    this.getFacultyInfo(response[0].faculty_id);
+                    this.getSpecialityInfo(response[0].speciality_id);
                 },
                 () => {
-                    const message = 'Сталася помилка. Спробуйте знову'
-                    const title = 'Помилка'
-                    this.closeModal(title)
+                    const message = 'Сталася помилка. Спробуйте знову';
+                    const title = 'Помилка';
+                    this.closeModal(title);
                     this.modalService.openModal(AlertComponent, {
                         data: {
                             message,
                             title,
                         },
-                    })
+                    });
                 }
-            )
+            );
     }
 
     getFacultyInfo(id: string): void {
@@ -113,20 +113,20 @@ export class StudentsViewModalComponent implements OnInit, OnDestroy {
             .getFacultyData(id)
             .subscribe(
                 (response) => {
-                    this.facultyName = response[0].faculty_name
+                    this.facultyName = response[0].faculty_name;
                 },
                 () => {
-                    const message = 'Сталася помилка. Спробуйте знову'
-                    const title = 'Помилка'
-                    this.closeModal(title)
+                    const message = 'Сталася помилка. Спробуйте знову';
+                    const title = 'Помилка';
+                    this.closeModal(title);
                     this.modalService.openModal(AlertComponent, {
                         data: {
                             message,
                             title,
                         },
-                    })
+                    });
                 }
-            )
+            );
     }
 
     getSpecialityInfo(id: string): void {
@@ -134,29 +134,29 @@ export class StudentsViewModalComponent implements OnInit, OnDestroy {
             .getSpecialityData(id)
             .subscribe(
                 (response) => {
-                    this.specialityName = response[0].speciality_name
+                    this.specialityName = response[0].speciality_name;
                 },
                 () => {
-                    const message = 'Сталася помилка. Спробуйте знову'
-                    const title = 'Помилка'
-                    this.closeModal(title)
+                    const message = 'Сталася помилка. Спробуйте знову';
+                    const title = 'Помилка';
+                    this.closeModal(title);
                     this.modalService.openModal(AlertComponent, {
                         data: {
                             message,
                             title,
                         },
-                    })
+                    });
                 }
-            )
+            );
     }
 
     closeModal(dialogResult: any = 'Закрито'): void {
-        this.dialogRef.close(dialogResult)
+        this.dialogRef.close(dialogResult);
     }
 
     ngOnDestroy(): void {
         if (this.studentSubscription) {
-            this.studentSubscription.unsubscribe()
+            this.studentSubscription.unsubscribe();
         }
     }
 }
