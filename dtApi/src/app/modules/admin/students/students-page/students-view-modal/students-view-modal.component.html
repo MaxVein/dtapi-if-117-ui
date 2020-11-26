@@ -5,7 +5,7 @@
             Інформація про студента
         </h3>
     </div>
-    <mat-dialog-content class="modal__content" *ngIf="this.student; else empty">
+    <mat-dialog-content class="modal__content" *ngIf="student; else empty">
         <div class="modal__container">
             <div class="modal__student-photo" *ngIf="student.photo !== ''">
                 <img [src]="student.photo" alt="Student photo" />
@@ -86,7 +86,7 @@
                     </div>
 
                     <div class="student-data-content">
-                        <h4>{{ student.email }}</h4>
+                        <h4>{{ studentInfo.email }}</h4>
                     </div>
                 </div>
 
@@ -100,7 +100,7 @@
                     </div>
 
                     <div class="student-data-content">
-                        <h4>{{ student.username }}</h4>
+                        <h4>{{ studentInfo.username }}</h4>
                     </div>
                 </div>
 
