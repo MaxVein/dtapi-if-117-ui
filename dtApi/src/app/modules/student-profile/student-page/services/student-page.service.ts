@@ -17,7 +17,7 @@ export class StudentService {
         const url = `test/getTestsBySubject/${id}`
         return this.http.get(`${environment.BASEURL}${url}`)
     }
-    getTestDetails(subjectId = '1') {
+    getTestDetails(subjectId = '') {
         const url = `timeTable/getTimeTablesForSubject/${subjectId}`
         return this.http.get(`${environment.BASEURL}${url}`)
     }

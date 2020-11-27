@@ -26,24 +26,10 @@ import { ForbiddenValidator } from './validator/userNameValidator'
 })
 export class LoginComponent implements OnInit {
     loginForm = this.fb.group({
-        userName: [
-            '',
-            // {
-            //     validators: [Validators.required],
-            //     // asyncValidators: [
-            //     //     this.userNameValidator.validate.bind(
-            //     //         this.userNameValidator
-            //     //     ),
-            //     // ],
-            //     // updateOn: 'blur',
-            // },
-        ],
+        userName: [''],
         password: [''],
     })
-    // get userName() {
-    //     const userNameValue = this.loginForm.get('userName')
-    //     return userNameValue
-    // }
+
     hide = true
     badRequest = false
     errorMessage: string
@@ -70,7 +56,7 @@ export class LoginComponent implements OnInit {
         const formValue: loginForm = this.loginForm.value
         this.userName = formValue.userName
         this.password = formValue.password
-        this.loginForm.reset()
+
         this.request.loginRequest(this.userName, this.password).subscribe({
             next: (res) => {
                 const goTo = res.roles.includes('admin') ? 'admin' : 'student'
@@ -78,6 +64,7 @@ export class LoginComponent implements OnInit {
                 this.router.navigate([goTo])
             },
             error: (error) => {
+                this.loginForm.reset()
                 this.handlerError(error)
             },
         })

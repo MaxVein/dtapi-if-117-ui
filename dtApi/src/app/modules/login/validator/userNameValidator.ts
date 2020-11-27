@@ -8,8 +8,8 @@ import { Responce } from '../interfaces/interfaces'
 @Injectable({ providedIn: 'root' })
 export class ForbiddenValidator implements AsyncValidator {
     constructor(private validationService: AuthService) {}
-    validate(cntr: AbstractControl) {
-        return this.validationService.getUserName(cntr.value).pipe(
+    validate(control: AbstractControl) {
+        return this.validationService.getUserName(control.value).pipe(
             map((forbidden: Responce) =>
                 forbidden.response ? null : { forbiddenValidator: true }
             ),

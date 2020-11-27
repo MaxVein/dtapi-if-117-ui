@@ -59,6 +59,8 @@ export class StudentPageComponent implements OnInit {
         'Почати тестування',
     ]
     defaultImage: string = environment.defaultImage
+    errorMessage: string = 'Дані відсутні'
+    closeButton: string = 'X'
 
     private studentId: string
     private groupId: string
@@ -142,10 +144,13 @@ export class StudentPageComponent implements OnInit {
             .pipe(
                 concatMap(
                     (res: testDetails[]): Observable<any> => {
-                        this.testsBySubject = res
-                        if (!Array.isArray(res)) {
-                            this.openSnackBar('Дані відсутні', 'X')
-                            return throwError(new Error('No data found...'))
+                        this.testsBySubject = [...res]
+                        if (res[0].response === 'no records') {
+                            this.openSnackBar(
+                                this.errorMessage,
+                                this.closeButton
+                            )
+                            return throwError(new Error(this.errorMessage))
                         } else {
                             return this.student.getTestDetails(this.subjectId)
                         }
@@ -158,11 +163,11 @@ export class StudentPageComponent implements OnInit {
                     let testDate = res
                     if (testDate === undefined) {
                         testDate = {
-                            end_date: 'Дані відсутні',
-                            start_date: 'Дані відсутні',
+                            end_date: this.errorMessage,
+                            start_date: this.errorMessage,
                         }
                     }
-                    this.testDetails = [...this.testsBySubject].map((test) => ({
+                    this.testDetails = this.testsBySubject.map((test) => ({
                         ...test,
                         ...testDate,
                         subjectname: this.subjectName,
@@ -170,9 +175,8 @@ export class StudentPageComponent implements OnInit {
                     this.dataSource = new MatTableDataSource(this.testDetails)
                     this.dataSource.paginator = this.paginator
                 },
-                error: (err) => {
+                error: () => {
                     this.dataSource = null
-                    console.error(err)
                 },
             })
     }
