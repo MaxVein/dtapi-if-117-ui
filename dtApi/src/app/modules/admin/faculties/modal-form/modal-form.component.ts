@@ -1,8 +1,8 @@
-import { Component, Inject, OnInit } from '@angular/core'
-import { FormBuilder, FormGroup, Validators } from '@angular/forms'
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog'
+import { Component, Inject, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 
-import { ApiService } from '../../../../shared/services/api.service'
+import { ApiService } from '../../../../shared/services/api.service';
 
 @Component({
     selector: 'app-modal-form',
@@ -17,7 +17,7 @@ export class ModalFormComponent implements OnInit {
         @Inject(MAT_DIALOG_DATA) public data?
     ) {}
 
-    form: FormGroup
+    form: FormGroup;
 
     ngOnInit() {
         this.form = this.formBuilder.group({
@@ -29,7 +29,7 @@ export class ModalFormComponent implements OnInit {
                 this.data ? this.data.faculty_description : '',
                 [Validators.required],
             ],
-        })
+        });
     }
     addFaculty(str: string): void {
         switch (str) {
@@ -42,23 +42,23 @@ export class ModalFormComponent implements OnInit {
                     )
                     .subscribe(
                         (res) => {
-                            this.dialogRef.close(res)
+                            this.dialogRef.close(res);
                         },
                         (error) => {
-                            this.apiService.snackBarOpen()
+                            this.apiService.snackBarOpen();
                         }
-                    )
-                break
+                    );
+                break;
             case 'add':
                 this.apiService.addEntity('Faculty', this.form.value).subscribe(
                     (res) => this.dialogRef.close(res),
                     (error) => {
-                        this.apiService.snackBarOpen()
+                        this.apiService.snackBarOpen();
                     }
-                )
+                );
         }
     }
     onCancel(): void {
-        this.dialogRef.close()
+        this.dialogRef.close();
     }
 }

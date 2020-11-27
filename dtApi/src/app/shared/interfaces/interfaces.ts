@@ -32,30 +32,30 @@ export interface DialogResult {
 }
 
 export interface Check {
-    response: boolean
+    response: boolean;
 }
 
 export interface Unique {
-    propertyIsNotUnique: boolean
+    propertyIsNotUnique: boolean;
 }
 
 export interface Faculty {
-    faculty_id: number
-    faculty_name: string
-    faculty_description: string
+    faculty_id: number;
+    faculty_name: string;
+    faculty_description: string;
 }
 
 export interface Group {
-    group_id: string
-    group_name: string
-    speciality_id: string
-    faculty_id: string
+    group_id: string;
+    group_name: string;
+    speciality_id: string;
+    faculty_id: string;
 }
 
 export interface Speciality {
-    speciality_id: number
-    speciality_code: string
-    speciality_name: string
+    speciality_id: number;
+    speciality_code: string;
+    speciality_name: string;
 }
 
 export interface Response {

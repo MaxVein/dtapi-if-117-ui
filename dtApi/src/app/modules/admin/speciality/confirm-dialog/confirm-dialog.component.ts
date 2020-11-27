@@ -1,7 +1,7 @@
-import { Component, Inject, OnInit } from '@angular/core'
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog'
+import { Component, Inject, OnInit } from '@angular/core';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 
-import { ApiService } from '../api.service'
+import { ApiService } from '../api.service';
 
 @Component({
     selector: 'app-confirm-dialog',
@@ -21,11 +21,11 @@ export class ConfirmDialogComponent {
             .subscribe(
                 (res) => {
                     if (res.response === 'ok')
-                        this.dialogRef.close(res.response)
+                        this.dialogRef.close(res.response);
                 },
                 (error) => {
-                    this.apiService.snackBarOpen()
+                    this.apiService.snackBarOpen();
                 }
-            )
+            );
     }
 }

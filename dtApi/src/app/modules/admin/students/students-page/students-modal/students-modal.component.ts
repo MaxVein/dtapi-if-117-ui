@@ -5,7 +5,7 @@ import {
     OnDestroy,
     OnInit,
     ViewChild,
-} from '@angular/core'
+} from '@angular/core';
 import {
     AsyncValidatorFn,
     FormControl,
@@ -43,7 +43,7 @@ export class StudentsModalComponent implements OnInit, OnDestroy {
     defaultImage = environment.defaultImage
     studentSubscription: Subscription
 
-    @ViewChild('imageFile') inputRef: ElementRef
+    @ViewChild('imageFile') inputRef: ElementRef;
 
     constructor(
         public dialogRef: MatDialogRef<StudentsModalComponent>,
@@ -53,9 +53,9 @@ export class StudentsModalComponent implements OnInit, OnDestroy {
     ) {}
 
     ngOnInit(): void {
-        this.loading = true
-        this.initForm()
-        this.getStudentInfo()
+        this.loading = true;
+        this.initForm();
+        this.getStudentInfo();
     }
 
     initForm(): void {
@@ -116,7 +116,7 @@ export class StudentsModalComponent implements OnInit, OnDestroy {
                 this.student ? this.student.plain_password : '',
                 [Validators.required]
             ),
-        })
+        });
     }
 
     getStudentInfo(): void {
@@ -139,9 +139,9 @@ export class StudentsModalComponent implements OnInit, OnDestroy {
                                 title,
                                 error,
                             },
-                        })
+                        });
                     }
-                )
+                );
         } else {
             setTimeout(() => {
                 this.loading = false
@@ -174,9 +174,9 @@ export class StudentsModalComponent implements OnInit, OnDestroy {
                             title,
                             error,
                         },
-                    })
+                    });
                 }
-            )
+            );
     }
 
     uniqueValidator(
@@ -195,19 +195,23 @@ export class StudentsModalComponent implements OnInit, OnDestroy {
             ) {
                 return of(null)
             } else {
-                return this.studentsService.check(entity, method, control.value)
+                return this.studentsService.check(
+                    entity,
+                    method,
+                    control.value
+                );
             }
-        }
+        };
     }
 
     submit(): void {
         if (this.form.invalid) {
-            return
+            return;
         }
 
-        this.form.disable()
-        this.submitted = true
-        this.loading = true
+        this.form.disable();
+        this.submitted = true;
+        this.loading = true;
 
         const formData: Student = {
             gradebook_id: this.form.value.gradebookID,
@@ -219,7 +223,7 @@ export class StudentsModalComponent implements OnInit, OnDestroy {
             password: this.form.value.password,
             password_confirm: this.form.value.password_confirm,
             plain_password: this.form.value.password,
-        }
+        };
 
         const studentInfo: StudentInfo = {
             email: this.form.value.email,
@@ -256,9 +260,9 @@ export class StudentsModalComponent implements OnInit, OnDestroy {
                                 title,
                                 error,
                             },
-                        })
+                        });
                     }
-                )
+                );
         } else {
             this.studentSubscription = this.studentsService
                 .create(newStudent)
@@ -283,23 +287,23 @@ export class StudentsModalComponent implements OnInit, OnDestroy {
                                 title,
                                 error,
                             },
-                        })
+                        });
                     }
-                )
+                );
         }
     }
 
     fileInput(): void {
-        this.inputRef.nativeElement.click()
+        this.inputRef.nativeElement.click();
     }
 
     fileUpload(event: Event): void {
         const file: File = (event.target as HTMLInputElement).files[0]
         const reader: FileReader = new FileReader()
         reader.onload = () => {
-            this.image = reader.result
-        }
-        reader.readAsDataURL(file)
+            this.image = reader.result;
+        };
+        reader.readAsDataURL(file);
     }
 
     closeModal(dialogResult: DialogResult = { message: 'Скасовано' }): void {
@@ -308,7 +312,7 @@ export class StudentsModalComponent implements OnInit, OnDestroy {
 
     ngOnDestroy(): void {
         if (this.studentSubscription) {
-            this.studentSubscription.unsubscribe()
+            this.studentSubscription.unsubscribe();
         }
     }
 }

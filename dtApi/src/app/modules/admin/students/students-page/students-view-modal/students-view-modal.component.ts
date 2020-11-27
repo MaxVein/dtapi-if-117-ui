@@ -40,9 +40,9 @@ export class StudentsViewModalComponent implements OnInit, OnDestroy {
     ) {}
 
     ngOnInit(): void {
-        this.loading = true
-        this.getStudentInfo()
-        this.getGroupInfo()
+        this.loading = true;
+        this.getStudentInfo();
+        this.getGroupInfo();
     }
 
     getStudentInfo(): void {
@@ -64,9 +64,9 @@ export class StudentsViewModalComponent implements OnInit, OnDestroy {
                             title,
                             error,
                         },
-                    })
+                    });
                 }
-            )
+            );
     }
 
     getOtherStudentInfo(): void {
@@ -91,9 +91,9 @@ export class StudentsViewModalComponent implements OnInit, OnDestroy {
                             title,
                             error,
                         },
-                    })
+                    });
                 }
-            )
+            );
     }
 
     getGroupInfo(): void {
@@ -116,9 +116,9 @@ export class StudentsViewModalComponent implements OnInit, OnDestroy {
                             title,
                             error,
                         },
-                    })
+                    });
                 }
-            )
+            );
     }
 
     getFacultyInfo(id: string): void {
@@ -139,9 +139,9 @@ export class StudentsViewModalComponent implements OnInit, OnDestroy {
                             title,
                             error,
                         },
-                    })
+                    });
                 }
-            )
+            );
     }
 
     getSpecialityInfo(id: string): void {
@@ -162,9 +162,9 @@ export class StudentsViewModalComponent implements OnInit, OnDestroy {
                             title,
                             error,
                         },
-                    })
+                    });
                 }
-            )
+            );
     }
 
     closeModal(dialogResult: DialogResult = { message: 'Закрито' }): void {
@@ -173,7 +173,7 @@ export class StudentsViewModalComponent implements OnInit, OnDestroy {
 
     ngOnDestroy(): void {
         if (this.studentSubscription) {
-            this.studentSubscription.unsubscribe()
+            this.studentSubscription.unsubscribe();
         }
     }
 }

@@ -1,14 +1,19 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
-import { Component, Inject, Input, OnInit } from '@angular/core'
-import { Admins, ModalData } from '../../admin-model/Admins'
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog'
-import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms'
-import { MustMatch } from '../../validators/password-match.validator'
-import { AdminsCrudService } from '../../admin-services/admins-crud.service'
-import { MatSnackBar } from '@angular/material/snack-bar'
-import { MatTableDataSource } from '@angular/material/table'
+import { Component, Inject, Input, OnInit } from '@angular/core';
+import { Admins, ModalData } from '../../admin-model/Admins';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import {
+    FormBuilder,
+    FormControl,
+    FormGroup,
+    Validators,
+} from '@angular/forms';
+import { MustMatch } from '../../validators/password-match.validator';
+import { AdminsCrudService } from '../../admin-services/admins-crud.service';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatTableDataSource } from '@angular/material/table';
 
 @Component({
     selector: 'app-admin-modal-creation',
@@ -24,9 +29,9 @@ export class AdminModalCreationComponent implements OnInit {
         private snackBar: MatSnackBar
     ) {}
 
-    hide = true
-    AdminForm: FormGroup
-    formForUpdateCondition: boolean = this.data.title !== 'Редагувати адміна'
+    hide = true;
+    AdminForm: FormGroup;
+    formForUpdateCondition: boolean = this.data.title !== 'Редагувати адміна';
 
     ngOnInit(): void {
         this.AdminForm = this.formBuilder.group(
@@ -50,62 +55,61 @@ export class AdminModalCreationComponent implements OnInit {
             {
                 validator: MustMatch('password', 'password_confirm'),
             }
-        )
+        );
     }
     get adminControls() {
-        return this.AdminForm.controls
+        return this.AdminForm.controls;
     }
     deleteUpdateFormNameValidation() {
-        this.AdminForm.get('username').clearValidators()
-        this.AdminForm.get('username').updateValueAndValidity()
+        this.AdminForm.get('username').clearValidators();
+        this.AdminForm.get('username').updateValueAndValidity();
     }
     submit(data: any): void {
         if (this.AdminForm.valid) {
-            const formValue = this.AdminForm.value
+            const formValue = this.AdminForm.value;
             switch (data.title) {
                 case 'Додати адміна':
                     if (formValue) {
                         this.admincrud.addAdmin(formValue).subscribe(
                             (res) => {
-                                console.warn('Результат запиту', res)
                                 if (res !== {}) {
-                                    Object.assign(data.user, res)
+                                    Object.assign(data.user, res);
                                     this.snackBar.open(
                                         'Адміна успішно додано',
                                         'Закрити',
                                         {
                                             duration: 3000,
                                         }
-                                    )
-                                    this.dialogRef.close()
+                                    );
+                                    this.dialogRef.close();
                                 } else {
-                                    data.user = undefined
-                                    this.dialogRef.close()
+                                    data.user = undefined;
+                                    this.dialogRef.close();
                                 }
                             },
                             (err) => {
-                                data.user = undefined
+                                data.user = undefined;
                                 this.snackBar.open(
                                     'Адмін з такими даними існує',
                                     'Закрити',
                                     {
                                         duration: 3000,
                                     }
-                                )
-                                this.dialogRef.close()
+                                );
+                                this.dialogRef.close();
                             }
-                        )
+                        );
                     }
-                    break
+                    break;
                 case 'Редагувати адміна':
                     if (formValue) {
                         for (const item in formValue) {
                             if (formValue[item] === null) {
-                                delete formValue[item]
+                                delete formValue[item];
                             }
                         }
-                        const changedValues = formValue
-                        const changedValuesJSON = JSON.stringify(formValue)
+                        const changedValues = formValue;
+                        const changedValuesJSON = JSON.stringify(formValue);
                         if (changedValuesJSON !== '{}') {
                             if (this.AdminForm.get('username')) {
                                 this.admincrud
@@ -120,7 +124,7 @@ export class AdminModalCreationComponent implements OnInit {
                                                 {
                                                     duration: 3000,
                                                 }
-                                            )
+                                            );
                                         } else if (res.response === false) {
                                             this.admincrud
                                                 .updateAdmin(
@@ -133,15 +137,15 @@ export class AdminModalCreationComponent implements OnInit {
                                                             res.response ===
                                                             'ok'
                                                         ) {
-                                                            this.dialogRef.close()
-                                                            data.newUser = changedValues
+                                                            this.dialogRef.close();
+                                                            data.newUser = changedValues;
                                                             this.snackBar.open(
                                                                 'Адміна успішно відредаговано',
                                                                 'Закрити',
                                                                 {
                                                                     duration: 3000,
                                                                 }
-                                                            )
+                                                            );
                                                         }
                                                     },
                                                     (err) => {
@@ -153,11 +157,11 @@ export class AdminModalCreationComponent implements OnInit {
                                                             {
                                                                 duration: 3000,
                                                             }
-                                                        )
+                                                        );
                                                     }
-                                                )
+                                                );
                                         }
-                                    })
+                                    });
                             } else {
                                 this.admincrud
                                     .updateAdmin(
@@ -166,28 +170,28 @@ export class AdminModalCreationComponent implements OnInit {
                                     )
                                     .subscribe((res) => {
                                         if (res.response === 'ok') {
-                                            this.dialogRef.close()
-                                            data.newUser = changedValues
+                                            this.dialogRef.close();
+                                            data.newUser = changedValues;
                                             this.snackBar.open(
                                                 'Адміна успішно відредаговано',
                                                 'Закрити',
                                                 {
                                                     duration: 3000,
                                                 }
-                                            )
+                                            );
                                         }
-                                    })
+                                    });
                             }
                         } else {
                             this.snackBar.open('Веддіть значення', 'Закрити', {
                                 duration: 3000,
-                            })
+                            });
                         }
                     }
             }
         }
     }
     onNoClick(): void {
-        this.dialogRef.close()
+        this.dialogRef.close();
     }
 }

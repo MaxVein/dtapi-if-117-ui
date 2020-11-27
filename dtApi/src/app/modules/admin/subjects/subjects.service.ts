@@ -1,26 +1,26 @@
-import { Injectable } from '@angular/core'
+import { Injectable } from '@angular/core';
 import {
     HttpClient,
     HttpHeaders,
     HttpErrorResponse,
-} from '@angular/common/http'
+} from '@angular/common/http';
 
-import { throwError } from 'rxjs'
-import { catchError } from 'rxjs/operators'
+import { throwError } from 'rxjs';
+import { catchError } from 'rxjs/operators';
 
-import { environment } from '../../../../environments/environment'
+import { environment } from '../../../../environments/environment';
 
-const BASEURL = environment.BASEURL
-const entityURI = `${BASEURL}Subject`
+const BASEURL = environment.BASEURL;
+const entityURI = `${BASEURL}Subject`;
 
 interface SubjectsResponse {
-    subject_id: number
-    subject_name: string
-    subject_description: string
+    subject_id: number;
+    subject_name: string;
+    subject_description: string;
 }
 interface SubjectsRequest {
-    subject_name: string
-    subject_description: string
+    subject_name: string;
+    subject_description: string;
 }
 
 @Injectable({
@@ -32,7 +32,7 @@ export class SubjectsService {
     public getData(id?: string) {
         return this.http
             .get<SubjectsResponse[]>(`${entityURI}/getRecords/${id}`)
-            .pipe(catchError(this.handleError))
+            .pipe(catchError(this.handleError));
     }
 
     public create = (body: SubjectsRequest) => {
@@ -42,8 +42,8 @@ export class SubjectsService {
                 body,
                 this.generateHeaders()
             )
-            .pipe(catchError(this.handleError))
-    }
+            .pipe(catchError(this.handleError));
+    };
 
     public update = (id: number, body: SubjectsRequest) => {
         return this.http
@@ -52,30 +52,30 @@ export class SubjectsService {
                 body,
                 this.generateHeaders()
             )
-            .pipe(catchError(this.handleError))
-    }
+            .pipe(catchError(this.handleError));
+    };
 
     public delete = (id: number) => {
         return this.http
             .delete(`${entityURI}/del/${id}`)
-            .pipe(catchError(this.handleError))
-    }
+            .pipe(catchError(this.handleError));
+    };
 
     private handleError(error: HttpErrorResponse) {
         if (error.error instanceof ErrorEvent) {
-            console.error('An error occurred:', error.error.message)
+            console.error('An error occurred:', error.error.message);
         } else {
             console.error(
                 `Backend returned code ${error.status}, ` +
                     `body was: ${error.error}`
-            )
+            );
         }
-        return throwError('Something bad happened; please try again later.')
+        return throwError('Something bad happened; please try again later.');
     }
 
     private generateHeaders = () => {
         return {
             headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
-        }
-    }
+        };
+    };
 }

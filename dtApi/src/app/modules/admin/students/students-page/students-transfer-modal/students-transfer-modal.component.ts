@@ -37,9 +37,9 @@ export class StudentsTransferModalComponent implements OnInit, OnDestroy {
     ) {}
 
     ngOnInit(): void {
-        this.loading = true
-        this.getStudentInfo()
-        this.getFacultyList()
+        this.loading = true;
+        this.getStudentInfo();
+        this.getFacultyList();
     }
 
     getStudentInfo(): void {
@@ -64,9 +64,9 @@ export class StudentsTransferModalComponent implements OnInit, OnDestroy {
                             title,
                             error,
                         },
-                    })
+                    });
                 }
-            )
+            );
     }
 
     getFacultyList(): void {
@@ -87,9 +87,9 @@ export class StudentsTransferModalComponent implements OnInit, OnDestroy {
                             title,
                             error,
                         },
-                    })
+                    });
                 }
-            )
+            );
     }
 
     getGroups(event: MatSelectChange): void {
@@ -109,14 +109,14 @@ export class StudentsTransferModalComponent implements OnInit, OnDestroy {
                             title,
                             error,
                         },
-                    })
+                    });
                 }
-            )
+            );
     }
 
     getGroup(event: MatSelectChange): void {
-        this.selectedGroupID = event.value
-        this.submitted = true
+        this.selectedGroupID = event.value;
+        this.submitted = true;
     }
 
     submit(): void {
@@ -144,9 +144,9 @@ export class StudentsTransferModalComponent implements OnInit, OnDestroy {
                             title,
                             error,
                         },
-                    })
+                    });
                 }
-            )
+            );
     }
 
     closeModal(dialogResult: DialogResult = { message: 'Скасовано' }): void {
@@ -155,7 +155,7 @@ export class StudentsTransferModalComponent implements OnInit, OnDestroy {
 
     ngOnDestroy(): void {
         if (this.studentSubscription) {
-            this.studentSubscription.unsubscribe()
+            this.studentSubscription.unsubscribe();
         }
     }
 }

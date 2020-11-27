@@ -1,9 +1,9 @@
-import { Component } from '@angular/core'
-import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout'
-import { Observable } from 'rxjs'
-import { map, shareReplay } from 'rxjs/operators'
-import { AuthService } from '../login/services/auth.service'
-import { Router } from '@angular/router'
+import { Component } from '@angular/core';
+import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
+import { Observable } from 'rxjs';
+import { map, shareReplay } from 'rxjs/operators';
+import { AuthService } from '../login/services/auth.service';
+import { Router } from '@angular/router';
 
 @Component({
     selector: 'app-admin',
@@ -11,7 +11,7 @@ import { Router } from '@angular/router'
     styleUrls: ['./admin.component.scss'],
 })
 export class AdminComponent {
-    menuIcon = 'menu_open'
+    menuIcon = 'menu_open';
 
     constructor(
         private apiService: AuthService,
@@ -21,14 +21,14 @@ export class AdminComponent {
     logOut() {
         this.apiService.logOutRequest().subscribe({
             next: () => this.router.navigate(['/login']),
-        })
+        });
     }
 
     menuIconChange(): void {
         if (this.menuIcon === 'menu_open') {
-            this.menuIcon = 'menu'
+            this.menuIcon = 'menu';
         } else {
-            this.menuIcon = 'menu_open'
+            this.menuIcon = 'menu_open';
         }
     }
 
@@ -37,5 +37,5 @@ export class AdminComponent {
         .pipe(
             map((result) => result.matches),
             shareReplay()
-        )
+        );
 }

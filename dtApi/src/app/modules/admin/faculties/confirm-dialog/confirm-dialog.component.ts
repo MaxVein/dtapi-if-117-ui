@@ -1,7 +1,7 @@
-import { Component, Inject } from '@angular/core'
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog'
+import { Component, Inject } from '@angular/core';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 
-import { ApiService } from '../../../../shared/services/api.service'
+import { ApiService } from '../../../../shared/services/api.service';
 
 @Component({
     selector: 'app-confirm-dialog',
@@ -18,11 +18,11 @@ export class ConfirmDialogComponent {
     agreeBtn(): void {
         this.apiService.delEntity('Faculty', this.data.faculty_id).subscribe(
             (res) => {
-                if (res.response === 'ok') this.dialogRef.close(res.response)
+                if (res.response === 'ok') this.dialogRef.close(res.response);
             },
             (error) => {
-                this.apiService.snackBarOpen()
+                this.apiService.snackBarOpen();
             }
-        )
+        );
     }
 }

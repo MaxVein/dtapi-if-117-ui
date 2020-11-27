@@ -1,17 +1,17 @@
 export interface Admins {
-    id: string
-    email: string
-    username: string
+    id: string;
+    email: string;
+    username: string;
 }
 export interface AdminsCreation {
-    id?: string
-    email: string
-    username: string
-    password: string
-    password_confirm: string
+    id?: string;
+    email: string;
+    username: string;
+    password: string;
+    password_confirm: string;
 }
 
 export interface ModalData {
-    title?: string
-    user?: AdminsCreation
+    title?: string;
+    user?: AdminsCreation;
 }

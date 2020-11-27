@@ -1,10 +1,10 @@
-import { Component, OnInit, Inject } from '@angular/core'
+import { Component, OnInit, Inject } from '@angular/core';
 
-import { Subject } from '../models/Subject'
-import { DialogData } from '../models/DialogData'
-import { TestService } from '../services/test.service'
+import { Subject } from '../models/Subject';
+import { DialogData } from '../models/DialogData';
+import { TestService } from '../services/test.service';
 
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog'
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 
 @Component({
     selector: 'app-test-modal',
@@ -12,7 +12,7 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog'
     styleUrls: ['./test-modal.component.scss'],
 })
 export class TestModalComponent implements OnInit {
-    subjects: Subject[] = []
+    subjects: Subject[] = [];
 
     constructor(
         private testService: TestService,
@@ -22,7 +22,7 @@ export class TestModalComponent implements OnInit {
 
     ngOnInit() {
         this.testService.getEntity('subject').subscribe((result: Subject[]) => {
-            this.subjects = result
-        })
+            this.subjects = result;
+        });
     }
 }
