@@ -8,24 +8,25 @@ import {
 } from '@angular/core';
 import {
     AsyncValidatorFn,
+    FormBuilder,
     FormControl,
     FormGroup,
     ValidationErrors,
     Validators,
-} from '@angular/forms'
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog'
-import { AlertComponent } from '../../../../../shared/components/alert/alert.component'
-import { StudentsService } from 'src/app/modules/admin/students/students.service'
-import { ModalService } from '../../../../../shared/services/modal.service'
-import { Observable, of, Subscription } from 'rxjs'
+} from '@angular/forms';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { AlertComponent } from '../../../../../shared/components/alert/alert.component';
+import { StudentsService } from 'src/app/modules/admin/students/students.service';
+import { ModalService } from '../../../../../shared/services/modal.service';
+import { Observable, of, Subscription } from 'rxjs';
 import {
     DialogResult,
     Response,
     Student,
     StudentInfo,
     ValidateStudentData,
-} from 'src/app/shared/interfaces/interfaces'
-import { environment } from 'src/environments/environment'
+} from 'src/app/shared/interfaces/interfaces';
+import { environment } from 'src/environments/environment';
 
 @Component({
     selector: 'app-students-modal',
@@ -33,19 +34,20 @@ import { environment } from 'src/environments/environment'
     styleUrls: ['./students-modal.component.scss'],
 })
 export class StudentsModalComponent implements OnInit, OnDestroy {
-    form: FormGroup
-    loading = false
-    submitted = false
-    hide = true
-    student: Student = this.data.STUDENT_DATA
-    validateData: ValidateStudentData
-    image: string | ArrayBuffer = ''
-    defaultImage = environment.defaultImage
-    studentSubscription: Subscription
+    form: FormGroup;
+    loading = false;
+    submitted = false;
+    hide = true;
+    student: Student = this.data.studentData;
+    validateData: ValidateStudentData;
+    image: string | ArrayBuffer = '';
+    defaultImage = environment.defaultImage;
+    studentSubscription: Subscription;
 
     @ViewChild('imageFile') inputRef: ElementRef;
 
     constructor(
+        private formBuilder: FormBuilder,
         public dialogRef: MatDialogRef<StudentsModalComponent>,
         private studentsService: StudentsService,
         private modalService: ModalService,
@@ -53,26 +55,20 @@ export class StudentsModalComponent implements OnInit, OnDestroy {
     ) {}
 
     ngOnInit(): void {
-        this.loading = true;
-        this.initForm();
-        this.getStudentInfo();
-    }
-
-    initForm(): void {
-        this.form = new FormGroup({
-            lastname: new FormControl(
+        this.form = this.formBuilder.group({
+            lastname: [
                 this.student ? this.student.student_surname : '',
-                [Validators.required]
-            ),
-            firstname: new FormControl(
+                [Validators.required],
+            ],
+            firstname: [
                 this.student ? this.student.student_name : '',
-                [Validators.required]
-            ),
-            fathername: new FormControl(
+                [Validators.required],
+            ],
+            fathername: [
                 this.student ? this.student.student_fname : '',
-                [Validators.required]
-            ),
-            gradebookID: new FormControl(
+                [Validators.required],
+            ],
+            gradebookID: [
                 this.student ? this.student.gradebook_id : '',
                 {
                     validators: [Validators.required],
@@ -84,68 +80,87 @@ export class StudentsModalComponent implements OnInit, OnDestroy {
                             'gradebook_id'
                         ),
                     ],
-                }
-            ),
-            username: new FormControl(null, {
-                validators: [Validators.required],
-                updateOn: 'blur',
-                asyncValidators: [
-                    this.uniqueValidator(
-                        'AdminUser',
-                        'checkUserName',
-                        'username'
+                },
+            ],
+            username: [
+                null,
+                {
+                    validators: [
+                        Validators.required,
+                        Validators.minLength(6),
+                        Validators.pattern(
+                            '^(?=[a-zA-Z0-9._]{6,20}$)(?!.*[_.]{2})[^_.].*[^_.]$'
+                        ),
+                    ],
+                    updateOn: 'blur',
+                    asyncValidators: [
+                        this.uniqueValidator(
+                            'AdminUser',
+                            'checkUserName',
+                            'username'
+                        ),
+                    ],
+                },
+            ],
+            email: [
+                null,
+                {
+                    validators: [
+                        Validators.required,
+                        Validators.email,
+                        Validators.pattern(
+                            '[a-zA-Z0-9._]+@[a-zA-Z_]+?\\.[a-zA-Z]{2,3}'
+                        ),
+                    ],
+                    updateOn: 'blur',
+                    asyncValidators: [
+                        this.uniqueValidator(
+                            'AdminUser',
+                            'checkEmailAddress',
+                            'email'
+                        ),
+                    ],
+                },
+            ],
+            password: [
+                this.student ? this.student.plain_password : '',
+                [
+                    Validators.required,
+                    Validators.minLength(8),
+                    Validators.pattern(
+                        '((?=.*\\d)(?=.*[a-z])(?=.*[A-Z]).{8,30})'
                     ),
                 ],
-            }),
-            email: new FormControl(null, {
-                validators: [Validators.required, Validators.email],
-                updateOn: 'blur',
-                asyncValidators: [
-                    this.uniqueValidator(
-                        'AdminUser',
-                        'checkEmailAddress',
-                        'email'
-                    ),
-                ],
-            }),
-            password: new FormControl(
+            ],
+            password_confirm: [
                 this.student ? this.student.plain_password : '',
-                [Validators.required, Validators.minLength(8)]
-            ),
-            password_confirm: new FormControl(
-                this.student ? this.student.plain_password : '',
-                [Validators.required]
-            ),
+                [Validators.required],
+            ],
         });
+        this.getStudentInfo();
     }
 
     getStudentInfo(): void {
-        if (this.data.IS_UPDATE_DATA) {
+        this.loading = false;
+        if (this.data.isUpdateData) {
+            this.loading = true;
             this.studentSubscription = this.studentsService
                 .getById('Student', this.student.user_id)
                 .subscribe(
                     (response: Student[]) => {
-                        this.student.photo = response[0].photo
-                        this.getOtherStudentInfo()
+                        this.student.photo = response[0].photo;
+                        this.getOtherStudentInfo();
                     },
                     (error: Response) => {
-                        const message = 'Сталася помилка. Спробуйте знову'
-                        const title = 'Помилка'
-                        this.loading = false
-                        this.closeModal({ message: title })
-                        this.modalService.openModal(AlertComponent, {
-                            data: {
-                                message,
-                                title,
-                                error,
-                            },
-                        });
+                        this.loading = false;
+                        this.closeModal({ message: 'Помилка' });
+                        this.errorHandler(
+                            error,
+                            'Помилка',
+                            'Сталася помилка. Спробуйте знову'
+                        );
                     }
                 );
-        } else {
-            setTimeout(() => {
-                this.loading = false
-            }, 200)
         }
     }
 
@@ -154,27 +169,23 @@ export class StudentsModalComponent implements OnInit, OnDestroy {
             .getById('AdminUser', this.student.user_id)
             .subscribe(
                 (response: StudentInfo[]) => {
-                    this.form.get('username').setValue(response[0].username)
-                    this.form.get('email').setValue(response[0].email)
+                    this.form.get('username').setValue(response[0].username);
+                    this.form.get('email').setValue(response[0].email);
                     this.validateData = {
                         gradebook_id: this.student.gradebook_id,
                         username: response[0].username,
                         email: response[0].email,
-                    }
-                    this.loading = false
+                    };
+                    this.loading = false;
                 },
                 (error: Response) => {
-                    const message = 'Сталася помилка. Спробуйте знову'
-                    const title = 'Помилка'
-                    this.loading = false
-                    this.closeModal({ message: title })
-                    this.modalService.openModal(AlertComponent, {
-                        data: {
-                            message,
-                            title,
-                            error,
-                        },
-                    });
+                    this.loading = false;
+                    this.closeModal({ message: 'Помилка' });
+                    this.errorHandler(
+                        error,
+                        'Помилка',
+                        'Сталася помилка. Спробуйте знову'
+                    );
                 }
             );
     }
@@ -193,7 +204,7 @@ export class StudentsModalComponent implements OnInit, OnDestroy {
                 this.validateData &&
                 this.validateData[check] === control.value
             ) {
-                return of(null)
+                return of(null);
             } else {
                 return this.studentsService.check(
                     entity,
@@ -202,6 +213,31 @@ export class StudentsModalComponent implements OnInit, OnDestroy {
                 );
             }
         };
+    }
+
+    studentData(): Student {
+        const formData: Student = {
+            gradebook_id: this.form.value.gradebookID,
+            student_surname: this.form.value.lastname,
+            student_name: this.form.value.firstname,
+            student_fname: this.form.value.fathername,
+            group_id: this.data.groupID,
+            photo: this.image,
+            password: this.form.value.password,
+            password_confirm: this.form.value.password_confirm,
+            plain_password: this.form.value.password,
+        };
+
+        const studentInfo: StudentInfo = {
+            email: this.form.value.email,
+            username: this.form.value.username,
+        };
+
+        if (this.image === '' && this.data.isUpdateData) {
+            formData.photo = this.student.photo;
+        }
+
+        return Object.assign({}, formData, studentInfo);
     }
 
     submit(): void {
@@ -213,84 +249,63 @@ export class StudentsModalComponent implements OnInit, OnDestroy {
         this.submitted = true;
         this.loading = true;
 
-        const formData: Student = {
-            gradebook_id: this.form.value.gradebookID,
-            student_surname: this.form.value.lastname,
-            student_name: this.form.value.firstname,
-            student_fname: this.form.value.fathername,
-            group_id: this.data.GROUP_ID,
-            photo: this.image,
-            password: this.form.value.password,
-            password_confirm: this.form.value.password_confirm,
-            plain_password: this.form.value.password,
-        };
+        const newStudent = this.studentData();
 
-        const studentInfo: StudentInfo = {
-            email: this.form.value.email,
-            username: this.form.value.username,
-        }
-
-        if (this.image === '' && this.data.IS_UPDATE_DATA) {
-            formData.photo = this.student.photo
-        }
-
-        const newStudent = Object.assign({}, formData, studentInfo)
-
-        if (this.data.IS_UPDATE_DATA) {
-            this.studentSubscription = this.studentsService
-                .update(this.student.user_id, newStudent)
-                .subscribe(
-                    (response: Response) => {
-                        this.loading = false
-                        this.form.enable()
-                        this.closeModal({
-                            message: response,
-                            data: newStudent,
-                            id: this.student.user_id,
-                        })
-                    },
-                    (error: Response) => {
-                        const message = 'Сталася помилка. Спробуйте знову'
-                        const title = 'Помилка'
-                        this.loading = false
-                        this.closeModal({ message: title })
-                        this.modalService.openModal(AlertComponent, {
-                            data: {
-                                message,
-                                title,
-                                error,
-                            },
-                        });
-                    }
-                );
+        if (this.data.isUpdateData) {
+            this.update(newStudent);
         } else {
-            this.studentSubscription = this.studentsService
-                .create(newStudent)
-                .subscribe(
-                    (response: Response) => {
-                        this.loading = false
-                        this.form.enable()
-                        this.closeModal({
-                            message: response,
-                            data: newStudent,
-                            id: response.id,
-                        })
-                    },
-                    (error: Response) => {
-                        const message = 'Сталася помилка. Спробуйте знову'
-                        const title = 'Помилка'
-                        this.loading = false
-                        this.closeModal({ message: title })
-                        this.modalService.openModal(AlertComponent, {
-                            data: {
-                                message,
-                                title,
-                                error,
-                            },
-                        });
-                    }
-                );
+            this.create(newStudent);
         }
+    }
+
+    update(newStudent: Student): void {
+        this.studentSubscription = this.studentsService
+            .update(this.student.user_id, newStudent)
+            .subscribe(
+                (response: Response) => {
+                    this.form.enable();
+                    this.loading = false;
+                    this.closeModal({
+                        message: response,
+                        data: newStudent,
+                        id: this.student.user_id,
+                    });
+                },
+                (error: Response) => {
+                    this.loading = false;
+                    this.closeModal({ message: 'Помилка' });
+                    this.errorHandler(
+                        error,
+                        'Помилка',
+                        'Сталася помилка. Спробуйте знову'
+                    );
+                }
+            );
+    }
+
+    create(newStudent: Student): void {
+        this.studentSubscription = this.studentsService
+            .create(newStudent)
+            .subscribe(
+                (response: Response) => {
+                    this.form.enable();
+                    this.loading = false;
+                    this.closeModal({
+                        message: response,
+                        data: newStudent,
+                        id: response.id,
+                    });
+                },
+                (error: Response) => {
+                    this.loading = false;
+                    this.closeModal({ message: 'Помилка' });
+                    this.errorHandler(
+                        error,
+                        'Помилка',
+                        'Сталася помилка. Спробуйте знову'
+                    );
+                }
+            );
     }
 
     fileInput(): void {
@@ -298,16 +313,26 @@ export class StudentsModalComponent implements OnInit, OnDestroy {
     }
 
     fileUpload(event: Event): void {
-        const file: File = (event.target as HTMLInputElement).files[0]
-        const reader: FileReader = new FileReader()
+        const file: File = (event.target as HTMLInputElement).files[0];
+        const reader: FileReader = new FileReader();
         reader.onload = () => {
             this.image = reader.result;
         };
         reader.readAsDataURL(file);
     }
 
+    errorHandler(error: Response, title: string, message: string): void {
+        this.modalService.openModal(AlertComponent, {
+            data: {
+                message,
+                title,
+                error,
+            },
+        });
+    }
+
     closeModal(dialogResult: DialogResult = { message: 'Скасовано' }): void {
-        this.dialogRef.close(dialogResult)
+        this.dialogRef.close(dialogResult);
     }
 
     ngOnDestroy(): void {
