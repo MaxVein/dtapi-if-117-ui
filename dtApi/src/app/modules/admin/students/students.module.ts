@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { StudentsPageComponent } from './students-page/students-page.component';
-import { RouterModule, Routes } from '@angular/router';
+import { RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { SharedModule } from 'src/app/shared/modules/shared.module';
 
@@ -12,8 +12,6 @@ import { StudentsService } from 'src/app/modules/admin/students/students.service
 
 import { ConfirmDirective } from '../../../shared/directives/students/confirm.directive';
 
-const routes: Routes = [{ path: '', component: StudentsPageComponent }];
-
 @NgModule({
     declarations: [
         StudentsPageComponent,
@@ -22,7 +20,11 @@ const routes: Routes = [{ path: '', component: StudentsPageComponent }];
         StudentsTransferModalComponent,
         ConfirmDirective,
     ],
-    imports: [CommonModule, SharedModule, RouterModule.forChild(routes)],
+    imports: [
+        CommonModule,
+        SharedModule,
+        RouterModule.forChild([{ path: '', component: StudentsPageComponent }]),
+    ],
     providers: [StudentsService],
 })
 export class StudentsModule {}

@@ -2,10 +2,10 @@
     <div class="modal__header">
         <h1 mat-dialog-title class="modal__title">
             <mat-icon class="header-icon">
-                {{ data.IS_UPDATE_DATA ? 'edit' : 'person_add' }}
+                {{ data.isUpdateData ? 'edit' : 'person_add' }}
             </mat-icon>
             {{
-                data.IS_UPDATE_DATA
+                data.isUpdateData
                     ? 'Редагувати дані студента'
                     : 'Додати нового студента'
             }}
@@ -194,6 +194,19 @@
                         >
                             Користувач з таким ім'я уже існує
                         </small>
+                        <small *ngIf="form.get('username').hasError('pattern')">
+                            Ім'я користувача повинно складатись з QWERTY літер,
+                            цифер та поширених розділових знаків, окрім знаку -
+                            .
+                        </small>
+                        <small *ngIf="form.get('username').errors.minlength">
+                            Мінімальна довжина ім'я користувача
+                            {{
+                                form.get('username').errors.minlength
+                                    .requiredLength
+                            }}
+                            символів.
+                        </small>
                     </mat-error>
                 </mat-form-field>
             </div>
@@ -235,6 +248,10 @@
                             *ngIf="form.get('email').errors.propertyIsNotUnique"
                         >
                             Користувач з такою електронною адресою вже існує
+                        </small>
+                        <small *ngIf="form.get('email').hasError('pattern')">
+                            Некоректні дані! Будь-ласка введіть існуючу
+                            електронну пошту
                         </small>
                     </mat-error>
                 </mat-form-field>
@@ -298,6 +315,10 @@
                         <small *ngIf="form.get('password').errors.required">
                             Поле не заповнене! Будь-ласка введіть унікальний
                             пароль студента
+                        </small>
+                        <small *ngIf="form.get('password').hasError('pattern')">
+                            Пароль має містити лише QWERTY літери (великі та
+                            малі), цифри та поширені розділові знаки
                         </small>
                     </mat-error>
                 </mat-form-field>
@@ -368,7 +389,7 @@
             </div>
 
             <div class="image-form-control">
-                <div class="image" *ngIf="!this.data.IS_UPDATE_DATA">
+                <div class="image" *ngIf="!this.data.isUpdateData">
                     <img
                         class="preview-image"
                         *ngIf="image"
@@ -385,9 +406,7 @@
 
                 <div
                     class="image"
-                    *ngIf="
-                        this.data.IS_UPDATE_DATA && this.student.photo !== ''
-                    "
+                    *ngIf="this.data.isUpdateData && this.student.photo !== ''"
                 >
                     <img
                         class="preview-image"
@@ -411,9 +430,7 @@
 
                 <div
                     class="image"
-                    *ngIf="
-                        this.data.IS_UPDATE_DATA && this.student.photo === ''
-                    "
+                    *ngIf="this.data.isUpdateData && this.student.photo === ''"
                 >
                     <img
                         class="preview-image"
@@ -432,7 +449,7 @@
                 <div class="file-input">
                     <button
                         [matTooltip]="
-                            this.data.IS_UPDATE_DATA
+                            this.data.isUpdateData
                                 ? 'Нажміть, щоб оновити фото'
                                 : 'Нажміть, щоб завантажити фото'
                         "
@@ -475,7 +492,7 @@
                     [disabled]="form.invalid || submitted"
                 >
                     {{
-                        data.IS_UPDATE_DATA
+                        data.isUpdateData
                             ? 'Редагувати дані'
                             : 'Додати студента'
                     }}

@@ -29,7 +29,7 @@ export class StudentsService {
     getById(entity: string, id: string): Observable<Student[] | StudentInfo[]> {
         return this.http.get<Student[] | StudentInfo[]>(
             `${environment.BASEURL}${entity}/getRecords/${id}`
-        )
+        );
     }
 
     create(student: Student): Observable<Student> {

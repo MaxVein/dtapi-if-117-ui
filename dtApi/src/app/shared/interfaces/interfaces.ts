@@ -1,34 +1,34 @@
 export interface Student {
-    user_id?: string
-    gradebook_id: string
-    student_surname: string
-    student_name: string
-    student_fname: string
-    group_id: number
-    photo: string | ArrayBuffer
-    password?: string
-    password_confirm?: string
-    plain_password: string
+    user_id?: string;
+    gradebook_id: string;
+    student_surname: string;
+    student_name: string;
+    student_fname: string;
+    group_id: number;
+    photo: string | ArrayBuffer;
+    password?: string;
+    password_confirm?: string;
+    plain_password: string;
 }
 
 export interface StudentInfo {
-    email: string
-    id?: string
-    last_login?: string
-    logins?: number
-    username: string
+    email: string;
+    id?: string;
+    last_login?: string;
+    logins?: number;
+    username: string;
 }
 
 export interface ValidateStudentData {
-    gradebook_id: string
-    username: string
-    email: string
+    gradebook_id: string;
+    username: string;
+    email: string;
 }
 
 export interface DialogResult {
-    message?: any
-    data?: any
-    id?: number | string
+    message?: any;
+    data?: any;
+    id?: number | string;
 }
 
 export interface Check {
@@ -59,7 +59,7 @@ export interface Speciality {
 }
 
 export interface Response {
-    response?: string
-    user_id?: string
-    id?: number
+    response?: string;
+    user_id?: string;
+    id?: number;
 }
