@@ -1,35 +1,35 @@
-import { Component, ViewChild, OnInit, ChangeDetectorRef } from '@angular/core'
-import { MatPaginator } from '@angular/material/paginator'
-import { MatTableDataSource, MatTable } from '@angular/material/table'
-import { MatDialog } from '@angular/material/dialog'
-import { MatSort } from '@angular/material/sort'
-import { Router } from '@angular/router'
-import { forkJoin } from 'rxjs'
+import { Component, ViewChild, OnInit, ChangeDetectorRef } from '@angular/core';
+import { MatPaginator } from '@angular/material/paginator';
+import { MatTableDataSource, MatTable } from '@angular/material/table';
+import { MatDialog } from '@angular/material/dialog';
+import { MatSort } from '@angular/material/sort';
+import { Router } from '@angular/router';
+import { forkJoin } from 'rxjs';
 
-import { GroupsService } from './groups.service'
-import { ConfirmDeleteComponent } from './confirm-delete/confirm-delete.component'
-import { GroupDialogComponent } from './group-dialog/group-dialog.component'
+import { GroupsService } from './groups.service';
+import { ConfirmDeleteComponent } from './confirm-delete/confirm-delete.component';
+import { GroupDialogComponent } from './group-dialog/group-dialog.component';
 
 export interface GroupData {
-    group_id: string
-    group_name: string
-    speciality_name: string
-    faculty_name: string
-    speciality_id: string
-    faculty_id: string
+    group_id: string;
+    group_name: string;
+    speciality_name: string;
+    faculty_name: string;
+    speciality_id: string;
+    faculty_id: string;
 }
 export interface AddGroupData {
-    group_name: string
-    speciality_id: string
-    faculty_id: string
+    group_name: string;
+    speciality_id: string;
+    faculty_id: string;
 }
 
 export interface ServiceResponse {
-    groups: []
-    faculties: []
-    specialities: []
+    groups: [];
+    faculties: [];
+    specialities: [];
 }
-let ELEMENT_DATA: GroupData[]
+let ELEMENT_DATA: GroupData[];
 
 @Component({
     selector: 'app-groups',
@@ -37,22 +37,22 @@ let ELEMENT_DATA: GroupData[]
     styleUrls: ['./groups.component.scss'],
 })
 export class GroupsComponent implements OnInit {
-    loading: boolean
+    loading: boolean;
     specialities: Array<{
-        speciality_id: string
-        speciality_name: string
-        speciality_code: string
-    }>
+        speciality_id: string;
+        speciality_name: string;
+        speciality_code: string;
+    }>;
     faculties: Array<{
-        faculty_id: string
-        faculty_name: string
-        faculty_code: string
-    }>
-    sharedData: any = []
-    group_name: string
-    speciality_name: string
-    faculty_name: string
-    group_id: string
+        faculty_id: string;
+        faculty_name: string;
+        faculty_code: string;
+    }>;
+    sharedData: any = [];
+    group_name: string;
+    speciality_name: string;
+    faculty_name: string;
+    group_id: string;
 
     displayedColumns: string[] = [
         'group_id',
@@ -60,13 +60,13 @@ export class GroupsComponent implements OnInit {
         'speciality_name',
         'faculty_name',
         'actions',
-    ]
-    dataSource = new MatTableDataSource<GroupData>(ELEMENT_DATA)
+    ];
+    dataSource = new MatTableDataSource<GroupData>(ELEMENT_DATA);
 
-    @ViewChild(MatPaginator, { static: false }) paginator: MatPaginator
-    @ViewChild(MatSort, { static: false }) sort: MatSort
+    @ViewChild(MatPaginator, { static: false }) paginator: MatPaginator;
+    @ViewChild(MatSort, { static: false }) sort: MatSort;
 
-    res = []
+    res = [];
     constructor(
         private groupsSertvice: GroupsService,
         public dialog: MatDialog,
@@ -74,8 +74,8 @@ export class GroupsComponent implements OnInit {
     ) {}
 
     ngOnInit() {
-        this.loading = true
-        this.getGroups()
+        this.loading = true;
+        this.getGroups();
     }
     private getGroups(): void {
         forkJoin({
@@ -83,23 +83,23 @@ export class GroupsComponent implements OnInit {
             faculties: this.groupsSertvice.getData('Faculty'),
             specialities: this.groupsSertvice.getData('Speciality'),
         }).subscribe((res: ServiceResponse) => {
-            this.specialities = res.specialities
-            this.faculties = res.faculties
-            const newData = this.genereteTableData(res.groups)
-            this.sharedData.push(this.specialities, this.faculties)
-            this.dataSource = new MatTableDataSource<GroupData>(newData)
+            this.specialities = res.specialities;
+            this.faculties = res.faculties;
+            const newData = this.genereteTableData(res.groups);
+            this.sharedData.push(this.specialities, this.faculties);
+            this.dataSource = new MatTableDataSource<GroupData>(newData);
             this.sharedData
                 ? this.groupsSertvice.saveData(this.sharedData)
-                : false
-            this.dataSource.paginator = this.paginator
-            this.dataSource.sort = this.sort
-        })
-        this.loading = false
-        this.groupsSertvice.snackBarOpen('Групи завантажено')
+                : false;
+            this.dataSource.paginator = this.paginator;
+            this.dataSource.sort = this.sort;
+        });
+        this.loading = false;
+        this.groupsSertvice.snackBarOpen('Групи завантажено');
     }
 
     changeGroup(group?: GroupData): void {
-        group ? this.editGroupModal(group) : this.addGroupModal()
+        group ? this.editGroupModal(group) : this.addGroupModal();
     }
 
     delCurrGroup(group: GroupData): void {
@@ -108,15 +108,15 @@ export class GroupsComponent implements OnInit {
             data: {
                 group_name: group.group_name,
             },
-        })
+        });
         dialogRef.afterClosed().subscribe((result: boolean) => {
             if (result) {
-                this.delGroup(group.group_id)
+                this.delGroup(group.group_id);
             } else {
-                this.dataSource.paginator = this.paginator
-                this.dataSource.sort = this.sort
+                this.dataSource.paginator = this.paginator;
+                this.dataSource.sort = this.sort;
             }
-        })
+        });
     }
     addGroup(group: AddGroupData) {
         this.groupsSertvice.insertData('Group', group).subscribe(
@@ -131,17 +131,19 @@ export class GroupsComponent implements OnInit {
                         result[0].faculty_id,
                         'faculty_id'
                     ),
-                }
-                this.dataSource.data = this.dataSource.data.concat(result)
-                this.dataSource.paginator = this.paginator
-                this.dataSource.sort = this.sort
-                this.groupsSertvice.snackBarOpen('Групу додано')
+                };
+                this.dataSource.data = this.dataSource.data.concat(result);
+                this.dataSource.paginator.lastPage();
+                this.dataSource.sort = this.sort;
+                this.groupsSertvice.snackBarOpen('Групу додано');
             },
             (error) => {
-                this.groupsSertvice.snackBarOpen('Можливо така група вже існує')
-                this.loading = false
+                this.groupsSertvice.snackBarOpen(
+                    'Можливо така група вже існує'
+                );
+                this.loading = false;
             }
-        )
+        );
     }
     editGroup(id: string, group) {
         this.groupsSertvice.updateData('Group', id, group).subscribe(
@@ -158,43 +160,45 @@ export class GroupsComponent implements OnInit {
                                 res[0].faculty_id,
                                 'faculty_id'
                             ),
-                        })
+                        });
                     } else {
-                        return item
+                        return item;
                     }
-                })
-                this.dataSource.data = newSourse
-                this.groupsSertvice.snackBarOpen('Групу відредаговано')
+                });
+                this.dataSource.data = newSourse;
+                this.groupsSertvice.snackBarOpen('Групу відредаговано');
             },
             (error) => {
-                this.groupsSertvice.snackBarOpen('Можливо така група вже існує')
+                this.groupsSertvice.snackBarOpen(
+                    'Можливо така група вже існує'
+                );
             }
-        )
+        );
     }
     getSpecParam(param: string, field: string) {
         if (field === 'speciality_name') {
             const currentSpec = this.specialities.filter(
                 (item) => item.speciality_name === param
-            )
-            return currentSpec[0].speciality_id
+            );
+            return currentSpec[0].speciality_id;
         } else {
             const currentSpec = this.specialities.filter(
                 (item) => item.speciality_id === param
-            )
-            return currentSpec[0].speciality_name
+            );
+            return currentSpec[0].speciality_name;
         }
     }
     getFacParam(param: string, field: string) {
         if (field === 'faculty_name') {
             const currentSpec = this.faculties.filter(
                 (item) => item.faculty_name === param
-            )
-            return currentSpec[0].faculty_id
+            );
+            return currentSpec[0].faculty_id;
         } else {
             const currentSpec = this.faculties.filter(
                 (item) => item.faculty_id === param
-            )
-            return currentSpec[0].faculty_name
+            );
+            return currentSpec[0].faculty_name;
         }
     }
     delGroup(id: string) {
@@ -202,41 +206,41 @@ export class GroupsComponent implements OnInit {
             () => {
                 this.dataSource.data = this.dataSource.data.filter(
                     (item) => item.group_id !== id
-                )
-                this.groupsSertvice.snackBarOpen('Групу видалено')
-                this.dataSource.data = this.dataSource.data
+                );
+                this.groupsSertvice.snackBarOpen('Групу видалено');
+                this.dataSource.data = this.dataSource.data;
             },
             () => {
-                this.groupsSertvice.snackBarOpen('Спочатку видаліть студентів')
+                this.groupsSertvice.snackBarOpen('Спочатку видаліть студентів');
             }
-        )
+        );
     }
     applyFilter(event: Event) {
-        const filterValue = (event.target as HTMLInputElement).value
-        this.dataSource.filter = filterValue.trim().toLowerCase()
+        const filterValue = (event.target as HTMLInputElement).value;
+        this.dataSource.filter = filterValue.trim().toLowerCase();
     }
     goToStudents(id: string, groupName: string) {
         this.router.navigate(['admin/group/students/', id], {
             queryParams: {
                 groupName: groupName,
             },
-        })
+        });
     }
     genereteTableData(data) {
-        const newData = data
+        const newData = data;
         newData.map((item) => {
             this.specialities.map((elem) => {
                 if (item.speciality_id === elem.speciality_id) {
-                    item.speciality_name = elem.speciality_name
+                    item.speciality_name = elem.speciality_name;
                 }
-            })
+            });
             this.faculties.map((elem) => {
                 if (item.faculty_id === elem.faculty_id) {
-                    item.faculty_name = elem.faculty_name
+                    item.faculty_name = elem.faculty_name;
                 }
-            })
-        })
-        return newData
+            });
+        });
+        return newData;
     }
     editGroupModal(group) {
         const dialogRef = this.dialog.open(GroupDialogComponent, {
@@ -248,7 +252,7 @@ export class GroupsComponent implements OnInit {
                 faculty_name: group.faculty_name,
                 type: 'edit',
             },
-        })
+        });
         dialogRef.afterClosed().subscribe((result) => {
             if (result) {
                 this.editGroup(group.group_id, {
@@ -261,9 +265,9 @@ export class GroupsComponent implements OnInit {
                         result.faculty_name,
                         'faculty_name'
                     ),
-                })
+                });
             }
-        })
+        });
     }
     addGroupModal() {
         const dialogRef = this.dialog.open(GroupDialogComponent, {
@@ -271,7 +275,7 @@ export class GroupsComponent implements OnInit {
             data: {
                 type: 'add',
             },
-        })
+        });
         dialogRef.afterClosed().subscribe((result: GroupData) => {
             if (result) {
                 this.addGroup({
@@ -284,8 +288,8 @@ export class GroupsComponent implements OnInit {
                         result.faculty_name,
                         'faculty_name'
                     ),
-                })
+                });
             }
-        })
+        });
     }
 }

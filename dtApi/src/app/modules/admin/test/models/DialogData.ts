@@ -1,4 +1,4 @@
 export interface DialogData {
-    data: any
-    description: any
+    data: any;
+    description: any;
 }

@@ -194,6 +194,19 @@
                         >
                             Користувач з таким ім'я уже існує
                         </small>
+                        <small *ngIf="form.get('username').hasError('pattern')">
+                            Ім'я користувача повинно складатись з QWERTY літер,
+                            цифер та поширених розділових знаків, окрім знаку -
+                            .
+                        </small>
+                        <small *ngIf="form.get('username').errors.minlength">
+                            Мінімальна довжина ім'я користувача
+                            {{
+                                form.get('username').errors.minlength
+                                    .requiredLength
+                            }}
+                            символів.
+                        </small>
                     </mat-error>
                 </mat-form-field>
             </div>
@@ -235,6 +248,10 @@
                             *ngIf="form.get('email').errors.propertyIsNotUnique"
                         >
                             Користувач з такою електронною адресою вже існує
+                        </small>
+                        <small *ngIf="form.get('email').hasError('pattern')">
+                            Некоректні дані! Будь-ласка введіть існуючу
+                            електронну пошту
                         </small>
                     </mat-error>
                 </mat-form-field>
@@ -298,6 +315,10 @@
                         <small *ngIf="form.get('password').errors.required">
                             Поле не заповнене! Будь-ласка введіть унікальний
                             пароль студента
+                        </small>
+                        <small *ngIf="form.get('password').hasError('pattern')">
+                            Пароль має містити лише QWERTY літери (великі та
+                            малі), цифри та поширені розділові знаки
                         </small>
                     </mat-error>
                 </mat-form-field>

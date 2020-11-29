@@ -39,6 +39,9 @@
                             Виберіть Групу
                         </mat-label>
                         <mat-select
+                            [disabled]="
+                                faculties.length === 0 || !selectedFaculty
+                            "
                             required
                             placeholder="Група"
                             (selectionChange)="getGroup($event)"

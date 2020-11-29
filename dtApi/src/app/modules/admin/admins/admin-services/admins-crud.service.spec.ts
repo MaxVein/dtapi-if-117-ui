@@ -1,16 +1,16 @@
-import { TestBed } from '@angular/core/testing'
+import { TestBed } from '@angular/core/testing';
 
-import { AdminsCrudService } from './admins-crud.service'
+import { AdminsCrudService } from './admins-crud.service';
 
 describe('AdminsCrudService', () => {
-    let service: AdminsCrudService
+    let service: AdminsCrudService;
 
     beforeEach(() => {
-        TestBed.configureTestingModule({})
-        service = TestBed.inject(AdminsCrudService)
-    })
+        TestBed.configureTestingModule({});
+        service = TestBed.inject(AdminsCrudService);
+    });
 
     it('should be created', () => {
-        expect(service).toBeTruthy()
-    })
-})
+        expect(service).toBeTruthy();
+    });
+});

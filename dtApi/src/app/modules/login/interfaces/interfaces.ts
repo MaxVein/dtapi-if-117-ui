@@ -1,10 +1,10 @@
 export interface loginForm {
-    userName: string
-    password: string
+    userName: string;
+    password: string;
 }
 export interface logoSrc {
-    logo: string
+    logo: string;
 }
 export interface Responce {
-    response: boolean
+    response: boolean;
 }

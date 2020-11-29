@@ -1,8 +1,8 @@
-import { Injectable } from '@angular/core'
-import { MatDialog } from '@angular/material/dialog'
+import { Injectable } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 
-import { ConfirmComponent } from '../../../../shared/components/confirm/confirm.component'
-import { AlertComponent } from '../../../../shared/components/alert/alert.component'
+import { ConfirmComponent } from '../../../../shared/components/confirm/confirm.component';
+import { AlertComponent } from '../../../../shared/components/alert/alert.component';
 
 @Injectable({
     providedIn: 'root',
@@ -16,7 +16,7 @@ export class ModalService {
                 message: msg,
                 title: title,
             },
-        })
+        });
     }
 
     openConfirmModal(msg: string, callbackFunction: () => void): void {
@@ -24,14 +24,14 @@ export class ModalService {
             data: {
                 message: msg,
             },
-        })
+        });
 
         dialogRef.afterClosed().subscribe((result) => {
-            if (result) callbackFunction()
-        })
+            if (result) callbackFunction();
+        });
     }
 
     openErrorModal(msg: string): void {
-        this.openAlertModal(msg, 'Помилка')
+        this.openAlertModal(msg, 'Помилка');
     }
 }
