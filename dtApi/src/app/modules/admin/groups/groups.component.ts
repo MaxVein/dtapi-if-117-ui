@@ -85,7 +85,7 @@ export class GroupsComponent implements OnInit {
         }).subscribe((res: ServiceResponse) => {
             this.specialities = res.specialities
             this.faculties = res.faculties
-            let newData = this.genereteTableData(res.groups)
+            const newData = this.genereteTableData(res.groups)
             this.sharedData.push(this.specialities, this.faculties)
             this.dataSource = new MatTableDataSource<GroupData>(newData)
             this.sharedData
@@ -223,7 +223,7 @@ export class GroupsComponent implements OnInit {
         })
     }
     genereteTableData(data) {
-        let newData = data
+        const newData = data
         newData.map((item) => {
             this.specialities.map((elem) => {
                 if (item.speciality_id === elem.speciality_id) {
