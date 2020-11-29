@@ -1,0 +1,108 @@
+.dashboard-card {
+    position: absolute;
+    top: 15px;
+    left: 15px;
+    right: 15px;
+    bottom: 15px;
+}
+.more-button {
+    position: absolute;
+    top: 5px;
+    right: 10px;
+}
+.dashboard-card-content {
+    text-align: center;
+}
+
+.dashboard-card-content {
+    width: 100%;
+    height: 90%;
+    overflow: hidden;
+    &:hover {
+        .dashboard-card-content__icon {
+            color: #3f51b5;
+            transition: all 0.2s ease;
+        }
+    }
+}
+.dashboard-card-link {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+.dashboard-card-content__container {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+.dashboard-card-content__icon {
+    display: inline-block;
+    width: fit-content;
+    height: fit-content;
+    font-size: 10rem;
+    transition: all 0.2s ease;
+}
+@media screen and(max-width:1250px) {
+    .dashboard-card-content__icon {
+        font-size: 6rem;
+    }
+}
+@media screen and(max-width:1000px) {
+    .dashboard-card-content__icon {
+        font-size: 5rem;
+        margin-bottom: 2rem;
+    }
+}
+
+.dashboard-card-content__count {
+    position: absolute;
+    display: inline-flex;
+    color: rgb(255, 255, 255);
+    width: 3.5rem;
+    height: 3.5rem;
+    border-radius: 50%;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    font-weight: 500;
+    right: -0.5rem;
+    top: -0.5rem;
+}
+mat-grid-tile:nth-child(7) {
+    .dashboard-card-content__count {
+        display: none;
+    }
+}
+mat-grid-tile:nth-child(8) {
+    .dashboard-card-content__count {
+        display: none;
+    }
+}
+
+.dashboard-card-content__link {
+    position: absolute;
+    right: 1rem;
+    bottom: 1rem;
+}
+@media screen and(max-width:850px) {
+    .dashboard-card-content__icon {
+        font-size: 5rem;
+        margin-bottom: 2rem;
+    }
+    .dashboard-card-content__count {
+        width: 2.5rem;
+        height: 2.5rem;
+        font-size: 1.2rem;
+    }
+}
+@media screen and(max-width:760px) {
+    .dashboard-card-content__link {
+        position: relative;
+        right: 0rem;
+    }
+}
