@@ -50,6 +50,7 @@ export class StudentsPageComponent implements OnInit, AfterViewInit, OnDestroy {
     ) {}
 
     ngOnInit(): void {
+        this.groupID = this.route.snapshot.params['id'];
         this.route.queryParams.subscribe((param) => {
             this.groupName = param['groupName'];
         });
@@ -63,7 +64,6 @@ export class StudentsPageComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     getStudentsByGroup(): void {
-        this.groupID = this.route.snapshot.params['id'];
         this.studentSubscription = this.studentsService
             .getByGroup(this.groupID, true)
             .subscribe(
@@ -116,7 +116,7 @@ export class StudentsPageComponent implements OnInit, AfterViewInit, OnDestroy {
                 } else if (result.message.response === 'ok') {
                     result.data.user_id = result.id;
                     this.dataSource.data.unshift(result.data);
-                    this.dataSource.data = this.dataSource.data;
+                    this.dataSource._updateChangeSubscription();
                     this.modalService.showSnackBar('Студента додано');
                 } else if (result.message === 'Скасовано') {
                     this.modalService.showSnackBar('Скасовано');
@@ -148,7 +148,7 @@ export class StudentsPageComponent implements OnInit, AfterViewInit, OnDestroy {
                     );
                     result.data.user_id = result.id;
                     this.dataSource.data[index] = result.data;
-                    this.dataSource.data = this.dataSource.data;
+                    this.dataSource._updateChangeSubscription();
                     this.modalService.showSnackBar('Дані студента оновлено');
                 } else if (result.message === 'Скасовано') {
                     this.modalService.showSnackBar('Скасовано');

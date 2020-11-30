@@ -8,7 +8,7 @@ import { map } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
 
 @Injectable()
-export class DashboardMetricsService {
+export class DashboardService {
     private baseurl = environment.BASEURL;
     constructor(private httpInstance: HttpClient) {}
     backendLogin(): Observable<any> {
