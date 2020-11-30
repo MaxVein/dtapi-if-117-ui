@@ -55,26 +55,20 @@ export class ListTableComponent implements OnInit, AfterViewInit {
         );
     }
 
-    openModal(data?): void {
+    openModal(data?: ListTableItem): void {
         this.dialogService
             .createModal(data ? data : '')
             .afterClosed()
             .subscribe(
                 (res?) => {
                     if (!res) return;
-
+                    const result: ListTableItem = res.res[0];
                     switch (res.str) {
                         case 'upd':
-                            const index = this.dataSource.data.findIndex(
-                                (s) => s.speciality_id === data.speciality_id
-                            );
-                            this.dataSource.data[index] = res.res[0];
-                            this.dataSource.data = this.dataSource.data;
+                            this.updateSpecialityView(data, result);
                             break;
                         case 'added':
-                            const length = this.dataSource.data.length;
-                            this.dataSource.data[length] = res.res[0];
-                            this.dataSource.data = this.dataSource.data;
+                            this.addSpecialityView(result);
                             break;
                     }
                 },
@@ -84,7 +78,16 @@ export class ListTableComponent implements OnInit, AfterViewInit {
             );
     }
 
-    editSpeciality(elem: ListTableItem[]): void {
+    addSpecialityView(result: ListTableItem) {
+        this.dataSource.data = [...this.dataSource.data, result];
+        this.dataSource.paginator.lastPage();
+    }
+    updateSpecialityView(data: ListTableItem, result: ListTableItem) {
+        this.dataSource.data = this.dataSource.data.map((i) =>
+            i.speciality_id === data.speciality_id ? result : i
+        );
+    }
+    editSpeciality(elem: ListTableItem): void {
         this.openModal(elem);
     }
 

@@ -1,9 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { Router } from '@angular/router';
 import { Observable, of } from 'rxjs';
-import { tap } from 'rxjs/operators';
 
 import { environment } from 'src/environments/environment';
 
