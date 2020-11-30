@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 
 import { ApiService } from '../api.service';
+import { ListTableItem } from '../list-table/list-table.component';
 
 @Component({
     selector: 'app-modal-form',
@@ -35,38 +36,43 @@ export class ModalFormComponent implements OnInit {
             ],
         });
     }
-    addSpeciality(str: string): void {
+    editSpeciality(str: string): void {
         switch (str) {
             case 'update':
-                this.apiService
-                    .updateEntity(
-                        'Speciality',
-                        this.data.speciality_id,
-                        this.form.value
-                    )
-                    .subscribe(
-                        (res) => {
-                            const result = { res, str: 'upd' };
-                            this.dialogRef.close(result);
-                        },
-                        (error) => {
-                            this.apiService.snackBarOpen();
-                        }
-                    );
+                this.updateSpeciality();
                 break;
             case 'add':
-                this.apiService
-                    .addEntity('Speciality', this.form.value)
-                    .subscribe(
-                        (res) => {
-                            const result = { res, str: 'added' };
-                            this.dialogRef.close(result);
-                        },
-                        (error) => {
-                            this.apiService.snackBarOpen();
-                        }
-                    );
+                this.addSpeciality();
+                break;
         }
+    }
+    updateSpeciality() {
+        this.apiService
+            .updateEntity(
+                'Speciality',
+                this.data.speciality_id,
+                this.form.value
+            )
+            .subscribe(
+                (res: ListTableItem) => {
+                    const result = { res, str: 'upd' };
+                    this.dialogRef.close(result);
+                },
+                (error) => {
+                    this.apiService.snackBarOpen();
+                }
+            );
+    }
+    addSpeciality() {
+        this.apiService.addEntity('Speciality', this.form.value).subscribe(
+            (res) => {
+                const result = { res, str: 'added' };
+                this.dialogRef.close(result);
+            },
+            (error) => {
+                this.apiService.snackBarOpen();
+            }
+        );
     }
     onCancel(): void {
         this.dialogRef.close();
