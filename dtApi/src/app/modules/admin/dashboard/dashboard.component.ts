@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { BreakpointObserver } from '@angular/cdk/layout';
 import { CardsResponsiveOptions } from './CardsOptions';
 import { DashboardService } from './dashboard.service';
+import { forkJoin } from 'rxjs';
 
 @Component({
     selector: 'app-dashboard',
@@ -65,6 +66,7 @@ export class DashboardComponent implements OnInit {
         this.layoutChangesMedia.subscribe((result) => {
             this.layoutChange(result.breakpoints);
         });
+
         this.CARDSDATA = [
             {
                 title: 'Факультети',
@@ -115,36 +117,22 @@ export class DashboardComponent implements OnInit {
                 link: '/admin/protocol',
             },
         ];
-        this.infoservice.getFacultiesNumber().subscribe((facultiesInfo) => {
+
+        forkJoin({
+            FacultiesNumber: this.infoservice.getFacultiesNumber(),
+            GroupsNumber: this.infoservice.getGroupsNumber(),
+            SpecialitiesNumber: this.infoservice.getSpecialitiesNumber(),
+            SubjectNumber: this.infoservice.getSubjectsNumber(),
+            StudentsNumber: this.infoservice.getStudentsNumber(),
+            AdminsNumber: this.infoservice.getAdminsNumber(),
+        }).subscribe((result) => {
             this.CARDSDATA.forEach((item, index) => {
-                index === 0 ? (item.count = facultiesInfo) : null;
-            });
-        });
-        this.infoservice.getGroupsNumber().subscribe((groupsInfo) => {
-            this.CARDSDATA.forEach((item, index) => {
-                index === 1 ? (item.count = groupsInfo) : null;
-            });
-        });
-        this.infoservice
-            .getSpecialitiesNumber()
-            .subscribe((specialitiesInfo) => {
-                this.CARDSDATA.forEach((item, index) => {
-                    index === 2 ? (item.count = specialitiesInfo) : null;
-                });
-            });
-        this.infoservice.getSubjectsNumber().subscribe((subjectsInfo) => {
-            this.CARDSDATA.forEach((item, index) => {
-                index === 3 ? (item.count = subjectsInfo) : null;
-            });
-        });
-        this.infoservice.getStudentsNumber().subscribe((studentsInfo) => {
-            this.CARDSDATA.forEach((item, index) => {
-                index === 4 ? (item.count = studentsInfo) : null;
-            });
-        });
-        this.infoservice.getAdminsNumber().subscribe((adminsInfo) => {
-            this.CARDSDATA.forEach((item, index) => {
-                index === 5 ? (item.count = adminsInfo) : null;
+                index === 0 ? (item.count = result.FacultiesNumber) : null;
+                index === 1 ? (item.count = result.GroupsNumber) : null;
+                index === 2 ? (item.count = result.SpecialitiesNumber) : null;
+                index === 3 ? (item.count = result.SubjectNumber) : null;
+                index === 4 ? (item.count = result.StudentsNumber) : null;
+                index === 5 ? (item.count = result.AdminsNumber) : null;
             });
         });
     }
