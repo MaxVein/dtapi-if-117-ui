@@ -18,9 +18,9 @@ export interface DialogData {
     styleUrls: ['./group-dialog.component.scss'],
 })
 export class GroupDialogComponent implements OnInit {
-    sharedInfo: any;
-    specialities: any;
-    faculties: any;
+    sharedInfo: any = [];
+    specialities: [];
+    faculties: [];
     groupInfo: [];
     title: string;
     form: FormGroup;
