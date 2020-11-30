@@ -1,9 +1,10 @@
-import { Component } from '@angular/core';
+import { Component, HostBinding } from '@angular/core';
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 import { Observable } from 'rxjs';
 import { map, shareReplay } from 'rxjs/operators';
 import { AuthService } from '../login/services/auth.service';
 import { Router } from '@angular/router';
+import { OverlayContainer } from '@angular/cdk/overlay';
 
 @Component({
     selector: 'app-admin',
@@ -16,8 +17,22 @@ export class AdminComponent {
     constructor(
         private apiService: AuthService,
         private router: Router,
-        private breakpointObserver: BreakpointObserver
+        private breakpointObserver: BreakpointObserver,
+        public overlayContainer: OverlayContainer
     ) {}
+
+    @HostBinding('class') componentCssClass;
+
+    onSetTheme(theme: string): void {
+        this.overlayContainer.getContainerElement().classList.add(theme);
+        if (theme === 'default-theme') {
+            this.overlayContainer
+                .getContainerElement()
+                .classList.remove('dark-theme');
+        }
+        this.componentCssClass = theme;
+    }
+
     logOut() {
         this.apiService.logOutRequest().subscribe({
             next: () => this.router.navigate(['/login']),
