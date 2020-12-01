@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { BreakpointObserver } from '@angular/cdk/layout';
 import { CardsResponsiveOptions } from './CardsOptions';
 import { DashboardService } from './dashboard.service';
+import { forkJoin } from 'rxjs';
 
 @Component({
     selector: 'app-dashboard',
@@ -30,31 +31,28 @@ export class DashboardComponent implements OnInit {
     ]);
     layoutChange(result: any): void {
         for (const item in result) {
-            switch (item) {
-                case this.ResponsiveData.isXLScreen:
-                    if (!result[item]) break;
-                    this.ResponsiveData.breakpoint = 4;
-                    this.ResponsiveData.rowHeight = 380;
-                    break;
-                case this.ResponsiveData.isLGScreen:
-                    if (!result[item]) break;
-                    this.ResponsiveData.breakpoint = 3;
-                    this.ResponsiveData.rowHeight = 320;
-                    break;
-                case this.ResponsiveData.isMDScreen:
-                    if (!result[item]) break;
-                    this.ResponsiveData.breakpoint = 3;
-                    this.ResponsiveData.rowHeight = 280;
-                    break;
-                case this.ResponsiveData.isSMScreen:
-                    if (!result[item]) break;
-                    this.ResponsiveData.breakpoint = 2;
-                    this.ResponsiveData.rowHeight = 230;
-                    break;
-                case this.ResponsiveData.isMSScreen:
-                    if (!result[item]) break;
-                    this.ResponsiveData.breakpoint = 1;
-                    break;
+            if (result[item]) {
+                switch (item) {
+                    case this.ResponsiveData.isXLScreen:
+                        this.ResponsiveData.breakpoint = 4;
+                        this.ResponsiveData.rowHeight = 380;
+                        break;
+                    case this.ResponsiveData.isLGScreen:
+                        this.ResponsiveData.breakpoint = 3;
+                        this.ResponsiveData.rowHeight = 320;
+                        break;
+                    case this.ResponsiveData.isMDScreen:
+                        this.ResponsiveData.breakpoint = 3;
+                        this.ResponsiveData.rowHeight = 280;
+                        break;
+                    case this.ResponsiveData.isSMScreen:
+                        this.ResponsiveData.breakpoint = 2;
+                        this.ResponsiveData.rowHeight = 230;
+                        break;
+                    case this.ResponsiveData.isMSScreen:
+                        this.ResponsiveData.breakpoint = 1;
+                        break;
+                }
             }
         }
     }
@@ -68,6 +66,7 @@ export class DashboardComponent implements OnInit {
         this.layoutChangesMedia.subscribe((result) => {
             this.layoutChange(result.breakpoints);
         });
+
         this.CARDSDATA = [
             {
                 title: 'Факультети',
@@ -118,39 +117,22 @@ export class DashboardComponent implements OnInit {
                 link: '/admin/protocol',
             },
         ];
-        this.infoservice.getFacultiesNumber().subscribe((facultiesInfo) => {
-            this.CARDSDATA.map((item, index) => {
-                index === 0 ? (item.count = facultiesInfo) : null;
-            });
-        });
-        this.infoservice.getGroupsNumber().subscribe((groupsInfo) => {
-            this.CARDSDATA.map((item, index) => {
-                index === 1 ? (item.count = groupsInfo) : null;
-            });
-        });
-        this.infoservice
-            .getSpecialitiesNumber()
-            .subscribe((specialitiesInfo) => {
-                this.CARDSDATA.map((item, index) => {
-                    index === 2 ? (item.count = specialitiesInfo) : null;
-                });
-            });
-        this.infoservice.getSubjectsNumber().subscribe((subjectsInfo) => {
-            this.CARDSDATA.map((item, index) => {
-                index === 3 ? (item.count = subjectsInfo) : null;
-            });
-        });
-        this.infoservice.getStudentsNumber().subscribe((studentsInfo) => {
-            this.CARDSDATA.map((item, index) => {
-                index === 4 ? (item.count = studentsInfo) : null;
-            });
-        });
-        this.infoservice.getAdminsNumber().subscribe((adminsInfo) => {
-            this.CARDSDATA.map((item, index) => {
-                index === 5 ? (item.count = adminsInfo) : null;
-                // if (index === 5) {
-                //     item.count = adminsInfo;
-                // }
+
+        forkJoin({
+            FacultiesNumber: this.infoservice.getFacultiesNumber(),
+            GroupsNumber: this.infoservice.getGroupsNumber(),
+            SpecialitiesNumber: this.infoservice.getSpecialitiesNumber(),
+            SubjectNumber: this.infoservice.getSubjectsNumber(),
+            StudentsNumber: this.infoservice.getStudentsNumber(),
+            AdminsNumber: this.infoservice.getAdminsNumber(),
+        }).subscribe((result) => {
+            this.CARDSDATA.forEach((item, index) => {
+                index === 0 ? (item.count = result.FacultiesNumber) : null;
+                index === 1 ? (item.count = result.GroupsNumber) : null;
+                index === 2 ? (item.count = result.SpecialitiesNumber) : null;
+                index === 3 ? (item.count = result.SubjectNumber) : null;
+                index === 4 ? (item.count = result.StudentsNumber) : null;
+                index === 5 ? (item.count = result.AdminsNumber) : null;
             });
         });
     }
