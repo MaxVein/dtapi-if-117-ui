@@ -1,4 +1,4 @@
-<mat-sidenav-container class="sidenav-container">
+<mat-sidenav-container class="sidenav-container unicorn-dark-theme">
     <mat-sidenav
         #drawer
         class="sidenav"
@@ -34,7 +34,23 @@
             <mat-menu #menu="matMenu">
                 <button mat-menu-item (click)="logOut()">Вийти</button>
             </mat-menu>
-            <button mat-button [matMenuTriggerFor]="lang">Мова</button>
+            <button
+                mat-button
+                matTooltip="Змінити тему додатку"
+                [matMenuTriggerFor]="theme"
+            >
+                <mat-icon>format_color_fill</mat-icon>
+            </button>
+            <mat-menu #theme>
+                <button mat-menu-item (click)="onSetTheme('default-theme')">
+                    <mat-icon>brightness_5</mat-icon>
+                    Light
+                </button>
+                <button mat-menu-item (click)="onSetTheme('dark-theme')">
+                    <mat-icon>brightness_2</mat-icon>
+                    Dark
+                </button>
+            </mat-menu>
             <mat-menu #lang="matMenu">
                 <button mat-menu-item>ENG</button>
                 <button mat-menu-item>UKR</button>
