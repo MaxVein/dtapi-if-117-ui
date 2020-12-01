@@ -1,6 +1,6 @@
 import { TestBed } from '@angular/core/testing';
 
-import { AdminsCrudService } from './admins-crud.service';
+import { AdminsCrudService } from './admins.service';
 
 describe('AdminsCrudService', () => {
     let service: AdminsCrudService;

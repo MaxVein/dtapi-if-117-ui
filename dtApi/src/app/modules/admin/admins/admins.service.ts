@@ -7,36 +7,35 @@ import { environment } from 'src/environments/environment';
     providedIn: 'root',
 })
 export class AdminsCrudService {
-    private baseurl = environment.BASEURL;
     private entity = 'AdminUser';
     constructor(private httpInstance: HttpClient) {}
 
     getAdmins(): Observable<any> {
         return this.httpInstance.get(
-            `${this.baseurl}${this.entity}/getRecords`
+            `${environment.BASEURL}${this.entity}/getRecords`
         );
     }
 
     addAdmin(body: string): Observable<any> {
         return this.httpInstance.post(
-            `${this.baseurl}${this.entity}/insertData`,
+            `${environment.BASEURL}${this.entity}/insertData`,
             body
         );
     }
     updateAdmin(body: string, id: string): Observable<any> {
         return this.httpInstance.post(
-            `${this.baseurl}${this.entity}/update/${id}`,
+            `${environment.BASEURL}${this.entity}/update/${id}`,
             body
         );
     }
     deleteAdmin(id: string): Observable<any> {
         return this.httpInstance.delete(
-            `${this.baseurl}${this.entity}/del/${id}`
+            `${environment.BASEURL}${this.entity}/del/${id}`
         );
     }
     checkAdminName(username: string): Observable<any> {
         return this.httpInstance.get(
-            `${this.baseurl}${this.entity}/checkUserName/${username}`
+            `${environment.BASEURL}${this.entity}/checkUserName/${username}`
         );
     }
 }

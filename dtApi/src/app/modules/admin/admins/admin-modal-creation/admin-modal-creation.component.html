@@ -3,6 +3,7 @@
     [formGroup]="AdminForm"
     (ngSubmit)="submit(data)"
     novalidate
+    class="admins-modal"
 >
     <h1 mat-dialog-title class="modal-title">{{ data.title }}</h1>
     <div *ngIf="formForUpdateCondition; else updateForm" mat-dialog-content>
