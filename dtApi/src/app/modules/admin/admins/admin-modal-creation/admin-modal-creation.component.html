@@ -209,12 +209,7 @@
     </ng-template>
     <div mat-dialog-actions class="modal-field">
         <button mat-button type="reset" (click)="onNoClick()">Скасувати</button>
-        <button
-            type="submit"
-            [disabled]="!AdminForm.valid"
-            [mat-dialog-close]="data"
-            mat-button
-        >
+        <button type="submit" [disabled]="!AdminForm.valid" mat-button>
             Зберегти
         </button>
     </div>

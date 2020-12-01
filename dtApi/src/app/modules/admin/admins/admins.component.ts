@@ -16,7 +16,7 @@ import { AdminsCrudService } from './admins.service';
     styleUrls: ['./admins.component.scss'],
     providers: [AdminsCrudService],
 })
-export class AdminsComponent implements OnInit, OnDestroy {
+export class AdminsComponent implements OnInit {
     displayedColumns: string[] = ['id', 'name', 'email', 'operations'];
     dataSource: MatTableDataSource<Admins>;
     adminsArray: [] = [];
@@ -29,6 +29,7 @@ export class AdminsComponent implements OnInit, OnDestroy {
         private admincrud: AdminsCrudService,
         public dialog: MatDialog
     ) {}
+
     applyFilter(event: Event): void {
         const filterValue = (event.target as HTMLInputElement).value;
         this.dataSource.filter = filterValue.trim().toLowerCase();
@@ -42,23 +43,19 @@ export class AdminsComponent implements OnInit, OnDestroy {
             .open(AdminModalCreationComponent, {
                 data: {
                     title: 'Додати адміна',
-                    user: {},
                 },
             })
             .afterClosed()
             .subscribe((res) => {
-                console.warn(res);
-                // if (res !== undefined) {
-                //     setTimeout(() => {
-                //         if (res.user !== undefined) {
-                //             this.dataSource = new MatTableDataSource(
-                //                 this.adminsArray.concat(res.user)
-                //             );
-                //             this.dataSource.paginator = this.paginator;
-                //             this.dataSource.sort = this.sort;
-                //         }
-                //     }, 500);
-                // }
+                if (res) {
+                    if (res.finished) {
+                        this.dataSource.data = this.dataSource.data.concat(
+                            res.user
+                        );
+                        this.dataSource._updateChangeSubscription();
+                        this.dataSource.paginator = this.paginator;
+                    }
+                }
             });
     }
     updateAdminModelOpen(user: Admins): void {
@@ -67,7 +64,7 @@ export class AdminsComponent implements OnInit, OnDestroy {
                 data: {
                     title: 'Редагувати адміна',
                     user: {
-                        userId: user.id,
+                        id: user.id,
                         username: user.username,
                         email: user.email,
                     },
@@ -75,28 +72,20 @@ export class AdminsComponent implements OnInit, OnDestroy {
             })
             .afterClosed()
             .subscribe((res) => {
-                console.warn(res);
-                if (status === 'ok') {
-                    setTimeout(() => {
-                        if (res.newUser !== {}) {
-                            const userIndex = this.dataSource.data.indexOf(
-                                res.user
-                            );
-                            const oldUser = this.dataSource.data.find(
-                                (item, index) => index === userIndex
-                            );
-                            for (const oldItem in oldUser) {
-                                for (const newItem in res.newUser) {
-                                    if (oldItem === newItem) {
-                                        oldUser[oldItem] = res.newUser[newItem];
-                                        this.dataSource.data = this.dataSource.data;
-                                    }
-                                }
+                if (res) {
+                    if (!res.finished) return;
+                    const oldUser = this.dataSource.data.find(
+                        (item, index) =>
+                            index === this.dataSource.data.indexOf(user)
+                    );
+                    for (const oldItem in oldUser) {
+                        for (const newItem in res.user) {
+                            if (oldItem === newItem) {
+                                oldUser[oldItem] = res.user[newItem];
+                                this.dataSource._updateChangeSubscription();
                             }
-                            this.dataSource.paginator = this.paginator;
-                            this.dataSource.sort = this.sort;
                         }
-                    }, 500);
+                    }
                 }
             });
     }
@@ -105,16 +94,18 @@ export class AdminsComponent implements OnInit, OnDestroy {
             .open(DeleteConfirmModalComponent, {
                 data: {
                     title: 'Підтвердіть дію',
-                    userId: user.id,
+                    user: user,
                 },
             })
             .afterClosed()
             .subscribe((res) => {
-                if (res === 'ok') {
-                    const elementIndex = this.dataSource.data.indexOf(res.user);
-                    this.dataSource.data.splice(elementIndex, 1);
+                if (res.finished) {
+                    this.dataSource.data.splice(
+                        this.dataSource.data.indexOf(res.user),
+                        1
+                    );
+                    this.dataSource._updateChangeSubscription();
                     this.dataSource.paginator = this.paginator;
-                    this.dataSource.sort = this.sort;
                 }
             });
     }
@@ -139,5 +130,4 @@ export class AdminsComponent implements OnInit, OnDestroy {
             this.dataSource.sort = this.sort;
         });
     }
-    ngOnDestroy(): void {}
 }

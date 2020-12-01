@@ -2,6 +2,8 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs/internal/Observable';
 import { environment } from 'src/environments/environment';
+import { map } from 'rxjs/operators';
+import { Admins } from './Admins';
 
 @Injectable({
     providedIn: 'root',
@@ -11,9 +13,19 @@ export class AdminsCrudService {
     constructor(private httpInstance: HttpClient) {}
 
     getAdmins(): Observable<any> {
-        return this.httpInstance.get(
-            `${environment.BASEURL}${this.entity}/getRecords`
-        );
+        return this.httpInstance
+            .get(`${environment.BASEURL}${this.entity}/getRecords`)
+            .pipe(
+                map((val: Array<Admins>) => {
+                    return val.map((item) => {
+                        return {
+                            id: item.id,
+                            email: item.email,
+                            username: item.username,
+                        };
+                    });
+                })
+            );
     }
 
     addAdmin(body: string): Observable<any> {

@@ -64,26 +64,22 @@ export class AdminModalCreationComponent implements OnInit {
         this.AdminForm.get('username').clearValidators();
         this.AdminForm.get('username').updateValueAndValidity();
     }
-    addAdmin(formValues, data): void {
+    addAdmin(formValues): void {
+        const snackbar = this.snackBar;
         this.adminservice.addAdmin(formValues).subscribe(
-            (res) => {
-                if (res !== {}) {
-                    // Object.assign(data.user, res);
-                    this.snackBar.open('Адміна успішно додано', 'Закрити', {
-                        duration: 3000,
-                    });
-                    this.dialogRef.close({ status: 'ok', res });
-                } else {
-                    // data.user = undefined;
-                    this.dialogRef.close({ status: 'error' });
-                }
-            },
-            (err) => {
-                data.user = undefined;
-                this.snackBar.open('Адмін з такими даними існує', 'Закрити', {
+            (newUser) => {
+                snackbar.open('Адміна успішно додано', 'Закрити', {
                     duration: 3000,
                 });
-                this.dialogRef.close();
+                this.dialogRef.close({
+                    finished: true,
+                    user: newUser,
+                });
+            },
+            (err) => {
+                snackbar.open('Адмін з такими даними існує', 'Закрити', {
+                    duration: 3000,
+                });
             }
         );
     }
@@ -99,10 +95,7 @@ export class AdminModalCreationComponent implements OnInit {
                     });
                 } else {
                     this.adminservice
-                        .updateAdmin(
-                            JSON.stringify(formValues),
-                            data.user.userId
-                        )
+                        .updateAdmin(JSON.stringify(formValues), data.user.id)
                         .pipe(pluck('response'))
                         .subscribe(
                             (res) => {
@@ -113,11 +106,10 @@ export class AdminModalCreationComponent implements OnInit {
                                         duration: 3000,
                                     }
                                 );
-                                const result = {
-                                    status: res,
+                                this.dialogRef.close({
+                                    finished: true,
                                     user: formValues,
-                                };
-                                this.dialogRef.close(result);
+                                });
                             },
                             (err) => {
                                 snackbar.open('Щось пішло не так', 'Закрити', {
@@ -132,7 +124,7 @@ export class AdminModalCreationComponent implements OnInit {
         if (this.AdminForm.valid) {
             switch (data.title) {
                 case 'Додати адміна':
-                    this.addAdmin(this.AdminForm.value, data);
+                    this.addAdmin(this.AdminForm.value);
                     break;
                 case 'Редагувати адміна':
                     this.updateAdmin(this.AdminForm.value, data);

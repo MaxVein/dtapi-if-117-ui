@@ -24,7 +24,7 @@ export class DeleteConfirmModalComponent {
     submit(data: any, form: NgForm): void {
         if (form.submitted) {
             this.admincrud
-                .deleteAdmin(data.userId)
+                .deleteAdmin(data.user.id)
                 .pipe(pluck('response'))
                 .subscribe((res) => {
                     if (res === 'ok') {
@@ -35,11 +35,17 @@ export class DeleteConfirmModalComponent {
                                 duration: 3000,
                             }
                         );
-                        this.dialogRef.close({ res });
+                        this.dialogRef.close({
+                            finished: true,
+                            user: data.user,
+                        });
                     }
                 });
         } else {
-            this.dialogRef.close();
+            this.dialogRef.close({
+                finished: false,
+                user: data.user,
+            });
         }
     }
     onNoClick(): void {
