@@ -63,3 +63,9 @@ export interface Response {
     user_id?: string;
     id?: number;
 }
+
+export interface Subject {
+    subject_id: string;
+    subject_name: string;
+    subject_description: string;
+}

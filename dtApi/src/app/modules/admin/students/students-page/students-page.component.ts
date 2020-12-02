@@ -13,14 +13,14 @@ import { StudentsViewModalComponent } from './students-view-modal/students-view-
 import { StudentsTransferModalComponent } from './students-transfer-modal/students-transfer-modal.component';
 import { ConfirmComponent } from 'src/app/shared/components/confirm/confirm.component';
 import { AlertComponent } from '../../../../shared/components/alert/alert.component';
-import { StudentsService } from 'src/app/modules/admin/students/students.service';
+import { StudentsService } from 'src/app/modules/admin/students/services/students.service';
 import { ModalService } from 'src/app/shared/services/modal.service';
 import { Subscription } from 'rxjs';
 import {
     Student,
     Response,
     DialogResult,
-} from 'src/app/shared/interfaces/interfaces';
+} from 'src/app/shared/interfaces/entity.interfaces';
 
 @Component({
     selector: 'app-students-page',

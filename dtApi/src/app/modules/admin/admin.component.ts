@@ -5,6 +5,8 @@ import { map, shareReplay } from 'rxjs/operators';
 import { AuthService } from '../login/services/auth.service';
 import { Router } from '@angular/router';
 import { OverlayContainer } from '@angular/cdk/overlay';
+import { RouterState } from '../../shared/interfaces/student.interfaces';
+import { Logged } from '../../shared/interfaces/auth.interfaces';
 
 @Component({
     selector: 'app-admin',
@@ -13,15 +15,30 @@ import { OverlayContainer } from '@angular/cdk/overlay';
 })
 export class AdminComponent {
     menuIcon = 'menu_open';
+    username: string;
+
+    @HostBinding('class') componentCssClass;
 
     constructor(
         private apiService: AuthService,
         private router: Router,
         private breakpointObserver: BreakpointObserver,
         public overlayContainer: OverlayContainer
-    ) {}
+    ) {
+        this.getUserData();
+    }
 
-    @HostBinding('class') componentCssClass;
+    getUserData(): void {
+        const navigation = this.router.getCurrentNavigation();
+        if (navigation.extras.state) {
+            const state = navigation.extras.state as RouterState;
+            this.username = state.username;
+        } else {
+            this.apiService.isLogged().subscribe((response: Logged) => {
+                this.username = response.username;
+            });
+        }
+    }
 
     onSetTheme(theme: string): void {
         this.overlayContainer.getContainerElement().classList.add(theme);
@@ -33,7 +50,7 @@ export class AdminComponent {
         this.componentCssClass = theme;
     }
 
-    logOut() {
+    logOut(): void {
         this.apiService.logOutRequest().subscribe({
             next: () => this.router.navigate(['/login']),
         });

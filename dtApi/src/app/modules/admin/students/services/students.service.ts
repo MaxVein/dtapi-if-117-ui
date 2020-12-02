@@ -11,8 +11,8 @@ import {
     Student,
     StudentInfo,
     Unique,
-} from '../../../shared/interfaces/interfaces';
-import { environment } from '../../../../environments/environment';
+} from '../../../../shared/interfaces/entity.interfaces';
+import { environment } from '../../../../../environments/environment';
 
 @Injectable()
 export class StudentsService {
