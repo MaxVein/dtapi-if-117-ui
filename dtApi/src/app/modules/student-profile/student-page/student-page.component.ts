@@ -218,7 +218,7 @@ export class StudentPageComponent implements OnInit {
             testId
         )
         isTest$.subscribe({
-            next: (res) => console.log(res),
+            // next: (res) => console.log(res),
             error: (err) =>
                 this.openDialog(this.dialogTitle, err.error.response),
         })
