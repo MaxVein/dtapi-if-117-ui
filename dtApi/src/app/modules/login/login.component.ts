@@ -3,9 +3,8 @@ import { Router } from '@angular/router'
 import { trigger, style, animate, transition } from '@angular/animations'
 import { FormBuilder, Validators } from '@angular/forms'
 
-import { logoSrc, loginForm } from './interfaces/interfaces'
-import { AuthService } from './services/auth.service'
-import { ForbiddenValidator } from './validator/userNameValidator'
+import { logoSrc, loginForm } from './login.interfaces'
+import { AuthService } from './auth.service'
 
 @Component({
     animations: [
@@ -41,13 +40,11 @@ export class LoginComponent implements OnInit {
     constructor(
         private request: AuthService,
         private router: Router,
-        private fb: FormBuilder,
-        private userNameValidator: ForbiddenValidator
-    ) {
-        this.loginForm
-    }
+        private fb: FormBuilder
+    ) {}
 
     ngOnInit(): void {
+        this.loginForm
         this.getLogo()
     }
 

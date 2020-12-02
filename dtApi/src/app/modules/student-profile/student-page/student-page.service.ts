@@ -13,12 +13,16 @@ export class StudentService {
         const url = `${entity}/getRecords/${Id}`
         return this.http.get(`${environment.BASEURL}${url}`)
     }
-    getTestDate(id = '') {
+    getTestBySubject(id = '') {
         const url = `test/getTestsBySubject/${id}`
         return this.http.get(`${environment.BASEURL}${url}`)
     }
-    getTestDetails(subjectId = '') {
-        const url = `timeTable/getTimeTablesForSubject/${subjectId}`
+    getTestDetails(groupId: string, subjectId = '') {
+        const url = `timeTable/getTimeTableForGroupAndSubject/${groupId}/${subjectId}`
+        return this.http.get(`${environment.BASEURL}${url}`)
+    }
+    checkPosibilityOfTest(studentId: string, testId: string) {
+        const url = `Log/startTest/${studentId}/${testId}`
         return this.http.get(`${environment.BASEURL}${url}`)
     }
 }

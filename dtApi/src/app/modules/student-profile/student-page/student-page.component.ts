@@ -2,6 +2,12 @@ import { Component, OnInit, ViewChild } from '@angular/core'
 import { MatPaginator } from '@angular/material/paginator'
 import { MatTableDataSource } from '@angular/material/table'
 import { MatSnackBar } from '@angular/material/snack-bar'
+import { Router } from '@angular/router'
+import {
+    MatDialog,
+    MatDialogRef,
+    MAT_DIALOG_DATA,
+} from '@angular/material/dialog'
 
 import { concatMap, map } from 'rxjs/operators'
 import { Observable, throwError } from 'rxjs'
@@ -16,10 +22,10 @@ import {
     subjectDetails,
     testDetails,
     testDate,
-} from './interfaces/student-pageInterfaces'
-import { StudentService } from './services/student-page.service'
-import { AuthService } from '../../login/services/auth.service'
-import { Router } from '@angular/router'
+} from './student-page.interfaces'
+import { StudentService } from './student-page.service'
+import { AuthService } from '../../login/auth.service'
+import { AlertComponent } from 'src/app/shared/components/alert/alert.component'
 
 @Component({
     selector: 'app-student-page',
@@ -31,7 +37,8 @@ export class StudentPageComponent implements OnInit {
         private student: StudentService,
         private auth: AuthService,
         private snackBar: MatSnackBar,
-        private router: Router
+        private router: Router,
+        public dialog: MatDialog
     ) {}
 
     photo: string
@@ -59,8 +66,9 @@ export class StudentPageComponent implements OnInit {
         'Почати тестування',
     ]
     defaultImage: string = environment.defaultImage
-    errorMessage: string = 'Дані відсутні'
-    closeButton: string = 'X'
+    errorMessage = 'Дані відсутні'
+    closeButton = 'X'
+    dialogTitle = 'Alert'
 
     private studentId: string
     private groupId: string
@@ -140,28 +148,29 @@ export class StudentPageComponent implements OnInit {
 
     getTestInfo() {
         this.student
-            .getTestDate(this.subjectId)
+            .getTestBySubject(this.subjectId)
             .pipe(
                 concatMap(
                     (res: testDetails[]): Observable<any> => {
-                        this.testsBySubject = [...res]
-                        if (res[0].response === 'no records') {
+                        this.testsBySubject = res
+                        if (!res[0]) {
                             this.openSnackBar(
                                 this.errorMessage,
                                 this.closeButton
                             )
                             return throwError(new Error(this.errorMessage))
-                        } else {
-                            return this.student.getTestDetails(this.subjectId)
                         }
+                        return this.student.getTestDetails(
+                            this.groupId,
+                            this.subjectId
+                        )
                     }
-                ),
-                map((res) => res[0])
+                )
             )
             .subscribe({
                 next: (res: testDate) => {
-                    let testDate = res
-                    if (testDate === undefined) {
+                    let testDate = res[0] ? res[0] : res
+                    if (testDate.response === 'no records') {
                         testDate = {
                             end_date: this.errorMessage,
                             start_date: this.errorMessage,
@@ -199,6 +208,24 @@ export class StudentPageComponent implements OnInit {
     openSnackBar(message: string, action: string) {
         this.snackBar.open(message, action, {
             duration: 2000,
+        })
+    }
+
+    checkTest(event) {
+        const testId = event.target.id
+        const isTest$ = this.student.checkPosibilityOfTest(
+            this.studentId,
+            testId
+        )
+        isTest$.subscribe({
+            next: (res) => console.log(res),
+            error: (err) =>
+                this.openDialog(this.dialogTitle, err.error.response),
+        })
+    }
+    openDialog(title: string, message: string): void {
+        this.dialog.open(AlertComponent, {
+            data: { title, message },
         })
     }
 }

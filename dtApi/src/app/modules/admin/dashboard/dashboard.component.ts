@@ -3,7 +3,6 @@ import { Breakpoints, BreakpointObserver } from '@angular/cdk/layout'
 import { map, shareReplay } from 'rxjs/operators'
 import { Observable } from 'rxjs'
 import { Router } from '@angular/router'
-import { AuthService } from '../../login/services/auth.service'
 
 @Component({
     selector: 'app-dashboard',

@@ -108,7 +108,13 @@
                 <ng-container matColumnDef="Почати тестування">
                     <th mat-header-cell *matHeaderCellDef>Почати тестування</th>
                     <td mat-cell *matCellDef="let test">
-                        <span class="material-icons"> not_started </span>
+                        <span
+                            (click)="checkTest($event)"
+                            id="{{ test.test_id }}"
+                            class="test-icon material-icons"
+                        >
+                            not_started
+                        </span>
                     </td>
                 </ng-container>
                 <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
