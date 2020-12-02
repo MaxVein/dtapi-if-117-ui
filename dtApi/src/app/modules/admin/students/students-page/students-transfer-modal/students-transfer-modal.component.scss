@@ -1,5 +1,5 @@
 .transfer {
-    width: 450px;
+    width: 400px;
 
     &__header {
         margin-top: 10px;
@@ -68,5 +68,7 @@
 }
 
 mat-progress-spinner {
-    margin: 53px 175px;
+    position: relative;
+    left: 1.6%;
+    margin: 49px 150px;
 }

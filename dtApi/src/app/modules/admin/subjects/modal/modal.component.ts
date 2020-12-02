@@ -1,11 +1,11 @@
-import { Component, OnInit, Inject } from '@angular/core'
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog'
-import { FormControl, FormGroup, Validators } from '@angular/forms'
+import { Component, OnInit, Inject } from '@angular/core';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 
 interface SubjectsResponse {
-    subject_id: number
-    subject_name: string
-    subject_description: string
+    subject_id: number;
+    subject_name: string;
+    subject_description: string;
 }
 
 @Component({
@@ -24,7 +24,7 @@ export class ModalComponent implements OnInit {
             [Validators.required, Validators.pattern('[а-яА-ЯіІїЄє ]*')]
         ),
         subject_id: new FormControl(this.data ? this.data.subject_id : ''),
-    })
+    });
 
     constructor(
         public dialogRef: MatDialogRef<ModalComponent>,
@@ -39,15 +39,15 @@ export class ModalComponent implements OnInit {
             this.subjectForm.touched &&
             this.subjectForm.dirty
         ) {
-            this.dialogRef.close(this.subjectForm.value)
+            this.dialogRef.close(this.subjectForm.value);
         }
     }
 
     public onClose(): void {
-        this.dialogRef.close(false)
+        this.dialogRef.close(false);
     }
 
     hasError = (controlName: string, errorName: string) => {
-        return this.subjectForm.controls[controlName].hasError(errorName)
-    }
+        return this.subjectForm.controls[controlName].hasError(errorName);
+    };
 }

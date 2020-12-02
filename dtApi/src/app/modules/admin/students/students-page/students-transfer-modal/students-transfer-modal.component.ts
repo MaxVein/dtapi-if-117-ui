@@ -1,11 +1,18 @@
-import { Component, Inject, OnDestroy, OnInit } from '@angular/core'
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog'
-import { MatSelectChange } from '@angular/material/select'
-import { AlertComponent } from 'src/app/shared/components/alert/alert.component'
-import { StudentsService } from 'src/app/modules/admin/students/students.service'
-import { ModalService } from 'src/app/shared/services/modal.service'
-import { Subscription } from 'rxjs'
-import { Faculty, Group, Student } from 'src/app/shared/interfaces/interfaces'
+import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { MatSelectChange } from '@angular/material/select';
+import { AlertComponent } from 'src/app/shared/components/alert/alert.component';
+import { StudentsService } from 'src/app/modules/admin/students/students.service';
+import { ModalService } from 'src/app/shared/services/modal.service';
+import { Subscription } from 'rxjs';
+import {
+    DialogResult,
+    Faculty,
+    Group,
+    Response,
+    Student,
+    StudentInfo,
+} from 'src/app/shared/interfaces/interfaces';
 
 @Component({
     selector: 'app-students-transfer-modal',
@@ -13,13 +20,15 @@ import { Faculty, Group, Student } from 'src/app/shared/interfaces/interfaces'
     styleUrls: ['./students-transfer-modal.component.scss'],
 })
 export class StudentsTransferModalComponent implements OnInit, OnDestroy {
-    loading = false
-    student: Student = this.data.student_data
-    studentSubscription: Subscription
-    faculties: Faculty[] = []
-    groups: Group[] = []
-    selectedGroupID: string
-    submitted = false
+    loading = false;
+    submitted = false;
+    student: Student = this.data.studentData;
+    studentInfo: StudentInfo;
+    faculties: Faculty[] = [];
+    groups: Group[] = [];
+    selectedFaculty = false;
+    selectedGroupID: number;
+    studentSubscription: Subscription;
 
     constructor(
         @Inject(MAT_DIALOG_DATA) public data: any,
@@ -29,117 +38,124 @@ export class StudentsTransferModalComponent implements OnInit, OnDestroy {
     ) {}
 
     ngOnInit(): void {
-        this.loading = true
-        this.getStudentInfo()
-        this.getFacultyList()
+        this.loading = true;
+        this.getStudentInfo();
+        this.getFacultyList();
     }
 
     getStudentInfo(): void {
         this.studentSubscription = this.studentsService
-            .getById(this.student.user_id)
+            .getById('AdminUser', this.student.user_id)
             .subscribe(
-                (response) => {
-                    this.student.username = response[0].username
-                    this.student.email = response[0].email
-                    this.loading = false
+                (response: StudentInfo[]) => {
+                    this.studentInfo = {
+                        username: response[0].username,
+                        email: response[0].email,
+                    };
                 },
-                () => {
-                    const message = 'Сталася помилка. Спробуйте знову'
-                    const title = 'Помилка'
-                    this.closeModal(title)
-                    this.modalService.openModal(AlertComponent, {
-                        data: {
-                            message,
-                            title,
-                        },
-                    })
+                (error: Response) => {
+                    this.loading = false;
+                    this.closeModal({ message: 'Помилка' });
+                    this.errorHandler(
+                        error,
+                        'Помилка',
+                        'Сталася помилка. Спробуйте знову'
+                    );
                 }
-            )
+            );
     }
 
     getFacultyList(): void {
         this.studentSubscription = this.studentsService
             .getEntityFaculty()
             .subscribe(
-                (response) => {
-                    this.faculties = response
+                (response: Faculty[]) => {
+                    this.faculties = response;
+                    this.loading = false;
                 },
-                () => {
-                    const message = 'Сталася помилка. Спробуйте знову'
-                    const title = 'Помилка'
-                    this.closeModal(title)
-                    this.modalService.openModal(AlertComponent, {
-                        data: {
-                            message,
-                            title,
-                        },
-                    })
+                (error: Response) => {
+                    this.loading = false;
+                    this.closeModal({ message: 'Помилка' });
+                    this.errorHandler(
+                        error,
+                        'Помилка',
+                        'Сталася помилка. Спробуйте знову'
+                    );
                 }
-            )
+            );
     }
 
     getGroups(event: MatSelectChange): void {
-        const facultyID = event.value
         this.studentSubscription = this.studentsService
-            .getEntityGroupsByFaculty(facultyID)
+            .getEntityGroupsByFaculty(event.value)
             .subscribe(
-                (response) => {
-                    this.groups = response
+                (response: Group[]) => {
+                    this.groups = response;
+                    this.selectedFaculty = true;
                 },
-                () => {
-                    const message = 'Сталася помилка. Спробуйте знову'
-                    const title = 'Помилка'
-                    this.closeModal(title)
-                    this.modalService.openModal(AlertComponent, {
-                        data: {
-                            message,
-                            title,
-                        },
-                    })
+                (error: Response) => {
+                    this.closeModal({ message: 'Помилка' });
+                    this.errorHandler(
+                        error,
+                        'Помилка',
+                        'Сталася помилка. Спробуйте знову'
+                    );
                 }
-            )
+            );
     }
 
     getGroup(event: MatSelectChange): void {
-        this.selectedGroupID = event.value
-        this.submitted = true
+        this.selectedGroupID = event.value;
+        this.submitted = true;
     }
 
     submit(): void {
-        this.loading = true
-        const newStudent = Object.assign({}, this.data.student_data)
-        newStudent.group_id = this.selectedGroupID
-        this.studentSubscription = this.studentsService
-            .update(this.data.student_data.user_id, newStudent)
-            .subscribe(
-                (response) => {
-                    this.loading = false
-                    const data = Object.assign({}, response)
-                    data.user_id = this.data.student_data.user_id
-                    this.dialogRef.close(data)
-                },
-                () => {
-                    const message = 'Сталася помилка. Спробуйте знову'
-                    const title = 'Помилка'
-                    this.loading = false
-                    this.closeModal(title)
-                    this.modalService.openModal(AlertComponent, {
-                        data: {
-                            message,
-                            title,
-                        },
-                    })
-                }
-            )
+        this.loading = true;
+        this.student.group_id = this.selectedGroupID;
+        const updateStudent = Object.assign({}, this.student, this.studentInfo);
+        this.update(updateStudent);
     }
 
-    closeModal(dialogResult: any = 'Скасовано'): void {
-        this.dialogRef.close(dialogResult)
+    update(updateStudent: Student): void {
+        this.studentSubscription = this.studentsService
+            .update(this.student.user_id, updateStudent)
+            .subscribe(
+                (response: Response) => {
+                    this.loading = false;
+                    this.closeModal({
+                        message: response,
+                        id: this.student.user_id,
+                    });
+                },
+                (error: Response) => {
+                    this.loading = false;
+                    this.closeModal({ message: 'Помилка' });
+                    this.errorHandler(
+                        error,
+                        'Помилка',
+                        'Сталася помилка. Спробуйте знову'
+                    );
+                }
+            );
+    }
+
+    errorHandler(error: Response, title: string, message: string): void {
+        this.modalService.openModal(AlertComponent, {
+            data: {
+                message,
+                title,
+                error,
+            },
+        });
+    }
+
+    closeModal(dialogResult: DialogResult = { message: 'Скасовано' }): void {
+        this.dialogRef.close(dialogResult);
     }
 
     ngOnDestroy(): void {
         if (this.studentSubscription) {
-            this.studentSubscription.unsubscribe()
+            this.studentSubscription.unsubscribe();
         }
     }
 }

@@ -1,15 +1,15 @@
-import { Component, OnInit, Inject } from '@angular/core'
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog'
-import { FormBuilder, FormGroup, Validators } from '@angular/forms'
+import { Component, OnInit, Inject } from '@angular/core';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
-import { GroupsService } from '../groups.service'
+import { GroupsService } from '../groups.service';
 
 export interface DialogData {
-    group_id: string
-    group_name: string
-    speciality_name: string
-    faculty_name: string
-    type: string
+    group_id: string;
+    group_name: string;
+    speciality_name: string;
+    faculty_name: string;
+    type: string;
 }
 
 @Component({
@@ -18,12 +18,12 @@ export interface DialogData {
     styleUrls: ['./group-dialog.component.scss'],
 })
 export class GroupDialogComponent implements OnInit {
-    sharedInfo: any
-    specialities: any
-    faculties: any
-    groupInfo: []
-    title: string
-    form: FormGroup
+    sharedInfo: any = [];
+    specialities: [];
+    faculties: [];
+    groupInfo: [];
+    title: string;
+    form: FormGroup;
 
     constructor(
         private formBuilder: FormBuilder,
@@ -34,14 +34,14 @@ export class GroupDialogComponent implements OnInit {
 
     ngOnInit() {
         if (this.data.type === 'add') {
-            this.title = 'Додати групу'
+            this.title = 'Додати групу';
         } else {
-            this.title = 'Редагувати групу'
+            this.title = 'Редагувати групу';
         }
-        this.sharedInfo = this.groupsSertvice.getsharedData()
-        this.specialities = this.sharedInfo[0][0]
-        this.faculties = this.sharedInfo[0][1]
-        this.groupsSertvice.getData('Group', this.data.group_id)
+        this.sharedInfo = this.groupsSertvice.getsharedData();
+        this.specialities = this.sharedInfo[0][0];
+        this.faculties = this.sharedInfo[0][1];
+        this.groupsSertvice.getData('Group', this.data.group_id);
         this.form = this.formBuilder.group({
             group_name: [
                 this.data ? this.data.group_name : '',
@@ -60,12 +60,12 @@ export class GroupDialogComponent implements OnInit {
                 this.data ? this.data.faculty_name : '',
                 [Validators.required],
             ],
-        })
+        });
     }
     addGroup() {
-        this.dialogRef.close(this.form.value)
+        this.dialogRef.close(this.form.value);
     }
     onNoClick(): void {
-        this.dialogRef.close()
+        this.dialogRef.close();
     }
 }

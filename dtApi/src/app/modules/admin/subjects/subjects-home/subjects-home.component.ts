@@ -1,20 +1,20 @@
-import { Component, OnInit, ViewChild, AfterViewInit } from '@angular/core'
-import { MatTableDataSource } from '@angular/material/table'
-import { MatSort } from '@angular/material/sort'
-import { MatPaginator } from '@angular/material/paginator'
-import { MatDialog } from '@angular/material/dialog'
+import { Component, OnInit, ViewChild, AfterViewInit } from '@angular/core';
+import { MatTableDataSource } from '@angular/material/table';
+import { MatSort } from '@angular/material/sort';
+import { MatPaginator } from '@angular/material/paginator';
+import { MatDialog } from '@angular/material/dialog';
 
-import { SubjectsService } from '../subjects.service'
-import { ModalComponent } from '../modal/modal.component'
+import { SubjectsService } from '../subjects.service';
+import { ModalComponent } from '../modal/modal.component';
 
 interface SubjectsResponse {
-    subject_id: number
-    subject_name: string
-    subject_description: string
+    subject_id: number;
+    subject_name: string;
+    subject_description: string;
 }
 interface SubjectsRequest {
-    subject_name: string
-    subject_description: string
+    subject_name: string;
+    subject_description: string;
 }
 
 @Component({
@@ -28,11 +28,11 @@ export class SubjectsHomeComponent implements OnInit, AfterViewInit {
         'subject_name',
         'subject_description',
         'operations',
-    ]
-    public dataSource = new MatTableDataSource<SubjectsResponse>()
+    ];
+    public dataSource = new MatTableDataSource<SubjectsResponse>();
 
-    @ViewChild(MatSort) sort: MatSort
-    @ViewChild(MatPaginator) paginator: MatPaginator
+    @ViewChild(MatSort) sort: MatSort;
+    @ViewChild(MatPaginator) paginator: MatPaginator;
 
     constructor(
         private subjectsService: SubjectsService,
@@ -40,68 +40,68 @@ export class SubjectsHomeComponent implements OnInit, AfterViewInit {
     ) {}
 
     ngOnInit() {
-        this.getSubjects()
+        this.getSubjects();
     }
 
     ngAfterViewInit(): void {
-        this.dataSource.sort = this.sort
-        this.dataSource.paginator = this.paginator
+        this.dataSource.sort = this.sort;
+        this.dataSource.paginator = this.paginator;
     }
 
     public getSubjects() {
         this.subjectsService
             .getData()
-            .subscribe((response) => (this.dataSource.data = response))
+            .subscribe((response) => (this.dataSource.data = response));
     }
 
     public redirectToCreate = (data: SubjectsRequest) => {
-        this.subjectsService.create(data).subscribe()
-    }
+        this.subjectsService.create(data).subscribe();
+    };
 
     public redirectToUpdate = (id: number, body: SubjectsResponse) => {
-        this.subjectsService.update(id, body).subscribe()
-    }
+        this.subjectsService.update(id, body).subscribe();
+    };
 
     public redirectToDelete = (id: number) => {
         this.subjectsService.delete(id).subscribe(() => {
             this.dataSource.data = this.dataSource.data.filter(
                 (item) => item.subject_id !== id
-            )
-        })
-    }
+            );
+        });
+    };
 
     public onCreate(): void {
         const dialogRef = this.dialog.open(ModalComponent, {
             width: '300px',
-        })
+        });
 
         dialogRef.afterClosed().subscribe((result: SubjectsRequest) => {
             if (result) {
-                const updResult = { ...result }
+                const updResult = { ...result };
                 for (const k in updResult) {
-                    if (!updResult[k]) delete updResult[k]
+                    if (!updResult[k]) delete updResult[k];
                 }
-                this.redirectToCreate(updResult)
-                this.getSubjects()
+                this.redirectToCreate(updResult);
+                this.getSubjects();
             }
-        })
+        });
     }
 
     public onEdit(element: SubjectsResponse): void {
         const dialogRef = this.dialog.open(ModalComponent, {
             width: '300px',
             data: element,
-        })
+        });
 
         dialogRef.afterClosed().subscribe((result: SubjectsResponse) => {
             if (result) {
-                this.redirectToUpdate(result.subject_id, result)
-                this.getSubjects()
+                this.redirectToUpdate(result.subject_id, result);
+                this.getSubjects();
             }
-        })
+        });
     }
 
     public doFilter = (value: string) => {
-        this.dataSource.filter = value.trim().toLocaleLowerCase()
-    }
+        this.dataSource.filter = value.trim().toLocaleLowerCase();
+    };
 }

@@ -3,6 +3,7 @@
     (ngSubmit)="submit(data, DeleteForm)"
     novalidate
     #DeleteForm="ngForm"
+    class="admins-modal"
 >
     <h1 mat-dialog-title class="modal-title">{{ data.title }}</h1>
     <div mat-dialog-content>
@@ -16,7 +17,7 @@
         <button
             type="submit"
             [disabled]="!DeleteForm.valid"
-            [mat-dialog-close]="data"
+            mat-dialog-close
             mat-button
         >
             Підтвердити

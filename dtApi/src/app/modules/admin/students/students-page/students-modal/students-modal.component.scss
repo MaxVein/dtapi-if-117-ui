@@ -1,6 +1,5 @@
 .modal {
-    width: 500px;
-    height: 700px;
+    overflow: hidden;
 
     &__header {
         margin-top: 20px;
@@ -19,7 +18,7 @@
     }
 
     &__form {
-        margin: 20px auto 20px auto;
+        margin: 20px auto auto auto;
         padding: 2% 5%;
 
         & mat-icon {
@@ -84,6 +83,6 @@
 
 mat-progress-spinner {
     position: relative;
-    left: 1.5%;
-    margin: 310px 200px;
+    left: 1%;
+    margin: 300px 185px;
 }

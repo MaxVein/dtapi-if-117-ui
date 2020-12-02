@@ -1,5 +1,5 @@
 .modal {
-    width: 700px;
+    width: 660px;
 
     &__header {
         margin-top: 15px;
@@ -34,7 +34,7 @@
         justify-content: center;
 
         & img {
-            width: 73%;
+            width: 78%;
             height: 250px;
         }
     }
@@ -92,6 +92,6 @@
 
 mat-progress-spinner {
     position: relative;
-    left: 1%;
-    margin: 281px 300px;
+    left: 1.7%;
+    margin: 281px 280px;
 }
