@@ -1,4 +1,4 @@
-<mat-sidenav-container class="sidenav-container unicorn-dark-theme">
+<mat-sidenav-container class="sidenav-container">
     <mat-sidenav
         #drawer
         class="sidenav"
@@ -75,7 +75,9 @@
             >
             <span class="toolbar-spacer"></span>
             <span class="toolbar-spacer"></span>
-            <button mat-button [matMenuTriggerFor]="menu">Адмін</button>
+            <button mat-button [matMenuTriggerFor]="menu">
+                {{ username }}
+            </button>
             <mat-menu #menu="matMenu">
                 <button mat-menu-item (click)="logOut()">Вийти</button>
             </mat-menu>

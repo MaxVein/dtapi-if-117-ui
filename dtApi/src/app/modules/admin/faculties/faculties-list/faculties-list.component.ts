@@ -4,7 +4,7 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { MatTableDataSource } from '@angular/material/table';
 
-import { Faculty } from '../../../../shared/interfaces/interfaces';
+import { Faculty } from '../../../../shared/interfaces/entity.interfaces';
 import { ApiService } from '../../../../shared/services/api.service';
 import { ModalFormComponent } from '../modal-form/modal-form.component';
 import { ConfirmDialogComponent } from '../confirm-dialog/confirm-dialog.component';
