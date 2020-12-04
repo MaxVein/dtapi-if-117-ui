@@ -16,7 +16,7 @@ import {
 } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { AlertComponent } from '../../../../../shared/components/alert/alert.component';
-import { StudentsService } from 'src/app/modules/admin/students/students.service';
+import { StudentsService } from 'src/app/modules/admin/students/services/students.service';
 import { ModalService } from '../../../../../shared/services/modal.service';
 import { Observable, of, Subscription } from 'rxjs';
 import {
@@ -25,7 +25,7 @@ import {
     Student,
     StudentInfo,
     ValidateStudentData,
-} from 'src/app/shared/interfaces/interfaces';
+} from 'src/app/shared/interfaces/entity.interfaces';
 import { environment } from 'src/environments/environment';
 
 @Component({

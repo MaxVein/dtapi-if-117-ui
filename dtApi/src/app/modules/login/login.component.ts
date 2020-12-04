@@ -1,11 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { NavigationExtras, Router } from '@angular/router';
 import { trigger, style, animate, transition } from '@angular/animations';
-import { FormBuilder, Validators } from '@angular/forms';
-
-import { logoSrc, loginForm } from './interfaces/interfaces';
-import { AuthService } from './services/auth.service';
-import { ForbiddenValidator } from './validator/userNameValidator';
+import { FormBuilder } from '@angular/forms';
+import { AuthService } from './auth.service';
+import { Logged, Logo, Login } from '../../shared/interfaces/auth.interfaces';
 
 @Component({
     animations: [
@@ -26,24 +24,10 @@ import { ForbiddenValidator } from './validator/userNameValidator';
 })
 export class LoginComponent implements OnInit {
     loginForm = this.fb.group({
-        userName: [
-            '',
-            // {
-            //     validators: [Validators.required],
-            //     // asyncValidators: [
-            //     //     this.userNameValidator.validate.bind(
-            //     //         this.userNameValidator
-            //     //     ),
-            //     // ],
-            //     // updateOn: 'blur',
-            // },
-        ],
+        userName: [''],
         password: [''],
     });
-    // get userName() {
-    //     const userNameValue = this.loginForm.get('userName')
-    //     return userNameValue
-    // }
+
     hide = true;
     badRequest = false;
     errorMessage: string;
@@ -55,29 +39,30 @@ export class LoginComponent implements OnInit {
     constructor(
         private request: AuthService,
         private router: Router,
-        private fb: FormBuilder,
-        private userNameValidator: ForbiddenValidator
-    ) {
-        this.loginForm;
-    }
+        private fb: FormBuilder
+    ) {}
 
     ngOnInit(): void {
+        this.loginForm;
         this.getLogo();
     }
 
-    onSubmit(event) {
-        event.preventDefault();
-        const formValue: loginForm = this.loginForm.value;
+    onSubmit(): void {
+        const formValue: Login = this.loginForm.value;
         this.userName = formValue.userName;
         this.password = formValue.password;
-        this.loginForm.reset();
+
         this.request.loginRequest(this.userName, this.password).subscribe({
-            next: (res) => {
+            next: (res: Logged) => {
                 const goTo = res.roles.includes('admin') ? 'admin' : 'student';
                 localStorage.setItem('role', goTo);
-                this.router.navigate([goTo]);
+                const navigationExtras: NavigationExtras = {
+                    state: { username: res.username, id: res.id },
+                };
+                this.router.navigate([goTo], navigationExtras);
             },
             error: (error) => {
+                this.loginForm.reset();
                 this.handlerError(error);
             },
         });
@@ -96,7 +81,7 @@ export class LoginComponent implements OnInit {
     }
 
     getLogo() {
-        this.request.getLogo().subscribe((res: logoSrc) => {
+        this.request.getLogo().subscribe((res: Logo) => {
             this.logoSrc = res.logo;
         });
     }

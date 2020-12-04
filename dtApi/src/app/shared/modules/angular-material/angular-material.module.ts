@@ -23,10 +23,12 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatListModule } from '@angular/material/list';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatSortModule } from '@angular/material/sort';
+import { MatCheckboxModule } from '@angular/material/checkbox';
 
 @NgModule({
     declarations: [],
     imports: [
+        MatCheckboxModule,
         CommonModule,
         MatTableModule,
         MatIconModule,
@@ -52,6 +54,7 @@ import { MatSortModule } from '@angular/material/sort';
         MatSortModule,
     ],
     exports: [
+        MatCheckboxModule,
         MatTableModule,
         MatIconModule,
         MatButtonModule,

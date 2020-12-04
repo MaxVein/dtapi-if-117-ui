@@ -1,0 +1,26 @@
+<form
+    action="post"
+    (ngSubmit)="submit(data, DeleteForm)"
+    novalidate
+    #DeleteForm="ngForm"
+    class="admins-modal"
+>
+    <h1 mat-dialog-title class="modal-title">{{ data.title }}</h1>
+    <div mat-dialog-content>
+        <p class="delete-modal-text">
+            <mat-icon class="delete-modal-icon">person_remove</mat-icon><br />
+            Ви впевнені в тому що хочете видалити даного користувача?
+        </p>
+    </div>
+    <div mat-dialog-actions class="modal-field">
+        <button mat-button type="reset" (click)="onNoClick()">Скасувати</button>
+        <button
+            type="submit"
+            [disabled]="!DeleteForm.valid"
+            mat-dialog-close
+            mat-button
+        >
+            Підтвердити
+        </button>
+    </div>
+</form>

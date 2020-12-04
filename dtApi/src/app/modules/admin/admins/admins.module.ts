@@ -2,20 +2,20 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 import { RouterModule, Routes } from '@angular/router';
-import { AdminsTemplateComponent } from './admins-template/admins-template.component';
+import { AdminsComponent } from './admins.component';
 import { SharedModule } from 'src/app/shared/modules/shared.module';
-import { AdminModalCreationComponent } from './admin-modals/admin-modal-creation/admin-modal-creation.component';
-import { DeleteConfirmModalComponent } from './admin-modals/delete-confirm-modal/delete-confirm-modal.component';
+import { AdminModalCreationComponent } from './admin-modal-creation/admin-modal-creation.component';
+import { DeleteConfirmModalComponent } from './delete-confirm-modal/delete-confirm-modal.component';
 
-const routes: Routes = [{ path: '', component: AdminsTemplateComponent }];
+const routes: Routes = [{ path: '', component: AdminsComponent }];
 
 @NgModule({
     declarations: [
-        AdminsTemplateComponent,
+        AdminsComponent,
         AdminModalCreationComponent,
         DeleteConfirmModalComponent,
     ],
     imports: [CommonModule, SharedModule, RouterModule.forChild(routes)],
-    exports: [AdminsTemplateComponent],
+    exports: [AdminsComponent],
 })
 export class AdminsModule {}

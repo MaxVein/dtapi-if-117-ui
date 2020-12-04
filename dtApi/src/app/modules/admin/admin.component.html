@@ -1,4 +1,4 @@
-<mat-sidenav-container class="sidenav-container unicorn-dark-theme">
+<mat-sidenav-container class="sidenav-container">
     <mat-sidenav
         #drawer
         class="sidenav"
@@ -9,16 +9,60 @@
     >
         <mat-toolbar>Навігація</mat-toolbar>
         <mat-nav-list>
-            <a mat-list-item routerLink="/admin/dashboard">Головна</a>
-            <a mat-list-item routerLink="/admin/faculties">Факультети</a>
-            <a mat-list-item routerLink="/admin/group">Групи</a>
-            <a mat-list-item routerLink="/admin/speciality">Спеціальності</a>
-            <a mat-list-item routerLink="/admin/subjects">Предмети</a>
-            <a mat-list-item routerLink="/admin/results">Результати</a>
-            <a mat-list-item routerLink="/admin/protocol">Протокол</a>
-            <a mat-list-item routerLink="/admin/admins">Адміни</a>
-            <a mat-list-item routerLink="/admin/about">Про нас</a>
-            <a mat-list-item routerLink="/admin/results">Результати</a>
+            <a
+                mat-list-item
+                routerLinkActive="active-link"
+                routerLink="/admin/dashboard"
+                >Головна</a
+            >
+            <a
+                mat-list-item
+                routerLinkActive="active-link"
+                routerLink="/admin/faculties"
+                >Факультети</a
+            >
+            <a
+                mat-list-item
+                routerLinkActive="active-link"
+                routerLink="/admin/group"
+                >Групи</a
+            >
+            <a
+                mat-list-item
+                routerLinkActive="active-link"
+                routerLink="/admin/speciality"
+                >Спеціальності</a
+            >
+            <a
+                mat-list-item
+                routerLinkActive="active-link"
+                routerLink="/admin/subjects"
+                >Предмети</a
+            >
+            <a
+                mat-list-item
+                routerLinkActive="active-link"
+                routerLink="/admin/results"
+                >Результати</a
+            >
+            <a
+                mat-list-item
+                routerLinkActive="active-link"
+                routerLink="/admin/protocol"
+                >Протокол</a
+            >
+            <a
+                mat-list-item
+                routerLinkActive="active-link"
+                routerLink="/admin/admins"
+                >Адміни</a
+            >
+            <a
+                mat-list-item
+                routerLinkActive="active-link"
+                routerLink="/admin/about"
+                >Про нас</a
+            >
             <a mat-list-item (click)="logOut()">Вихід</a>
         </mat-nav-list>
     </mat-sidenav>
@@ -31,7 +75,9 @@
             >
             <span class="toolbar-spacer"></span>
             <span class="toolbar-spacer"></span>
-            <button mat-button [matMenuTriggerFor]="menu">Адмін</button>
+            <button mat-button [matMenuTriggerFor]="menu">
+                {{ username }}
+            </button>
             <mat-menu #menu="matMenu">
                 <button mat-menu-item (click)="logOut()">Вийти</button>
             </mat-menu>

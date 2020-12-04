@@ -3,6 +3,7 @@ import { MatTableDataSource } from '@angular/material/table';
 import { MatSort } from '@angular/material/sort';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatDialog } from '@angular/material/dialog';
+import { Router } from '@angular/router';
 
 import { SubjectsService } from '../subjects.service';
 import { ModalComponent } from '../modal/modal.component';
@@ -36,7 +37,8 @@ export class SubjectsHomeComponent implements OnInit, AfterViewInit {
 
     constructor(
         private subjectsService: SubjectsService,
-        public dialog: MatDialog
+        public dialog: MatDialog,
+        private router: Router
     ) {}
 
     ngOnInit() {
@@ -104,4 +106,7 @@ export class SubjectsHomeComponent implements OnInit, AfterViewInit {
     public doFilter = (value: string) => {
         this.dataSource.filter = value.trim().toLocaleLowerCase();
     };
+    redirectToTest() {
+        this.router.navigate(['admin/subjects/test']);
+    }
 }

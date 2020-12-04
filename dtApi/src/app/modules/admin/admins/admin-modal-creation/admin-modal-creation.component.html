@@ -1,0 +1,216 @@
+<form
+    action="post"
+    [formGroup]="AdminForm"
+    (ngSubmit)="submit(data)"
+    novalidate
+    class="admins-modal"
+>
+    <h1 mat-dialog-title class="modal-title">{{ data.title }}</h1>
+    <div *ngIf="formForUpdateCondition; else updateForm" mat-dialog-content>
+        <mat-form-field class="modal-field">
+            <mat-label class="modal-entity-input"
+                ><mat-icon>person</mat-icon> Ім'я</mat-label
+            >
+            <input
+                name="username"
+                matInput
+                formControlName="username"
+                cdkFocusInitial
+                required
+            />
+            <small
+                *ngIf="
+                    AdminForm.controls['username'].invalid &&
+                    AdminForm.controls['username'].touched
+                "
+            >
+                Неправильне ім'я
+            </small>
+        </mat-form-field>
+        <mat-form-field class="modal-field">
+            <mat-label><mat-icon>email</mat-icon> E-mail</mat-label>
+            <input
+                name="email"
+                pattern="[a-zA-Z_]+@[a-zA-Z_]+?\.[a-zA-Z]{2,3}"
+                matInput
+                formControlName="email"
+                required
+            />
+            <small
+                *ngIf="
+                    adminControls['email'].invalid &&
+                    adminControls['email'].touched
+                "
+            >
+                Неправильний email
+            </small>
+        </mat-form-field>
+        <mat-form-field class="modal-field">
+            <mat-label><mat-icon>vpn_key</mat-icon> Пароль</mat-label>
+            <input
+                name="password"
+                [type]="hide ? 'password' : 'text'"
+                matInput
+                formControlName="password"
+                required
+            />
+            <button
+                mat-icon-button
+                matSuffix
+                (click)="hide = !hide"
+                [attr.aria-label]="'Hide password'"
+                [attr.aria-pressed]="hide"
+            >
+                <mat-icon>{{
+                    hide ? 'visibility_off' : 'visibility'
+                }}</mat-icon>
+            </button>
+            <small
+                *ngIf="
+                    adminControls['password'].invalid &&
+                    adminControls['password'].touched
+                "
+            >
+                <ul>
+                    <li>Мінімум 9 символів</li>
+                    <li>Одна велика та мала буква та 1 цифра</li>
+                </ul>
+            </small>
+        </mat-form-field>
+        <mat-form-field class="modal-field">
+            <mat-label>Підтвердіть пароль</mat-label>
+            <input
+                name="password_confirm"
+                matInput
+                formControlName="password_confirm"
+                [type]="hide ? 'password' : 'text'"
+                required
+            />
+            <button
+                mat-icon-button
+                matSuffix
+                (click)="hide = !hide"
+                [attr.aria-label]="'Hide password'"
+                [attr.aria-pressed]="hide"
+            >
+                <mat-icon>{{
+                    hide ? 'visibility_off' : 'visibility'
+                }}</mat-icon>
+            </button>
+            <small
+                *ngIf="
+                    adminControls['password_confirm'].invalid &&
+                    adminControls['password_confirm'].touched
+                "
+            >
+                Паролі не однакові
+            </small>
+        </mat-form-field>
+    </div>
+    <ng-template #updateForm>
+        <div mat-dialog-content>
+            <mat-form-field class="modal-field">
+                <mat-label><mat-icon>person</mat-icon> Ім'я</mat-label>
+                <input
+                    name="username"
+                    matInput
+                    formControlName="username"
+                    cdkFocusInitial
+                    (focus)="deleteUpdateFormNameValidation()"
+                />
+                <small
+                    *ngIf="
+                        AdminForm.controls['username'].invalid &&
+                        AdminForm.controls['username'].touched
+                    "
+                >
+                    Неправильне ім'я
+                </small>
+            </mat-form-field>
+            <mat-form-field class="modal-field">
+                <mat-label><mat-icon>email</mat-icon> E-mail</mat-label>
+                <input
+                    name="email"
+                    pattern="[a-zA-Z_]+@[a-zA-Z_]+?\.[a-zA-Z]{2,3}"
+                    matInput
+                    formControlName="email"
+                />
+                <small
+                    *ngIf="
+                        adminControls['email'].invalid &&
+                        adminControls['email'].touched
+                    "
+                >
+                    Неправильний email
+                </small>
+            </mat-form-field>
+            <mat-form-field class="modal-field">
+                <mat-label><mat-icon>vpn_key</mat-icon> Пароль</mat-label>
+                <input
+                    name="password"
+                    [type]="hide ? 'password' : 'text'"
+                    matInput
+                    formControlName="password"
+                />
+                <button
+                    mat-icon-button
+                    matSuffix
+                    (click)="hide = !hide"
+                    [attr.aria-label]="'Hide password'"
+                    [attr.aria-pressed]="hide"
+                >
+                    <mat-icon>{{
+                        hide ? 'visibility_off' : 'visibility'
+                    }}</mat-icon>
+                </button>
+
+                <small
+                    *ngIf="
+                        adminControls['password'].invalid &&
+                        adminControls['password'].touched
+                    "
+                >
+                    <ul>
+                        <li>Мінімум 9 символів</li>
+                        <li>Одна велика та мала буква та 1 цифра</li>
+                    </ul>
+                </small>
+            </mat-form-field>
+            <mat-form-field class="modal-field">
+                <mat-label>Підтвердіть пароль</mat-label>
+                <input
+                    name="password_confirm"
+                    matInput
+                    formControlName="password_confirm"
+                    [type]="hide ? 'password' : 'text'"
+                />
+                <button
+                    mat-icon-button
+                    matSuffix
+                    (click)="hide = !hide"
+                    [attr.aria-label]="'Hide password'"
+                    [attr.aria-pressed]="hide"
+                >
+                    <mat-icon>{{
+                        hide ? 'visibility_off' : 'visibility'
+                    }}</mat-icon>
+                </button>
+
+                <small
+                    *ngIf="
+                        adminControls['password_confirm'].invalid &&
+                        adminControls['password_confirm'].touched
+                    "
+                >
+                    Паролі не однакові
+                </small>
+            </mat-form-field>
+        </div>
+    </ng-template>
+    <div mat-dialog-actions class="modal-field">
+        <button mat-button type="reset" (click)="onNoClick()">Скасувати</button>
+        <button type="submit" [disabled]="!AdminForm.valid" mat-button>
+            Зберегти
+        </button>
+    </div>
+</form>
