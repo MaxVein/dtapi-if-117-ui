@@ -3,14 +3,14 @@ import { RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { SharedModule } from 'src/app/shared/modules/shared.module';
 
-import { StudentPageComponent } from './student-page.component';
+import { ProfilePageComponent } from './profile-page.component';
 
 @NgModule({
-    declarations: [StudentPageComponent],
+    declarations: [ProfilePageComponent],
     imports: [
         CommonModule,
         SharedModule,
-        RouterModule.forChild([{ path: '', component: StudentPageComponent }]),
+        RouterModule.forChild([{ path: '', component: ProfilePageComponent }]),
     ],
 })
-export class StudentPageModule {}
+export class ProfileModule {}

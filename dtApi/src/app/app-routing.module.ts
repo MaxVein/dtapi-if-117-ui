@@ -24,9 +24,9 @@ const routes: Routes = [
     {
         path: 'student',
         loadChildren: () =>
-            import(
-                './modules/student-profile/student-page/student-page.module'
-            ).then((m) => m.StudentPageModule),
+            import('./modules/student/student.module').then(
+                (m) => m.StudentModule
+            ),
         canActivate: [StudentGuard],
     },
     { path: '404', component: NotFoundPageComponent },

@@ -1,28 +1,23 @@
 import { Component, HostBinding } from '@angular/core';
-import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
-import { Observable } from 'rxjs';
-import { map, shareReplay } from 'rxjs/operators';
-import { AuthService } from '../login/auth.service';
 import { Router } from '@angular/router';
+import { AuthService } from '../../modules/login/auth.service';
 import { OverlayContainer } from '@angular/cdk/overlay';
-import { RouterState } from '../../shared/interfaces/student.interfaces';
 import { Logged } from '../../shared/interfaces/auth.interfaces';
+import { RouterState } from '../../shared/interfaces/student.interfaces';
 
 @Component({
-    selector: 'app-admin',
-    templateUrl: './admin.component.html',
-    styleUrls: ['./admin.component.scss'],
+    selector: 'app-student',
+    templateUrl: './student.component.html',
+    styleUrls: ['./student.component.scss'],
 })
-export class AdminComponent {
-    menuIcon = 'menu_open';
+export class StudentComponent {
     username: string;
 
     @HostBinding('class') componentCssClass;
 
     constructor(
-        private apiService: AuthService,
         private router: Router,
-        private breakpointObserver: BreakpointObserver,
+        private auth: AuthService,
         public overlayContainer: OverlayContainer
     ) {
         this.getUserData();
@@ -34,7 +29,7 @@ export class AdminComponent {
             const state = navigation.extras.state as RouterState;
             this.username = state.username;
         } else {
-            this.apiService.isLogged().subscribe((response: Logged) => {
+            this.auth.isLogged().subscribe((response: Logged) => {
                 this.username = response.username;
             });
         }
@@ -50,24 +45,11 @@ export class AdminComponent {
         this.componentCssClass = theme;
     }
 
-    logOut(): void {
-        this.apiService.logOutRequest().subscribe({
-            next: () => this.router.navigate(['/login']),
+    logout(): void {
+        this.auth.logOutRequest().subscribe({
+            next: () => {
+                this.router.navigate(['/login']);
+            },
         });
     }
-
-    menuIconChange(): void {
-        if (this.menuIcon === 'menu_open') {
-            this.menuIcon = 'menu';
-        } else {
-            this.menuIcon = 'menu_open';
-        }
-    }
-
-    isHandset$: Observable<boolean> = this.breakpointObserver
-        .observe(Breakpoints.Handset)
-        .pipe(
-            map((result) => result.matches),
-            shareReplay()
-        );
 }

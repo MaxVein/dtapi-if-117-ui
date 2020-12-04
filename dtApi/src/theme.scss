@@ -17,3 +17,54 @@ $dark-theme: mat-dark-theme($dark-primary, $dark-accent, $dark-warn);
 .dark-theme {
     @include angular-material-theme($dark-theme);
 }
+.mat-list-item.active-link {
+    background-color: #3f51b5;
+    color: white;
+    font-weight: 500;
+}
+.mat-list-item.active-link:focus {
+    background-color: #3f51b5;
+    color: white;
+    font-weight: 500;
+}
+.mat-list-item.active-link:hover {
+    background-color: #3f51b5;
+    color: white;
+    font-weight: 500;
+}
+.mat-list-item.active-link:active {
+    background-color: #3f51b5;
+    color: white;
+    font-weight: 500;
+}
+.mat-nav-list .mat-list-item:hover {
+    background-color: #3f51b5ab;
+    color: white;
+}
+.mat-list-item.active-link:hover {
+    background-color: #3f51b5;
+    color: white;
+}
+
+.dark-theme .mat-nav-list .active-link {
+    background-color: #e91e63;
+    font-weight: 500;
+}
+.dark-theme .mat-nav-list .active-link:focus {
+    background-color: #e91e63;
+    font-weight: 500;
+}
+.dark-theme .mat-nav-list .active-link:hover {
+    background-color: #e91e63;
+    font-weight: 500;
+}
+.dark-theme .mat-nav-list .active-link:active {
+    background-color: #e91e63;
+    font-weight: 500;
+}
+.dark-theme .mat-nav-list .mat-list-item:hover {
+    background-color: #e91e629d;
+}
+.dark-theme .mat-nav-list .active-link:hover {
+    background-color: #e91e63;
+}

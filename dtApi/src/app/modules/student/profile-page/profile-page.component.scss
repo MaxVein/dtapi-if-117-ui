@@ -1,22 +1,22 @@
-.student-container {
+.profile-container {
     padding-top: 30px;
     display: flex;
     height: 100%;
     justify-content: space-evenly;
     flex-wrap: wrap;
     align-items: flex-start;
-    .student-test-timeTable {
-        .student-table-test {
+    .profile-test-timeTable {
+        .profile-table-test {
             margin-bottom: 40px;
         }
     }
-    .student-test-title,
-    .student-info-title {
+    .profile-test-title,
+    .profile-info-title {
         text-align: center;
         font-size: 24px;
         padding-bottom: 20px;
     }
-    .student-table {
+    .profile-table {
         th,
         td {
             text-align: center;
@@ -28,10 +28,10 @@
             }
         }
     }
-    .student-info {
+    .profile-info {
         text-align: center;
         margin-bottom: 30px;
-        .student-info-title {
+        .profile-info-title {
             font-size: 25px;
             margin-bottom: 60px;
         }
@@ -42,10 +42,10 @@
                 0px 3px 14px 2px rgba(0, 0, 0, 0.12);
         }
     }
-    .student-test-options {
+    .profile-test-options {
         text-align: center;
     }
-    .student-select {
+    .profile-select {
         height: 35px;
         background-color: rgba(0, 0, 0, 0.05);
         font-size: 15px;
@@ -56,10 +56,4 @@
     .test-icon {
         cursor: pointer;
     }
-}
-
-.student-toolbar {
-    display: flex;
-    justify-content: space-between;
-    z-index: 100;
 }

@@ -1,7 +1,7 @@
 import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { AlertComponent } from '../../../../../shared/components/alert/alert.component';
-import { StudentsService } from 'src/app/modules/admin/students/students.service';
+import { StudentsService } from 'src/app/modules/admin/students/services/students.service';
 import { ModalService } from '../../../../../shared/services/modal.service';
 import { Subscription } from 'rxjs';
 import {
@@ -12,7 +12,7 @@ import {
     Speciality,
     Student,
     StudentInfo,
-} from 'src/app/shared/interfaces/interfaces';
+} from 'src/app/shared/interfaces/entity.interfaces';
 import { environment } from 'src/environments/environment';
 
 @Component({
@@ -29,7 +29,7 @@ export class StudentsViewModalComponent implements OnInit, OnDestroy {
     groupName: string;
     facultyName: string;
     specialityName: string;
-    defaultImage = environment.defaultImage;
+    defaultImage: string = environment.defaultImage;
     studentSubscription: Subscription;
 
     constructor(

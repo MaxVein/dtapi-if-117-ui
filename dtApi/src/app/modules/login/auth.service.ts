@@ -1,9 +1,9 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Router } from '@angular/router';
-import { Observable, of } from 'rxjs';
+import { Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
-
+import { Response } from 'src/app/shared/interfaces/entity.interfaces';
+import { Logged, Logo } from 'src/app/shared/interfaces/auth.interfaces';
 import { environment } from 'src/environments/environment';
 
 @Injectable({
@@ -12,39 +12,41 @@ import { environment } from 'src/environments/environment';
 export class AuthService {
     currentUser = null;
 
-    constructor(private http: HttpClient, private router: Router) {}
+    constructor(private http: HttpClient) {}
 
-    loginRequest(userName: string, password: string): Observable<any> {
-        const url = 'login/index';
+    loginRequest(userName: string, password: string): Observable<Logged> {
         const body = {
             username: userName,
             password: password,
         };
-        return this.http.post(`${environment.BASEURL}${url}`, body).pipe(
-            tap((data) => {
-                this.currentUser = data;
-            })
-        );
+        return this.http
+            .post<Logged>(`${environment.BASEURL}login/index`, body)
+            .pipe(
+                tap((data) => {
+                    this.currentUser = data;
+                })
+            );
     }
 
-    logOutRequest() {
-        return this.http.get(`${environment.BASEURL}login/logout`).pipe(
-            tap(() => {
-                this.currentUser = null;
-            })
-        );
+    logOutRequest(): Observable<Response> {
+        return this.http
+            .get<Response>(`${environment.BASEURL}login/logout`)
+            .pipe(
+                tap(() => {
+                    this.currentUser = null;
+                })
+            );
     }
 
-    isLogged() {
-        const url = 'login/isLogged';
-        return this.http.get(`${environment.BASEURL}${url}`);
+    isLogged(): Observable<Logged> {
+        return this.http.get<Logged>(`${environment.BASEURL}login/isLogged`);
     }
 
-    getLogo() {
-        const url = 'welcome/logo';
-        return this.http.get(`${environment.BASEURL}${url}`);
+    getLogo(): Observable<Logo> {
+        return this.http.get<Logo>(`${environment.BASEURL}welcome/logo`);
     }
-    getUserName(userName) {
+
+    getUserName(userName: string) {
         const url = `AdminUser/checkUserName/${userName}`;
         return this.http.get(`${environment.BASEURL}${url}`);
     }
