@@ -75,6 +75,8 @@ export class StudentPageComponent implements OnInit {
     @ViewChild(MatPaginator) paginator: MatPaginator;
 
     ngOnInit(): void {
+        this.student.resetSessionData();
+        this.student.timer(15);
         this.auth
             .isLogged()
             .pipe(
@@ -194,6 +196,7 @@ export class StudentPageComponent implements OnInit {
         this.subjectName = event.target.value;
         this.getTestInfo();
     }
+
     logOut() {
         this.auth.logOutRequest().subscribe({
             next: () => {
@@ -201,6 +204,7 @@ export class StudentPageComponent implements OnInit {
             },
         });
     }
+
     openSnackBar(message: string, action: string) {
         this.snackBar.open(message, action, {
             duration: 2000,
@@ -219,6 +223,7 @@ export class StudentPageComponent implements OnInit {
                 this.openDialog(this.dialogTitle, err.error.response),
         });
     }
+
     openDialog(title: string, message: string): void {
         this.dialog.open(AlertComponent, {
             data: { title, message },

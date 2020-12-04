@@ -55,21 +55,52 @@ const routes: Routes = [
                 ],
             },
             {
-                path: 'tests',
-                loadChildren: () =>
-                    import('./test/test.module').then((m) => m.TestModule),
-            },
-            {
                 path: 'about',
                 loadChildren: () =>
                     import('./about/about.module').then((m) => m.AboutModule),
             },
             {
                 path: 'subjects',
-                loadChildren: () =>
-                    import('./subjects/subjects.module').then(
-                        (m) => m.SubjectsModule
-                    ),
+                children: [
+                    {
+                        path: '',
+                        loadChildren: () =>
+                            import('./subjects/subjects.module').then(
+                                (m) => m.SubjectsModule
+                            ),
+                    },
+                    {
+                        path: 'test',
+                        children: [
+                            {
+                                path: '',
+                                loadChildren: () =>
+                                    import('./test/test.module').then(
+                                        (m) => m.TestModule
+                                    ),
+                            },
+                            {
+                                path: 'questions',
+                                children: [
+                                    {
+                                        path: '',
+                                        loadChildren: () =>
+                                            import(
+                                                './questions/questions.module'
+                                            ).then((m) => m.QuestionsModule),
+                                    },
+                                    {
+                                        path: 'answer',
+                                        loadChildren: () =>
+                                            import(
+                                                './answers/answers.module'
+                                            ).then((m) => m.AnswersModule),
+                                    },
+                                ],
+                            },
+                        ],
+                    },
+                ],
             },
             {
                 path: '',
