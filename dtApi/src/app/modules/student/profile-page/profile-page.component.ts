@@ -3,10 +3,10 @@ import { Router } from '@angular/router';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
 import { AlertComponent } from '../../../shared/components/alert/alert.component';
-import { AuthService } from '../../login/services/auth.service';
+import { AuthService } from '../../login/auth.service';
 import { StudentService } from '../services/student.service';
 import { ModalService } from '../../../shared/services/modal.service';
-import { Subscription } from 'rxjs';
+import { Subscription, throwError } from 'rxjs';
 import { concatMap, map } from 'rxjs/operators';
 import { Logged } from '../../../shared/interfaces/auth.interfaces';
 import {
@@ -193,25 +193,19 @@ export class ProfilePageComponent implements OnInit, OnDestroy {
             .pipe(
                 concatMap((res: TestDetails[]) => {
                     this.testsBySubject = res;
-                    if (!Array.isArray(res)) {
-                        this.modalService.openModal(AlertComponent, {
-                            data: {
-                                message: 'Дані відсутні',
-                                title: 'Увага',
-                            },
-                        });
+                    if (!res[0]) {
+                        return throwError(new Error());
                     } else {
                         return this.studentService.getTestDetails(
                             this.subjectID
                         );
                     }
-                }),
-                map((res) => res[0])
+                })
             )
             .subscribe({
                 next: (res: TestDate) => {
-                    let testDate = res;
-                    if (testDate === undefined) {
+                    let testDate = res[0] ? res[0] : res;
+                    if (testDate.response === 'no records') {
                         testDate = {
                             end_date: 'Дані відсутні',
                             start_date: 'Дані відсутні',
@@ -228,11 +222,12 @@ export class ProfilePageComponent implements OnInit, OnDestroy {
                 },
                 error: (error: Response) => {
                     this.dataSource = null;
-                    this.errorHandler(
-                        error,
-                        'Помилка',
-                        'Сталася помилка. Спробуйте знову'
-                    );
+                    this.modalService.openModal(AlertComponent, {
+                        data: {
+                            message: 'Дані відсутні',
+                            title: 'Увага',
+                        },
+                    });
                 },
             });
     }

@@ -2,8 +2,8 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
-import { Response } from '../../../shared/interfaces/entity.interfaces';
-import { Logged, Logo } from '../../../shared/interfaces/auth.interfaces';
+import { Response } from 'src/app/shared/interfaces/entity.interfaces';
+import { Logged, Logo } from 'src/app/shared/interfaces/auth.interfaces';
 import { environment } from 'src/environments/environment';
 
 @Injectable({
