@@ -24,3 +24,8 @@ export interface TestDate {
     timetable_id?: string;
     response?: string;
 }
+
+export interface SpecialityDataProfile {
+    name: string;
+    code: string;
+}

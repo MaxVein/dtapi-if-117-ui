@@ -19,7 +19,11 @@
             Dark
         </button>
     </mat-menu>
-    <button mat-button [matMenuTriggerFor]="menu">
+    <button
+        mat-button
+        [matMenuTriggerFor]="menu"
+        matTooltip="Натисніть, щоб вийти"
+    >
         {{ username }}
     </button>
     <mat-menu #menu="matMenu">
