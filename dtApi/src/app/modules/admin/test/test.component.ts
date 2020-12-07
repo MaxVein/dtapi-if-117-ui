@@ -1,16 +1,18 @@
 import { Component, ViewChild, OnInit } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 
 import { TestService } from './services/test.service';
 import { Test } from './models/Test';
 import { Subject } from './models/Subject';
 import { TestModalComponent } from './test-modal/test-modal.component';
 import { ModalService } from './services/modal.service';
+import { ActivatedRoute, Router } from '@angular/router';
 
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource, MatTable } from '@angular/material/table';
 import { MatSort } from '@angular/material/sort';
 import { MatDialog } from '@angular/material/dialog';
+import { filter, map, tap } from 'rxjs/operators';
 
 @Component({
     selector: 'app-tests',
@@ -20,6 +22,8 @@ import { MatDialog } from '@angular/material/dialog';
 export class TestComponent implements OnInit {
     tests: Test[] = [];
     subjects: Subject[] = [];
+
+    subject_id: string;
 
     displayedColumns: string[] = [
         'test_id',
@@ -40,14 +44,29 @@ export class TestComponent implements OnInit {
     constructor(
         private testService: TestService,
         private modalService: ModalService,
-        public dialog: MatDialog
+        public dialog: MatDialog,
+        private router: Router,
+        private activeRoute: ActivatedRoute
     ) {}
 
     ngOnInit() {
-        this.getTests().subscribe((data: Test[]) => {
-            this.tests = data;
-            this.dataSource.data = this.tests;
+        this.activeRoute.queryParams.subscribe((queryParam: any) => {
+            this.subject_id = queryParam['subject_id'];
         });
+        this.getTests()
+            .pipe(
+                map((val: any) =>
+                    val.filter((item) => {
+                        if (item.subject_id === this.subject_id) {
+                            return val;
+                        }
+                    })
+                )
+            )
+            .subscribe((data: Test[]) => {
+                this.tests = data;
+                this.dataSource.data = this.tests;
+            });
         this.getSubjects().subscribe(
             (data: Subject[]) => (this.subjects = data)
         );
@@ -56,7 +75,7 @@ export class TestComponent implements OnInit {
         this.dataSource.sort = this.sort;
     }
 
-    getTests(): Observable<Test[]> {
+    getTests(): any {
         return this.testService.getEntity('test');
     }
 
@@ -139,5 +158,8 @@ export class TestComponent implements OnInit {
                     'Спочатку видаліть всі деталі тесту'
                 )
         );
+    }
+    navigateToTestQuestions(id: number): void {
+        this.router.navigate(['admin/subjects/tests/questions', id]);
     }
 }
