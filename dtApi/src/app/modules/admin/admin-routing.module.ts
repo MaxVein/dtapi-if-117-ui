@@ -79,25 +79,6 @@ const routes: Routes = [
                                         (m) => m.TestModule
                                     ),
                             },
-                            {
-                                path: 'questions',
-                                children: [
-                                    {
-                                        path: '',
-                                        loadChildren: () =>
-                                            import(
-                                                './questions/questions.module'
-                                            ).then((m) => m.QuestionsModule),
-                                    },
-                                    {
-                                        path: 'answer',
-                                        loadChildren: () =>
-                                            import(
-                                                './answers/answers.module'
-                                            ).then((m) => m.AnswersModule),
-                                    },
-                                ],
-                            },
                         ],
                     },
                 ],

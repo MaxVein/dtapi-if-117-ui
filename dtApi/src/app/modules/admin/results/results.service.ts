@@ -59,4 +59,18 @@ export class ResultsService {
 
         return `${hours}:${minutes}:${seconds}`;
     }
+
+    getByEntityManager(
+        entity: string,
+        idsList: Array<number>
+    ): Observable<any> {
+        const data = {
+            entity: entity,
+            ids: idsList,
+        };
+        return this.http.post(
+            `${environment.BASEURL}EntityManager/getEntityValues`,
+            data
+        );
+    }
 }

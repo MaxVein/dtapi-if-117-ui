@@ -1,6 +1,9 @@
 import { Component, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { MatTableDataSource } from '@angular/material/table';
 import { forkJoin } from 'rxjs';
+import { DetailDialogComponent } from './detail-dialog/detail-dialog.component';
 import { ResultsService } from './results.service';
 
 @Component({
@@ -9,7 +12,11 @@ import { ResultsService } from './results.service';
     styleUrls: ['./results.component.scss'],
 })
 export class ResultsComponent implements OnInit {
-    constructor(private resultService: ResultsService) {}
+    constructor(
+        private resultService: ResultsService,
+        private formBuilder: FormBuilder,
+        private dialog: MatDialog
+    ) {}
     displayedColumns: string[] = [
         'id',
         'fullName',
@@ -23,12 +30,17 @@ export class ResultsComponent implements OnInit {
     testId;
     groupList;
     testsListByGroup;
-    testsList;
+    testsList = null;
     studentsResultsByGroup;
     testResults;
     dataSource = new MatTableDataSource();
+    form: FormGroup;
 
     ngOnInit(): void {
+        this.getGroupAndTestInfo();
+        this.formInitialize();
+    }
+    private getGroupAndTestInfo() {
         this.resultService.getGroupList().subscribe({
             next: (res) => {
                 this.groupList = res;
@@ -46,11 +58,17 @@ export class ResultsComponent implements OnInit {
             next: (res: any) => {
                 if (res.response) {
                     this.resultService.snackBarOpen();
+                    this.testId = null;
+                    this.testsList = null;
+                } else {
+                    this.groupId = $event.value;
+                    this.testsList = this.testsListByGroup.filter((i) =>
+                        res.some((j) => j.test_id === i.test_id)
+                    );
                 }
-                this.groupId = $event.value;
-                this.testsList = this.testsListByGroup.filter((i) =>
-                    res.some((j) => j.test_id === i.test_id)
-                );
+            },
+            error: () => {
+                this.testId = null;
             },
         });
     }
@@ -81,6 +99,21 @@ export class ResultsComponent implements OnInit {
     }
 
     onChangeTest($event) {
-        this.testId = $event.value;
+        if ($event.value) {
+            this.testId = $event.value;
+        }
+    }
+
+    private formInitialize() {
+        this.form = this.formBuilder.group({
+            testName: ['', [Validators.required]],
+            groupName: ['', [Validators.required]],
+        });
+    }
+
+    onClick(data) {
+        this.dialog.open(DetailDialogComponent, {
+            data,
+        });
     }
 }

@@ -2,3 +2,31 @@ td,
 th {
     width: auto;
 }
+.getDataBtn {
+    width: 100%;
+    margin-bottom: 20px;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    border-radius: 0%;
+    &:hover {
+        opacity: 0.85;
+    }
+    &:disabled {
+        cursor: not-allowed;
+    }
+}
+
+.operation-button {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.2rem;
+    height: 2.2rem;
+    min-width: 30px;
+    margin: 0 0.5rem 0 0;
+    padding: 0 0.4rem;
+    &:hover {
+        opacity: 0.85;
+    }
+}
