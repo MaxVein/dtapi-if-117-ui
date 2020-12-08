@@ -99,6 +99,7 @@ export class AdminsComponent implements OnInit {
             })
             .afterClosed()
             .subscribe((res) => {
+                if (!res) return;
                 if (res.finished) {
                     this.dataSource.data.splice(
                         this.dataSource.data.indexOf(res.user),

@@ -65,31 +65,62 @@
         <ng-container matColumnDef="actions">
             <th mat-header-cell *matHeaderCellDef mat-sort-header>Дії</th>
             <td mat-cell *matCellDef="let element">
-                <mat-icon
-                    (click)="openEditDialog(element)"
-                    aria-hidden="false"
-                    aria-label="edit"
-                    matTooltip="Редагування"
+                <button
+                    class="operation-button"
+                    color="primary"
+                    mat-flat-button
                 >
-                    edit
-                </mat-icon>
-                <mat-icon
-                    (click)="removeTest(element)"
-                    aria-hidden="false"
-                    aria-label="delete"
-                    matTooltip="Видалення
+                    <mat-icon
+                        (click)="openEditDialog(element)"
+                        aria-hidden="false"
+                        aria-label="edit"
+                        matTooltip="Редагування"
+                    >
+                        edit
+                    </mat-icon>
+                </button>
+                <button
+                    class="operation-button"
+                    color="primary"
+                    mat-flat-button
+                >
+                    <mat-icon
+                        (click)="removeTest(element)"
+                        aria-hidden="false"
+                        aria-label="delete"
+                        matTooltip="Видалення
                     "
+                    >
+                        delete
+                    </mat-icon>
+                </button>
+                <button
+                    class="operation-button"
+                    color="primary"
+                    mat-flat-button
                 >
-                    delete
-                </mat-icon>
-                <mat-icon
-                    aria-hidden="false"
-                    aria-label="description"
-                    matTooltip="Параметри теста
-                    "
+                    <mat-icon
+                        aria-hidden="false"
+                        aria-label="description"
+                        matTooltip="Параметри теста"
+                    >
+                        description
+                    </mat-icon>
+                </button>
+                <button
+                    class="operation-button"
+                    color="primary"
+                    mat-flat-button
                 >
-                    description
-                </mat-icon>
+                    <mat-icon
+                        aria-hidden="false"
+                        aria-label="questions"
+                        matTooltip="Питання до тесту"
+                        (click)="navigateToTestQuestions(element.test_id)"
+                    >
+                        help_center
+                    </mat-icon>
+                </button>
             </td>
         </ng-container>
         <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
