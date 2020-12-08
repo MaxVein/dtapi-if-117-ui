@@ -9,7 +9,7 @@ import { ResultsService } from '../results.service';
     styleUrls: ['./detail-dialog.component.scss'],
 })
 export class DetailDialogComponent implements OnInit {
-    displayedColumns: string[] = ['id', 'textName', 'answer'];
+    displayedColumns: string[] = ['id', 'textName', 'answer', 'details'];
     constructor(
         private resService: ResultsService,
         @Inject(MAT_DIALOG_DATA) public data?

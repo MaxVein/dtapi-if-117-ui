@@ -57,10 +57,11 @@ export class ResultsComponent implements OnInit {
         this.resultService.getResultTestIdsByGroup($event.value).subscribe({
             next: (res: any) => {
                 if (res.response) {
-                    this.resultService.snackBarOpen();
-                    this.testId = null;
                     this.testsList = null;
+
+                    this.resultService.snackBarOpen();
                 } else {
+                    this.form.get('testName').reset();
                     this.groupId = $event.value;
                     this.testsList = this.testsListByGroup.filter((i) =>
                         res.some((j) => j.test_id === i.test_id)
@@ -73,29 +74,34 @@ export class ResultsComponent implements OnInit {
         });
     }
     onSubmit() {
-        forkJoin([
-            this.resultService.getStudentInfo(this.groupId),
-            this.resultService.getRecordsByTestDate(this.testId, this.groupId),
-        ]).subscribe({
-            next: ([gropuRes, testRes]: [[], []]) => {
-                this.testResults = testRes;
-                this.studentsResultsByGroup = gropuRes;
-                this.dataSource.data = this.testResults.map((item) => {
-                    const duration = this.resultService.getDuration(
-                        item.session_date,
-                        item.start_time,
-                        item.end_time
-                    );
+        if (this.form.get('testName').value) {
+            forkJoin([
+                this.resultService.getStudentInfo(this.groupId),
+                this.resultService.getRecordsByTestDate(
+                    this.testId,
+                    this.groupId
+                ),
+            ]).subscribe({
+                next: ([gropuRes, testRes]: [[], []]) => {
+                    this.testResults = testRes;
+                    this.studentsResultsByGroup = gropuRes;
+                    this.dataSource.data = this.testResults.map((item) => {
+                        const duration = this.resultService.getDuration(
+                            item.session_date,
+                            item.start_time,
+                            item.end_time
+                        );
 
-                    const studentInfo = this.studentsResultsByGroup.filter(
-                        (data) => data.user_id === item.student_id
-                    );
-                    return Object.assign({}, item, ...studentInfo, {
-                        duration,
+                        const studentInfo = this.studentsResultsByGroup.filter(
+                            (data) => data.user_id === item.student_id
+                        );
+                        return Object.assign({}, item, ...studentInfo, {
+                            duration,
+                        });
                     });
-                });
-            },
-        });
+                },
+            });
+        }
     }
 
     onChangeTest($event) {
@@ -115,6 +121,8 @@ export class ResultsComponent implements OnInit {
         this.dialog.open(DetailDialogComponent, {
             data,
             panelClass: 'custom-dialog-container',
+            disableClose: true,
+            maxHeight: '90vh',
         });
     }
 }

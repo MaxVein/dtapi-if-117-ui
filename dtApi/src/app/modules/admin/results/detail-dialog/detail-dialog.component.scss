@@ -3,6 +3,9 @@ th {
     width: auto;
     padding: 5px;
 }
+td {
+    justify-content: center;
+}
 
 .true-answer {
     background-color: #b5baff;
@@ -19,5 +22,12 @@ th {
     padding-bottom: 5px;
     &:hover {
         opacity: 0.85;
+    }
+}
+.detail-btn {
+    font-size: 1.5rem;
+    cursor: pointer;
+    &:hover {
+        font-size: 1.6rem;
     }
 }
