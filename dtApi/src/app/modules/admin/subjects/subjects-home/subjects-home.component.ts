@@ -106,7 +106,11 @@ export class SubjectsHomeComponent implements OnInit, AfterViewInit {
     public doFilter = (value: string) => {
         this.dataSource.filter = value.trim().toLocaleLowerCase();
     };
-    redirectToTest() {
-        this.router.navigate(['admin/subjects/test']);
+    redirectToTest(id: number) {
+        this.router.navigate(['admin/subjects/tests'], {
+            queryParams: {
+                subject_id: id,
+            },
+        });
     }
 }
