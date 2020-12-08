@@ -71,3 +71,8 @@ th {
     display: flex;
     justify-content: space-between;
 }
+.custom-dialog-container {
+    mat-dialog-container {
+        padding: 0px;
+    }
+}

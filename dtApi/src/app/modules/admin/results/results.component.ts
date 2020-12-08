@@ -114,6 +114,7 @@ export class ResultsComponent implements OnInit {
     onClick(data) {
         this.dialog.open(DetailDialogComponent, {
             data,
+            panelClass: 'custom-dialog-container',
         });
     }
 }

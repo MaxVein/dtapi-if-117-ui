@@ -9,7 +9,7 @@ import { ResultsService } from '../results.service';
     styleUrls: ['./detail-dialog.component.scss'],
 })
 export class DetailDialogComponent implements OnInit {
-    displayedColumns: string[] = ['id', 'textName'];
+    displayedColumns: string[] = ['id', 'textName', 'answer'];
     constructor(
         private resService: ResultsService,
         @Inject(MAT_DIALOG_DATA) public data?
@@ -19,12 +19,19 @@ export class DetailDialogComponent implements OnInit {
     dataSource = new MatTableDataSource();
     ngOnInit(): void {
         this.dataSource.data = JSON.parse(this.data.questions);
+
         this.ids = this.dataSource.data.map((i) => {
             return i['question_id'];
         });
         this.resService.getByEntityManager('Question', this.ids).subscribe({
             next: (res) => {
                 this.questionsList = res;
+                this.dataSource.data = this.questionsList.map((item) => {
+                    const studentInfo = JSON.parse(
+                        this.data.true_answers
+                    ).filter((data) => data.question_id === item.question_id);
+                    return Object.assign({}, item, ...studentInfo);
+                });
             },
         });
     }

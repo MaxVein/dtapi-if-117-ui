@@ -1,18 +1,39 @@
-<table mat-table [dataSource]="questionsList">
+<table mat-table [dataSource]="dataSource">
     <ng-container matColumnDef="id">
-        <th mat-header-cell *matHeaderCellDef>№</th>
-        <td mat-cell *matCellDef="let element">
+        <th mat-header-cell *matHeaderCellDef>ID</th>
+        <td
+            mat-cell
+            *matCellDef="let element"
+            [ngClass]="element.true ? 'true-answer' : 'false-answer'"
+        >
             {{ element.question_id }}
         </td>
     </ng-container>
 
     <ng-container matColumnDef="textName">
-        <th mat-header-cell *matHeaderCellDef>ПІБ Студента</th>
-        <td mat-cell *matCellDef="let element">
+        <th mat-header-cell *matHeaderCellDef>Текст запитання</th>
+        <td
+            mat-cell
+            *matCellDef="let element"
+            [ngClass]="element.true ? 'true-answer' : 'false-answer'"
+        >
             {{ element.question_text }}
+        </td>
+    </ng-container>
+    <ng-container matColumnDef="answer">
+        <th mat-header-cell *matHeaderCellDef>Відповідь</th>
+        <td
+            mat-cell
+            *matCellDef="let element"
+            [ngClass]="element.true ? 'true-answer' : 'false-answer'"
+        >
+            {{ element.true ? 'правильна' : 'неправильна' }}
         </td>
     </ng-container>
 
     <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
     <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
 </table>
+<button mat-raised-button class="close-btn" color="primary" type="submit">
+    Отримати дані
+</button>
