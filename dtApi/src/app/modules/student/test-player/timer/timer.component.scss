@@ -1,0 +1,54 @@
+.timer {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+
+    & .timer-icon {
+        vertical-align: middle;
+        font-size: 30px;
+        margin: -11px 10px auto auto;
+    }
+
+    &__info {
+        margin-top: 5px;
+        & h1 {
+            font-weight: 580;
+        }
+    }
+
+    &__panel {
+        & h1 {
+            font-weight: 500;
+        }
+
+        & .timer-circle {
+            text-align: center;
+            border-radius: 15px;
+            padding: 10px 0;
+            background: #f44336;
+        }
+
+        & .timer-panel-icon {
+            vertical-align: middle;
+            font-size: 30px;
+            margin: -12px 10px auto auto;
+        }
+
+        & .countdown {
+            font-size: 25px;
+        }
+    }
+
+    &__actions {
+        margin-top: 25px;
+
+        & .finish-btn {
+            font-size: 16px;
+            padding: 5px 30px;
+        }
+    }
+}
+
+mat-divider {
+    margin-top: 20px;
+}

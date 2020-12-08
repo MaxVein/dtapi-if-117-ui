@@ -1,8 +1,7 @@
-import { Component, HostBinding } from '@angular/core';
+import { Component, HostBinding, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthService } from '../../modules/login/auth.service';
-import { OverlayContainer } from '@angular/cdk/overlay';
-import { Logged } from '../../shared/interfaces/auth.interfaces';
+import { ThemeService } from '../../shared/services/theme.service';
 import { RouterState } from '../../shared/interfaces/student.interfaces';
 
 @Component({
@@ -10,17 +9,21 @@ import { RouterState } from '../../shared/interfaces/student.interfaces';
     templateUrl: './student.component.html',
     styleUrls: ['./student.component.scss'],
 })
-export class StudentComponent {
+export class StudentComponent implements OnInit, OnDestroy {
     username: string;
 
     @HostBinding('class') componentCssClass;
 
     constructor(
         private router: Router,
-        private auth: AuthService,
-        public overlayContainer: OverlayContainer
+        private authService: AuthService,
+        private themeService: ThemeService
     ) {
         this.getUserData();
+    }
+
+    ngOnInit(): void {
+        this.componentCssClass = this.themeService.initTheme();
     }
 
     getUserData(): void {
@@ -28,28 +31,25 @@ export class StudentComponent {
         if (navigation.extras.state) {
             const state = navigation.extras.state as RouterState;
             this.username = state.username;
+            localStorage.setItem('username', state.username);
         } else {
-            this.auth.isLogged().subscribe((response: Logged) => {
-                this.username = response.username;
-            });
+            this.username = localStorage.getItem('username');
         }
     }
 
     onSetTheme(theme: string): void {
-        this.overlayContainer.getContainerElement().classList.add(theme);
-        if (theme === 'default-theme') {
-            this.overlayContainer
-                .getContainerElement()
-                .classList.remove('dark-theme');
-        }
-        this.componentCssClass = theme;
+        this.componentCssClass = this.themeService.onSetTheme(theme);
     }
 
     logout(): void {
-        this.auth.logOutRequest().subscribe({
+        this.authService.logOutRequest().subscribe({
             next: () => {
                 this.router.navigate(['/login']);
             },
         });
+    }
+
+    ngOnDestroy(): void {
+        localStorage.clear();
     }
 }

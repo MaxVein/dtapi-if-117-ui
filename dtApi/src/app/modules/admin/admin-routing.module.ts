@@ -70,7 +70,7 @@ const routes: Routes = [
                             ),
                     },
                     {
-                        path: 'tests',
+                        path: 'tests/:id',
                         children: [
                             {
                                 path: '',
@@ -80,6 +80,13 @@ const routes: Routes = [
                                     ),
                             },
 
+                            {
+                                path: 'test-detailes',
+                                loadChildren: () =>
+                                    import(
+                                        './test-detailes/test-detailes.module'
+                                    ).then((m) => m.TestDetailesModule),
+                            },
                             {
                                 path: 'questions/:id',
                                 children: [
