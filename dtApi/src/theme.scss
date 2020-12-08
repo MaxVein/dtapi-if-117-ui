@@ -18,59 +18,64 @@ $dark-theme: mat-dark-theme($dark-primary, $dark-accent, $dark-warn);
     @include angular-material-theme($dark-theme);
 }
 .mat-list-item.active-link {
-    background-color: #3f51b5;
+    background-color: #3f51b5 !important;
     color: white;
     font-weight: 500;
 }
 .mat-list-item.active-link:focus {
-    background-color: #3f51b5;
+    background-color: #3f51b5 !important;
     color: white;
     font-weight: 500;
 }
 .mat-list-item.active-link:hover {
-    background-color: #3f51b5;
+    background-color: #3f51b5 !important;
     color: white;
     font-weight: 500;
 }
 .mat-list-item.active-link:active {
-    background-color: #3f51b5;
+    background-color: #3f51b5 !important;
     color: white;
     font-weight: 500;
 }
 .mat-nav-list .mat-list-item:hover {
-    background-color: #3f51b5ab;
+    background-color: #3f51b5ab !important;
     color: white;
 }
 .mat-list-item.active-link:hover {
-    background-color: #3f51b5;
+    background-color: #3f51b5 !important;
     color: white;
 }
 
 .dark-theme .mat-nav-list .active-link {
-    background-color: #e91e63;
+    background-color: #e91e63 !important;
     font-weight: 500;
 }
 .dark-theme .mat-nav-list .active-link:focus {
-    background-color: #e91e63;
+    background-color: #e91e63 !important;
     font-weight: 500;
 }
 .dark-theme .mat-nav-list .active-link:hover {
-    background-color: #e91e63;
+    background-color: #e91e63 !important;
     font-weight: 500;
 }
 .dark-theme .mat-nav-list .active-link:active {
-    background-color: #e91e63;
+    background-color: #e91e63 !important;
     font-weight: 500;
 }
 .dark-theme .mat-nav-list .mat-list-item:hover {
-    background-color: #e91e629d;
+    background-color: #e91e629d !important;
 }
 .dark-theme .mat-nav-list .active-link:hover {
-    background-color: #e91e63;
+    background-color: #e91e63 !important;
 }
 .dark-theme .empty-data-theme {
     background: #e91e63 !important;
 }
 .dark-theme .icon-theme {
     color: #e91e63 !important;
+}
+.dark-theme .dashboard-card-content:hover {
+    .dashboard-card-content__icon {
+        color: #e91e63 !important;
+    }
 }

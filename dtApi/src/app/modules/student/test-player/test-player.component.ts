@@ -83,6 +83,7 @@ export class TestPlayerComponent implements OnInit, OnDestroy {
                 this.loading = false;
             },
             (error: Response) => {
+                this.loading = false;
                 this.errorHandler(
                     error,
                     'Помилка',

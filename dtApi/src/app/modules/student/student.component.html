@@ -10,6 +10,16 @@
             <span class="toolbar-spacer"></span>
             <button
                 mat-button
+                [matMenuTriggerFor]="menu"
+                matTooltip="Натисніть, щоб вийти"
+            >
+                {{ username ? username : 'Вихід' }}
+            </button>
+            <mat-menu #menu="matMenu">
+                <button mat-menu-item (click)="logout()">Вийти</button>
+            </mat-menu>
+            <button
+                mat-button
                 matTooltip="Змінити тему додатку"
                 [matMenuTriggerFor]="theme"
             >
@@ -24,21 +34,6 @@
                     <mat-icon>brightness_2</mat-icon>
                     Dark
                 </button>
-            </mat-menu>
-            <button
-                mat-button
-                [matMenuTriggerFor]="menu"
-                matTooltip="Натисніть, щоб вийти"
-            >
-                {{ username ? username : 'Вихід' }}
-            </button>
-            <mat-menu #menu="matMenu">
-                <button mat-menu-item (click)="logout()">Вийти</button>
-            </mat-menu>
-            <button mat-button [matMenuTriggerFor]="lang">Мова</button>
-            <mat-menu #lang="matMenu">
-                <button mat-menu-item>ENG</button>
-                <button mat-menu-item>UKR</button>
             </mat-menu>
         </mat-toolbar>
         <div class="student-content-wrapper">

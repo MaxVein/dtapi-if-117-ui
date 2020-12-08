@@ -24,6 +24,7 @@ import { MatListModule } from '@angular/material/list';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatSortModule } from '@angular/material/sort';
 import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatRippleModule } from '@angular/material/core';
 
 @NgModule({
     declarations: [],
@@ -52,6 +53,7 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
         MatListModule,
         MatTabsModule,
         MatSortModule,
+        MatRippleModule,
     ],
     exports: [
         MatCheckboxModule,
@@ -77,6 +79,7 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
         MatListModule,
         MatTabsModule,
         MatSortModule,
+        MatRippleModule,
     ],
 })
 export class AngularMaterialModule {}
