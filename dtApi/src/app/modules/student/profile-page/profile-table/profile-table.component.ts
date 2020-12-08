@@ -6,20 +6,25 @@ import {
     OnInit,
     ViewChild,
 } from '@angular/core';
-import { Router } from '@angular/router';
+import { NavigationExtras, Router } from '@angular/router';
 import { MatSelectChange } from '@angular/material/select';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import { ModalService } from '../../../../shared/services/modal.service';
-import { StudentService } from '../../services/student.service';
+import { ProfileService } from '../../services/profile.service';
 import { AlertComponent } from '../../../../shared/components/alert/alert.component';
+import { ConfirmComponent } from '../../../../shared/components/confirm/confirm.component';
 import { of, Subscription } from 'rxjs';
 import { concatMap } from 'rxjs/operators';
 import {
     TestDate,
     TestDetails,
 } from '../../../../shared/interfaces/student.interfaces';
-import { Subject } from '../../../../shared/interfaces/entity.interfaces';
+import {
+    DialogResult,
+    Response,
+    Subject,
+} from '../../../../shared/interfaces/entity.interfaces';
 
 @Component({
     selector: 'app-profile-table',
@@ -28,11 +33,11 @@ import { Subject } from '../../../../shared/interfaces/entity.interfaces';
 })
 export class ProfileTableComponent implements OnInit, AfterViewInit, OnDestroy {
     @Input() subjects: Subject[];
-    @Input() firstSubject: Subject;
-    hide = false;
-    startSelect: string;
+    currentDate: Date;
     subjectName: string;
     subjectID: string;
+    hide = false;
+    startText = false;
     testsBySubject: TestDetails[] = [];
     testDetails: TestDate[];
     dataSource = new MatTableDataSource<TestDate>();
@@ -46,20 +51,20 @@ export class ProfileTableComponent implements OnInit, AfterViewInit, OnDestroy {
         'Кількість спроб',
         'Почати тестування',
     ];
-    studentSubscription: Subscription;
+    profileSubscription: Subscription;
 
     @ViewChild(MatPaginator, { static: false }) paginator: MatPaginator;
 
     constructor(
         public modalService: ModalService,
         private router: Router,
-        private studentService: StudentService
+        private profileService: ProfileService
     ) {}
 
     ngOnInit(): void {
+        this.currentDate = new Date();
         this.hide = true;
-        this.initSubjects();
-        this.getTestInfo();
+        this.startText = true;
     }
 
     ngAfterViewInit(): void {
@@ -75,26 +80,28 @@ export class ProfileTableComponent implements OnInit, AfterViewInit, OnDestroy {
         }
     }
 
-    initSubjects(): void {
-        this.startSelect = this.firstSubject.subject_name;
-        this.subjectID = this.firstSubject.subject_id;
-        this.subjectName = this.firstSubject.subject_name;
+    selectSubject(event: MatSelectChange): void {
+        const subjectData = event.value;
+        this.subjectID = subjectData.id;
+        this.subjectName = subjectData.name;
+        this.getTestInfo();
     }
 
     getTestInfo(): void {
-        this.studentSubscription = this.studentService
+        this.startText = false;
+        this.profileSubscription = this.profileService
             .getTestDate(this.subjectID)
             .pipe(
                 concatMap((res: TestDetails[]) => {
                     if (res.length) {
                         this.testsBySubject = res;
                         this.modalService.showSnackBar('Тести завантажено');
-                        return this.studentService.getTestDetails(
+                        return this.profileService.getTestDetails(
                             this.subjectID
                         );
                     } else {
-                        this.testsBySubject = [];
                         this.hide = false;
+                        this.testsBySubject = [];
                         this.modalService.showSnackBar('Тести відсутні');
                         return of();
                     }
@@ -127,17 +134,72 @@ export class ProfileTableComponent implements OnInit, AfterViewInit, OnDestroy {
             });
     }
 
-    selectSubject(event: MatSelectChange): void {
-        const subjectData = event.value;
-        this.subjectID = subjectData.id;
-        this.subjectName = subjectData.name;
-        this.startSelect = '';
-        this.getTestInfo();
+    checkPossibilityToPassTest(test: TestDetails): void {
+        this.profileSubscription = this.profileService
+            .testPlayerGetTest(test.test_id)
+            .subscribe(
+                () => {
+                    this.startTest(test);
+                },
+                (error: Response) => {
+                    this.errorHandler(
+                        error,
+                        'Попередження',
+                        this.checkCurrentDate(test)
+                    );
+                }
+            );
     }
 
-    startTest(): void {
-        this.router.navigate(['student/test-player']);
+    checkCurrentDate(test: TestDate | any): string {
+        const startDate = new Date(`${test.start_date}`);
+        const startDateWithTime = new Date(
+            `${test.start_date} ${test.start_time}`
+        );
+        const endDate = new Date(`${test.end_date} ${test.end_time}`);
+        if (this.currentDate >= startDate && this.currentDate <= endDate) {
+            return `Ви не можете здавати цей екзамен! Екзамен буде доступний сьогодні о ${test.start_time}`;
+        } else if (
+            this.currentDate > startDateWithTime &&
+            this.currentDate > endDate
+        ) {
+            return `Ви не можете здавати цей екзамен! Екзамен більше не доступний`;
+        } else if (
+            this.currentDate < startDateWithTime &&
+            this.currentDate < endDate
+        ) {
+            return `Ви не можете здавати цей екзамен! Екзамен буде доступний ${test.start_date} о ${test.start_time}`;
+        } else {
+            return `Екзамен не доступний! Немає потрібних даних`;
+        }
     }
+
+    startTest(test: TestDetails): void {
+        this.modalService.openModal(
+            ConfirmComponent,
+            {
+                data: {
+                    icon: 'school',
+                    message: `Розпочати тест ${test.test_name} з предмету ${test.subjectname}?
+                    Тривалість тесту ${test.time_for_test} та ${test.attempts} спроби на здачу ${test.tasks} завдань!`,
+                },
+            },
+            (result: DialogResult) => {
+                if (result) {
+                    const navigationExtras: NavigationExtras = {
+                        state: test,
+                    };
+                    this.router.navigate(
+                        ['student/test-player', test.test_id],
+                        navigationExtras
+                    );
+                } else if (!result) {
+                    this.modalService.showSnackBar('Скасовано');
+                }
+            }
+        );
+    }
+
     errorHandler(error: Response, title: string, message: string): void {
         this.modalService.openModal(AlertComponent, {
             data: {
@@ -149,8 +211,8 @@ export class ProfileTableComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     ngOnDestroy(): void {
-        if (this.studentSubscription) {
-            this.studentSubscription.unsubscribe();
+        if (this.profileSubscription) {
+            this.profileSubscription.unsubscribe();
         }
     }
 }

@@ -1,28 +1,17 @@
 <div class="profile" *ngIf="!loading; else loader">
-    <div class="profile__student-info" *ngIf="student; else notData">
-        <app-profile-card
-            [student]="student"
-            [speciality]="{ name: specialityName, code: specialityCode }"
-            [groupName]="groupName"
-            [facultyName]="facultyName"
-        ></app-profile-card>
+    <div class="profile__student-info">
+        <app-profile-card [profileData]="studentProfileData"></app-profile-card>
     </div>
 
-    <ng-template #notData>
-        <div class="empty-data">
-            <h1>Дані студента відсутні</h1>
-        </div>
-    </ng-template>
-
-    <div class="profile__test" *ngIf="subjects.length; else empty">
-        <app-profile-table
-            [firstSubject]="firstSubject"
-            [subjects]="subjects"
-        ></app-profile-table>
+    <div
+        class="profile__test"
+        *ngIf="subjects.length && studentProfileData; else empty"
+    >
+        <app-profile-table [subjects]="subjects"></app-profile-table>
     </div>
     <ng-template #empty>
-        <div class="empty-data-subjects">
-            <h1>Предмети відсутні</h1>
+        <div class="empty-data-subjects" *ngIf="!studentProfileData">
+            <h1 class="empty-data-theme">Предмети відсутні</h1>
         </div>
     </ng-template>
 </div>

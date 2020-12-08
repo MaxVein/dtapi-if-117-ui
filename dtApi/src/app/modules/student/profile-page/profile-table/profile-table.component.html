@@ -5,7 +5,7 @@
     <mat-form-field class="select-subject">
         <mat-label>
             <mat-icon class="search-icon">collections_bookmark</mat-icon>
-            Оберіть предмет
+            Предмети
         </mat-label>
         <mat-select
             (selectionChange)="selectSubject($event)"
@@ -18,7 +18,6 @@
                 {{ subject.subject_name }}
             </mat-option>
         </mat-select>
-        <mat-select-trigger>{{ startSelect }}</mat-select-trigger>
     </mat-form-field>
 
     <mat-form-field>
@@ -87,13 +86,15 @@
             <ng-container matColumnDef="Почати тестування">
                 <th mat-header-cell *matHeaderCellDef>Почати тестування</th>
                 <td mat-cell *matCellDef="let test">
-                    <span
-                        class="material-icons test-icon"
+                    <button
+                        class="operation-button"
+                        mat-flat-button
+                        color="primary"
                         matTooltip="Натисніть, щоб розпочати"
-                        (click)="startTest()"
+                        (click)="checkPossibilityToPassTest(test)"
                     >
-                        not_started
-                    </span>
+                        <mat-icon>not_started</mat-icon>
+                    </button>
                 </td>
             </ng-container>
             <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
@@ -110,9 +111,12 @@
         ></mat-paginator>
     </div>
     <div class="empty-data-test" *ngIf="!testsBySubject.length && !hide">
-        <h1>
+        <h1 class="empty-data-theme">
             Тести з даного предмету <br />
             відсутні
         </h1>
+    </div>
+    <div class="empty-data-test select" *ngIf="startText && hide">
+        <h1 class="empty-data-theme">Оберіть предмет для тестування</h1>
     </div>
 </div>

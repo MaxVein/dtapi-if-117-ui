@@ -1,5 +1,5 @@
-import { RouterModule, Routes } from '@angular/router';
 import { NgModule } from '@angular/core';
+import { RouterModule, Routes } from '@angular/router';
 import { StudentComponent } from './student.component';
 
 const routes: Routes = [
@@ -15,7 +15,7 @@ const routes: Routes = [
                     ),
             },
             {
-                path: 'test-player',
+                path: 'test-player/:id',
                 loadChildren: () =>
                     import('./test-player/test-player.module').then(
                         (m) => m.TestPlayerModule

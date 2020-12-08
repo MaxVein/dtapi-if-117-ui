@@ -30,7 +30,7 @@
                 [matMenuTriggerFor]="menu"
                 matTooltip="Натисніть, щоб вийти"
             >
-                {{ username }}
+                {{ username ? username : 'Вихід' }}
             </button>
             <mat-menu #menu="matMenu">
                 <button mat-menu-item (click)="logout()">Вийти</button>

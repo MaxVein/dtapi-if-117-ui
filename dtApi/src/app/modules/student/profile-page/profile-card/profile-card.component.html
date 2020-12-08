@@ -3,71 +3,86 @@
         <mat-icon class="header-icon">assignment_ind</mat-icon> Профіль студента
     </h1>
     <mat-card>
-        <div class="profile-card__student-photo">
-            <img
-                class="student-photo"
-                *ngIf="student.photo !== ''"
-                mat-card-lg-image
-                src="{{ student.photo }}"
-                alt="{{ student.student_fname }} {{ student.student_name }}"
-            />
-            <img
-                class="student-photo"
-                *ngIf="student.photo === ''"
-                mat-card-lg-image
-                src="{{ defaultImage }}"
-                alt="{{ student.student_fname }} {{ student.student_name }}"
-            />
-        </div>
-        <mat-card-content>
-            <div class="profile-card__student-data">
-                <div class="profile-card__student-title">
-                    <h2>
-                        {{ student.student_surname }} {{ student.student_name }}
-                        {{ student.student_fname }}
-                    </h2>
-                </div>
-
-                <div class="profile-card__student-other-data">
-                    <div class="profile-card__data-title">
-                        <h2 class="title">Факультет:</h2>
-                    </div>
-                    <h2>
-                        {{ facultyName }}
-                    </h2>
-                </div>
-
-                <mat-divider></mat-divider>
-
-                <div class="profile-card__student-other-data">
-                    <div class="profile-card__data-title">
-                        <h2 class="title">Спеціальність:</h2>
-                    </div>
-                    <h2>{{ speciality.code }} {{ speciality.name }}</h2>
-                </div>
-
-                <mat-divider></mat-divider>
-
-                <div class="profile-card__student-other-data">
-                    <div class="profile-card__data-title">
-                        <h2 class="title">Група:</h2>
-                    </div>
-                    <h2>
-                        {{ groupName }}
-                    </h2>
-                </div>
-
-                <mat-divider></mat-divider>
-
-                <div class="profile-card__student-other-data">
-                    <div class="profile-card__data-title">
-                        <h2 class="title">Номер залікової:</h2>
-                    </div>
-                    <h2>
-                        {{ student.gradebook_id }}
-                    </h2>
-                </div>
+        <div class="card" *ngIf="profileData; else notData">
+            <div class="profile-card__student-photo">
+                <img
+                    class="student-photo"
+                    *ngIf="profileData.photo !== ''"
+                    mat-card-lg-image
+                    src="{{ profileData.photo }}"
+                    alt="{{ profileData.student_fname }} {{
+                        profileData.student_name
+                    }}"
+                />
+                <img
+                    class="student-photo"
+                    *ngIf="profileData.photo === ''"
+                    mat-card-lg-image
+                    src="{{ defaultImage }}"
+                    alt="{{ profileData.student_fname }} {{
+                        profileData.student_name
+                    }}"
+                />
             </div>
-        </mat-card-content>
+            <mat-card-content>
+                <div class="profile-card__student-data">
+                    <div class="profile-card__student-title">
+                        <h2>
+                            {{ profileData.student_surname }}
+                            {{ profileData.student_name }}
+                            {{ profileData.student_fname }}
+                        </h2>
+                    </div>
+
+                    <div class="profile-card__student-other-data">
+                        <div class="profile-card__data-title">
+                            <h2 class="title">Факультет:</h2>
+                        </div>
+                        <h2>
+                            {{ profileData.faculty_name }}
+                        </h2>
+                    </div>
+
+                    <mat-divider></mat-divider>
+
+                    <div class="profile-card__student-other-data">
+                        <div class="profile-card__data-title">
+                            <h2 class="title">Спеціальність:</h2>
+                        </div>
+                        <h2>
+                            {{ profileData.speciality_code }}
+                            {{ profileData.speciality_name }}
+                        </h2>
+                    </div>
+
+                    <mat-divider></mat-divider>
+
+                    <div class="profile-card__student-other-data">
+                        <div class="profile-card__data-title">
+                            <h2 class="title">Група:</h2>
+                        </div>
+                        <h2>
+                            {{ profileData.group_name }}
+                        </h2>
+                    </div>
+
+                    <mat-divider></mat-divider>
+
+                    <div class="profile-card__student-other-data">
+                        <div class="profile-card__data-title">
+                            <h2 class="title">Номер залікової:</h2>
+                        </div>
+                        <h2>
+                            {{ profileData.gradebook_id }}
+                        </h2>
+                    </div>
+                </div>
+            </mat-card-content>
+        </div>
+        <ng-template #notData>
+            <div class="empty-data-profile">
+                <h1 class="empty-data-theme">Дані студента відсутні</h1>
+            </div>
+        </ng-template>
     </mat-card>
 </div>

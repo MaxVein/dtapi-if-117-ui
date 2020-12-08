@@ -24,21 +24,16 @@
     &__title {
         font-size: 30px;
         font-weight: 500;
-        margin-bottom: 40px;
         text-align: center;
     }
 
     &__table {
         margin-top: 10px;
 
-        & table {
-            width: 100%;
-        }
-
         & th,
         td {
             text-align: center;
-            padding: 0.3em;
+            padding: 0.3em 1.5em;
 
             @media screen and (max-width: 600px) {
                 font-size: 12px;
@@ -46,19 +41,19 @@
                 word-break: break-word;
             }
         }
-
-        & .test-icon {
-            margin-top: 6px;
-            cursor: pointer;
-        }
     }
 
     & .empty-data-test {
         display: inline-block;
-        top: 40%;
-        left: 52%;
+        top: 49%;
+        left: 55%;
         position: absolute;
         text-align: center;
+
+        &.select {
+            top: 51%;
+            left: 51%;
+        }
 
         & h1 {
             border-radius: 4px;
