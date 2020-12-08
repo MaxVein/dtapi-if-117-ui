@@ -58,7 +58,7 @@ export class ResultsComponent implements OnInit {
             next: (res: any) => {
                 if (res.response) {
                     this.testsList = null;
-
+                    this.form.get('testName').reset();
                     this.resultService.snackBarOpen();
                 } else {
                     this.form.get('testName').reset();
