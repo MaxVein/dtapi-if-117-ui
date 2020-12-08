@@ -86,6 +86,25 @@ const routes: Routes = [
                                         './test-detailes/test-detailes.module'
                                     ).then((m) => m.TestDetailesModule),
                             },
+                            {
+                                path: 'questions/:id',
+                                children: [
+                                    {
+                                        path: '',
+                                        loadChildren: () =>
+                                            import(
+                                                './questions/questions.module'
+                                            ).then((m) => m.QuestionsModule),
+                                    },
+                                    // {
+                                    //     path: 'answer',
+                                    //     loadChildren: () =>
+                                    //         import(
+                                    //             './answers/answers.module'
+                                    //         ).then((m) => m.AnswersModule),
+                                    // },
+                                ],
+                            },
                         ],
                     },
                 ],

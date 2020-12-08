@@ -2,7 +2,7 @@ import { Component, HostBinding } from '@angular/core';
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 import { Observable } from 'rxjs';
 import { map, shareReplay } from 'rxjs/operators';
-import { AuthService } from '../login/services/auth.service';
+import { AuthService } from '../login/auth.service';
 import { Router } from '@angular/router';
 import { OverlayContainer } from '@angular/cdk/overlay';
 import { RouterState } from '../../shared/interfaces/student.interfaces';

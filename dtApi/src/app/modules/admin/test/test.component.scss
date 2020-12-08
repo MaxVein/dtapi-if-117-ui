@@ -12,11 +12,17 @@ td {
     justify-content: flex-end;
 }
 
-.mat-icon {
-    &:hover {
-        color: red;
-        cursor: pointer;
+.entity-title {
+    display: flex;
+    align-items: center;
+    .mat-icon {
+        width: auto;
+        height: auto;
     }
+}
+.entity-header {
+    display: flex;
+    justify-content: space-between;
 }
 .entity-title {
     display: flex;
@@ -24,6 +30,10 @@ td {
     .mat-icon {
         width: auto;
         height: auto;
+    }
+    .entity-title-icon {
+        font-size: 2rem;
+        margin-right: 0.5rem;
     }
 }
 .operation-button {

@@ -1,6 +1,6 @@
 import { Component, HostBinding } from '@angular/core';
 import { Router } from '@angular/router';
-import { AuthService } from '../login/services/auth.service';
+import { AuthService } from '../../modules/login/auth.service';
 import { OverlayContainer } from '@angular/cdk/overlay';
 import { Logged } from '../../shared/interfaces/auth.interfaces';
 import { RouterState } from '../../shared/interfaces/student.interfaces';

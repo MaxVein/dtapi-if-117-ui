@@ -1,6 +1,6 @@
 import { Component, ViewChild, OnInit } from '@angular/core';
-import { Observable } from 'rxjs';
 import { Router, ActivatedRoute } from '@angular/router';
+import { Observable } from 'rxjs';
 
 import { TestService } from './services/test.service';
 import { Test } from './models/Test';
@@ -22,6 +22,8 @@ export class TestComponent implements OnInit {
     tests: Test[] = [];
     subjects: Subject[] = [];
     groupID: number;
+
+    subject_id: string;
 
     displayedColumns: string[] = [
         'test_id',
@@ -161,10 +163,13 @@ export class TestComponent implements OnInit {
         );
     }
     public redirectToTestDetail(id: string) {
-        this.router.navigate(['admin/subjects/tests/1/test-detailes'], {
+        this.router.navigate([`admin/subjects/tests/${id}/test-detailes`], {
             queryParams: {
                 test_id: id,
             },
         });
+    }
+    navigateToTestQuestions(id: number): void {
+        this.router.navigate([`admin/subjects/tests/${id}/questions`, id]);
     }
 }

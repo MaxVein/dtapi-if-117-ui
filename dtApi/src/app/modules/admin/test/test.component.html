@@ -112,13 +112,14 @@
                     class="operation-button"
                     mat-flat-button
                     color="primary"
+                    (click)="navigateToTestQuestions(element.test_id)"
                 >
                     <mat-icon
-                        aria-hidden="false"
-                        aria-label="description"
+                        aria-label="questions"
+                        matTooltip="Питання до тесту"
                         matTooltip="Питання"
                     >
-                        toc
+                        help_center
                     </mat-icon>
                 </button>
             </td>
