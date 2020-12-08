@@ -79,6 +79,7 @@ const routes: Routes = [
                                         (m) => m.TestModule
                                     ),
                             },
+
                             {
                                 path: 'test-detailes',
                                 loadChildren: () =>
@@ -96,18 +97,18 @@ const routes: Routes = [
                                                 './questions/questions.module'
                                             ).then((m) => m.QuestionsModule),
                                     },
-                                    // {
-                                    //     path: 'answer',
-                                    //     loadChildren: () =>
-                                    //         import(
-                                    //             './answers/answers.module'
-                                    //         ).then((m) => m.AnswersModule),
-                                    // },
                                 ],
                             },
                         ],
                     },
                 ],
+            },
+            {
+                path: 'results',
+                loadChildren: () =>
+                    import('./results/results.module').then(
+                        (m) => m.ResultsModule
+                    ),
             },
             {
                 path: '',

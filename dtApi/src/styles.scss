@@ -71,7 +71,11 @@ th {
     display: flex;
     justify-content: space-between;
 }
-
+.custom-dialog-container {
+    mat-dialog-container {
+        padding: 0px;
+    }
+}
 .empty-data {
     display: inline-block;
     top: 45%;
