@@ -18,6 +18,26 @@ export class TestService {
             `${environment.BASEURL}${entity}/getRecords/${id}`
         );
     }
+    getTests(entity: string, id?: number): Observable<any> {
+        if (id === undefined) {
+            return this.http.get(
+                `${environment.BASEURL}${entity}/getTestsBySubject/`
+            );
+        }
+        return this.http.get(
+            `${environment.BASEURL}${entity}/getTestsBySubject/${id}`
+        );
+    }
+    getTestDetailes(subEntity: string, id?: number): Observable<any> {
+        if (id === undefined) {
+            return this.http.get(
+                `${environment.BASEURL}/testDetail/${subEntity}`
+            );
+        }
+        return this.http.get(
+            `${environment.BASEURL}/testDetail/${subEntity}/${id}`
+        );
+    }
     createEntity(entity: string, payload): Observable<any> {
         return this.http.post(
             `${environment.BASEURL}${entity}/insertData`,

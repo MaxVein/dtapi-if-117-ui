@@ -3,6 +3,7 @@ import { MatTableDataSource } from '@angular/material/table';
 import { MatSort } from '@angular/material/sort';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatDialog } from '@angular/material/dialog';
+import { Router } from '@angular/router';
 
 import { SubjectsService } from '../subjects.service';
 import { ModalComponent } from '../modal/modal.component';
@@ -36,7 +37,8 @@ export class SubjectsHomeComponent implements OnInit, AfterViewInit {
 
     constructor(
         private subjectsService: SubjectsService,
-        public dialog: MatDialog
+        public dialog: MatDialog,
+        private router: Router
     ) {}
 
     ngOnInit() {
@@ -55,11 +57,29 @@ export class SubjectsHomeComponent implements OnInit, AfterViewInit {
     }
 
     public redirectToCreate = (data: SubjectsRequest) => {
-        this.subjectsService.create(data).subscribe();
+        this.subjectsService
+            .create(data)
+            .subscribe((result: SubjectsResponse) => {
+                this.dataSource.data = this.dataSource.data.concat(result[0]);
+                this.dataSource.paginator.lastPage();
+            });
     };
 
     public redirectToUpdate = (id: number, body: SubjectsResponse) => {
-        this.subjectsService.update(id, body).subscribe();
+        this.subjectsService
+            .update(id, body)
+            .subscribe((result: SubjectsResponse) => {
+                const newSourse = this.dataSource.data.map((item) => {
+                    if (item.subject_id === id) {
+                        return (item = {
+                            ...result[0],
+                        });
+                    } else {
+                        return item;
+                    }
+                });
+                this.dataSource.data = newSourse;
+            });
     };
 
     public redirectToDelete = (id: number) => {
@@ -104,4 +124,11 @@ export class SubjectsHomeComponent implements OnInit, AfterViewInit {
     public doFilter = (value: string) => {
         this.dataSource.filter = value.trim().toLocaleLowerCase();
     };
+    public redirectToTests(id: string, subject_name: string) {
+        this.router.navigate(['admin/subjects/tests/', id], {
+            queryParams: {
+                subject_name: subject_name,
+            },
+        });
+    }
 }

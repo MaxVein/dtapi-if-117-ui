@@ -17,11 +17,10 @@ export class ModalComponent implements OnInit {
     public subjectForm = new FormGroup({
         subject_name: new FormControl(this.data ? this.data.subject_name : '', [
             Validators.required,
-            Validators.pattern('[а-яА-ЯіІїЄє ]*'),
         ]),
         subject_description: new FormControl(
             this.data ? this.data.subject_description : '',
-            [Validators.required, Validators.pattern('[а-яА-ЯіІїЄє ]*')]
+            [Validators.required]
         ),
         subject_id: new FormControl(this.data ? this.data.subject_id : ''),
     });

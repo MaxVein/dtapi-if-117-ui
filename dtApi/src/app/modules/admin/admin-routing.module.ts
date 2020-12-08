@@ -55,21 +55,40 @@ const routes: Routes = [
                 ],
             },
             {
-                path: 'tests',
-                loadChildren: () =>
-                    import('./test/test.module').then((m) => m.TestModule),
-            },
-            {
                 path: 'about',
                 loadChildren: () =>
                     import('./about/about.module').then((m) => m.AboutModule),
             },
             {
                 path: 'subjects',
-                loadChildren: () =>
-                    import('./subjects/subjects.module').then(
-                        (m) => m.SubjectsModule
-                    ),
+                children: [
+                    {
+                        path: '',
+                        loadChildren: () =>
+                            import('./subjects/subjects.module').then(
+                                (m) => m.SubjectsModule
+                            ),
+                    },
+                    {
+                        path: 'tests/:id',
+                        children: [
+                            {
+                                path: '',
+                                loadChildren: () =>
+                                    import('./test/test.module').then(
+                                        (m) => m.TestModule
+                                    ),
+                            },
+                            {
+                                path: 'test-detailes',
+                                loadChildren: () =>
+                                    import(
+                                        './test-detailes/test-detailes.module'
+                                    ).then((m) => m.TestDetailesModule),
+                            },
+                        ],
+                    },
+                ],
             },
             {
                 path: '',

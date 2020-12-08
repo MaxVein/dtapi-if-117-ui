@@ -12,9 +12,6 @@
             <mat-error *ngIf="hasError('subject_name', 'required')"
                 >Це поле є обов'язковим</mat-error
             >
-            <mat-error *ngIf="hasError('subject_name', 'pattern')"
-                >Використовуйте українські літери</mat-error
-            >
         </mat-form-field>
     </div>
 
@@ -29,9 +26,6 @@
             ></textarea>
             <mat-error *ngIf="hasError('subject_description', 'required')"
                 >Це поле є обов'язковим</mat-error
-            >
-            <mat-error *ngIf="hasError('subject_description', 'pattern')"
-                >Використовуйте українські літери</mat-error
             >
         </mat-form-field>
     </div>

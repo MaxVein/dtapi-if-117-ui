@@ -1,5 +1,6 @@
 import { Component, ViewChild, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
+import { Router, ActivatedRoute } from '@angular/router';
 
 import { TestService } from './services/test.service';
 import { Test } from './models/Test';
@@ -20,6 +21,7 @@ import { MatDialog } from '@angular/material/dialog';
 export class TestComponent implements OnInit {
     tests: Test[] = [];
     subjects: Subject[] = [];
+    groupID: number;
 
     displayedColumns: string[] = [
         'test_id',
@@ -40,14 +42,20 @@ export class TestComponent implements OnInit {
     constructor(
         private testService: TestService,
         private modalService: ModalService,
-        public dialog: MatDialog
+        private route: ActivatedRoute,
+        public dialog: MatDialog,
+        private router: Router
     ) {}
 
     ngOnInit() {
-        this.getTests().subscribe((data: Test[]) => {
-            this.tests = data;
-            this.dataSource.data = this.tests;
-        });
+        this.groupID = this.route.snapshot.params['id'];
+        this.getTests(this.groupID).subscribe(
+            (data: Test[]) => {
+                this.tests = data;
+                this.dataSource.data = this.tests;
+            },
+            (err) => {}
+        );
         this.getSubjects().subscribe(
             (data: Subject[]) => (this.subjects = data)
         );
@@ -56,8 +64,8 @@ export class TestComponent implements OnInit {
         this.dataSource.sort = this.sort;
     }
 
-    getTests(): Observable<Test[]> {
-        return this.testService.getEntity('test');
+    getTests(id: number): Observable<Test[]> {
+        return this.testService.getTests('test', id);
     }
 
     getSubjects(): Observable<Subject[]> {
@@ -94,7 +102,7 @@ export class TestComponent implements OnInit {
         });
         dialogRef.afterClosed().subscribe((result) => {
             if (result) {
-                this.editTest(result);
+                this.editTest(result, test.test_id);
             }
         });
     }
@@ -103,7 +111,6 @@ export class TestComponent implements OnInit {
         const subject = this.subjects.find(
             (subjectItem) => subjectItem.subject_id === subjectId
         );
-
         if (subject) return subject.subject_name;
         return 'Undefined';
     }
@@ -112,32 +119,52 @@ export class TestComponent implements OnInit {
         this.testService
             .createEntity('test', test)
             .subscribe((result: Test[]) => {
-                this.tests.push(result[0]);
-                this.table.renderRows();
+                this.dataSource.data = this.dataSource.data.concat(result);
                 this.dataSource.paginator = this.paginator;
+                this.dataSource.paginator.lastPage();
             });
     }
 
-    editTest(test: Test): void {
+    editTest(test: Test, id: number): void {
         this.testService
-            .updateEntity('test', test, test.test_id)
-            .subscribe(() => (this.dataSource.data = this.tests));
+            .updateEntity('test', test, id)
+            .subscribe((data: Test) => {
+                this.dataSource.data = this.dataSource.data.concat(data);
+                const newSourse = this.dataSource.data.map((item) => {
+                    if (item.test_id === id) {
+                        return (item = {
+                            ...data[0],
+                        });
+                    } else {
+                        return item;
+                    }
+                });
+                this.dataSource.data = newSourse;
+            });
     }
 
     removeTest(test: Test): void {
         this.testService.deleteEntity('test', test.test_id).subscribe(
-            () =>
+            () => {
                 this.modalService.openConfirmModal(
                     'Видалити тест?',
                     () =>
                         (this.dataSource.data = this.dataSource.data.filter(
                             (t) => t.test_id !== test.test_id
                         ))
-                ),
+                );
+            },
             (error) =>
                 this.modalService.openErrorModal(
                     'Спочатку видаліть всі деталі тесту'
                 )
         );
+    }
+    public redirectToTestDetail(id: string) {
+        this.router.navigate(['admin/subjects/tests/1/test-detailes'], {
+            queryParams: {
+                test_id: id,
+            },
+        });
     }
 }
