@@ -1,19 +1,18 @@
-import { Component, HostBinding } from '@angular/core';
+import { Component, HostBinding, OnDestroy, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
+import { AuthService } from '../login/auth.service';
+import { ThemeService } from '../../shared/services/theme.service';
 import { Observable } from 'rxjs';
 import { map, shareReplay } from 'rxjs/operators';
-import { AuthService } from '../login/auth.service';
-import { Router } from '@angular/router';
-import { OverlayContainer } from '@angular/cdk/overlay';
 import { RouterState } from '../../shared/interfaces/student.interfaces';
-import { Logged } from '../../shared/interfaces/auth.interfaces';
 
 @Component({
     selector: 'app-admin',
     templateUrl: './admin.component.html',
     styleUrls: ['./admin.component.scss'],
 })
-export class AdminComponent {
+export class AdminComponent implements OnInit, OnDestroy {
     menuIcon = 'menu_open';
     username: string;
 
@@ -21,11 +20,15 @@ export class AdminComponent {
 
     constructor(
         private apiService: AuthService,
+        private themeService: ThemeService,
         private router: Router,
-        private breakpointObserver: BreakpointObserver,
-        public overlayContainer: OverlayContainer
+        private breakpointObserver: BreakpointObserver
     ) {
         this.getUserData();
+    }
+
+    ngOnInit(): void {
+        this.componentCssClass = this.themeService.initTheme();
     }
 
     getUserData(): void {
@@ -33,21 +36,14 @@ export class AdminComponent {
         if (navigation.extras.state) {
             const state = navigation.extras.state as RouterState;
             this.username = state.username;
+            localStorage.setItem('username', state.username);
         } else {
-            this.apiService.isLogged().subscribe((response: Logged) => {
-                this.username = response.username;
-            });
+            this.username = localStorage.getItem('username');
         }
     }
 
     onSetTheme(theme: string): void {
-        this.overlayContainer.getContainerElement().classList.add(theme);
-        if (theme === 'default-theme') {
-            this.overlayContainer
-                .getContainerElement()
-                .classList.remove('dark-theme');
-        }
-        this.componentCssClass = theme;
+        this.componentCssClass = this.themeService.onSetTheme(theme);
     }
 
     logOut(): void {
@@ -70,4 +66,8 @@ export class AdminComponent {
             map((result) => result.matches),
             shareReplay()
         );
+
+    ngOnDestroy(): void {
+        localStorage.clear();
+    }
 }

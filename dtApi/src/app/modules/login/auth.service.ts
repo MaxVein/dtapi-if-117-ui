@@ -45,9 +45,4 @@ export class AuthService {
     getLogo(): Observable<Logo> {
         return this.http.get<Logo>(`${environment.BASEURL}welcome/logo`);
     }
-
-    getUserName(userName: string) {
-        const url = `AdminUser/checkUserName/${userName}`;
-        return this.http.get(`${environment.BASEURL}${url}`);
-    }
 }

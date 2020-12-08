@@ -1,19 +1,19 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { ProfilePageComponent } from './profile-page.component';
+import { TimerComponent } from './timer.component';
 
-describe('ProfilePageComponent', () => {
-    let component: ProfilePageComponent;
-    let fixture: ComponentFixture<ProfilePageComponent>;
+describe('TimerComponent', () => {
+    let component: TimerComponent;
+    let fixture: ComponentFixture<TimerComponent>;
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            declarations: [ProfilePageComponent],
+            declarations: [TimerComponent],
         }).compileComponents();
     });
 
     beforeEach(() => {
-        fixture = TestBed.createComponent(ProfilePageComponent);
+        fixture = TestBed.createComponent(TimerComponent);
         component = fixture.componentInstance;
         fixture.detectChanges();
     });

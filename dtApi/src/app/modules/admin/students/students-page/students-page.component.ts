@@ -41,7 +41,7 @@ export class StudentsPageComponent implements OnInit, AfterViewInit, OnDestroy {
     dataSource = new MatTableDataSource<Student>();
     studentSubscription: Subscription;
 
-    @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
+    @ViewChild(MatPaginator, { static: false }) paginator: MatPaginator;
 
     constructor(
         private studentsService: StudentsService,
