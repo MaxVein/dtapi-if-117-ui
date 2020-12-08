@@ -82,7 +82,7 @@ export class TestDetailesComponent implements OnInit {
     }
 
     openAddDialog(): void {
-        let levels = this.dataSource.data.map((item) => Number(item.level));
+        const levels = this.dataSource.data.map((item) => Number(item.level));
         const dialogRef = this.dialog.open(TestDetailsDialogComponent, {
             width: '600px',
             data: {
@@ -96,7 +96,7 @@ export class TestDetailesComponent implements OnInit {
     }
 
     openEditDialog(test: TestDetails): void {
-        let levels = this.dataSource.data.map((item) => Number(item.level));
+        const levels = this.dataSource.data.map((item) => Number(item.level));
         const dialogRef = this.dialog.open(TestDetailsDialogComponent, {
             width: '600px',
             data: {
