@@ -1,0 +1,100 @@
+<form [formGroup]="form" (submit)="onSubmit()">
+    <mat-form-field appearance="fill">
+        <mat-label>Group Name</mat-label>
+        <mat-select
+            formControlName="groupName"
+            name="groupList"
+            (selectionChange)="onChange($event)"
+        >
+            <mat-option
+                *ngFor="let group of groupList"
+                [value]="group.group_id"
+            >
+                {{ group.group_name }}
+            </mat-option>
+        </mat-select>
+    </mat-form-field>
+    <mat-form-field appearance="fill">
+        <mat-label>Test Name</mat-label>
+        <mat-select
+            formControlName="testName"
+            name="testsList"
+            (selectionChange)="onChangeTest($event)"
+        >
+            <mat-option *ngFor="let test of testsList" [value]="test.test_id">
+                {{ test.test_name }}
+            </mat-option>
+        </mat-select>
+    </mat-form-field>
+    <button
+        mat-raised-button
+        class="getDataBtn"
+        color="primary"
+        type="submit"
+        [disabled]="!form.valid"
+    >
+        Отримати дані
+    </button>
+</form>
+<table mat-table [dataSource]="dataSource" *ngIf="dataSource.data.length">
+    <ng-container matColumnDef="id">
+        <th mat-header-cell *matHeaderCellDef>№</th>
+        <td mat-cell *matCellDef="let element">
+            {{ 1 }}
+        </td>
+    </ng-container>
+
+    <ng-container matColumnDef="fullName">
+        <th mat-header-cell *matHeaderCellDef>ПІБ Студента</th>
+        <td mat-cell *matCellDef="let element">
+            {{
+                element.student_name +
+                    ' ' +
+                    element.student_fname +
+                    ' ' +
+                    element.student_surname
+            }}
+        </td>
+    </ng-container>
+    <ng-container matColumnDef="rating">
+        <th mat-header-cell *matHeaderCellDef>Оцінка</th>
+        <td mat-cell *matCellDef="let element">
+            {{ element.result }}
+        </td>
+    </ng-container>
+    <ng-container matColumnDef="data">
+        <th mat-header-cell *matHeaderCellDef>Дата</th>
+        <td mat-cell *matCellDef="let element">
+            {{ element.session_date }}
+        </td>
+    </ng-container>
+    <ng-container matColumnDef="startTime">
+        <th mat-header-cell *matHeaderCellDef>Початок</th>
+        <td mat-cell *matCellDef="let element">
+            {{ element.start_time }}
+        </td>
+    </ng-container>
+    <ng-container matColumnDef="duration">
+        <th mat-header-cell *matHeaderCellDef>Тривалість</th>
+        <td mat-cell *matCellDef="let element">
+            {{ element.duration }}
+        </td>
+    </ng-container>
+    <ng-container matColumnDef="statistic">
+        <th mat-header-cell *matHeaderCellDef>statistic</th>
+        <div class="btnStat">
+            <td mat-cell *matCellDef="let item">
+                <a
+                    class="operation-button"
+                    (click)="onClick(item)"
+                    alt="Деталі тестування"
+                >
+                    <mat-icon class="detail-btn">view_headline</mat-icon>
+                </a>
+            </td>
+        </div>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+</table>
