@@ -39,7 +39,9 @@
             [ngClass]="element.true ? 'true-answer' : 'false-answer'"
         >
             <a>
-                <mat-icon class="detail-btn">view_headline</mat-icon>
+                <mat-icon class="detail-btn" (click)="detailByQuestion(element)"
+                    >view_headline</mat-icon
+                >
             </a>
         </td>
     </ng-container>

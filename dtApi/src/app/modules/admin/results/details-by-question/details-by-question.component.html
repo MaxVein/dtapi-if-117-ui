@@ -1,0 +1,51 @@
+<div class="contenter">
+    <mat-card class="ask-header">
+        <mat-card-title>Запитання</mat-card-title>
+        <mat-card-content>{{ data.question_text }}</mat-card-content>
+    </mat-card>
+    <mat-card class="ask-header">
+        <mat-card-title>Ваша відповідь</mat-card-title>
+        <mat-card-content>Потім дороблю xD</mat-card-content>
+    </mat-card>
+    <mat-card class="ask-header">
+        <mat-card-title class="center-title">варіанти відповіді</mat-card-title>
+        <div class="content" fxLayout="row wrap" fxLayoutGap="5px grid">
+            <div
+                fxFlex="33%"
+                fxFlex.xs="100%"
+                fxFlex.sm="50%"
+                *ngFor="let elem of dataSource"
+            >
+                <mat-card class="mat-elevation-z4 center-text">
+                    <mat-card-content>
+                        <p>{{ elem.answer_text }}</p>
+                    </mat-card-content>
+                    <mat-card-actions class="center-text">
+                        <p
+                            class="correct-answer"
+                            mat-button
+                            [ngClass]="
+                                +elem.true_answer
+                                    ? 'true-answer'
+                                    : 'false-answer'
+                            "
+                        >
+                            {{
+                                +elem.true_answer ? 'Правильна' : 'Неправильна'
+                            }}
+                        </p>
+                    </mat-card-actions>
+                </mat-card>
+            </div>
+        </div>
+    </mat-card>
+    <button
+        mat-raised-button
+        mat-dialog-close
+        class="close-btn"
+        color="primary"
+        type="button"
+    >
+        Закрити
+    </button>
+</div>
