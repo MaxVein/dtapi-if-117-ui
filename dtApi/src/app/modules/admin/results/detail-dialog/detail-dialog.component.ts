@@ -21,7 +21,6 @@ export class DetailDialogComponent implements OnInit {
     dataSource = new MatTableDataSource();
     ngOnInit(): void {
         this.dataSource.data = JSON.parse(this.data.questions);
-
         this.ids = this.dataSource.data.map((i) => {
             return i['question_id'];
         });
@@ -32,7 +31,15 @@ export class DetailDialogComponent implements OnInit {
                     const studentInfo = JSON.parse(
                         this.data.true_answers
                     ).filter((data) => data.question_id === item.question_id);
-                    return Object.assign({}, item, ...studentInfo);
+                    const answerData = JSON.parse(this.data.questions).filter(
+                        (data) => data.question_id === item.question_id
+                    );
+                    return Object.assign(
+                        {},
+                        item,
+                        ...studentInfo,
+                        ...answerData
+                    );
                 });
             },
         });
