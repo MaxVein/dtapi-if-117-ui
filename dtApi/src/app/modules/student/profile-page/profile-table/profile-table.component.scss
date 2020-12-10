@@ -1,0 +1,67 @@
+.profile-table {
+    & .header-icon {
+        vertical-align: middle;
+        font-size: 30px;
+        margin: -11px 10px auto auto;
+    }
+
+    & .search-icon {
+        vertical-align: middle;
+        font-size: 20px;
+        margin: -3px 5px auto auto;
+    }
+
+    & mat-form-field {
+        font-size: 16px;
+        width: 100%;
+    }
+
+    & h1 {
+        text-align: center;
+        margin-bottom: 20px;
+    }
+
+    &__title {
+        font-size: 30px;
+        font-weight: 500;
+        text-align: center;
+    }
+
+    &__table {
+        margin-top: 10px;
+
+        & th,
+        td {
+            text-align: center;
+            padding: 0.3em 1.5em;
+
+            @media screen and (max-width: 600px) {
+                font-size: 12px;
+                padding: 1px;
+                word-break: break-word;
+            }
+        }
+    }
+
+    & .empty-data-test {
+        display: inline-block;
+        top: 49%;
+        left: 55%;
+        position: absolute;
+        text-align: center;
+
+        &.select {
+            top: 51%;
+            left: 51%;
+        }
+
+        & h1 {
+            border-radius: 4px;
+            font-size: 28px;
+            font-weight: 500;
+            color: #f4f4f4;
+            background: #3f51b5;
+            padding: 10px 15px 10px 15px;
+        }
+    }
+}

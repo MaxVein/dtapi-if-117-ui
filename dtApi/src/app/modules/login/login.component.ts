@@ -4,6 +4,7 @@ import { trigger, style, animate, transition } from '@angular/animations';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { AuthService } from './auth.service';
 import { Logged, Logo, Login } from '../../shared/interfaces/auth.interfaces';
+import { Response } from '../../shared/interfaces/entity.interfaces';
 
 @Component({
     animations: [
@@ -24,7 +25,6 @@ import { Logged, Logo, Login } from '../../shared/interfaces/auth.interfaces';
 })
 export class LoginComponent implements OnInit {
     loginForm: FormGroup;
-
     hide = true;
     badRequest = false;
     errorMessage: string;
@@ -40,21 +40,17 @@ export class LoginComponent implements OnInit {
     ) {}
 
     ngOnInit(): void {
-        this.formInitializer();
-        this.getLogo();
-    }
-    formInitializer() {
         this.loginForm = this.fb.group({
             userName: [''],
             password: [''],
         });
+        this.getLogo();
     }
 
     onSubmit(): void {
         const formValue: Login = this.loginForm.value;
         this.userName = formValue.userName;
         this.password = formValue.password;
-
         this.request.loginRequest(this.userName, this.password).subscribe({
             next: (res: Logged) => {
                 const goTo = res.roles.includes('admin') ? 'admin' : 'student';
@@ -64,31 +60,31 @@ export class LoginComponent implements OnInit {
                 };
                 this.router.navigate([goTo], navigationExtras);
             },
-            error: (error) => {
+            error: (error: Response) => {
                 this.loginForm.reset();
                 this.handlerError(error);
             },
         });
     }
 
-    handlerError(err) {
+    handlerError(err: any): void {
         this.badRequest = true;
         this.errorMessage = err.error.response;
         this.removeErrorMessage();
     }
 
-    removeErrorMessage() {
+    removeErrorMessage(): void {
         setTimeout(() => {
             this.badRequest = false;
         }, 1500);
     }
 
-    getLogo() {
+    getLogo(): void {
         this.request.getLogo().subscribe((res: Logo) => {
             this.logoSrc = res.logo;
         });
     }
-    fixOutlineStyle(input) {
+    fixOutlineStyle(input: any): void {
         input.updateOutlineGap();
     }
 }

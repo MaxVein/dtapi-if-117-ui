@@ -1,0 +1,35 @@
+<div class="timer">
+    <div class="timer__info">
+        <h1 class="test-name">
+            <mat-icon class="timer-icon">school</mat-icon>
+            {{ test.test_name }}
+        </h1>
+        <h1 class="test-subject">
+            <mat-icon class="timer-icon">collections_bookmark</mat-icon>
+            {{ test.subjectname }}
+        </h1>
+    </div>
+    <div class="timer__panel">
+        <h1 class="timer-panel-text">До завершення тесту:</h1>
+        <h1 class="timer-circle">
+            <mat-icon class="timer-panel-icon">schedule</mat-icon>
+            <countdown
+                class="countdown"
+                [config]="{ leftTime: timer }"
+                (event)="timeGone($event)"
+            ></countdown>
+        </h1>
+    </div>
+    <div class="timer__actions">
+        <button
+            class="finish-btn"
+            mat-flat-button
+            color="warn"
+            (click)="finishTest()"
+            matTooltip="Завершити тестування та показати результат"
+        >
+            Завершити тест
+        </button>
+    </div>
+</div>
+<mat-divider></mat-divider>

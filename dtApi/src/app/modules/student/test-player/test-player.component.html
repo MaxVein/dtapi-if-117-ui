@@ -1,1 +1,18 @@
-<p>test-player works!</p>
+<section class="test-player" *ngIf="!loading; else loader">
+    <div class="container">
+        <div class="test-player__header">
+            <app-timer
+                [hidden]="testDone"
+                (onCheck)="checkTest($event)"
+                [test]="currentTest"
+            ></app-timer>
+        </div>
+        <div class="test-player__content" [hidden]="testDone"></div>
+        <div class="test-player__results" [hidden]="!testDone">
+            <app-results></app-results>
+        </div>
+    </div>
+</section>
+<ng-template #loader>
+    <app-loader></app-loader>
+</ng-template>

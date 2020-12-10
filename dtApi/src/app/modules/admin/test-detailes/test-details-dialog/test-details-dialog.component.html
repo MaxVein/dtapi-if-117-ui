@@ -1,0 +1,45 @@
+<!-- <h3 mat-dialog-title>{{data.description.title}}</h3> -->
+<form [formGroup]="form" (ngSubmit)="sendTest()">
+    <div mat-dialog-content>
+        <mat-form-field class="example-full-width">
+            <mat-label>Рівень</mat-label>
+            <mat-select formControlName="level">
+                <mat-option *ngFor="let level of newLevels" [value]="level">
+                    {{ level }}
+                </mat-option>
+            </mat-select>
+            <mat-error
+                *ngIf="form.get('level').invalid && form.get('level').touched"
+            >
+                Поле не має бути пустим
+            </mat-error>
+        </mat-form-field>
+        <mat-form-field class="example-full-width">
+            <input
+                matInput
+                placeholder="Кількість завдань"
+                formControlName="tasks"
+            />
+            <mat-error
+                *ngIf="form.get('tasks').invalid && form.get('tasks').touched"
+            >
+                Поле не має бути пустим
+            </mat-error>
+        </mat-form-field>
+        <mat-form-field class="example-full-width">
+            <mat-label>Кількість балів</mat-label>
+            <input matInput type="number" formControlName="rate" required />
+            <mat-error
+                *ngIf="form.get('rate').invalid && form.get('rate').touched"
+            >
+                Поле не має бути пустим
+            </mat-error>
+        </mat-form-field>
+    </div>
+    <div class="toolbar" mat-dialog-actions>
+        <button mat-raised-button mat-dialog-close>Відмінити</button>
+        <button mat-button type="submit" [disabled]="form.invalid">
+            Зберегти
+        </button>
+    </div>
+</form>

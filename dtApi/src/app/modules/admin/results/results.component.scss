@@ -1,0 +1,31 @@
+td,
+th {
+    width: auto;
+}
+.getDataBtn {
+    width: 100%;
+    margin-bottom: 20px;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    border-radius: 0%;
+    &:hover {
+        opacity: 0.85;
+    }
+    &:disabled {
+        cursor: not-allowed;
+    }
+}
+
+.operation-button {
+    font-size: 23px;
+    &:hover {
+        opacity: 0.85;
+    }
+}
+.detail-btn {
+    font-size: 1.5rem;
+    cursor: pointer;
+    &:hover {
+        font-size: 1.6rem;
+    }
+}

@@ -2,14 +2,9 @@ table {
     width: 100%;
 }
 
-th:nth-child(3),
-td:nth-child(3) {
-    width: 25%;
-}
-
 th,
 td {
-    width: 10%;
+    width: 0%;
 }
 
 .paginator {
@@ -17,11 +12,17 @@ td {
     justify-content: flex-end;
 }
 
-.mat-icon {
-    &:hover {
-        color: red;
-        cursor: pointer;
+.entity-title {
+    display: flex;
+    align-items: center;
+    .mat-icon {
+        width: auto;
+        height: auto;
     }
+}
+.entity-header {
+    display: flex;
+    justify-content: space-between;
 }
 .entity-title {
     display: flex;
@@ -29,5 +30,29 @@ td {
     .mat-icon {
         width: auto;
         height: auto;
+    }
+    .entity-title-icon {
+        font-size: 2rem;
+        margin-right: 0.5rem;
+    }
+}
+.operation-button {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.2rem;
+    height: 2.2rem;
+    min-width: 30px;
+    margin: 0 0.5rem 0 0;
+    padding: 0 0.4rem;
+    &:last-child {
+        margin: 0 0 0 0;
+    }
+    .mat-icon {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.2rem;
     }
 }

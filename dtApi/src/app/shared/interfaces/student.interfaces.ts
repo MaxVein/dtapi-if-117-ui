@@ -1,3 +1,5 @@
+import { Student } from './entity.interfaces';
+
 export interface RouterState {
     username?: string;
     id?: string;
@@ -10,8 +12,18 @@ export interface TestDetails {
     tasks: string;
     test_id: string;
     test_name: string;
-    time_for_test: string;
+    time_for_test: number;
     response: string;
+    subjectname?: string;
+}
+
+export interface StudentProfile extends Student {
+    group_name?: string;
+    faculty_id?: number;
+    faculty_name?: string;
+    speciality_id?: string;
+    speciality_name?: string;
+    speciality_code?: string;
 }
 
 export interface TestDate {
@@ -23,4 +35,69 @@ export interface TestDate {
     subject_id?: string;
     timetable_id?: string;
     response?: string;
+}
+
+export interface SpecialityDataProfile {
+    name: string;
+    code: string;
+}
+
+export interface Question {
+    question_id: string;
+    test_id: string;
+    question_text: string;
+    level: string;
+    type: string;
+    attachment: string;
+}
+
+export interface Answer {
+    answer_id: number;
+    question_id: number;
+    true_answer: boolean;
+    answer_text: string;
+    attachment: string;
+}
+
+export interface QA extends Question {
+    answers: Answer[];
+}
+
+export interface Log {
+    log_id: number;
+    user_id: number;
+    test_id: number;
+    log_date: string;
+    log_time: string;
+    remote_ip: string;
+}
+
+export interface ServerTime {
+    unix_timestamp: number;
+    offset: number;
+    curtime: number;
+}
+
+export interface TestDetailsByTest {
+    id: number;
+    test_id: number;
+    level: number;
+    tasks: number;
+    rate: number;
+}
+
+export interface TestPlayerSaveData {
+    id?: number;
+    testInProgress?: boolean;
+    response: string;
+}
+
+export interface TestPlayerEndTime {
+    end: number;
+    response?: string;
+}
+
+export interface TestCheck {
+    time: boolean;
+    finish: boolean;
 }

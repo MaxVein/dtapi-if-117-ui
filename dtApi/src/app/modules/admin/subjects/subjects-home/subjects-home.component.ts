@@ -57,11 +57,29 @@ export class SubjectsHomeComponent implements OnInit, AfterViewInit {
     }
 
     public redirectToCreate = (data: SubjectsRequest) => {
-        this.subjectsService.create(data).subscribe();
+        this.subjectsService
+            .create(data)
+            .subscribe((result: SubjectsResponse) => {
+                this.dataSource.data = this.dataSource.data.concat(result[0]);
+                this.dataSource.paginator.lastPage();
+            });
     };
 
     public redirectToUpdate = (id: number, body: SubjectsResponse) => {
-        this.subjectsService.update(id, body).subscribe();
+        this.subjectsService
+            .update(id, body)
+            .subscribe((result: SubjectsResponse) => {
+                const newSourse = this.dataSource.data.map((item) => {
+                    if (item.subject_id === id) {
+                        return (item = {
+                            ...result[0],
+                        });
+                    } else {
+                        return item;
+                    }
+                });
+                this.dataSource.data = newSourse;
+            });
     };
 
     public redirectToDelete = (id: number) => {
@@ -106,7 +124,11 @@ export class SubjectsHomeComponent implements OnInit, AfterViewInit {
     public doFilter = (value: string) => {
         this.dataSource.filter = value.trim().toLocaleLowerCase();
     };
-    redirectToTest() {
-        this.router.navigate(['admin/subjects/test']);
+    public redirectToTests(id: string, subject_name: string) {
+        this.router.navigate(['admin/subjects/tests/', id], {
+            queryParams: {
+                subject_name: subject_name,
+            },
+        });
     }
 }
