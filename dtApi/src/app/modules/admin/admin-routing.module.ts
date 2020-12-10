@@ -88,7 +88,7 @@ const routes: Routes = [
                                     ).then((m) => m.TestDetailesModule),
                             },
                             {
-                                path: 'questions/:id',
+                                path: 'questions',
                                 children: [
                                     {
                                         path: '',
@@ -96,6 +96,13 @@ const routes: Routes = [
                                             import(
                                                 './questions/questions.module'
                                             ).then((m) => m.QuestionsModule),
+                                    },
+                                    {
+                                        path: 'answer',
+                                        loadChildren: () =>
+                                            import(
+                                                './answers/answers.module'
+                                            ).then((m) => m.AnswersModule),
                                     },
                                 ],
                             },
