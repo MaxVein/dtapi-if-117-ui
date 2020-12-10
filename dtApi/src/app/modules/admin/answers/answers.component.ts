@@ -17,9 +17,9 @@ import { minMaxValidator } from './validators/minMaxValidator';
     styleUrls: ['./answers.component.scss'],
 })
 export class AnswersComponent implements OnInit {
-    questionChanges: boolean = false;
-    answerTypeChanges: boolean = false;
-    typeNumericChanges: boolean = false;
+    questionChanges = false;
+    answerTypeChanges = false;
+    typeNumericChanges = false;
     alertMessage = 'Увага';
     errorQuestionTitle = "Це поле обов'язкове";
     showAtachmentAnswer = false;
