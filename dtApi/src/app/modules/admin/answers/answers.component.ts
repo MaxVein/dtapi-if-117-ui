@@ -17,9 +17,9 @@ import { minMaxValidator } from './validators/minMaxValidator';
     styleUrls: ['./answers.component.scss'],
 })
 export class AnswersComponent implements OnInit {
-    questionChanges: boolean;
-    answerTypeChanges: boolean;
-    typeNumericChanges: boolean;
+    questionChanges: boolean = false;
+    answerTypeChanges: boolean = false;
+    typeNumericChanges: boolean = false;
     alertMessage = 'Увага';
     errorQuestionTitle = "Це поле обов'язкове";
     showAtachmentAnswer = false;
@@ -106,7 +106,7 @@ export class AnswersComponent implements OnInit {
     }
     ngOnInit(): void {
         this.activatedRoute.queryParams.subscribe((params) => {
-            this.testId = params.testId;
+            this.testId = params.test_id;
             this.questionId = params.questionId;
         });
         this.state = history.state.data;
@@ -129,6 +129,8 @@ export class AnswersComponent implements OnInit {
                 if (!res[0]) {
                     this.noAnswers = true;
                 } else {
+                    // console.log(res);
+
                     this.fillForm(res);
                 }
             });
@@ -191,16 +193,18 @@ export class AnswersComponent implements OnInit {
             this.onSubmitEditedProfile(this.answersTypeNumeric).map(
                 (item, index) => {
                     if (item.changed) {
-                        //   console.log(item.changed);
-
                         updateId.push(this.idAnswerArray[index]);
+                        this.typeNumericChanges = true;
                     }
                 }
             );
         } else {
             this.onSubmitEditedProfile(this.answersType).map((item, index) => {
+                //console.log(this.sendAnswerData, 'index');
+                //console.log(item, 'map');
                 if (item.changed) {
                     updateId.push(this.idAnswerArray[index]);
+                    this.answerTypeChanges = true;
                 }
             });
         }
@@ -252,7 +256,7 @@ export class AnswersComponent implements OnInit {
                     if (res.response === 'ok') {
                         this.idAnswerArray.splice(index, 1);
                     }
-                    // console.log(res);
+                    //console.log(res);
                 });
         }
         this.answersType.removeAt(index);
@@ -400,30 +404,35 @@ export class AnswersComponent implements OnInit {
     createAnswerRequest(elem, index) {
         if (this.createMode) {
             this.answerServise.createAnswerRequest(elem).subscribe((res) => {
-                //console.log(res);
-            });
-        } else {
-            this.updateAnswerRequest(elem, index).subscribe((res) => {
                 // console.log(res);
             });
+        } else if (this.answerTypeChanges || this.typeNumericChanges) {
+            // console.log(this.idAnswerArray);
+
+            this.updateAnswerRequest(elem, this.idAnswerArray[index]).subscribe(
+                (res) => {
+                    // console.log(res);
+                }
+            );
         }
     }
     sendAnswerDataRequest() {
         this.createAnswer();
         this.sendAnswerData.map((elem, index) => {
-            if (this.createMode || !this.idAnswerArray[index]) {
-                this.answerServise
-                    .createAnswerRequest(elem)
-                    .subscribe((res) => {
-                        //console.log(res);
-                    });
-            } else if (!this.createMode && this.idAnswerArray[index]) {
-                this.answerServise
-                    .updateAnswer(elem, this.idAnswerArray[index])
-                    .subscribe((res) => {
-                        // console.log(res);
-                    });
-            }
+            this.createAnswerRequest(elem, index);
+            // if (this.createMode || !this.idAnswerArray[index]) {
+            //     this.answerServise
+            //         .createAnswerRequest(elem)
+            //         .subscribe((res) => {
+            //             console.log(res);
+            //         });
+            // } else if (!this.createMode && this.idAnswerArray[index]) {
+            //     this.answerServise
+            //         .updateAnswer(elem, this.idAnswerArray[index])
+            //         .subscribe((res) => {
+            //             console.log(res);
+            //         });
+            // }
         });
         // let formValue = this.answerForm.value;
         // if (this.typeOfQuestion === '4') {
@@ -475,18 +484,12 @@ export class AnswersComponent implements OnInit {
     }
     createQuestionAndAnswer() {
         this.checkChangesForm();
-        // this.questionFormChange.push(
-        //     this.onSubmitEditedProfile(this.answerForm)
-        // );
-        // this.onSubmitEditedProfile(this.answerForm);
-        // console.log(this.questionFormChange.splice(0, 4));
-        // this.onSubmitEditedProfile(this.answersType);
-        // console.log(this.answerTypeFormChange);
-        // this.onSubmitEditedProfile(this.answersTypeNumeric);
-        // console.log(this.answerTypeNumericFormChange);
         if (
-            this.answersType.controls.length === 0 &&
-            this.answersTypeNumeric.invalid
+            (this.answersType.controls.length === 0 &&
+                this.answersTypeNumeric.invalid) ||
+            (!this.answerTypeChanges &&
+                !this.typeNumericChanges &&
+                this.questionChanges)
         ) {
             let message = 'Питання повинне містити відповіді';
             if (
@@ -495,6 +498,12 @@ export class AnswersComponent implements OnInit {
             ) {
                 message =
                     'Мінімальне значення не може бути більше або рівне макcимального';
+            } else if (
+                !this.answerTypeChanges &&
+                !this.typeNumericChanges &&
+                this.questionChanges
+            ) {
+                message = 'Для редагування внесіть зміни в форму';
             }
             this.openModal(this.alertMessage, message, AlertComponent);
             return;
@@ -513,13 +522,16 @@ export class AnswersComponent implements OnInit {
     }
     cancelRedirect(e) {
         e.preventDefault();
-        this.router.navigate(['admin/subjects/test/questions']);
+        this.router.navigate([`admin/subjects/tests/${this.testId}/questions`]);
     }
     navigateToQuestionPage(data: questionData) {
-        // console.log(data);
-        this.router.navigate(['admin/subjects/test/questions'], {
-            state: { data: data },
-        });
+        //console.log(data);
+        this.router.navigate(
+            [`admin/subjects/tests/${this.testId}/questions`],
+            {
+                state: { data: data },
+            }
+        );
     }
     openModal(title: string, message: string, component: any) {
         this.modalService.openModal(component, {

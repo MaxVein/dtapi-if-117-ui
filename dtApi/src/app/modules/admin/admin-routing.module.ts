@@ -88,7 +88,7 @@ const routes: Routes = [
                                     ).then((m) => m.TestDetailesModule),
                             },
                             {
-                                path: 'questions/:id',
+                                path: 'questions',
                                 children: [
                                     {
                                         path: '',
