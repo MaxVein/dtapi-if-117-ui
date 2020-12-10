@@ -8,8 +8,8 @@
     </button>
 </div>
 <mat-form-field>
-    <mat-label class="entity-search-label"
-        ><mat-icon class="entity-search-icon">help</mat-icon> Пошук</mat-label
+    <mat-label class="entity-search-label">
+        <mat-icon class="entity-search-icon">help</mat-icon> Пошук</mat-label
     >
     <input
         matInput
@@ -74,7 +74,7 @@
                     mat-flat-button
                     color="primary"
                     matTooltip="Відповіді до питання"
-                    (click)="redirectToAnswers(item.question_id)"
+                    (click)="redirectToAnswers(item)"
                 >
                     <mat-icon>question_answer</mat-icon>
                 </button>

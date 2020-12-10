@@ -24,6 +24,7 @@
         "@angular/platform-browser-dynamic": "~11.0.2",
         "@angular/router": "~11.0.2",
         "@rxweb/translate": "^1.0.13",
+        "ngx-material-file-input": "^2.1.1",
         "ngx-countdown": "^11.0.0",
         "rxjs": "~6.6.0",
         "tslib": "^2.0.0",
