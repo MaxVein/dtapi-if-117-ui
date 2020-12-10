@@ -24,10 +24,12 @@ import { MatListModule } from '@angular/material/list';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatSortModule } from '@angular/material/sort';
 import { MatCheckboxModule } from '@angular/material/checkbox';
+import { FlexLayoutModule } from '@angular/flex-layout';
 
 @NgModule({
     declarations: [],
     imports: [
+        FlexLayoutModule,
         MatCheckboxModule,
         CommonModule,
         MatTableModule,
@@ -54,6 +56,7 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
         MatSortModule,
     ],
     exports: [
+        FlexLayoutModule,
         MatCheckboxModule,
         MatTableModule,
         MatIconModule,
