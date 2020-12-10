@@ -11,21 +11,35 @@
     </div>
     <div class="timer__panel">
         <h1 class="timer-panel-text">До завершення тесту:</h1>
-        <h1 class="timer-circle">
-            <mat-icon class="timer-panel-icon">schedule</mat-icon>
-            <countdown
-                class="countdown"
-                [config]="{ leftTime: timer }"
-                (event)="timeGone($event)"
-            ></countdown>
-        </h1>
+        <div
+            [ngClass]="{
+                warning: timer.minutes < 10 && timer.hours == 0,
+                danger: timer.minutes < 2 && timer.hours == 0
+            }"
+            class="timer-circle"
+            *ngIf="timer.hours || timer.minutes || timer.seconds; else initTime"
+        >
+            <h1 class="timer-numbers">
+                <mat-icon class="timer-panel-icon">schedule</mat-icon>
+                {{ timer.hours }}:{{ timer.minutes }}:{{ timer.seconds }}
+            </h1>
+        </div>
+        <ng-template #initTime>
+            <div class="timer-circle">
+                <h1 class="timer-init">
+                    <mat-icon class="timer-panel-icon">schedule</mat-icon>
+                    Визначення часу...
+                </h1>
+            </div>
+        </ng-template>
     </div>
     <div class="timer__actions">
         <button
+            type="button"
             class="finish-btn"
             mat-flat-button
             color="warn"
-            (click)="finishTest()"
+            (click)="finishTest(false)"
             matTooltip="Завершити тестування та показати результат"
         >
             Завершити тест

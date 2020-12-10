@@ -2,15 +2,11 @@
     <div class="container">
         <div class="test-player__header">
             <app-timer
-                [hidden]="testDone"
-                (onCheck)="checkTest($event)"
+                (onCheck)="finishTest($event)"
                 [test]="currentTest"
             ></app-timer>
         </div>
-        <div class="test-player__content" [hidden]="testDone"></div>
-        <div class="test-player__results" [hidden]="!testDone">
-            <app-results></app-results>
-        </div>
+        <div class="test-player__content"></div>
     </div>
 </section>
 <ng-template #loader>

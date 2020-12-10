@@ -1,21 +1,30 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, HostListener, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { ProfileService } from '../services/profile.service';
 import { TestPlayerService } from '../services/test-player.service';
-import { Subscription } from 'rxjs';
-import {
-    QA,
-    TestCheck,
-    TestDetails,
-    TestPlayerSaveData,
-} from '../../../shared/interfaces/student.interfaces';
 import { ModalService } from '../../../shared/services/modal.service';
 import { ConfirmComponent } from '../../../shared/components/confirm/confirm.component';
+import { AlertComponent } from '../../../shared/components/alert/alert.component';
+import { Subscription } from 'rxjs';
+import { TestDetails } from '../../../shared/interfaces/student.interfaces';
 import {
     DialogResult,
     Response,
 } from '../../../shared/interfaces/entity.interfaces';
-import { AlertComponent } from '../../../shared/components/alert/alert.component';
+import {
+    TestPlayerResponse,
+    QA,
+    TestCheck,
+    TestPlayerQAError,
+} from '../../../shared/interfaces/test-player.interfaces';
+import {
+    areYouSureFinishTestMessage,
+    cancelMessage,
+    errorTitleMessage,
+    sessionErrorMessage,
+    testPlayerFinishMessage,
+    testPlayerQAError1,
+    testPlayerQAError2,
+} from '../Messages';
 
 @Component({
     selector: 'app-test-player',
@@ -26,13 +35,16 @@ export class TestPlayerComponent implements OnInit, OnDestroy {
     loading = false;
     currentTest: TestDetails;
     testQuestionsAndAnswers: QA[] = [];
-    testDone = false;
     playerSubscription: Subscription;
+
+    @HostListener('window:beforeunload', ['$event'])
+    onReloadHandler(event: Event): void {
+        event.returnValue = true;
+    }
 
     constructor(
         private route: ActivatedRoute,
         private router: Router,
-        private profileService: ProfileService,
         private testPlayerService: TestPlayerService,
         private modalService: ModalService
     ) {
@@ -41,8 +53,7 @@ export class TestPlayerComponent implements OnInit, OnDestroy {
 
     ngOnInit(): void {
         this.loading = true;
-        this.saveTestProgress(+this.currentTest.test_id);
-        this.getLog(+this.currentTest.test_id);
+        this.getTestQuestions(+this.currentTest.test_id);
     }
 
     initCurrentTest(): void {
@@ -54,24 +65,15 @@ export class TestPlayerComponent implements OnInit, OnDestroy {
         } else {
             this.currentTest = JSON.parse(localStorage.getItem('test_info'));
         }
-    }
-
-    saveTestProgress(id: number): void {
-        this.testPlayerService.testPlayerSaveData(+id, true).subscribe(() => {
-            this.modalService.showSnackBar('Тест розпочато');
-        });
-    }
-
-    getLog(id: number): void {
         this.playerSubscription = this.testPlayerService
             .testPlayerGetData()
-            .subscribe((testPlayerSaveData: TestPlayerSaveData) => {
-                if (testPlayerSaveData.response === 'Empty slot') {
-                    this.testPlayerService.getLog(+id).subscribe(() => {
-                        this.getTestQuestions(+id);
-                    });
-                } else {
-                    this.getTestQuestions(+id);
+            .subscribe((response: TestPlayerResponse) => {
+                if (+response.id !== +this.currentTest.test_id) {
+                    this.playerSubscription = this.testPlayerService
+                        .testPlayerResetSession()
+                        .subscribe(() => {});
+                    this.router.navigate(['/student/profile']);
+                    localStorage.setItem('isMatch', 'notMatch');
                 }
             });
     }
@@ -82,44 +84,76 @@ export class TestPlayerComponent implements OnInit, OnDestroy {
                 this.testQuestionsAndAnswers = testQuestionsAndAnswers;
                 this.loading = false;
             },
-            (error: Response) => {
+            (error: TestPlayerQAError) => {
                 this.loading = false;
-                this.errorHandler(
-                    error,
-                    'Помилка',
-                    `Сталася помилка! Спробуйте знову`
-                );
+                if (error.error.response === testPlayerQAError1(true)) {
+                    this.errorHandler(
+                        error.error,
+                        errorTitleMessage,
+                        testPlayerQAError1(false)
+                    );
+                } else if (error.error.response === testPlayerQAError2(true)) {
+                    this.errorHandler(
+                        error.error,
+                        errorTitleMessage,
+                        testPlayerQAError2(false)
+                    );
+                }
                 this.router.navigate(['/student/profile']);
             }
         );
     }
 
-    checkTest(event: TestCheck): void {
+    finishTest(event: TestCheck): void {
         if (event.finish && !event.time) {
             this.modalService.openModal(
                 ConfirmComponent,
                 {
                     data: {
                         icon: 'cancel',
-                        message: `Ви впевнені, що хочете завершити ${this.currentTest.test_name}?`,
+                        message: areYouSureFinishTestMessage(
+                            this.currentTest.test_name
+                        ),
                     },
                 },
                 (result: DialogResult) => {
                     if (result) {
-                        this.testPlayerService
-                            .testPlayerResetSession()
-                            .subscribe(() => {
-                                this.testDone = true;
-                                this.modalService.showSnackBar(
-                                    'Тест закінчено! Ваш результат'
-                                );
-                            });
+                        this.resetSession();
                     } else if (!result) {
-                        this.modalService.showSnackBar('Скасовано');
+                        this.modalService.showSnackBar(cancelMessage);
                     }
                 }
             );
+        } else if (!event.finish && event.time) {
+            this.checkTest();
         }
+    }
+
+    checkTest(): void {
+        this.router.navigate(['/student/test-player/results']);
+        // this.playerSubscription = this.testPlayerService.checkDoneTest().subscribe()
+    }
+
+    resetSession(): void {
+        this.playerSubscription = this.testPlayerService
+            .testPlayerResetSession()
+            .subscribe(
+                (response: TestPlayerResponse) => {
+                    if (response) {
+                        this.modalService.showSnackBar(
+                            testPlayerFinishMessage(false)
+                        );
+                        this.checkTest();
+                    }
+                },
+                (error: Response) => {
+                    this.errorHandler(
+                        error,
+                        errorTitleMessage,
+                        sessionErrorMessage
+                    );
+                }
+            );
     }
 
     errorHandler(error: Response, title: string, message: string): void {

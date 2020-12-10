@@ -15,11 +15,23 @@ const routes: Routes = [
                     ),
             },
             {
-                path: 'test-player/:id',
-                loadChildren: () =>
-                    import('./test-player/test-player.module').then(
-                        (m) => m.TestPlayerModule
-                    ),
+                path: 'test-player',
+                children: [
+                    {
+                        path: '',
+                        loadChildren: () =>
+                            import('./test-player/test-player.module').then(
+                                (m) => m.TestPlayerModule
+                            ),
+                    },
+                    {
+                        path: 'results',
+                        loadChildren: () =>
+                            import('./test-player/results/results.module').then(
+                                (m) => m.ResultsModule
+                            ),
+                    },
+                ],
             },
             {
                 path: '',
