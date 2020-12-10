@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { NavigationExtras, Router } from '@angular/router';
 import { trigger, style, animate, transition } from '@angular/animations';
-import { FormBuilder } from '@angular/forms';
+import { FormBuilder, FormGroup } from '@angular/forms';
 import { AuthService } from './auth.service';
 import { Logged, Logo, Login } from '../../shared/interfaces/auth.interfaces';
 
@@ -23,10 +23,7 @@ import { Logged, Logo, Login } from '../../shared/interfaces/auth.interfaces';
     styleUrls: ['./login.component.scss'],
 })
 export class LoginComponent implements OnInit {
-    loginForm = this.fb.group({
-        userName: [''],
-        password: [''],
-    });
+    loginForm: FormGroup;
 
     hide = true;
     badRequest = false;
@@ -43,8 +40,14 @@ export class LoginComponent implements OnInit {
     ) {}
 
     ngOnInit(): void {
-        this.loginForm;
+        this.formInitializer();
         this.getLogo();
+    }
+    formInitializer() {
+        this.loginForm = this.fb.group({
+            userName: [''],
+            password: [''],
+        });
     }
 
     onSubmit(): void {

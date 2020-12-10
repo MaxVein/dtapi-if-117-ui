@@ -192,10 +192,10 @@ export class ProfilePageComponent implements OnInit, OnDestroy {
             .getTestDate(this.subjectID)
             .pipe(
                 concatMap((res: TestDetails[]) => {
-                    this.testsBySubject = res;
                     if (!res[0]) {
                         return throwError(new Error());
                     } else {
+                        this.testsBySubject = res;
                         return this.studentService.getTestDetails(
                             this.subjectID
                         );

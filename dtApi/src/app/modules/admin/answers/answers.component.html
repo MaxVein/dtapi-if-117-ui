@@ -1,0 +1,181 @@
+<form [formGroup]="answerForm" (submit)="createQuestionAndAnswer()">
+    <div class="question">
+        <mat-form-field appearance="fill">
+            <mat-label>Питання</mat-label>
+            <textarea formControlName="questionText" matInput></textarea>
+            <mat-error *ngIf="answerForm.controls.questionText.invalid">{{
+                errorQuestionTitle
+            }}</mat-error>
+        </mat-form-field>
+    </div>
+    <mat-card *ngIf="attachmentQuestionSrc">
+        <img
+            mat-card-image
+            class="image"
+            src="{{ attachmentQuestionSrc }}"
+            alt="question picture"
+        />
+        <span class="material-icons close-btn" (click)="removeImageQuestion()">
+            close
+        </span>
+    </mat-card>
+    <div>
+        <mat-form-field>
+            <ngx-mat-file-input
+                formControlName="atachmentQuestion"
+                placeholder="Додати зображення"
+            ></ngx-mat-file-input>
+            <mat-icon matSuffix>folder</mat-icon>
+        </mat-form-field>
+    </div>
+    <mat-form-field appearance="fill">
+        <mat-label>Тип питання</mat-label>
+        <mat-select
+            formControlName="typeOfQuestion"
+            (selectionChange)="changeType()"
+        >
+            <mat-option
+                *ngFor="let type of questionType; let i = index"
+                value="{{ i + 1 }}"
+            >
+                {{ type }}
+            </mat-option>
+        </mat-select>
+    </mat-form-field>
+    <mat-form-field appearance="fill">
+        <mat-label>Рівень питання</mat-label>
+        <mat-select formControlName="level">
+            <mat-option
+                *ngFor="let level of levelType; let i = index"
+                value="{{ i + 1 }}"
+                >{{ i + 1 }}
+            </mat-option>
+        </mat-select>
+    </mat-form-field>
+
+    <div id="createAnswer">
+        <div
+            formArrayName="answersType"
+            *ngFor="let ans of answersType.controls; let i = index"
+        >
+            <div [formGroupName]="i">
+                <div *ngIf="showAnswers">
+                    <div class="addAnswerField">
+                        <mat-checkbox
+                            *ngIf="typeOfQuestion === '2'"
+                            class="example-margin"
+                            formControlName="trueAnswerMulti"
+                        ></mat-checkbox>
+                        <mat-checkbox
+                            *ngIf="typeOfQuestion === '1'"
+                            id="{{ i }}"
+                            class="radio-button"
+                            formControlName="trueAnswerSimple"
+                            (change)="checkRadioBtn(i)"
+                        ></mat-checkbox>
+                        <mat-form-field>
+                            <mat-label>Введіть варіант відповіді</mat-label>
+                            <input formControlName="text" matInput />
+                            <mat-error *ngIf="ans.controls.text.invalid">{{
+                                errorQuestionTitle
+                            }}</mat-error>
+                        </mat-form-field>
+                        <button
+                            (click)="removeAnswer(i)"
+                            mat-mini-fab
+                            color="primary"
+                            aria-label="Example icon button with a delete icon"
+                        >
+                            <mat-icon>delete</mat-icon>
+                        </button>
+                    </div>
+                    <mat-card
+                        *ngIf="showAtachmentAnswer && ans.value.atachmentAnswer"
+                    >
+                        <img
+                            mat-card-image
+                            class="image"
+                            src="{{ ans.value.atachmentAnswer }}"
+                            alt="answer"
+                        />
+                        <span
+                            class="material-icons close-btn"
+                            (click)="removeImageAnswer(i)"
+                        >
+                            close
+                        </span>
+                    </mat-card>
+                    <div>
+                        <mat-form-field>
+                            <ngx-mat-file-input
+                                formControlName="atachmentAnswer"
+                                placeholder="Додати зображення"
+                            ></ngx-mat-file-input>
+                            <mat-icon matSuffix>folder</mat-icon>
+                        </mat-form-field>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div *ngIf="noAnswers">Відповіді відсутні</div>
+        <div *ngIf="showAnswersNumeric" formGroupName="answersTypeNumeric">
+            <mat-form-field>
+                <input
+                    formControlName="numericAnswerMin"
+                    matInput
+                    type="number"
+                />
+                <mat-hint
+                    >Мінімальне числове значення діапазону відповіді</mat-hint
+                >
+                <mat-error
+                    *ngIf="answersTypeNumeric.controls.numericAnswerMin.invalid"
+                    >{{ errorQuestionTitle }}</mat-error
+                >
+            </mat-form-field>
+            <mat-form-field>
+                <input
+                    formControlName="numericAnswerMax"
+                    matInput
+                    type="number"
+                />
+                <mat-hint
+                    >Максимальне числове значення діапазону відповіді</mat-hint
+                >
+                <mat-error
+                    *ngIf="answersTypeNumeric.controls.numericAnswerMin.invalid"
+                    >{{ errorQuestionTitle }}</mat-error
+                >
+            </mat-form-field>
+        </div>
+        <button
+            [disabled]="showAnswersNumeric"
+            class="create-answer-btn"
+            mat-raised-button
+            color="primary"
+            (click)="addAnswer($event)"
+        >
+            Створити відповідь
+        </button>
+        <div сlass="btn-group">
+            <div>
+                <button
+                    mat-raised-button
+                    color="primary"
+                    [disabled]="answerForm.controls.questionText.invalid"
+                >
+                    {{ createMode ? 'Зберегти' : 'Редагувати' }}
+                </button>
+            </div>
+            <div>
+                <button
+                    mat-raised-button
+                    color="primary"
+                    (click)="cancelRedirect($event)"
+                >
+                    Скасувати
+                </button>
+            </div>
+        </div>
+    </div>
+</form>
