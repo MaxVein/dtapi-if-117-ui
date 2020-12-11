@@ -82,3 +82,6 @@ $dark-theme: mat-dark-theme($dark-primary, $dark-accent, $dark-warn);
 .dark-theme .timer-circle {
     background: #e91e63;
 }
+.dark-theme .dark-btn {
+    background: inherit !important;
+}
