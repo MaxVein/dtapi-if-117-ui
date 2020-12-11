@@ -24,18 +24,35 @@
         & .timer-circle {
             text-align: center;
             border-radius: 15px;
-            padding: 10px 0;
-            background: #f44336;
+            padding: 11px 0 12px 0;
+            background: #3f51b5;
+            color: white;
+
+            &.warning {
+                background: #fceb6f;
+                color: black;
+            }
+
+            &.danger {
+                background: #f44336;
+                color: black;
+            }
         }
 
         & .timer-panel-icon {
             vertical-align: middle;
             font-size: 30px;
-            margin: -12px 10px auto auto;
+            margin: -10px 10px auto auto;
         }
 
-        & .countdown {
+        & .timer-numbers {
+            margin-bottom: 0;
             font-size: 25px;
+        }
+
+        & .timer-init {
+            font-size: 20px;
+            margin-bottom: 0;
         }
     }
 

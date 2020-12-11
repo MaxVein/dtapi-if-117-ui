@@ -24,6 +24,7 @@ import { MatListModule } from '@angular/material/list';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatSortModule } from '@angular/material/sort';
 import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatRippleModule } from '@angular/material/core';
 import { FlexLayoutModule } from '@angular/flex-layout';
 
 @NgModule({
@@ -54,6 +55,7 @@ import { FlexLayoutModule } from '@angular/flex-layout';
         MatListModule,
         MatTabsModule,
         MatSortModule,
+        MatRippleModule,
     ],
     exports: [
         FlexLayoutModule,
@@ -80,6 +82,7 @@ import { FlexLayoutModule } from '@angular/flex-layout';
         MatListModule,
         MatTabsModule,
         MatSortModule,
+        MatRippleModule,
     ],
 })
 export class AngularMaterialModule {}

@@ -14,8 +14,8 @@ import { ModalService } from '../../../../shared/services/modal.service';
 import { ProfileService } from '../../services/profile.service';
 import { AlertComponent } from '../../../../shared/components/alert/alert.component';
 import { ConfirmComponent } from '../../../../shared/components/confirm/confirm.component';
-import { of, Subscription } from 'rxjs';
-import { concatMap } from 'rxjs/operators';
+import { of, Subscription, from } from 'rxjs';
+import { concatMap, mergeMap } from 'rxjs/operators';
 import {
     TestDate,
     TestDetails,
@@ -25,6 +25,34 @@ import {
     Response,
     Subject,
 } from '../../../../shared/interfaces/entity.interfaces';
+import { TestPlayerService } from '../../services/test-player.service';
+import {
+    TestLog,
+    TestLogError,
+    TestPlayerResponse,
+    TestPlayerSaveData,
+} from '../../../../shared/interfaces/test-player.interfaces';
+import {
+    cancelMessage,
+    confirmStartTestMessage,
+    errorTitleMessage,
+    isTestStart,
+    notDataRequiredMessage,
+    notTestData,
+    profileTestMessage,
+    testLogError1,
+    testLogError2,
+    testLogError3,
+    testLogError4,
+    testLogError5,
+    testLogError6,
+    testLogError7,
+    testNoAvailableMessage,
+    testWillBeAvailableLaterMessage,
+    testWillBeAvailableTodayMessage,
+    uploadTests,
+    warningTitleMessage,
+} from '../../Messages';
 
 @Component({
     selector: 'app-profile-table',
@@ -33,13 +61,19 @@ import {
 })
 export class ProfileTableComponent implements OnInit, AfterViewInit, OnDestroy {
     @Input() subjects: Subject[];
+    @Input() groupId: number;
+    newSubjects = [];
+    subjectsIds: Array<string>;
     currentDate: Date;
     subjectName: string;
     subjectID: string;
     hide = false;
     startText = false;
     testsBySubject: TestDetails[] = [];
-    testDetails: TestDate[];
+    testsByGroup: TestDetails[] = [];
+
+    testDetails: TestDate[] = [];
+    allTestDetails: TestDate[] = [];
     dataSource = new MatTableDataSource<TestDate>();
     displayedColumns: string[] = [
         'Предмет',
@@ -58,13 +92,15 @@ export class ProfileTableComponent implements OnInit, AfterViewInit, OnDestroy {
     constructor(
         public modalService: ModalService,
         private router: Router,
-        private profileService: ProfileService
+        private profileService: ProfileService,
+        private testPlayerService: TestPlayerService
     ) {}
 
     ngOnInit(): void {
         this.currentDate = new Date();
         this.hide = true;
         this.startText = true;
+        this.getTestInfoByGroup();
     }
 
     ngAfterViewInit(): void {
@@ -82,22 +118,32 @@ export class ProfileTableComponent implements OnInit, AfterViewInit, OnDestroy {
 
     selectSubject(event: MatSelectChange): void {
         const subjectData = event.value;
-        this.subjectID = subjectData.id;
-        this.subjectName = subjectData.name;
-        this.getTestInfo();
+        if (subjectData === 'ALL') {
+            this.hide = false;
+            this.startText = false;
+            this.testDetails = [];
+            this.getTestInfoByGroup();
+        } else {
+            this.subjectID = subjectData.id;
+            this.subjectName = subjectData.name;
+            this.getTestInfo();
+        }
     }
-
-    getTestInfo(): void {
+    getTestInfoByGroup() {
         this.startText = false;
+        this.dataSource = new MatTableDataSource();
         this.profileSubscription = this.profileService
-            .getTestDate(this.subjectID)
+            .getTestDetails(this.groupId)
             .pipe(
-                concatMap((res: TestDetails[]) => {
+                mergeMap((res: TestDetails[]) => {
                     if (res.length) {
                         this.testsBySubject = res;
+                        this.subjectsIds = res.map((item) => item.subject_id);
                         this.modalService.showSnackBar('Тести завантажено');
-                        return this.profileService.getTestDetails(
-                            this.subjectID
+                        return from(this.subjectsIds).pipe(
+                            mergeMap((id) =>
+                                this.profileService.getTestDate(id)
+                            )
                         );
                     } else {
                         this.hide = false;
@@ -108,12 +154,61 @@ export class ProfileTableComponent implements OnInit, AfterViewInit, OnDestroy {
                 })
             )
             .subscribe({
+                next: (res: any) => {
+                    const testDate = res[0] ? res[0] : res;
+                    if (!this.newSubjects.length) {
+                        this.getNewSubjects(this.testsBySubject);
+                    }
+                    this.testsBySubject.forEach((test) => {
+                        res.forEach((item) => {
+                            if (item.subject_id === test.subject_id) {
+                                this.testDetails.push({
+                                    ...test,
+                                    ...item,
+                                    subjectname: this.getSubName(
+                                        test.subject_id
+                                    ),
+                                });
+                            }
+                        });
+                    });
+                    this.dataSource.data = this.testDetails;
+                    this.dataSource.paginator = this.paginator;
+                },
+                error: (error: Response) => {
+                    this.errorHandler(
+                        error,
+                        'Помилка',
+                        'Сталася помилка. Спробуйте знову'
+                    );
+                },
+            });
+    }
+    getTestInfo(): void {
+        this.startText = false;
+        this.profileSubscription = this.profileService
+            .getTestDate(this.subjectID)
+            .pipe(
+                concatMap((res: TestDetails[]) => {
+                    if (res.length) {
+                        this.testsBySubject = res;
+                        this.modalService.showSnackBar(uploadTests(true));
+                        return this.profileService.getTestDetails(this.groupId);
+                    } else {
+                        this.hide = false;
+                        this.testsBySubject = [];
+                        this.modalService.showSnackBar(uploadTests(false));
+                        return of();
+                    }
+                })
+            )
+            .subscribe({
                 next: (res: TestDate) => {
                     let testDate = res[0] ? res[0] : res;
                     if (testDate.response === 'no records') {
                         testDate = {
-                            end_date: 'Дані відсутні',
-                            start_date: 'Дані відсутні',
+                            end_date: notTestData,
+                            start_date: notTestData,
                         };
                     }
                     this.testDetails = [...this.testsBySubject].map((test) => ({
@@ -127,28 +222,11 @@ export class ProfileTableComponent implements OnInit, AfterViewInit, OnDestroy {
                 error: (error: Response) => {
                     this.errorHandler(
                         error,
-                        'Помилка',
-                        'Сталася помилка. Спробуйте знову'
+                        errorTitleMessage,
+                        profileTestMessage(this.subjectName)
                     );
                 },
             });
-    }
-
-    checkPossibilityToPassTest(test: TestDetails): void {
-        this.profileSubscription = this.profileService
-            .testPlayerGetTest(test.test_id)
-            .subscribe(
-                () => {
-                    this.startTest(test);
-                },
-                (error: Response) => {
-                    this.errorHandler(
-                        error,
-                        'Попередження',
-                        this.checkCurrentDate(test)
-                    );
-                }
-            );
     }
 
     checkCurrentDate(test: TestDate | any): string {
@@ -158,46 +236,158 @@ export class ProfileTableComponent implements OnInit, AfterViewInit, OnDestroy {
         );
         const endDate = new Date(`${test.end_date} ${test.end_time}`);
         if (this.currentDate >= startDate && this.currentDate <= endDate) {
-            return `Ви не можете здавати цей екзамен! Екзамен буде доступний сьогодні о ${test.start_time}`;
+            return testWillBeAvailableTodayMessage(test.start_time);
         } else if (
             this.currentDate > startDateWithTime &&
             this.currentDate > endDate
         ) {
-            return `Ви не можете здавати цей екзамен! Екзамен більше не доступний`;
+            return testNoAvailableMessage(test.end_date);
         } else if (
             this.currentDate < startDateWithTime &&
             this.currentDate < endDate
         ) {
-            return `Ви не можете здавати цей екзамен! Екзамен буде доступний ${test.start_date} о ${test.start_time}`;
+            return testWillBeAvailableLaterMessage(
+                test.start_date,
+                test.start_time
+            );
         } else {
-            return `Екзамен не доступний! Немає потрібних даних`;
+            return notDataRequiredMessage();
         }
     }
 
-    startTest(test: TestDetails): void {
+    checkPossibilityToPassTest(test: TestDetails): void {
+        this.profileSubscription = this.profileService
+            .testPlayerGetTest(test.test_id)
+            .subscribe(
+                () => {
+                    this.confirmStartTest(test);
+                },
+                (error: Response) => {
+                    this.errorHandler(
+                        error,
+                        warningTitleMessage,
+                        this.checkCurrentDate(test)
+                    );
+                }
+            );
+    }
+
+    confirmStartTest(test: TestDetails): void {
         this.modalService.openModal(
             ConfirmComponent,
             {
                 data: {
                     icon: 'school',
-                    message: `Розпочати тест ${test.test_name} з предмету ${test.subjectname}?
-                    Тривалість тесту ${test.time_for_test} та ${test.attempts} спроби на здачу ${test.tasks} завдань!`,
+                    message: confirmStartTestMessage(test),
                 },
             },
             (result: DialogResult) => {
                 if (result) {
-                    const navigationExtras: NavigationExtras = {
-                        state: test,
-                    };
-                    this.router.navigate(
-                        ['student/test-player', test.test_id],
-                        navigationExtras
-                    );
+                    this.startTest(test);
                 } else if (!result) {
-                    this.modalService.showSnackBar('Скасовано');
+                    this.modalService.showSnackBar(cancelMessage);
                 }
             }
         );
+    }
+
+    startTest(test: TestDetails): void {
+        this.profileSubscription = this.testPlayerService
+            .getLog(+test.test_id)
+            .subscribe(
+                (log: TestLog) => {
+                    if (log.response === 'ok') {
+                        this.modalService.showSnackBar(isTestStart(true));
+                        this.testPlayerService
+                            .testPlayerSaveData({
+                                id: +test.test_id,
+                                testInProgress: true,
+                            })
+                            .subscribe(
+                                (response: TestPlayerSaveData) => {
+                                    if (response.response) {
+                                        this.navigateToTest(test);
+                                    }
+                                },
+                                (error: Response) => {
+                                    this.errorHandler(
+                                        error,
+                                        errorTitleMessage,
+                                        isTestStart(false)
+                                    );
+                                }
+                            );
+                    }
+                },
+                (error: TestLogError) => {
+                    switch (error.error.response) {
+                        case testLogError1(true):
+                            this.errorHandler(
+                                error.error,
+                                errorTitleMessage,
+                                testLogError1(false)
+                            );
+                            break;
+                        case testLogError2(true):
+                            this.errorHandler(
+                                error.error,
+                                errorTitleMessage,
+                                testLogError2(false)
+                            );
+                            break;
+                        case testLogError3(true):
+                            this.errorHandler(
+                                error.error,
+                                errorTitleMessage,
+                                testLogError3(false)
+                            );
+                            break;
+                        case testLogError4(true):
+                            this.profileSubscription = this.testPlayerService
+                                .testPlayerGetData()
+                                .subscribe((response: TestPlayerResponse) => {
+                                    if (+response.id === +test.test_id) {
+                                        this.navigateToTest(test);
+                                    } else {
+                                        this.errorHandler(
+                                            error.error,
+                                            errorTitleMessage,
+                                            testLogError4(false)
+                                        );
+                                    }
+                                });
+                            break;
+                        case testLogError5(true):
+                            this.errorHandler(
+                                error.error,
+                                errorTitleMessage,
+                                testLogError5(false)
+                            );
+                            break;
+                        case testLogError6(true):
+                            this.errorHandler(
+                                error.error,
+                                errorTitleMessage,
+                                testLogError6(false)
+                            );
+                            break;
+                        case testLogError7(true):
+                            this.errorHandler(
+                                error.error,
+                                errorTitleMessage,
+                                testLogError7(false)
+                            );
+                            break;
+                    }
+                }
+            );
+    }
+
+    navigateToTest(test: TestDetails): void {
+        const navigationExtras: NavigationExtras = {
+            state: test,
+        };
+        this.router.navigate(['student/test-player'], navigationExtras);
     }
 
     errorHandler(error: Response, title: string, message: string): void {
@@ -209,7 +399,20 @@ export class ProfileTableComponent implements OnInit, AfterViewInit, OnDestroy {
             },
         });
     }
-
+    getSubName(id: string) {
+        const currentSpec = this.subjects.filter(
+            (item) => item.subject_id === id
+        );
+        return currentSpec[0].subject_name;
+    }
+    getNewSubjects(res) {
+        res.forEach((elem) => {
+            const newElem = this.subjects.filter(
+                (item) => elem.subject_id === item.subject_id
+            );
+            this.newSubjects.push(newElem[0]);
+        });
+    }
     ngOnDestroy(): void {
         if (this.profileSubscription) {
             this.profileSubscription.unsubscribe();

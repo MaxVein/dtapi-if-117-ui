@@ -12,11 +12,12 @@
             class="profile-select"
         >
             <mat-option
-                *ngFor="let subject of subjects"
+                *ngFor="let subject of newSubjects"
                 [value]="{ name: subject.subject_name, id: subject.subject_id }"
             >
                 {{ subject.subject_name }}
             </mat-option>
+            <mat-option value="ALL"> Показати всі </mat-option>
         </mat-select>
     </mat-form-field>
 

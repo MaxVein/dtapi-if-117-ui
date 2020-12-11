@@ -19,6 +19,21 @@ export interface StudentInfo {
     username: string;
 }
 
+export interface StudentProfileData extends Student {
+    username?: string;
+    email?: string;
+    faculty_name?: string;
+    group_name?: string;
+    speciality_code?: string;
+    speciality_name?: string;
+    speciality_id?: string;
+}
+
+export interface GroupInfoState {
+    groupName: string;
+    id: number;
+}
+
 export interface ValidateStudentData {
     gradebook_id: string;
     username: string;
@@ -59,6 +74,7 @@ export interface Speciality {
 }
 
 export interface Response {
+    error?: Response;
     response?: string;
     user_id?: string;
     id?: number;

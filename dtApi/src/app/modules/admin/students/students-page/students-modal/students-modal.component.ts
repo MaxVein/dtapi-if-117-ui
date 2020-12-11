@@ -24,9 +24,16 @@ import {
     Response,
     Student,
     StudentInfo,
+    StudentProfileData,
     ValidateStudentData,
 } from 'src/app/shared/interfaces/entity.interfaces';
 import { environment } from 'src/environments/environment';
+import {
+    cancelErrorMessage,
+    getUpdateErrorMessage,
+    titleErrorMessage,
+    updateCreateErrorMessage,
+} from '../../../Messages';
 
 @Component({
     selector: 'app-students-modal',
@@ -145,49 +152,30 @@ export class StudentsModalComponent implements OnInit, OnDestroy {
         if (this.data.isUpdateData) {
             this.loading = true;
             this.studentSubscription = this.studentsService
-                .getById('Student', this.student.user_id)
+                .getStudentDataForUpdate(this.student.user_id)
                 .subscribe(
-                    (response: Student[]) => {
-                        this.student.photo = response[0].photo;
-                        this.getOtherStudentInfo();
+                    (response: StudentProfileData) => {
+                        this.student.photo = response.photo;
+                        this.form.get('username').setValue(response.username);
+                        this.form.get('email').setValue(response.email);
+                        this.validateData = {
+                            gradebook_id: response.gradebook_id,
+                            username: response.username,
+                            email: response.email,
+                        };
+                        this.loading = false;
                     },
                     (error: Response) => {
                         this.loading = false;
-                        this.closeModal({ message: 'Помилка' });
+                        this.closeModal({ message: titleErrorMessage });
                         this.errorHandler(
                             error,
-                            'Помилка',
-                            'Сталася помилка. Спробуйте знову'
+                            titleErrorMessage,
+                            getUpdateErrorMessage
                         );
                     }
                 );
         }
-    }
-
-    getOtherStudentInfo(): void {
-        this.studentSubscription = this.studentsService
-            .getById('AdminUser', this.student.user_id)
-            .subscribe(
-                (response: StudentInfo[]) => {
-                    this.form.get('username').setValue(response[0].username);
-                    this.form.get('email').setValue(response[0].email);
-                    this.validateData = {
-                        gradebook_id: this.student.gradebook_id,
-                        username: response[0].username,
-                        email: response[0].email,
-                    };
-                    this.loading = false;
-                },
-                (error: Response) => {
-                    this.loading = false;
-                    this.closeModal({ message: 'Помилка' });
-                    this.errorHandler(
-                        error,
-                        'Помилка',
-                        'Сталася помилка. Спробуйте знову'
-                    );
-                }
-            );
     }
 
     uniqueValidator(
@@ -273,11 +261,11 @@ export class StudentsModalComponent implements OnInit, OnDestroy {
                 },
                 (error: Response) => {
                     this.loading = false;
-                    this.closeModal({ message: 'Помилка' });
+                    this.closeModal({ message: titleErrorMessage });
                     this.errorHandler(
                         error,
-                        'Помилка',
-                        'Сталася помилка. Спробуйте знову'
+                        titleErrorMessage,
+                        updateCreateErrorMessage(true)
                     );
                 }
             );
@@ -298,11 +286,11 @@ export class StudentsModalComponent implements OnInit, OnDestroy {
                 },
                 (error: Response) => {
                     this.loading = false;
-                    this.closeModal({ message: 'Помилка' });
+                    this.closeModal({ message: titleErrorMessage });
                     this.errorHandler(
                         error,
-                        'Помилка',
-                        'Сталася помилка. Спробуйте знову'
+                        titleErrorMessage,
+                        updateCreateErrorMessage(false)
                     );
                 }
             );
@@ -331,7 +319,9 @@ export class StudentsModalComponent implements OnInit, OnDestroy {
         });
     }
 
-    closeModal(dialogResult: DialogResult = { message: 'Скасовано' }): void {
+    closeModal(
+        dialogResult: DialogResult = { message: cancelErrorMessage }
+    ): void {
         this.dialogRef.close(dialogResult);
     }
 

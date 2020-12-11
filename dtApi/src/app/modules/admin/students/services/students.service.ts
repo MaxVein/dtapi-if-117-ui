@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { map, switchMap } from 'rxjs/operators';
 import {
     Check,
     Faculty,
@@ -10,6 +10,7 @@ import {
     Speciality,
     Student,
     StudentInfo,
+    StudentProfileData,
     Unique,
 } from '../../../../shared/interfaces/entity.interfaces';
 import { environment } from '../../../../../environments/environment';
@@ -91,6 +92,57 @@ export class StudentsService {
     getEntityGroupsByFaculty(id: string): Observable<Group[]> {
         return this.http.get<Group[]>(
             `${environment.BASEURL}group/getGroupsByFaculty/${id}`
+        );
+    }
+
+    getStudentDataForUpdate(id: string): Observable<StudentProfileData> {
+        const studentUpdateData: StudentProfileData[] = [];
+        return this.getById('Student', id).pipe(
+            switchMap((student: Student[]) => {
+                studentUpdateData.push(student[0]);
+                return this.getById('AdminUser', id);
+            }),
+            switchMap((studentInfo: StudentInfo[]) => {
+                studentUpdateData[0].username = studentInfo[0].username;
+                studentUpdateData[0].email = studentInfo[0].email;
+                return studentUpdateData;
+            })
+        );
+    }
+
+    getAllStudentData(
+        studentID: string,
+        groupID: number
+    ): Observable<StudentProfileData> {
+        const studentData: StudentProfileData[] = [];
+        return this.getById('Student', studentID).pipe(
+            switchMap((student: Student[]) => {
+                studentData.push(student[0]);
+                return this.getById('AdminUser', studentID);
+            }),
+            map((res: StudentInfo[]) => res[0]),
+            switchMap((studentInfo: StudentInfo) => {
+                studentData[0].username = studentInfo.username;
+                studentData[0].email = studentInfo.email;
+                return this.getGroupData(groupID);
+            }),
+            map((res: Group[]) => res[0]),
+            switchMap((group: Group) => {
+                studentData[0].group_name = group.group_name;
+                studentData[0].speciality_id = group.speciality_id;
+                return this.getFacultyData(group.faculty_id);
+            }),
+            map((res: Faculty[]) => res[0]),
+            switchMap((faculty: Faculty) => {
+                studentData[0].faculty_name = faculty.faculty_name;
+                return this.getSpecialityData(studentData[0].speciality_id);
+            }),
+            map((res: Speciality[]) => res[0]),
+            switchMap((speciality: Speciality) => {
+                studentData[0].speciality_code = speciality.speciality_code;
+                studentData[0].speciality_name = speciality.speciality_name;
+                return studentData;
+            })
         );
     }
 }

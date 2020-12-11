@@ -5,7 +5,9 @@
     </mat-card>
     <mat-card class="ask-header">
         <mat-card-title>Ваша відповідь</mat-card-title>
-        <mat-card-content>Потім дороблю xD</mat-card-content>
+        <mat-card-content *ngIf="dataSource">{{
+            getAnswerText()
+        }}</mat-card-content>
     </mat-card>
     <mat-card class="ask-header">
         <mat-card-title class="center-title">варіанти відповіді</mat-card-title>

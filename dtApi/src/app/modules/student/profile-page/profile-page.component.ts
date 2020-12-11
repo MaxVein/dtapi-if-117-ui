@@ -1,10 +1,23 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { ProfileService } from '../services/profile.service';
 import { ModalService } from '../../../shared/services/modal.service';
 import { AlertComponent } from '../../../shared/components/alert/alert.component';
 import { Subscription } from 'rxjs';
-import { Student, Subject } from '../../../shared/interfaces/entity.interfaces';
+import {
+    DialogResult,
+    Response,
+    Student,
+    Subject,
+} from '../../../shared/interfaces/entity.interfaces';
 import { StudentProfile } from '../../../shared/interfaces/student.interfaces';
+import {
+    errorTitleMessage,
+    isMatchErrorMessage,
+    profileStudentMessage,
+    profileSubjectsMessage,
+    welcomeMessage,
+} from '../Messages';
 
 @Component({
     selector: 'app-profile-page',
@@ -16,8 +29,10 @@ export class ProfilePageComponent implements OnInit, OnDestroy {
     studentProfileData: StudentProfile;
     subjects: Subject[] = [];
     profileSubscription: Subscription;
+    groupId: number;
 
     constructor(
+        private router: Router,
         private profileService: ProfileService,
         public modalService: ModalService
     ) {}
@@ -26,6 +41,7 @@ export class ProfilePageComponent implements OnInit, OnDestroy {
         this.loading = true;
         this.getStudentInfo();
         this.getSubjectInfo();
+        this.isMatch();
     }
 
     getStudentInfo(): void {
@@ -34,10 +50,11 @@ export class ProfilePageComponent implements OnInit, OnDestroy {
             .subscribe(
                 (response: Student) => {
                     if (response) {
+                        this.groupId = response.group_id;
                         this.studentProfileData = response;
                         this.loading = false;
                         this.modalService.showSnackBar(
-                            `Ласкаво просимо ${response.student_surname} ${response.student_name} ${response.student_fname}`
+                            welcomeMessage(response)
                         );
                     } else {
                         this.studentProfileData = null;
@@ -48,8 +65,8 @@ export class ProfilePageComponent implements OnInit, OnDestroy {
                     this.loading = false;
                     this.errorHandler(
                         error,
-                        'Помилка',
-                        'Сталася помилка. Спробуйте знову'
+                        errorTitleMessage,
+                        profileStudentMessage
                     );
                 }
             );
@@ -66,21 +83,42 @@ export class ProfilePageComponent implements OnInit, OnDestroy {
                     this.loading = false;
                     this.errorHandler(
                         error,
-                        'Помилка',
-                        'Сталася помилка. Спробуйте знову'
+                        errorTitleMessage,
+                        profileSubjectsMessage
                     );
                 }
             );
     }
 
+    isMatch(): void {
+        const match = localStorage.getItem('isMatch');
+        if (match === 'notMatch') {
+            this.modalService.openModal(AlertComponent, {
+                data: {
+                    title: errorTitleMessage,
+                    message: isMatchErrorMessage,
+                },
+            });
+        }
+        localStorage.setItem('isMatch', null);
+    }
+
     errorHandler(error: Response, title: string, message: string): void {
-        this.modalService.openModal(AlertComponent, {
-            data: {
-                message,
-                title,
-                error,
+        this.modalService.openModal(
+            AlertComponent,
+            {
+                data: {
+                    message,
+                    title,
+                    error,
+                },
             },
-        });
+            (result: DialogResult) => {
+                if (!result) {
+                    this.router.navigate(['/student/profile']);
+                }
+            }
+        );
     }
 
     ngOnDestroy(): void {

@@ -1,9 +1,9 @@
-import { Component, ViewChild, OnInit, ChangeDetectorRef } from '@angular/core';
+import { Component, ViewChild, OnInit } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
-import { MatTableDataSource, MatTable } from '@angular/material/table';
+import { MatTableDataSource } from '@angular/material/table';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSort } from '@angular/material/sort';
-import { Router } from '@angular/router';
+import { NavigationExtras, Router } from '@angular/router';
 import { forkJoin } from 'rxjs';
 
 import { GroupsService } from './groups.service';
@@ -18,6 +18,7 @@ export interface GroupData {
     speciality_id: string;
     faculty_id: string;
 }
+
 export interface AddGroupData {
     group_name: string;
     speciality_id: string;
@@ -29,6 +30,7 @@ export interface ServiceResponse {
     faculties: [];
     specialities: [];
 }
+
 let ELEMENT_DATA: GroupData[];
 
 @Component({
@@ -67,6 +69,7 @@ export class GroupsComponent implements OnInit {
     @ViewChild(MatSort, { static: false }) sort: MatSort;
 
     res = [];
+
     constructor(
         private groupsSertvice: GroupsService,
         public dialog: MatDialog,
@@ -77,6 +80,7 @@ export class GroupsComponent implements OnInit {
         this.loading = true;
         this.getGroups();
     }
+
     private getGroups(): void {
         forkJoin({
             groups: this.groupsSertvice.getData('Group'),
@@ -118,6 +122,7 @@ export class GroupsComponent implements OnInit {
             }
         });
     }
+
     addGroup(group: AddGroupData) {
         this.groupsSertvice.insertData('Group', group).subscribe(
             (result: GroupData) => {
@@ -145,6 +150,7 @@ export class GroupsComponent implements OnInit {
             }
         );
     }
+
     editGroup(id: string, group) {
         this.groupsSertvice.updateData('Group', id, group).subscribe(
             (res) => {
@@ -175,6 +181,7 @@ export class GroupsComponent implements OnInit {
             }
         );
     }
+
     getSpecParam(param: string, field: string) {
         if (field === 'speciality_name') {
             const currentSpec = this.specialities.filter(
@@ -188,6 +195,7 @@ export class GroupsComponent implements OnInit {
             return currentSpec[0].speciality_name;
         }
     }
+
     getFacParam(param: string, field: string) {
         if (field === 'faculty_name') {
             const currentSpec = this.faculties.filter(
@@ -201,6 +209,7 @@ export class GroupsComponent implements OnInit {
             return currentSpec[0].faculty_name;
         }
     }
+
     delGroup(id: string) {
         this.groupsSertvice.delData('Group', id).subscribe(
             () => {
@@ -215,17 +224,22 @@ export class GroupsComponent implements OnInit {
             }
         );
     }
+
     applyFilter(event: Event) {
         const filterValue = (event.target as HTMLInputElement).value;
         this.dataSource.filter = filterValue.trim().toLowerCase();
     }
-    goToStudents(id: string, groupName: string) {
-        this.router.navigate(['admin/group/students/', id], {
-            queryParams: {
+
+    goToStudents(id: string, groupName: string): void {
+        const navigationExtras: NavigationExtras = {
+            state: {
                 groupName: groupName,
+                id: id,
             },
-        });
+        };
+        this.router.navigate(['admin/group/students/'], navigationExtras);
     }
+
     genereteTableData(data) {
         const newData = data;
         newData.map((item) => {
@@ -242,6 +256,7 @@ export class GroupsComponent implements OnInit {
         });
         return newData;
     }
+
     editGroupModal(group) {
         const dialogRef = this.dialog.open(GroupDialogComponent, {
             width: '300px',
@@ -269,6 +284,7 @@ export class GroupsComponent implements OnInit {
             }
         });
     }
+
     addGroupModal() {
         const dialogRef = this.dialog.open(GroupDialogComponent, {
             width: '300px',

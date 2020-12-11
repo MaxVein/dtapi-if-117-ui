@@ -17,6 +17,9 @@ import { minMaxValidator } from './validators/minMaxValidator';
     styleUrls: ['./answers.component.scss'],
 })
 export class AnswersComponent implements OnInit {
+    answerAtachmentSrc = '';
+    noChanges = false;
+    updateAnswers: answerData[];
     questionChanges = false;
     answerTypeChanges = false;
     typeNumericChanges = false;
@@ -35,7 +38,7 @@ export class AnswersComponent implements OnInit {
     questionId: string;
     arrayOfButtons = [];
     sendAnswerData: answerData[] = [];
-    sendquestionData: questionData;
+    sendQuestionData: questionData;
     checkedElem: string;
     answerForm: FormGroup;
     showAnswers = false;
@@ -68,6 +71,8 @@ export class AnswersComponent implements OnInit {
                 {
                     numericAnswerMin: ['', Validators.required],
                     numericAnswerMax: ['', Validators.required],
+                    answer_idMin: [''],
+                    answer_idMax: [''],
                 },
                 {
                     validators: [minMaxValidator],
@@ -75,10 +80,20 @@ export class AnswersComponent implements OnInit {
             ),
         });
     }
-    get questionAtachment() {
-        const atachmentQuestionValue = this.answerForm.get('atachmentQuestion')
-            .value;
-        return atachmentQuestionValue;
+    newAnswersType(item?, trueAnswer?): FormGroup {
+        return this.fb.group({
+            text: [item ? item.answer_text : '', Validators.required],
+            trueAnswerSimple: [
+                trueAnswer === '1' ? true : false,
+                Validators.required,
+            ],
+            trueAnswerMulti: [
+                trueAnswer === '1' ? true : false,
+                Validators.required,
+            ],
+            atachmentAnswer: [item ? item.attachment : ''],
+            answer_id: [item ? item.answer_id : ''],
+        });
     }
     get level() {
         const levelValue = this.answerForm.get('level').value;
@@ -121,16 +136,29 @@ export class AnswersComponent implements OnInit {
         this.createMode = false;
         this.questionId = this.state.question_id;
         this.attachmentQuestionSrc = this.state.attachment;
-        this.testId = this.state.test_id;
+        (this.testId = this.state.test_id),
+            this.answerServise
+                .getQuestions(this.questionId)
+                .subscribe((res: questionData) => {
+                    if (res[0]) {
+                        this.state.attachment = res[0].attachment;
+                        this.attachmentQuestionSrc = res[0].attachment;
+                    } else {
+                        this.state.attachment = '';
+                    }
+                    this.getAnswers();
+                });
+    }
+    getAnswers() {
         this.answerServise
             .getAnswers(this.state.question_id)
             .subscribe((res: answerData[]) => {
                 this.answerForm.get('typeOfQuestion').disable();
                 if (!res[0]) {
                     this.noAnswers = true;
+                    this.noChanges = true;
                 } else {
-                    // console.log(res);
-
+                    this.updateAnswers = res;
                     this.fillForm(res);
                 }
             });
@@ -147,106 +175,163 @@ export class AnswersComponent implements OnInit {
                     this.answerForm.controls.answersTypeNumeric
                         .get('numericAnswerMin')
                         .setValue(item.answer_text);
+                    this.answerForm.controls.answersTypeNumeric
+                        .get('answer_idMin')
+                        .setValue(item.answer_id);
                 } else {
                     this.answerForm.controls.answersTypeNumeric
                         .get('numericAnswerMax')
                         .setValue(item.answer_text);
+                    this.answerForm.controls.answersTypeNumeric
+                        .get('answer_idMax')
+                        .setValue(item.answer_id);
                 }
             });
         } else {
             this.formAnswerArray.map((item: answerData) => {
-                this.showAtachmentAnswer = item.attachment ? true : false;
                 this.idAnswerArray.push(item.answer_id);
+                this.showAtachmentAnswer = item.attachment ? true : false;
                 const trueAnswer = item.true_answer;
                 this.answersType.push(this.newAnswersType(item, trueAnswer));
             });
         }
     }
-
-    updateAnswerRequest(elem, index) {
-        return this.answerServise.updateAnswer(elem, this.idAnswerArray[index]);
+    compareQuestions(): boolean {
+        if (this.createMode) {
+            return false;
+        }
+        return this.objectsAreSame(this.sendQuestionData, this.state);
     }
     removeImageQuestion() {
         this.attachmentQuestionSrc = '';
         this.answerForm.controls.atachmentQuestion.setValue('');
+        this.answerForm.controls.atachmentQuestion.markAsDirty();
+    }
+    compareAnswers(): boolean {
+        if (this.noChanges) {
+            return false;
+        } else if (!this.createMode) {
+            if (this.sendAnswerData.length !== this.updateAnswers.length) {
+                return false;
+            }
+            return this.sendAnswerData
+                .map((elem, index) => {
+                    return this.objectsAreSame(elem, this.updateAnswers[index]);
+                })
+                .every((elem, index) => {
+                    return elem === true;
+                });
+        }
+    }
+    finaleCompare() {
+        let chooseArr = 0;
+        if (this.sendAnswerData.length > this.updateAnswers.length) {
+            chooseArr = this.updateAnswers.length;
+        } else {
+            chooseArr = this.sendAnswerData.length;
+        }
+        this.idAnswerArray.slice(0, chooseArr);
+        const result = [];
+        for (let i = 0; i < this.idAnswerArray.length; i++) {
+            if (
+                this.objectsAreSame(
+                    this.sendAnswerData[i],
+                    this.updateAnswers[i]
+                ) === false
+            ) {
+                result.push(this.idAnswerArray[i]);
+            }
+        }
+        this.idAnswerArray = result;
     }
     removeImageAnswer(i: number) {
         this.answersType.controls[i].get('atachmentAnswer').setValue('');
         this.showAtachmentAnswer = false;
     }
-    onSubmitEditedProfile(form) {
-        return Object.keys(form.controls).map((key) => {
-            return {
-                [key]: form.get(key).value,
-                changed: form.get(key).dirty,
-            };
-        });
-    }
-    checkChangesForm() {
-        this.questionChanges = this.onSubmitEditedProfile(this.answerForm)
-            .splice(0, 4)
-            .every((item) => {
-                return item.changed === false;
-            });
-        const updateId = [];
-        if (this.typeOfQuestion === '4') {
-            this.onSubmitEditedProfile(this.answersTypeNumeric).map(
-                (item, index) => {
-                    if (item.changed) {
-                        updateId.push(this.idAnswerArray[index]);
-                        this.typeNumericChanges = true;
-                    }
-                }
-            );
-        } else {
-            this.onSubmitEditedProfile(this.answersType).map((item, index) => {
-                //console.log(this.sendAnswerData, 'index');
-                //console.log(item, 'map');
-                if (item.changed) {
-                    updateId.push(this.idAnswerArray[index]);
-                    this.answerTypeChanges = true;
-                }
-            });
+    objectsAreSame(x, y) {
+        let objectsAreSame = true;
+        for (const propertyName in x) {
+            if (x[propertyName] !== y[propertyName]) {
+                objectsAreSame = false;
+                break;
+            }
         }
-        this.idAnswerArray = updateId;
+        return objectsAreSame;
     }
 
-    //create answer and question part
-    newAnswersType(item?, trueAnswer?): FormGroup {
-        return this.fb.group({
-            text: [item ? item.answer_text : '', Validators.required],
-            trueAnswerSimple: [
-                trueAnswer === '1' ? true : false,
-                Validators.required,
-            ],
-            trueAnswerMulti: [
-                trueAnswer === '1' ? true : false,
-                Validators.required,
-            ],
-            atachmentAnswer: [item ? item.attachment : ''],
-        });
+    //create question part
+    getQuestionAttachment(): Observable<any> {
+        const file = this.atachmentQuestion.value;
+        if (!file) {
+            return of('');
+        } else if (typeof file === 'string') {
+            return of(file);
+        } else {
+            return this.getImageBase64(file._files[0]);
+        }
     }
+    createQuestionData() {
+        this.sendQuestionData = {
+            question_id: this.questionId,
+            test_id: this.testId,
+            question_text: this.questionText,
+            level: this.level,
+            type: this.typeOfQuestion,
+            attachment: this.atachmentQuestion.value
+                ? this.atachmentQuestion.value
+                : '',
+        };
+    }
+    createQuestion() {
+        this.getQuestionAttachment()
+            .pipe(
+                concatMap((res) => {
+                    this.sendQuestionData.attachment = res;
+                    if (this.createMode) {
+                        return this.answerServise.createQuestionRequest(
+                            this.sendQuestionData
+                        );
+                    } else if (!this.compareQuestions()) {
+                        return this.answerServise.updateQuestion(
+                            this.sendQuestionData,
+                            this.questionId
+                        );
+                    } else {
+                        return of(null);
+                    }
+                })
+            )
+            .subscribe((res: questionData) => {
+                if (res === null) {
+                } else if (this.questionId === res[0].question_id) {
+                    this.openModal('Alert', 'Question Update', AlertComponent);
+                } else if (res) {
+                    this.openModal('Alert', 'Question Create', AlertComponent);
+                    this.questionId = res[0].question_id;
+                }
+                this.sendAnswerDataRequest();
+                this.navigateToQuestionPage(res);
+            });
+    }
+
+    // create answer part
 
     addAnswer(e) {
         e.preventDefault();
+        this.noChanges = true;
         this.noAnswers = false;
         this.showAnswers = true;
         this.answersType.push(this.newAnswersType());
     }
     removeAnswer(index: number) {
         const removeId = this.idAnswerArray[index];
-        // let result: any;
-        // result = this.modalService.openModal(
-        //     ConfirmComponent,
-        //     {
-        //         data: {
-        //             icon: 'question_answer',
-        //             message: 'Ви впевнені що бажаєте видалити цю відповідь?',
-        //         },
-        //     },
-        //     result
-        // );
-        // console.log(result());
+
+        this.modalService.openModal(ConfirmComponent, {
+            data: {
+                icon: 'question_answer',
+                message: 'Ви впевнені що бажаєте видалити цю відповідь?',
+            },
+        });
 
         if (!this.createMode && removeId) {
             const removeId = this.idAnswerArray[index];
@@ -256,7 +341,6 @@ export class AnswersComponent implements OnInit {
                     if (res.response === 'ok') {
                         this.idAnswerArray.splice(index, 1);
                     }
-                    //console.log(res);
                 });
         }
         this.answersType.removeAt(index);
@@ -279,78 +363,83 @@ export class AnswersComponent implements OnInit {
                 return '1';
         }
     }
-
+    inputAnswerAtachment(index: number) {
+        const atachment = this.answersType.controls[index].get(
+            'atachmentAnswer'
+        );
+        if (this.answersType.value[index].atachmentAnswer._files[0]) {
+            this.getImageBase64(
+                this.answersType.value[index].atachmentAnswer._files[0]
+            ).subscribe((res) => {
+                atachment.setValue(res);
+                this.answerAtachmentSrc = res;
+            });
+        } else {
+            atachment.setValue('');
+        }
+    }
+    getImageBase64(file) {
+        const reader = new FileReader();
+        return new Observable((observer: Observer<any>) => {
+            reader.readAsDataURL(file);
+            reader.onloadend = () => {
+                observer.next(reader.result);
+                observer.complete();
+            };
+        });
+    }
+    isTrueAnswer(): boolean {
+        switch (this.typeOfQuestion) {
+            case '1':
+                return this.trueAnswer.value.every(
+                    (res) => res.trueAnswerSimple === false
+                );
+            case '2':
+                return this.trueAnswer.value.every(
+                    (res) => res.trueAnswerMulti === false
+                );
+            default:
+                return false;
+        }
+    }
     createAnswer() {
+        this.sendAnswerData = [];
         const formFieldsValue = this.answerForm.value;
-        formFieldsValue.answersType.map((item, index) => {
+        formFieldsValue.answersType.map((item) => {
             {
                 this.sendAnswerData.push({
-                    answer_text: item.text,
-                    true_answer: this.getTrueAnswer(item),
+                    answer_id: item.answer_id,
                     question_id: this.questionId,
+                    true_answer: this.getTrueAnswer(item),
+                    answer_text: item.text,
                     attachment: item.atachmentAnswer,
                 });
             }
         });
         if (this.typeOfQuestion === '4') {
             const typeQuestionNumeric = [
-                formFieldsValue.answersTypeNumeric.numericAnswerMin,
-                formFieldsValue.answersTypeNumeric.numericAnswerMax,
+                {
+                    answer_text:
+                        formFieldsValue.answersTypeNumeric.numericAnswerMin,
+
+                    answer_id: formFieldsValue.answersTypeNumeric.answer_idMin,
+                },
+                {
+                    answer_text:
+                        formFieldsValue.answersTypeNumeric.numericAnswerMax,
+                    answer_id: formFieldsValue.answersTypeNumeric.answer_idMax,
+                },
             ];
             for (let i = 0; i < typeQuestionNumeric.length; i++) {
-                const element = typeQuestionNumeric[i];
+                const item = typeQuestionNumeric[i];
                 this.sendAnswerData.push({
-                    answer_text: element,
+                    answer_id: item.answer_id,
+                    answer_text: item.answer_text,
                     true_answer: '1',
                     question_id: this.questionId,
                     attachment: '',
                 });
             }
-        }
-    }
-    createQuestion() {
-        const payload: questionData = {
-            test_id: this.testId,
-            question_text: this.questionText,
-            level: this.level,
-            type: this.typeOfQuestion,
-        };
-        this.getQuestionAttachment()
-            .pipe(
-                concatMap((res) => {
-                    payload.attachment = res;
-                    if (this.createMode) {
-                        this.getAnswerAtachment();
-                        return this.answerServise.createQuestionRequest(
-                            payload
-                        );
-                    } else if (!this.questionChanges) {
-                        this.getAnswerAtachment();
-                        return this.answerServise.updateQuestion(
-                            payload,
-                            this.questionId
-                        );
-                    } else {
-                        return of(null);
-                    }
-                })
-            )
-            .subscribe((res: questionData) => {
-                if (res) {
-                    this.questionId = res[0].question_id;
-                }
-                this.sendAnswerDataRequest();
-                this.navigateToQuestionPage(res);
-            });
-    }
-    getQuestionAttachment(): Observable<any> {
-        const file = this.atachmentQuestion.value;
-        if (!file) {
-            return of('');
-        } else if (typeof file === 'string') {
-            return of(file);
-        } else {
-            return this.getImageBase64(file._files[0]);
         }
     }
 
@@ -376,120 +465,43 @@ export class AnswersComponent implements OnInit {
         });
     }
 
-    getImageBase64(file) {
-        const reader = new FileReader();
-        return new Observable((observer: Observer<any>) => {
-            reader.readAsDataURL(file);
-            reader.onloadend = () => {
-                observer.next(reader.result);
-                observer.complete();
-            };
-        });
-    }
-    getAnswerAtachment() {
-        this.answersType.controls.map((item) => {
-            const file = item.value.atachmentAnswer;
-            if (!file) {
-                item.get('atachmentAnswer').setValue('');
-            } else {
-                this.getImageBase64(
-                    item.value.atachmentAnswer._files[0]
-                ).subscribe((res) => {
-                    item.get('atachmentAnswer').setValue(res);
-                });
+    sendAnswerDataRequest() {
+        if (this.createMode) {
+            this.createAnswer();
+        }
+        if (!this.createMode && this.updateAnswers) {
+            this.finaleCompare();
+        }
+        this.sendAnswerData.map((elem, index) => {
+            if (this.createMode || !elem.answer_id) {
+                delete elem.answer_id;
+                return this.answerServise
+                    .createAnswerRequest(elem)
+                    .subscribe((res) => {});
+            } else if (this.idAnswerArray.includes(elem.answer_id)) {
+                return this.answerServise
+                    .updateAnswer(elem, elem.answer_id)
+                    .subscribe((res) => {
+                        if (this.compareQuestions() && res) {
+                            this.openModal(
+                                'Alert',
+                                'Answers Updated',
+                                AlertComponent
+                            );
+                        }
+                    });
             }
         });
     }
-
-    createAnswerRequest(elem, index) {
-        if (this.createMode) {
-            this.answerServise.createAnswerRequest(elem).subscribe((res) => {
-                // console.log(res);
-            });
-        } else if (this.answerTypeChanges || this.typeNumericChanges) {
-            // console.log(this.idAnswerArray);
-
-            this.updateAnswerRequest(elem, this.idAnswerArray[index]).subscribe(
-                (res) => {
-                    // console.log(res);
-                }
-            );
-        }
-    }
-    sendAnswerDataRequest() {
-        this.createAnswer();
-        this.sendAnswerData.map((elem, index) => {
-            this.createAnswerRequest(elem, index);
-            // if (this.createMode || !this.idAnswerArray[index]) {
-            //     this.answerServise
-            //         .createAnswerRequest(elem)
-            //         .subscribe((res) => {
-            //             console.log(res);
-            //         });
-            // } else if (!this.createMode && this.idAnswerArray[index]) {
-            //     this.answerServise
-            //         .updateAnswer(elem, this.idAnswerArray[index])
-            //         .subscribe((res) => {
-            //             console.log(res);
-            //         });
-            // }
-        });
-        // let formValue = this.answerForm.value;
-        // if (this.typeOfQuestion === '4') {
-        //     this.sendAnswerData.map((elem, index) => {
-        //         this.createAnswerRequest(elem, index);
-        //     });
-        // } else {
-        //     this.sendAnswerData.map((elem, index) => {
-        //         const file = formValue.answersType[index].atachmentAnswer;
-        //         console.log(file);
-
-        //         if (file) {
-        //             this.getImageBase64(file._files[0])
-        //                 .pipe(
-        //                     concatMap((res) => {
-        //                         elem.attachment = res;
-        //                         if (
-        //                             this.createMode ||
-        //                             !this.idAnswerArray[index]
-        //                         ) {
-        //                             return this.answerServise.createAnswerRequest(
-        //                                 elem
-        //                             );
-        //                         } else {
-        //                             return this.answerServise.updateAnswer(
-        //                                 elem,
-        //                                 this.idAnswerArray[index]
-        //                             );
-        //                         }
-        //                     })
-        //                 )
-        //                 .subscribe((res) => {
-        //                     console.log(res);
-        //                 });
-        //         } else {
-        //             elem.attachment = '';
-        //             if (this.createMode || !this.idAnswerArray[index]) {
-        //                 this.answerServise
-        //                     .createAnswerRequest(elem)
-        //                     .subscribe((res) => console.log(res));
-        //             } else {
-        //                 this.updateAnswerRequest(elem, index).subscribe((res) =>
-        //                     console.log(res)
-        //                 );
-        //             }
-        //         }
-        //     });
-        // }
-    }
     createQuestionAndAnswer() {
-        this.checkChangesForm();
+        if (!this.compareAnswers() && !this.createMode) {
+            this.createAnswer();
+        }
+        this.createQuestionData();
         if (
             (this.answersType.controls.length === 0 &&
                 this.answersTypeNumeric.invalid) ||
-            (!this.answerTypeChanges &&
-                !this.typeNumericChanges &&
-                this.questionChanges)
+            (this.compareAnswers() && this.compareQuestions())
         ) {
             let message = 'Питання повинне містити відповіді';
             if (
@@ -498,11 +510,7 @@ export class AnswersComponent implements OnInit {
             ) {
                 message =
                     'Мінімальне значення не може бути більше або рівне макcимального';
-            } else if (
-                !this.answerTypeChanges &&
-                !this.typeNumericChanges &&
-                this.questionChanges
-            ) {
+            } else if (this.compareAnswers() && this.compareQuestions()) {
                 message = 'Для редагування внесіть зміни в форму';
             }
             this.openModal(this.alertMessage, message, AlertComponent);
@@ -525,7 +533,6 @@ export class AnswersComponent implements OnInit {
         this.router.navigate([`admin/subjects/tests/${this.testId}/questions`]);
     }
     navigateToQuestionPage(data: questionData) {
-        //console.log(data);
         this.router.navigate(
             [`admin/subjects/tests/${this.testId}/questions`],
             {
@@ -548,20 +555,5 @@ export class AnswersComponent implements OnInit {
                 message: 'Ви впевнені що бажаєте видалити цю відповідь?',
             },
         });
-    }
-
-    isTrueAnswer(): boolean {
-        switch (this.typeOfQuestion) {
-            case '1':
-                return this.trueAnswer.value.every(
-                    (res) => res.trueAnswerSimple === false
-                );
-            case '2':
-                return this.trueAnswer.value.every(
-                    (res) => res.trueAnswerMulti === false
-                );
-            default:
-                return false;
-        }
     }
 }
