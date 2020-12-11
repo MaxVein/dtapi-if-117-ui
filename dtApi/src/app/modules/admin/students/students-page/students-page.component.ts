@@ -1,17 +1,7 @@
-import {
-    AfterViewInit,
-    Component,
-    OnDestroy,
-    OnInit,
-    ViewChild,
-} from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
-import { MatPaginator } from '@angular/material/paginator';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { MatTableDataSource } from '@angular/material/table';
 import { StudentsModalComponent } from './students-modal/students-modal.component';
-import { StudentsViewModalComponent } from './students-view-modal/students-view-modal.component';
-import { StudentsTransferModalComponent } from './students-transfer-modal/students-transfer-modal.component';
-import { ConfirmComponent } from 'src/app/shared/components/confirm/confirm.component';
 import { AlertComponent } from '../../../../shared/components/alert/alert.component';
 import { StudentsService } from 'src/app/modules/admin/students/services/students.service';
 import { ModalService } from 'src/app/shared/services/modal.service';
@@ -19,48 +9,57 @@ import { Subscription } from 'rxjs';
 import {
     Student,
     Response,
+    GroupInfoState,
     DialogResult,
 } from 'src/app/shared/interfaces/entity.interfaces';
+import {
+    addStudentMessage,
+    cancelErrorMessage,
+    closeError,
+    errorMessage,
+    notStudentsMessage,
+    titleErrorMessage,
+    uploadStudentsMessage,
+} from '../../Messages';
 
 @Component({
     selector: 'app-students-page',
     templateUrl: './students-page.component.html',
     styleUrls: ['./students-page.component.scss'],
 })
-export class StudentsPageComponent implements OnInit, AfterViewInit, OnDestroy {
+export class StudentsPageComponent implements OnInit, OnDestroy {
     loading = false;
     isUpdateData = false;
+    dataSource = new MatTableDataSource<Student>();
     groupID: number;
     groupName: string;
-    displayedColumns: string[] = [
-        'index',
-        'gradebookID',
-        'studentInfo',
-        'actions',
-    ];
-    dataSource = new MatTableDataSource<Student>();
     studentSubscription: Subscription;
-
-    @ViewChild(MatPaginator, { static: false }) paginator: MatPaginator;
 
     constructor(
         private studentsService: StudentsService,
-        private route: ActivatedRoute,
+        private router: Router,
         public modalService: ModalService
-    ) {}
+    ) {
+        this.initGroupInfo();
+    }
 
     ngOnInit(): void {
-        this.groupID = this.route.snapshot.params['id'];
-        this.route.queryParams.subscribe((param) => {
-            this.groupName = param['groupName'];
-        });
         this.loading = true;
         this.getStudentsByGroup();
     }
 
-    ngAfterViewInit(): void {
-        this.paginator._intl.itemsPerPageLabel = 'Рядків у таблиці';
-        this.dataSource.paginator = this.paginator;
+    initGroupInfo(): void {
+        const navigation = this.router.getCurrentNavigation();
+        if (navigation.extras.state) {
+            const state = navigation.extras.state as GroupInfoState;
+            this.groupName = state.groupName;
+            this.groupID = state.id;
+            localStorage.setItem('group_name', JSON.stringify(state.groupName));
+            localStorage.setItem('group_id', JSON.stringify(state.id));
+        } else {
+            this.groupName = JSON.parse(localStorage.getItem('group_name'));
+            this.groupID = JSON.parse(localStorage.getItem('group_id'));
+        }
     }
 
     getStudentsByGroup(): void {
@@ -71,29 +70,18 @@ export class StudentsPageComponent implements OnInit, AfterViewInit, OnDestroy {
                     if (response.length) {
                         this.dataSource.data = response;
                         this.loading = false;
-                        this.modalService.showSnackBar('Студентів завантажено');
+                        this.modalService.showSnackBar(uploadStudentsMessage);
                     } else {
                         this.dataSource.data = [];
                         this.loading = false;
-                        this.modalService.showSnackBar(
-                            'У вибраній групі відсутні студенти'
-                        );
+                        this.modalService.showSnackBar(notStudentsMessage);
                     }
                 },
                 (error: Response) => {
                     this.loading = false;
-                    this.errorHandler(
-                        error,
-                        'Помилка',
-                        'Сталася помилка. Спробуйте знову'
-                    );
+                    this.errorHandler(error, titleErrorMessage, errorMessage);
                 }
             );
-    }
-
-    applyFilter(event: Event): void {
-        const filterValue = (event.target as HTMLInputElement).value;
-        this.dataSource.filter = filterValue.trim().toLowerCase();
     }
 
     add(): void {
@@ -111,131 +99,17 @@ export class StudentsPageComponent implements OnInit, AfterViewInit, OnDestroy {
                 },
             },
             (result: DialogResult) => {
-                if (result.message === 'Помилка') {
-                    this.modalService.showSnackBar('Закрито через помилку');
+                if (result.message === titleErrorMessage) {
+                    this.modalService.showSnackBar(closeError);
                 } else if (result.message.response === 'ok') {
                     result.data.user_id = result.id;
                     this.dataSource.data.unshift(result.data);
                     this.dataSource._updateChangeSubscription();
-                    this.modalService.showSnackBar('Студента додано');
-                } else if (result.message === 'Скасовано') {
-                    this.modalService.showSnackBar('Скасовано');
+                    this.dataSource.paginator.firstPage();
+                    this.modalService.showSnackBar(addStudentMessage);
+                } else if (result.message === cancelErrorMessage) {
+                    this.modalService.showSnackBar(cancelErrorMessage);
                 }
-            }
-        );
-    }
-
-    edit(student: Student): void {
-        this.isUpdateData = true;
-        this.modalService.openModal(
-            StudentsModalComponent,
-            {
-                disableClose: true,
-                autoFocus: false,
-                width: '500px',
-                height: '750px',
-                data: {
-                    isUpdateData: this.isUpdateData,
-                    studentData: student,
-                },
-            },
-            (result: DialogResult) => {
-                if (result.message === 'Помилка') {
-                    this.modalService.showSnackBar('Закрито через помилку');
-                } else if (result.message.response === 'ok') {
-                    const index = this.dataSource.data.findIndex(
-                        (s) => s.user_id === result.id
-                    );
-                    result.data.user_id = result.id;
-                    this.dataSource.data[index] = result.data;
-                    this.dataSource._updateChangeSubscription();
-                    this.modalService.showSnackBar('Дані студента оновлено');
-                } else if (result.message === 'Скасовано') {
-                    this.modalService.showSnackBar('Скасовано');
-                }
-            }
-        );
-    }
-
-    transfer(student: Student): void {
-        this.modalService.openModal(
-            StudentsTransferModalComponent,
-            {
-                disableClose: true,
-                data: {
-                    studentData: student,
-                },
-            },
-            (result: DialogResult) => {
-                if (result.message === 'Помилка') {
-                    this.modalService.showSnackBar('Закрито через помилку');
-                } else if (result.message.response === 'ok') {
-                    this.dataSource.data = this.dataSource.data.filter(
-                        (s) => s.user_id !== result.id
-                    );
-                    this.modalService.showSnackBar('Студента переведено');
-                } else if (result.message === 'Скасовано') {
-                    this.modalService.showSnackBar('Скасовано');
-                }
-            }
-        );
-    }
-
-    view(student: Student): void {
-        this.modalService.openModal(
-            StudentsViewModalComponent,
-            {
-                disableClose: true,
-                data: {
-                    studentID: student.user_id,
-                    groupID: student.group_id,
-                },
-            },
-            (result: DialogResult) => {
-                if (result.message === 'Закрито') {
-                    this.modalService.showSnackBar('Закрито');
-                } else if (result.message === 'Помилка') {
-                    this.modalService.showSnackBar('Закрито через помилку');
-                }
-            }
-        );
-    }
-
-    remove(firstname: string, lastname: string, id: string): void {
-        this.modalService.openModal(
-            ConfirmComponent,
-            {
-                data: {
-                    icon: 'person_remove',
-                    message: `Видалити студента ${firstname} ${lastname}?`,
-                },
-            },
-            (result: DialogResult) => {
-                if (result) {
-                    this.delete(id);
-                } else if (!result) {
-                    this.modalService.showSnackBar('Скасовано');
-                }
-            }
-        );
-    }
-
-    delete(id: string): void {
-        this.studentSubscription = this.studentsService.remove(id).subscribe(
-            (response: Response) => {
-                if (response) {
-                    this.dataSource.data = this.dataSource.data.filter(
-                        (s) => s.user_id !== id
-                    );
-                    this.modalService.showSnackBar('Студента було видалено');
-                }
-            },
-            (error: Response) => {
-                this.errorHandler(
-                    error,
-                    'Помилка',
-                    'Сталася помилка. Спробуйте знову'
-                );
             }
         );
     }
@@ -248,6 +122,7 @@ export class StudentsPageComponent implements OnInit, AfterViewInit, OnDestroy {
                 error,
             },
         });
+        this.router.navigate(['/admin/group']);
     }
 
     ngOnDestroy(): void {

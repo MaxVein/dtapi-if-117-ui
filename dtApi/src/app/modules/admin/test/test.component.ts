@@ -170,6 +170,6 @@ export class TestComponent implements OnInit {
         });
     }
     navigateToTestQuestions(id: number): void {
-        this.router.navigate([`admin/subjects/tests/${id}/questions`, id]);
+        this.router.navigate([`admin/subjects/tests/${id}/questions`]);
     }
 }

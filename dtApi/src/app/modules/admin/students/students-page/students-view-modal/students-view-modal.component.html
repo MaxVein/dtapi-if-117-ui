@@ -38,7 +38,7 @@
                     </div>
 
                     <div class="student-data-content">
-                        <h4>{{ facultyName }}</h4>
+                        <h4>{{ student.faculty_name }}</h4>
                     </div>
                 </div>
 
@@ -50,7 +50,10 @@
                     </div>
 
                     <div class="student-data-content">
-                        <h4>{{ specialityName }}</h4>
+                        <h4>
+                            {{ student.speciality_code }}
+                            {{ student.speciality_name }}
+                        </h4>
                     </div>
                 </div>
 
@@ -62,7 +65,7 @@
                     </div>
 
                     <div class="student-data-content">
-                        <h4>{{ groupName }}</h4>
+                        <h4>{{ student.group_name }}</h4>
                     </div>
                 </div>
 
@@ -86,7 +89,7 @@
                     </div>
 
                     <div class="student-data-content">
-                        <h4>{{ studentInfo.email }}</h4>
+                        <h4>{{ student.email }}</h4>
                     </div>
                 </div>
 
@@ -100,7 +103,7 @@
                     </div>
 
                     <div class="student-data-content">
-                        <h4>{{ studentInfo.username }}</h4>
+                        <h4>{{ student.username }}</h4>
                     </div>
                 </div>
 
@@ -122,7 +125,7 @@
                 (click)="closeModal()"
                 type="reset"
                 mat-dialog-close
-                class="modal__btn"
+                class="modal__btn dark-btn"
             >
                 Закрити
             </button>

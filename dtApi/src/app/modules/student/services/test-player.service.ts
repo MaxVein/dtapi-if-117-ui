@@ -6,17 +6,19 @@ import { forkJoin, of } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
 import {
     Answer,
-    Log,
-    QA,
     Question,
-    ServerTime,
-    TestDetailsByTest,
-    TestPlayerEndTime,
-    TestPlayerSaveData,
 } from '../../../shared/interfaces/student.interfaces';
 import { Logged } from '../../../shared/interfaces/auth.interfaces';
-import { Response } from '../../../shared/interfaces/entity.interfaces';
 import { environment } from '../../../../environments/environment';
+import {
+    TestLog,
+    TestPlayerSaveData,
+    ServerTime,
+    TestPlayerResponse,
+    TestPlayerEndTime,
+    TestDetailsByTest,
+    QA,
+} from '../../../shared/interfaces/test-player.interfaces';
 
 @Injectable()
 export class TestPlayerService {
@@ -44,10 +46,10 @@ export class TestPlayerService {
         );
     }
 
-    getLog(id: number): Observable<Log> {
+    getLog(id: number): Observable<TestLog> {
         return this.authService.isLogged().pipe(
             switchMap((user: Logged) => {
-                return this.http.get<Log>(
+                return this.http.get<TestLog>(
                     `${environment.BASEURL}Log/startTest/${user.id}/${id}`
                 );
             })
@@ -100,25 +102,26 @@ export class TestPlayerService {
     }
 
     testPlayerSaveData(
-        id: number,
-        testInProgress: boolean
-    ): Observable<Response> {
-        return this.http.post<Response>(
+        data: TestPlayerSaveData
+    ): Observable<TestPlayerSaveData> {
+        return this.http.post<TestPlayerSaveData>(
             `${environment.BASEURL}TestPlayer/saveData`,
-            { id, progress: testInProgress }
+            data
         );
     }
 
-    testPlayerGetData(): Observable<TestPlayerSaveData> {
-        return this.http.get<TestPlayerSaveData>(
+    testPlayerGetData(): Observable<TestPlayerResponse> {
+        return this.http.get<TestPlayerResponse>(
             `${environment.BASEURL}TestPlayer/getData`
         );
     }
 
-    testPlayerSaveEndTime(end: TestPlayerEndTime): Observable<Response> {
-        return this.http.post<Response>(
+    testPlayerSaveEndTime(
+        data: TestPlayerEndTime
+    ): Observable<TestPlayerEndTime> {
+        return this.http.post<TestPlayerEndTime>(
             `${environment.BASEURL}TestPlayer/saveEndTime`,
-            end
+            data
         );
     }
 
@@ -128,8 +131,8 @@ export class TestPlayerService {
         );
     }
 
-    testPlayerResetSession(): Observable<Response> {
-        return this.http.get<Response>(
+    testPlayerResetSession(): Observable<TestPlayerResponse> {
+        return this.http.get<TestPlayerResponse>(
             `${environment.BASEURL}TestPlayer/resetSessionData`
         );
     }
