@@ -19,6 +19,11 @@ export interface StudentInfo {
     username: string;
 }
 
+export interface GroupInfoState {
+    groupName: string;
+    id: number;
+}
+
 export interface ValidateStudentData {
     gradebook_id: string;
     username: string;
