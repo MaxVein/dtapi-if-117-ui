@@ -1,6 +1,7 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -16,7 +17,7 @@ import { QuestionService } from './question.service';
 export class QuestionComponent implements OnInit {
     displayedColumns: string[] = ['id', 'Text', 'Type', 'Level', 'operations'];
     dataSource: MatTableDataSource<[]>;
-    qyestionsArray: [] = [];
+    questionsArray: any[] = [];
     subscribed = true;
 
     test_id: number;
@@ -28,7 +29,8 @@ export class QuestionComponent implements OnInit {
         public dialog: MatDialog,
         private router: Router,
         private activeRoute: ActivatedRoute,
-        private questionService: QuestionService
+        private questionService: QuestionService,
+        private snackBar: MatSnackBar
     ) {}
 
     applyFilter(event: Event): void {
@@ -48,11 +50,11 @@ export class QuestionComponent implements OnInit {
                 this.updateQuestionModelOpen();
                 break;
             case 'Delete':
-                this.deleteQuestionModelOpen(question);
+                this.deleteQuestionModalOpen(question);
                 break;
         }
     }
-    deleteQuestionModelOpen(question: any): void {
+    deleteQuestionModalOpen(question: any): void {
         this.dialog
             .open(DeleteConfirmationModalComponent, {
                 data: {
@@ -73,7 +75,17 @@ export class QuestionComponent implements OnInit {
                 }
             });
     }
-    updateQuestionModelOpen(): void {}
+    updateQuestionModelOpen(): void {
+        this.router.navigate(
+            [`admin/subjects/tests/${this.test_id}/questions/answer`],
+            {
+                queryParams: {
+                    test_id: this.test_id,
+                },
+            }
+        );
+    }
+
     addQuestionModelOpen(): void {
         this.router.navigate(
             [`admin/subjects/tests/${this.test_id}/questions/answer`],
@@ -92,10 +104,20 @@ export class QuestionComponent implements OnInit {
         this.questionService
             .getNumberOfQuestions(this.test_id)
             .subscribe((numbersOfRecords: number) => {
+                if (numbersOfRecords === 0) {
+                    this.snackBar.open(
+                        'В базі даних немає питань по даному предмету',
+                        'X',
+                        {
+                            duration: 3000,
+                        }
+                    );
+                    return null;
+                }
                 this.questionService
                     .getQuestions(this.test_id, numbersOfRecords)
                     .subscribe((val) => {
-                        this.dataSource = val;
+                        this.dataSource = new MatTableDataSource(val);
                         this.dataSource.paginator = this.paginator;
                         this.dataSource.sort = this.sort;
                     });
