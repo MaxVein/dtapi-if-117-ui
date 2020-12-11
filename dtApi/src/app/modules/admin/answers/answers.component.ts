@@ -17,7 +17,7 @@ import { minMaxValidator } from './validators/minMaxValidator';
     styleUrls: ['./answers.component.scss'],
 })
 export class AnswersComponent implements OnInit {
-    answerAtachmentSrc: string = '';
+    answerAtachmentSrc = '';
     noChanges = false;
     updateAnswers: answerData[];
     questionChanges = false;
@@ -224,14 +224,14 @@ export class AnswersComponent implements OnInit {
         }
     }
     finaleCompare() {
-        let chooseArr: number = 0;
+        let chooseArr = 0;
         if (this.sendAnswerData.length > this.updateAnswers.length) {
             chooseArr = this.updateAnswers.length;
         } else {
             chooseArr = this.sendAnswerData.length;
         }
         this.idAnswerArray.slice(0, chooseArr);
-        let result = [];
+        const result = [];
         for (let i = 0; i < this.idAnswerArray.length; i++) {
             if (
                 this.objectsAreSame(
@@ -249,8 +249,8 @@ export class AnswersComponent implements OnInit {
         this.showAtachmentAnswer = false;
     }
     objectsAreSame(x, y) {
-        var objectsAreSame = true;
-        for (var propertyName in x) {
+        let objectsAreSame = true;
+        for (const propertyName in x) {
             if (x[propertyName] !== y[propertyName]) {
                 objectsAreSame = false;
                 break;
