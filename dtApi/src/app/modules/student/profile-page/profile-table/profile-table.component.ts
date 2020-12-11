@@ -14,8 +14,8 @@ import { ModalService } from '../../../../shared/services/modal.service';
 import { ProfileService } from '../../services/profile.service';
 import { AlertComponent } from '../../../../shared/components/alert/alert.component';
 import { ConfirmComponent } from '../../../../shared/components/confirm/confirm.component';
-import { of, Subscription } from 'rxjs';
-import { concatMap } from 'rxjs/operators';
+import { of, Subscription, from } from 'rxjs';
+import { concatMap, mergeMap } from 'rxjs/operators';
 import {
     TestDate,
     TestDetails,
@@ -33,13 +33,19 @@ import {
 })
 export class ProfileTableComponent implements OnInit, AfterViewInit, OnDestroy {
     @Input() subjects: Subject[];
+    @Input() groupId: number;
+    newSubjects = [];
+    subjectsIds: Array<string>;
     currentDate: Date;
     subjectName: string;
     subjectID: string;
     hide = false;
     startText = false;
     testsBySubject: TestDetails[] = [];
-    testDetails: TestDate[];
+    testsByGroup: TestDetails[] = [];
+
+    testDetails: TestDate[] = [];
+    allTestDetails: TestDate[] = [];
     dataSource = new MatTableDataSource<TestDate>();
     displayedColumns: string[] = [
         'Предмет',
@@ -65,6 +71,7 @@ export class ProfileTableComponent implements OnInit, AfterViewInit, OnDestroy {
         this.currentDate = new Date();
         this.hide = true;
         this.startText = true;
+        this.getTestInfoByGroup();
     }
 
     ngAfterViewInit(): void {
@@ -82,11 +89,72 @@ export class ProfileTableComponent implements OnInit, AfterViewInit, OnDestroy {
 
     selectSubject(event: MatSelectChange): void {
         const subjectData = event.value;
-        this.subjectID = subjectData.id;
-        this.subjectName = subjectData.name;
-        this.getTestInfo();
+        if (subjectData === 'ALL') {
+            this.hide = false;
+            this.startText = false;
+            this.testDetails = [];
+            this.getTestInfoByGroup();
+        } else {
+            this.subjectID = subjectData.id;
+            this.subjectName = subjectData.name;
+            this.getTestInfo();
+        }
     }
-
+    getTestInfoByGroup() {
+        this.startText = false;
+        this.dataSource = new MatTableDataSource();
+        this.profileSubscription = this.profileService
+            .getTestDetails(this.groupId)
+            .pipe(
+                mergeMap((res: TestDetails[]) => {
+                    if (res.length) {
+                        this.testsBySubject = res;
+                        this.subjectsIds = res.map((item) => item.subject_id);
+                        this.modalService.showSnackBar('Тести завантажено');
+                        return from(this.subjectsIds).pipe(
+                            mergeMap((id) =>
+                                this.profileService.getTestDate(id)
+                            )
+                        );
+                    } else {
+                        this.hide = false;
+                        this.testsBySubject = [];
+                        this.modalService.showSnackBar('Тести відсутні');
+                        return of();
+                    }
+                })
+            )
+            .subscribe({
+                next: (res: any) => {
+                    const testDate = res[0] ? res[0] : res;
+                    if (!this.newSubjects.length) {
+                        this.getNewSubjects(this.testsBySubject);
+                    }
+                    this.testsBySubject.forEach((test) => {
+                        res.forEach((item) => {
+                            if (item.subject_id === test.subject_id) {
+                                this.testDetails.push({
+                                    ...test,
+                                    ...item,
+                                    subjectname: this.getSubName(
+                                        test.subject_id
+                                    ),
+                                });
+                            }
+                        });
+                    });
+                    this.dataSource.data = this.testDetails;
+                    this.dataSource.paginator = this.paginator;
+                },
+                error: (error: Response) => {
+                    this.errorHandler(
+                        error,
+                        'Помилка',
+                        'Сталася помилка. Спробуйте знову'
+                    );
+                },
+            });
+    }
     getTestInfo(): void {
         this.startText = false;
         this.profileSubscription = this.profileService
@@ -96,9 +164,7 @@ export class ProfileTableComponent implements OnInit, AfterViewInit, OnDestroy {
                     if (res.length) {
                         this.testsBySubject = res;
                         this.modalService.showSnackBar('Тести завантажено');
-                        return this.profileService.getTestDetails(
-                            this.subjectID
-                        );
+                        return this.profileService.getTestDetails(this.groupId);
                     } else {
                         this.hide = false;
                         this.testsBySubject = [];
@@ -209,7 +275,20 @@ export class ProfileTableComponent implements OnInit, AfterViewInit, OnDestroy {
             },
         });
     }
-
+    getSubName(id: string) {
+        const currentSpec = this.subjects.filter(
+            (item) => item.subject_id === id
+        );
+        return currentSpec[0].subject_name;
+    }
+    getNewSubjects(res) {
+        res.forEach((elem) => {
+            const newElem = this.subjects.filter(
+                (item) => elem.subject_id === item.subject_id
+            );
+            this.newSubjects.push(newElem[0]);
+        });
+    }
     ngOnDestroy(): void {
         if (this.profileSubscription) {
             this.profileSubscription.unsubscribe();

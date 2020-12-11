@@ -7,7 +7,10 @@
         class="profile__test"
         *ngIf="subjects.length && studentProfileData; else empty"
     >
-        <app-profile-table [subjects]="subjects"></app-profile-table>
+        <app-profile-table
+            [subjects]="subjects"
+            [groupId]="groupId"
+        ></app-profile-table>
     </div>
     <ng-template #empty>
         <div class="empty-data-subjects" *ngIf="!studentProfileData">
