@@ -9,6 +9,10 @@ import { environment } from 'src/environments/environment';
 export class AnswersService {
     constructor(private http: HttpClient) {}
 
+    getQuestions(id: string) {
+        const url = `Question/getRecords/${id}/`;
+        return this.http.get(`${environment.BASEURL}${url}`);
+    }
     getAnswers(id: string) {
         const url = `answer/getAnswersByQuestion/${id}/`;
         return this.http.get(`${environment.BASEURL}${url}`);
