@@ -68,9 +68,6 @@ export class ResultsComponent implements OnInit {
                     );
                 }
             },
-            error: () => {
-                this.testId = null;
-            },
         });
     }
     onSubmit() {
@@ -82,7 +79,7 @@ export class ResultsComponent implements OnInit {
                     this.groupId
                 ),
             ]).subscribe({
-                next: ([gropuRes, testRes]: [[], []]) => {
+                next: ([gropuRes, testRes]) => {
                     this.testResults = testRes;
                     this.studentsResultsByGroup = gropuRes;
                     this.dataSource.data = this.testResults.map((item) => {
