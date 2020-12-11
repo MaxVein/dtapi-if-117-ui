@@ -1,0 +1,44 @@
+.results {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+    height: 100%;
+
+    &__content {
+        text-align: center;
+        position: absolute;
+        top: 35%;
+        left: 42%;
+    }
+
+    &__title {
+        & h1 {
+            font-weight: 500;
+            font-size: 35px;
+        }
+    }
+
+    &__score {
+        padding-top: 30px;
+        & .score {
+            font-size: 30px;
+            font-weight: 500;
+            border-radius: 20px;
+            background: #f44336;
+            padding: 10px 30px;
+        }
+    }
+
+    &__info {
+    }
+
+    &__actions {
+        padding-top: 40px;
+
+        & button {
+            font-size: 20px;
+            padding: 12px 50px;
+        }
+    }
+}

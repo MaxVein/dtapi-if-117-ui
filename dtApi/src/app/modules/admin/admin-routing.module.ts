@@ -70,7 +70,7 @@ const routes: Routes = [
                             ),
                     },
                     {
-                        path: 'tests',
+                        path: 'tests/:id',
                         children: [
                             {
                                 path: '',
@@ -79,8 +79,16 @@ const routes: Routes = [
                                         (m) => m.TestModule
                                     ),
                             },
+
                             {
-                                path: 'questions/:id',
+                                path: 'test-detailes',
+                                loadChildren: () =>
+                                    import(
+                                        './test-detailes/test-detailes.module'
+                                    ).then((m) => m.TestDetailesModule),
+                            },
+                            {
+                                path: 'questions',
                                 children: [
                                     {
                                         path: '',
@@ -89,18 +97,25 @@ const routes: Routes = [
                                                 './questions/questions.module'
                                             ).then((m) => m.QuestionsModule),
                                     },
-                                    // {
-                                    //     path: 'answer',
-                                    //     loadChildren: () =>
-                                    //         import(
-                                    //             './answers/answers.module'
-                                    //         ).then((m) => m.AnswersModule),
-                                    // },
+                                    {
+                                        path: 'answer',
+                                        loadChildren: () =>
+                                            import(
+                                                './answers/answers.module'
+                                            ).then((m) => m.AnswersModule),
+                                    },
                                 ],
                             },
                         ],
                     },
                 ],
+            },
+            {
+                path: 'results',
+                loadChildren: () =>
+                    import('./results/results.module').then(
+                        (m) => m.ResultsModule
+                    ),
             },
             {
                 path: '',

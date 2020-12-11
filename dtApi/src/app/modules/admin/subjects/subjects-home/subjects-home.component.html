@@ -65,13 +65,10 @@
                     class="operation-button"
                     mat-flat-button
                     color="primary"
-                    (click)="redirectToTest(element.subject_id)"
+                    (click)="redirectToTests(element.subject_id)"
+                    matTooltip="Перейти до тестів"
                 >
-                    <mat-icon class="mat-18"
-                        ><span class="material-icons">
-                            fact_check
-                        </span></mat-icon
-                    >
+                    <mat-icon class="mat-18">fact_check</mat-icon>
                 </button>
             </td>
         </ng-container>
@@ -79,5 +76,5 @@
         <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
         <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
     </table>
-    <mat-paginator [pageSizeOptions]="[10, 15, 20, 25]"> </mat-paginator>
+    <mat-paginator [pageSizeOptions]="[5, 10, 15, 20, 25]"> </mat-paginator>
 </div>

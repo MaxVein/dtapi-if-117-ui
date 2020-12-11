@@ -1,0 +1,33 @@
+td,
+th {
+    width: auto;
+    padding: 5px;
+}
+td {
+    justify-content: center;
+}
+
+.true-answer {
+    background-color: #b5baff;
+    color: rgb(87, 87, 87);
+}
+.false-answer {
+    background-color: #e2e2ff;
+    color: rgb(87, 87, 87);
+}
+.close-btn {
+    border-radius: 0%;
+    width: 100%;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    &:hover {
+        opacity: 0.85;
+    }
+}
+.detail-btn {
+    font-size: 1.5rem;
+    cursor: pointer;
+    &:hover {
+        font-size: 1.6rem;
+    }
+}

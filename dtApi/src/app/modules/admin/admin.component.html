@@ -57,6 +57,7 @@
                 routerLink="/admin/admins"
                 >Адміни</a
             >
+
             <a
                 mat-list-item
                 routerLinkActive="active-link"
@@ -76,7 +77,7 @@
             <span class="toolbar-spacer"></span>
             <span class="toolbar-spacer"></span>
             <button mat-button [matMenuTriggerFor]="menu">
-                {{ username }}
+                {{ username ? username : 'Вихід' }}
             </button>
             <mat-menu #menu="matMenu">
                 <button mat-menu-item (click)="logOut()">Вийти</button>
