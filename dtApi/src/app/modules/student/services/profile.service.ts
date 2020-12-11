@@ -34,9 +34,9 @@ export class ProfileService {
         );
     }
 
-    getTestDetails(id: string): Observable<TestDate[]> {
+    getTestDetails(group_id: number): Observable<any> {
         return this.http.get<TestDate[]>(
-            `${environment.BASEURL}timeTable/getTimeTablesForSubject/${id}`
+            `${environment.BASEURL}timeTable/getTimeTablesForGroup/${group_id}`
         );
     }
 

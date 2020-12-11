@@ -29,6 +29,7 @@ export class ProfilePageComponent implements OnInit, OnDestroy {
     studentProfileData: StudentProfile;
     subjects: Subject[] = [];
     profileSubscription: Subscription;
+    groupId: number;
 
     constructor(
         private router: Router,
@@ -49,6 +50,7 @@ export class ProfilePageComponent implements OnInit, OnDestroy {
             .subscribe(
                 (response: Student) => {
                     if (response) {
+                        this.groupId = response.group_id;
                         this.studentProfileData = response;
                         this.loading = false;
                         this.modalService.showSnackBar(
