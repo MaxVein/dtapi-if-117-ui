@@ -6,14 +6,15 @@ import { ModalService } from '../../../../../shared/services/modal.service';
 import { Subscription } from 'rxjs';
 import {
     DialogResult,
-    Faculty,
-    Group,
     Response,
-    Speciality,
-    Student,
-    StudentInfo,
+    StudentProfileData,
 } from 'src/app/shared/interfaces/entity.interfaces';
 import { environment } from 'src/environments/environment';
+import {
+    closeMessageE,
+    getUpdateErrorMessage,
+    titleErrorMessage,
+} from '../../../Messages';
 
 @Component({
     selector: 'app-students-view-modal',
@@ -22,13 +23,9 @@ import { environment } from 'src/environments/environment';
 })
 export class StudentsViewModalComponent implements OnInit, OnDestroy {
     loading = false;
-    student: Student;
-    studentInfo: StudentInfo;
+    student: StudentProfileData;
     studentID = this.data.studentID;
     groupID = this.data.groupID;
-    groupName: string;
-    facultyName: string;
-    specialityName: string;
     defaultImage: string = environment.defaultImage;
     studentSubscription: Subscription;
 
@@ -42,122 +39,31 @@ export class StudentsViewModalComponent implements OnInit, OnDestroy {
     ngOnInit(): void {
         this.loading = true;
         this.getStudentInfo();
-        this.getGroupInfo();
     }
 
     getStudentInfo(): void {
         this.studentSubscription = this.studentsService
-            .getById('Student', this.studentID)
+            .getAllStudentData(this.studentID, this.groupID)
             .subscribe(
-                (response: Student[]) => {
-                    this.student = response[0];
-                    this.getOtherStudentInfo();
-                },
-                (error: Response) => {
-                    this.loading = false;
-                    this.closeModal({ message: 'Помилка' });
-                    this.errorHandler(
-                        error,
-                        'Помилка',
-                        'Сталася помилка. Спробуйте знову'
-                    );
-                }
-            );
-    }
-
-    getOtherStudentInfo(): void {
-        this.studentSubscription = this.studentsService
-            .getById('AdminUser', this.studentID)
-            .subscribe(
-                (response: StudentInfo[]) => {
-                    this.studentInfo = {
-                        username: response[0].username,
-                        email: response[0].email,
-                    };
+                (response: StudentProfileData) => {
+                    this.student = response;
                     this.loading = false;
                 },
                 (error: Response) => {
                     this.loading = false;
-                    this.closeModal({ message: 'Помилка' });
-                    this.errorHandler(
-                        error,
-                        'Помилка',
-                        'Сталася помилка. Спробуйте знову'
-                    );
+                    this.closeModal({ message: titleErrorMessage });
+                    this.modalService.openModal(AlertComponent, {
+                        data: {
+                            message: getUpdateErrorMessage,
+                            title: titleErrorMessage,
+                            error,
+                        },
+                    });
                 }
             );
     }
 
-    getGroupInfo(): void {
-        this.studentSubscription = this.studentsService
-            .getGroupData(this.groupID)
-            .subscribe(
-                (response: Group[]) => {
-                    this.groupName = response[0].group_name;
-                    this.getFacultyInfo(response[0].faculty_id);
-                    this.getSpecialityInfo(response[0].speciality_id);
-                },
-                (error: Response) => {
-                    this.loading = false;
-                    this.closeModal({ message: 'Помилка' });
-                    this.errorHandler(
-                        error,
-                        'Помилка',
-                        'Сталася помилка. Спробуйте знову'
-                    );
-                }
-            );
-    }
-
-    getFacultyInfo(id: string): void {
-        this.studentSubscription = this.studentsService
-            .getFacultyData(id)
-            .subscribe(
-                (response: Faculty[]) => {
-                    this.facultyName = response[0].faculty_name;
-                },
-                (error: Response) => {
-                    this.loading = false;
-                    this.closeModal({ message: 'Помилка' });
-                    this.errorHandler(
-                        error,
-                        'Помилка',
-                        'Сталася помилка. Спробуйте знову'
-                    );
-                }
-            );
-    }
-
-    getSpecialityInfo(id: string): void {
-        this.studentSubscription = this.studentsService
-            .getSpecialityData(id)
-            .subscribe(
-                (response: Speciality[]) => {
-                    this.specialityName = response[0].speciality_name;
-                },
-                (error: Response) => {
-                    this.loading = false;
-                    this.closeModal({ message: 'Помилка' });
-                    this.errorHandler(
-                        error,
-                        'Помилка',
-                        'Сталася помилка. Спробуйте знову'
-                    );
-                }
-            );
-    }
-
-    errorHandler(error: Response, title: string, message: string): void {
-        this.modalService.openModal(AlertComponent, {
-            data: {
-                message,
-                title,
-                error,
-            },
-        });
-    }
-
-    closeModal(dialogResult: DialogResult = { message: 'Закрито' }): void {
+    closeModal(dialogResult: DialogResult = { message: closeMessageE }): void {
         this.dialogRef.close(dialogResult);
     }
 

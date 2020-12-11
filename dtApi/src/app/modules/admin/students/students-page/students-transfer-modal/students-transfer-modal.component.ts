@@ -13,6 +13,14 @@ import {
     Student,
     StudentInfo,
 } from 'src/app/shared/interfaces/entity.interfaces';
+import {
+    cancelErrorMessage,
+    getFacultyErrorMessage,
+    getGroupErrorMessage,
+    getUpdateErrorMessage,
+    titleErrorMessage,
+    transferStudentErrorMessage,
+} from '../../../Messages';
 
 @Component({
     selector: 'app-students-transfer-modal',
@@ -55,11 +63,11 @@ export class StudentsTransferModalComponent implements OnInit, OnDestroy {
                 },
                 (error: Response) => {
                     this.loading = false;
-                    this.closeModal({ message: 'Помилка' });
+                    this.closeModal({ message: titleErrorMessage });
                     this.errorHandler(
                         error,
-                        'Помилка',
-                        'Сталася помилка. Спробуйте знову'
+                        titleErrorMessage,
+                        getUpdateErrorMessage
                     );
                 }
             );
@@ -75,11 +83,11 @@ export class StudentsTransferModalComponent implements OnInit, OnDestroy {
                 },
                 (error: Response) => {
                     this.loading = false;
-                    this.closeModal({ message: 'Помилка' });
+                    this.closeModal({ message: titleErrorMessage });
                     this.errorHandler(
                         error,
-                        'Помилка',
-                        'Сталася помилка. Спробуйте знову'
+                        titleErrorMessage,
+                        getFacultyErrorMessage
                     );
                 }
             );
@@ -94,11 +102,11 @@ export class StudentsTransferModalComponent implements OnInit, OnDestroy {
                     this.selectedFaculty = true;
                 },
                 (error: Response) => {
-                    this.closeModal({ message: 'Помилка' });
+                    this.closeModal({ message: titleErrorMessage });
                     this.errorHandler(
                         error,
-                        'Помилка',
-                        'Сталася помилка. Спробуйте знову'
+                        titleErrorMessage,
+                        getGroupErrorMessage
                     );
                 }
             );
@@ -129,11 +137,11 @@ export class StudentsTransferModalComponent implements OnInit, OnDestroy {
                 },
                 (error: Response) => {
                     this.loading = false;
-                    this.closeModal({ message: 'Помилка' });
+                    this.closeModal({ message: titleErrorMessage });
                     this.errorHandler(
                         error,
-                        'Помилка',
-                        'Сталася помилка. Спробуйте знову'
+                        titleErrorMessage,
+                        transferStudentErrorMessage
                     );
                 }
             );
@@ -149,7 +157,9 @@ export class StudentsTransferModalComponent implements OnInit, OnDestroy {
         });
     }
 
-    closeModal(dialogResult: DialogResult = { message: 'Скасовано' }): void {
+    closeModal(
+        dialogResult: DialogResult = { message: cancelErrorMessage }
+    ): void {
         this.dialogRef.close(dialogResult);
     }
 

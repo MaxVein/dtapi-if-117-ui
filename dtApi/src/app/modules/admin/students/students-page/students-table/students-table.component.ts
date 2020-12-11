@@ -3,7 +3,6 @@ import {
     Component,
     Input,
     OnDestroy,
-    OnInit,
     ViewChild,
 } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
@@ -22,23 +21,29 @@ import {
     Response,
     Student,
 } from '../../../../../shared/interfaces/entity.interfaces';
+import {
+    cancelErrorMessage,
+    closeError,
+    closeMessageE,
+    errorMessage,
+    removeStudentMessage,
+    studentRemoveMessage,
+    studentsTableColumns,
+    titleErrorMessage,
+    transferStudentMessage,
+    updateStudentMessage,
+} from '../../../Messages';
 
 @Component({
     selector: 'app-students-table',
     templateUrl: './students-table.component.html',
     styleUrls: ['./students-table.component.scss'],
 })
-export class StudentsTableComponent
-    implements OnInit, AfterViewInit, OnDestroy {
+export class StudentsTableComponent implements AfterViewInit, OnDestroy {
     @Input() dataSource = new MatTableDataSource<Student>();
     @Input() groupID: number;
     isUpdateData = false;
-    displayedColumns: string[] = [
-        'id',
-        'gradebook_id',
-        'student_surname',
-        'actions',
-    ];
+    displayedColumns: string[] = studentsTableColumns;
     studentSubscription: Subscription;
 
     @ViewChild(MatPaginator, { static: false }) paginator: MatPaginator;
@@ -48,8 +53,6 @@ export class StudentsTableComponent
         private studentsService: StudentsService,
         public modalService: ModalService
     ) {}
-
-    ngOnInit(): void {}
 
     ngAfterViewInit(): void {
         this.paginator._intl.itemsPerPageLabel = 'Рядків у таблиці';
@@ -80,8 +83,8 @@ export class StudentsTableComponent
                 },
             },
             (result: DialogResult) => {
-                if (result.message === 'Помилка') {
-                    this.modalService.showSnackBar('Закрито через помилку');
+                if (result.message === titleErrorMessage) {
+                    this.modalService.showSnackBar(closeError);
                 } else if (result.message.response === 'ok') {
                     const index = this.dataSource.data.findIndex(
                         (s) => s.user_id === result.id
@@ -89,9 +92,9 @@ export class StudentsTableComponent
                     result.data.user_id = result.id;
                     this.dataSource.data[index] = result.data;
                     this.dataSource._updateChangeSubscription();
-                    this.modalService.showSnackBar('Дані студента оновлено');
-                } else if (result.message === 'Скасовано') {
-                    this.modalService.showSnackBar('Скасовано');
+                    this.modalService.showSnackBar(updateStudentMessage);
+                } else if (result.message === cancelErrorMessage) {
+                    this.modalService.showSnackBar(cancelErrorMessage);
                 }
             }
         );
@@ -107,15 +110,15 @@ export class StudentsTableComponent
                 },
             },
             (result: DialogResult) => {
-                if (result.message === 'Помилка') {
-                    this.modalService.showSnackBar('Закрито через помилку');
+                if (result.message === titleErrorMessage) {
+                    this.modalService.showSnackBar(closeError);
                 } else if (result.message.response === 'ok') {
                     this.dataSource.data = this.dataSource.data.filter(
                         (s) => s.user_id !== result.id
                     );
-                    this.modalService.showSnackBar('Студента переведено');
-                } else if (result.message === 'Скасовано') {
-                    this.modalService.showSnackBar('Скасовано');
+                    this.modalService.showSnackBar(transferStudentMessage);
+                } else if (result.message === cancelErrorMessage) {
+                    this.modalService.showSnackBar(cancelErrorMessage);
                 }
             }
         );
@@ -132,10 +135,10 @@ export class StudentsTableComponent
                 },
             },
             (result: DialogResult) => {
-                if (result.message === 'Закрито') {
-                    this.modalService.showSnackBar('Закрито');
-                } else if (result.message === 'Помилка') {
-                    this.modalService.showSnackBar('Закрито через помилку');
+                if (result.message === closeMessageE) {
+                    this.modalService.showSnackBar(closeMessageE);
+                } else if (result.message === titleErrorMessage) {
+                    this.modalService.showSnackBar(closeError);
                 }
             }
         );
@@ -147,14 +150,14 @@ export class StudentsTableComponent
             {
                 data: {
                     icon: 'person_remove',
-                    message: `Видалити студента ${firstname} ${lastname}?`,
+                    message: removeStudentMessage(firstname, lastname),
                 },
             },
             (result: DialogResult) => {
                 if (result) {
                     this.delete(id);
                 } else if (!result) {
-                    this.modalService.showSnackBar('Скасовано');
+                    this.modalService.showSnackBar(cancelErrorMessage);
                 }
             }
         );
@@ -167,15 +170,11 @@ export class StudentsTableComponent
                     this.dataSource.data = this.dataSource.data.filter(
                         (s) => s.user_id !== id
                     );
-                    this.modalService.showSnackBar('Студента було видалено');
+                    this.modalService.showSnackBar(studentRemoveMessage);
                 }
             },
             (error: Response) => {
-                this.errorHandler(
-                    error,
-                    'Помилка',
-                    'Сталася помилка. Спробуйте знову'
-                );
+                this.errorHandler(error, titleErrorMessage, errorMessage);
             }
         );
     }
