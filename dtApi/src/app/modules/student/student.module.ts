@@ -6,10 +6,11 @@ import { SharedModule } from '../../shared/modules/shared.module';
 import { StudentComponent } from './student.component';
 
 import { ProfileService } from './services/profile.service';
+import { TestPlayerService } from './services/test-player.service';
 
 @NgModule({
     declarations: [StudentComponent],
     imports: [CommonModule, SharedModule, StudentRoutingModule],
-    providers: [ProfileService],
+    providers: [ProfileService, TestPlayerService],
 })
 export class StudentModule {}

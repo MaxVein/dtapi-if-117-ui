@@ -16,7 +16,7 @@ export class NotFoundPageComponent implements OnInit {
         this.componentCssClass = this.themeService.initTheme();
         const role = localStorage.getItem('role');
         if (role === 'admin') {
-            this.link = '/admin/dashboard';
+            this.link = '/admin';
         } else {
             this.link = '/student';
         }
