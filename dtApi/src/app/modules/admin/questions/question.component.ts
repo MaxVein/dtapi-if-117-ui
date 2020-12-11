@@ -74,7 +74,16 @@ export class QuestionComponent implements OnInit {
             });
     }
     updateQuestionModelOpen(): void {}
-    addQuestionModelOpen(): void {}
+    addQuestionModelOpen(): void {
+        this.router.navigate(
+            [`admin/subjects/tests/${this.test_id}/questions/answer`],
+            {
+                queryParams: {
+                    test_id: this.test_id,
+                },
+            }
+        );
+    }
 
     ngOnInit(): void {
         this.activeRoute.params.subscribe(
@@ -93,7 +102,16 @@ export class QuestionComponent implements OnInit {
             });
     }
 
-    redirectToAnswers(id: number) {
-        this.router.navigate(['**', id]);
+    redirectToAnswers(data) {
+        this.router.navigate(
+            [`admin/subjects/tests/${this.test_id}/questions/answer`],
+
+            {
+                queryParams: {
+                    mode: 'edit',
+                },
+                state: { data: data },
+            }
+        );
     }
 }

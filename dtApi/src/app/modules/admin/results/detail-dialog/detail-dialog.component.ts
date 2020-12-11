@@ -1,6 +1,7 @@
 import { Component, Inject, OnInit } from '@angular/core';
-import { MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MatDialog, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatTableDataSource } from '@angular/material/table';
+import { DetailsByQuestionComponent } from '../details-by-question/details-by-question.component';
 import { ResultsService } from '../results.service';
 
 @Component({
@@ -11,6 +12,7 @@ import { ResultsService } from '../results.service';
 export class DetailDialogComponent implements OnInit {
     displayedColumns: string[] = ['id', 'textName', 'answer', 'details'];
     constructor(
+        private dialog: MatDialog,
         private resService: ResultsService,
         @Inject(MAT_DIALOG_DATA) public data?
     ) {}
@@ -33,6 +35,14 @@ export class DetailDialogComponent implements OnInit {
                     return Object.assign({}, item, ...studentInfo);
                 });
             },
+        });
+    }
+    detailByQuestion(data) {
+        this.dialog.open(DetailsByQuestionComponent, {
+            data,
+            panelClass: 'custom-dialog-container',
+            maxHeight: '90vh',
+            width: '1000px',
         });
     }
 }

@@ -1,0 +1,32 @@
+.addAnswerField {
+    display: flex;
+    align-items: center;
+    mat-checkbox {
+        margin-right: 10px;
+    }
+}
+
+.create-answer-btn {
+    margin: 10px;
+}
+
+.question {
+    display: flex;
+}
+
+.image {
+    position: relative;
+}
+
+.close-btn {
+    cursor: pointer;
+    color: red;
+    font-size: 30px;
+    top: -5%;
+    position: absolute;
+}
+
+.btn-group {
+    display: flex;
+    justify-content: space-between;
+}

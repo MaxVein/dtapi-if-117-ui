@@ -59,6 +59,7 @@ export interface Speciality {
 }
 
 export interface Response {
+    error?: Response;
     response?: string;
     user_id?: string;
     id?: number;

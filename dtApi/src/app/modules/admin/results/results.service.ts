@@ -73,4 +73,9 @@ export class ResultsService {
             data
         );
     }
+    getAnswersByQuestions(id) {
+        return this.http.get(
+            `${environment.BASEURL}answer/getAnswersByQuestion/${id}`
+        );
+    }
 }
