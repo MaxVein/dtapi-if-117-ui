@@ -1,18 +1,17 @@
 import { Component, ViewChild, OnInit } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
-import { Observable } from 'rxjs';
+import { forkJoin, Subscription, Observable } from 'rxjs';
 
 import { TestService } from './services/test.service';
-import { Test } from './models/Test';
-import { Subject } from './models/Subject';
 import { TestModalComponent } from './test-modal/test-modal.component';
-import { ModalService } from './services/modal.service';
+import { ModalService } from 'src/app/shared/services/modal.service';
 
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource, MatTable } from '@angular/material/table';
 import { MatSort } from '@angular/material/sort';
 import { MatDialog } from '@angular/material/dialog';
-import { filter, map, tap } from 'rxjs/operators';
+import { ServiceResponse, Test, Subject, DialogData } from './test.interfaces';
+import { ConfirmDeleteComponent } from '../groups/confirm-delete/confirm-delete.component';
 
 @Component({
     selector: 'app-tests',
@@ -37,6 +36,7 @@ export class TestComponent implements OnInit {
     ];
 
     dataSource = new MatTableDataSource<Test>();
+    testSubscription: Subscription;
 
     @ViewChild('table', { static: true }) table: MatTable<Test>;
     @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
@@ -52,19 +52,24 @@ export class TestComponent implements OnInit {
 
     ngOnInit() {
         this.groupID = this.route.snapshot.params['id'];
-        this.getTests(this.groupID).subscribe(
-            (data: Test[]) => {
-                this.tests = data;
+        this.testSubscription = forkJoin({
+            tests: this.getTests(this.groupID),
+            subjects: this.getSubjects(),
+        }).subscribe(
+            (res: ServiceResponse) => {
+                this.tests = res.tests;
                 this.dataSource.data = this.tests;
+                this.subjects = res.subjects;
+                this.modalService.showSnackBar('Тести завантажено');
+                this.dataSource.paginator = this.paginator;
+                this.dataSource.sort = this.sort;
             },
-            (err) => {}
+            (err) => {
+                this.modalService.showSnackBar(
+                    'Cталася помилка при завантаженні тестів'
+                );
+            }
         );
-        this.getSubjects().subscribe(
-            (data: Subject[]) => (this.subjects = data)
-        );
-
-        this.dataSource.paginator = this.paginator;
-        this.dataSource.sort = this.sort;
     }
 
     getTests(id: number): Observable<Test[]> {
@@ -119,17 +124,17 @@ export class TestComponent implements OnInit {
     }
 
     addTest(test: Test): void {
-        this.testService
+        this.testSubscription = this.testService
             .createEntity('test', test)
             .subscribe((result: Test[]) => {
                 this.dataSource.data = this.dataSource.data.concat(result);
-                this.dataSource.paginator = this.paginator;
                 this.dataSource.paginator.lastPage();
+                this.modalService.showSnackBar('Тест додано');
             });
     }
 
     editTest(test: Test, id: number): void {
-        this.testService
+        this.testSubscription = this.testService
             .updateEntity('test', test, id)
             .subscribe((data: Test) => {
                 this.dataSource.data = this.dataSource.data.concat(data);
@@ -143,25 +148,39 @@ export class TestComponent implements OnInit {
                     }
                 });
                 this.dataSource.data = newSourse;
+                this.modalService.showSnackBar('Тест змінено');
             });
     }
 
-    removeTest(test: Test): void {
-        this.testService.deleteEntity('test', test.test_id).subscribe(
-            () => {
-                this.modalService.openConfirmModal(
-                    'Видалити тест?',
-                    () =>
-                        (this.dataSource.data = this.dataSource.data.filter(
-                            (t) => t.test_id !== test.test_id
-                        ))
-                );
+    redirectToDelete(test: Test): void {
+        const dialogRef = this.dialog.open(ConfirmDeleteComponent, {
+            width: '300px',
+            data: {
+                group_name: test.test_name,
             },
-            (error) =>
-                this.modalService.openErrorModal(
-                    'Спочатку видаліть всі деталі тесту'
-                )
-        );
+        });
+        dialogRef.afterClosed().subscribe((result: boolean) => {
+            if (result) {
+                this.removeTest(test.test_id);
+            } else {
+                this.dataSource.paginator = this.paginator;
+                this.dataSource.sort = this.sort;
+            }
+        });
+    }
+    removeTest(id: number): void {
+        this.testSubscription = this.testService
+            .deleteEntity('test', id)
+            .subscribe(
+                () => {
+                    this.dataSource.data = this.dataSource.data.filter(
+                        (t) => t.test_id !== id
+                    );
+                    this.modalService.showSnackBar('Тест видалено');
+                },
+                (error) =>
+                    this.modalService.showSnackBar('Тест неможливо видалити')
+            );
     }
     public redirectToTestDetail(id: string) {
         this.router.navigate([`admin/subjects/tests/${id}/test-detailes`], {
@@ -172,5 +191,10 @@ export class TestComponent implements OnInit {
     }
     navigateToTestQuestions(id: number): void {
         this.router.navigate([`admin/subjects/tests/${id}/questions`]);
+    }
+    ngOnDestroy(): void {
+        if (this.testSubscription) {
+            this.testSubscription.unsubscribe();
+        }
     }
 }

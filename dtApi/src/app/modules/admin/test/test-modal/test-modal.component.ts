@@ -1,7 +1,6 @@
 import { Component, OnInit, Inject } from '@angular/core';
 
-import { Subject } from '../models/Subject';
-import { DialogData } from '../models/DialogData';
+import { DialogData, Subject } from '../test.interfaces';
 
 import { TestService } from '../services/test.service';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';

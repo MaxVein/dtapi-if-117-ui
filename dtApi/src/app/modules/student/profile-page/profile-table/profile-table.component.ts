@@ -154,8 +154,7 @@ export class ProfileTableComponent implements OnInit, AfterViewInit, OnDestroy {
                 })
             )
             .subscribe({
-                next: (res: any) => {
-                    const testDate = res[0] ? res[0] : res;
+                next: (res: Array<TestDate>) => {
                     if (!this.newSubjects.length) {
                         this.getNewSubjects(this.testsBySubject);
                     }
@@ -405,7 +404,7 @@ export class ProfileTableComponent implements OnInit, AfterViewInit, OnDestroy {
         );
         return currentSpec[0].subject_name;
     }
-    getNewSubjects(res) {
+    getNewSubjects(res: TestDetails[]) {
         res.forEach((elem) => {
             const newElem = this.subjects.filter(
                 (item) => elem.subject_id === item.subject_id

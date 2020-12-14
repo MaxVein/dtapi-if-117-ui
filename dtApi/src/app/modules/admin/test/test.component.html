@@ -83,7 +83,7 @@
                     class="operation-button"
                     mat-flat-button
                     color="primary"
-                    (click)="removeTest(element)"
+                    (click)="redirectToDelete(element)"
                 >
                     <mat-icon
                         aria-hidden="false"
@@ -132,5 +132,5 @@
             </td>
         </tr>
     </table>
-    <mat-paginator [pageSizeOptions]="[10, 15, 20, 25]"></mat-paginator>
+    <mat-paginator [pageSizeOptions]="[5, 10, 15, 20, 25]"></mat-paginator>
 </div>
