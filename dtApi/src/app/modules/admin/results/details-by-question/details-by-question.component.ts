@@ -9,7 +9,6 @@ import { ResultsService } from '../results.service';
 })
 export class DetailsByQuestionComponent implements OnInit {
     constructor(
-        private dialog: MatDialog,
         private resultApi: ResultsService,
         @Inject(MAT_DIALOG_DATA) public data?
     ) {}
@@ -17,6 +16,19 @@ export class DetailsByQuestionComponent implements OnInit {
     ngOnInit(): void {
         this.resultApi
             .getAnswersByQuestions(this.data.question_id)
-            .subscribe((res) => (this.dataSource = res));
+            .subscribe((res) => {
+                this.dataSource = res;
+            });
+    }
+    getAnswerText() {
+        const more = this.dataSource.filter((item) => {
+            return this.data.answer_ids.some((i) => i == item.answer_id);
+        });
+        if (!more.length) {
+            return this.data.answer_ids;
+        }
+        const toText = more.map((i) => i.answer_text).join(',');
+
+        return toText;
     }
 }
