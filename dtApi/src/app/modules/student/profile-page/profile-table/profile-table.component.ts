@@ -33,6 +33,7 @@ import {
     TestPlayerSaveData,
 } from '../../../../shared/interfaces/test-player.interfaces';
 import {
+    baseErrorMessage,
     cancelMessage,
     confirmStartTestMessage,
     errorTitleMessage,
@@ -48,6 +49,7 @@ import {
     testLogError6,
     testLogError7,
     testNoAvailableMessage,
+    testsTableColumns,
     testWillBeAvailableLaterMessage,
     testWillBeAvailableTodayMessage,
     uploadTests,
@@ -70,21 +72,10 @@ export class ProfileTableComponent implements OnInit, AfterViewInit, OnDestroy {
     hide = false;
     startText = false;
     testsBySubject: TestDetails[] = [];
-    testsByGroup: TestDetails[] = [];
-
     testDetails: TestDate[] = [];
     allTestDetails: TestDate[] = [];
     dataSource = new MatTableDataSource<TestDate>();
-    displayedColumns: string[] = [
-        'Предмет',
-        'Тест',
-        'Початок',
-        'Кінець',
-        'Кількість завдань',
-        'Тривалість тесту',
-        'Кількість спроб',
-        'Почати тестування',
-    ];
+    displayedColumns: string[] = testsTableColumns;
     profileSubscription: Subscription;
 
     @ViewChild(MatPaginator, { static: false }) paginator: MatPaginator;
@@ -99,7 +90,6 @@ export class ProfileTableComponent implements OnInit, AfterViewInit, OnDestroy {
     ngOnInit(): void {
         this.currentDate = new Date();
         this.hide = true;
-        this.startText = true;
         this.getTestInfoByGroup();
     }
 
@@ -116,21 +106,7 @@ export class ProfileTableComponent implements OnInit, AfterViewInit, OnDestroy {
         }
     }
 
-    selectSubject(event: MatSelectChange): void {
-        const subjectData = event.value;
-        if (subjectData === 'ALL') {
-            this.hide = false;
-            this.startText = false;
-            this.testDetails = [];
-            this.getTestInfoByGroup();
-        } else {
-            this.subjectID = subjectData.id;
-            this.subjectName = subjectData.name;
-            this.getTestInfo();
-        }
-    }
-    getTestInfoByGroup() {
-        this.startText = false;
+    getTestInfoByGroup(): void {
         this.dataSource = new MatTableDataSource();
         this.profileSubscription = this.profileService
             .getTestDetails(this.groupId)
@@ -139,23 +115,22 @@ export class ProfileTableComponent implements OnInit, AfterViewInit, OnDestroy {
                     if (res.length) {
                         this.testsBySubject = res;
                         this.subjectsIds = res.map((item) => item.subject_id);
-                        this.modalService.showSnackBar('Тести завантажено');
+                        this.modalService.showSnackBar(uploadTests(true));
                         return from(this.subjectsIds).pipe(
                             mergeMap((id) =>
                                 this.profileService.getTestDate(id)
                             )
                         );
                     } else {
-                        this.hide = false;
+                        this.startText = true;
                         this.testsBySubject = [];
-                        this.modalService.showSnackBar('Тести відсутні');
+                        this.modalService.showSnackBar(uploadTests(false));
                         return of();
                     }
                 })
             )
             .subscribe({
                 next: (res: any) => {
-                    const testDate = res[0] ? res[0] : res;
                     if (!this.newSubjects.length) {
                         this.getNewSubjects(this.testsBySubject);
                     }
@@ -178,14 +153,27 @@ export class ProfileTableComponent implements OnInit, AfterViewInit, OnDestroy {
                 error: (error: Response) => {
                     this.errorHandler(
                         error,
-                        'Помилка',
-                        'Сталася помилка. Спробуйте знову'
+                        errorTitleMessage,
+                        baseErrorMessage
                     );
                 },
             });
     }
+
+    selectSubject(event: MatSelectChange): void {
+        const subjectData = event.value;
+        if (subjectData === 'ALL') {
+            this.hide = false;
+            this.testDetails = [];
+            this.getTestInfoByGroup();
+        } else {
+            this.subjectID = subjectData.id;
+            this.subjectName = subjectData.name;
+            this.getTestInfo();
+        }
+    }
+
     getTestInfo(): void {
-        this.startText = false;
         this.profileSubscription = this.profileService
             .getTestDate(this.subjectID)
             .pipe(
@@ -227,6 +215,22 @@ export class ProfileTableComponent implements OnInit, AfterViewInit, OnDestroy {
                     );
                 },
             });
+    }
+
+    getSubName(id: string): string {
+        const currentSpec = this.subjects.filter(
+            (item) => item.subject_id === id
+        );
+        return currentSpec[0].subject_name;
+    }
+
+    getNewSubjects(res: any): void {
+        res.forEach((elem) => {
+            const newElem = this.subjects.filter(
+                (item) => elem.subject_id === item.subject_id
+            );
+            this.newSubjects.push(newElem[0]);
+        });
     }
 
     checkCurrentDate(test: TestDate | any): string {
@@ -399,20 +403,7 @@ export class ProfileTableComponent implements OnInit, AfterViewInit, OnDestroy {
             },
         });
     }
-    getSubName(id: string) {
-        const currentSpec = this.subjects.filter(
-            (item) => item.subject_id === id
-        );
-        return currentSpec[0].subject_name;
-    }
-    getNewSubjects(res) {
-        res.forEach((elem) => {
-            const newElem = this.subjects.filter(
-                (item) => elem.subject_id === item.subject_id
-            );
-            this.newSubjects.push(newElem[0]);
-        });
-    }
+
     ngOnDestroy(): void {
         if (this.profileSubscription) {
             this.profileSubscription.unsubscribe();
