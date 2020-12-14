@@ -130,7 +130,7 @@ export class ProfileTableComponent implements OnInit, AfterViewInit, OnDestroy {
                 })
             )
             .subscribe({
-                next: (res: any) => {
+                next: (res: Array<TestDate>) => {
                     if (!this.newSubjects.length) {
                         this.getNewSubjects(this.testsBySubject);
                     }
@@ -217,14 +217,13 @@ export class ProfileTableComponent implements OnInit, AfterViewInit, OnDestroy {
             });
     }
 
-    getSubName(id: string): string {
+    getSubName(id: string) {
         const currentSpec = this.subjects.filter(
             (item) => item.subject_id === id
         );
         return currentSpec[0].subject_name;
     }
-
-    getNewSubjects(res: any): void {
+    getNewSubjects(res: TestDetails[]) {
         res.forEach((elem) => {
             const newElem = this.subjects.filter(
                 (item) => elem.subject_id === item.subject_id
@@ -403,7 +402,6 @@ export class ProfileTableComponent implements OnInit, AfterViewInit, OnDestroy {
             },
         });
     }
-
     ngOnDestroy(): void {
         if (this.profileSubscription) {
             this.profileSubscription.unsubscribe();
