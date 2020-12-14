@@ -5,6 +5,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { of } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 import { AnswersService } from '../../answers/answers.service';
+import { answerData } from '../../answers/answersInterfaces';
 import { QuestionData, QuestionInstance } from '../Question';
 import { QuestionService } from '../question.service';
 
@@ -28,9 +29,7 @@ export class DeleteConfirmationModalComponent {
                 .getAnswers(data.question.question_id)
                 .pipe(
                     switchMap(
-                        (array: {
-                            response: string | Array<QuestionInstance>;
-                        }) => {
+                        (array: { response: string | Array<answerData> }) => {
                             return array.response !== 'no records'
                                 ? this.questioncrud.deleteAnswerCollection(
                                       array

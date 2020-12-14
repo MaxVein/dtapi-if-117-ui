@@ -82,7 +82,7 @@ export class QuestionComponent implements OnInit {
                 }
             });
     }
-    //?Як виправити порівняння item === question
+    //Як виправити порівняння item === question
     updateQuestionModelOpen(question: any): void {
         this.dialog
             .open(UpdateQuestionModalComponent, {

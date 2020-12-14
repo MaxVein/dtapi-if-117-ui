@@ -3,7 +3,8 @@ import { Injectable } from '@angular/core';
 import { forkJoin, Observable } from 'rxjs';
 import { map, pluck } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
-import { typeReverse } from './Question';
+import { answerData } from '../answers/answersInterfaces';
+import { QuestionInstance, typeReverse } from './Question';
 
 @Injectable({
     providedIn: 'root',
@@ -18,7 +19,7 @@ export class QuestionService {
                 `${environment.BASEURL}${this.entity}/getRecordsRangeByTest/${id}/${quantity}/0/wi`
             )
             .pipe(
-                map((arr: any[]) => {
+                map((arr: Array<QuestionInstance>) => {
                     const newarr = arr.map((item) => {
                         return {
                             question_id: item.question_id,
@@ -31,18 +32,12 @@ export class QuestionService {
                 })
             );
     }
-    getNumberOfQuestions(id: number): Observable<any> {
+    getNumberOfQuestions(id: number): Observable<number> {
         return this.httpInstance
             .get(
                 `${environment.BASEURL}${this.entity}/countRecordsByTest/${id}`
             )
             .pipe(pluck('numberOfRecords'));
-    }
-    addQuestion(body: string): Observable<any> {
-        return this.httpInstance.post(
-            `${environment.BASEURL}${this.entity}/insertData`,
-            body
-        );
     }
     deleteAnswerCollection(answers: any): Observable<any> {
         const deleteAnswerObservables = answers.map((answer) =>
