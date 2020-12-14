@@ -30,7 +30,7 @@ export class DetailsByQuestionComponent implements OnInit {
             }
             return this.data.answer_ids;
         }
-        let toText = more.map((i) => i.answer_text).join(', ');
+        const toText = more.map((i) => i.answer_text).join(', ');
 
         return toText;
     }
