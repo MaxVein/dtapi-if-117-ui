@@ -6,7 +6,9 @@ import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { ActivatedRoute, Router } from '@angular/router';
 import { DeleteConfirmationModalComponent } from './delete-confirmation-modal/delete-confirmation-modal.component';
+import { QuestionDataAfterClosed, QuestionInstance } from './Question';
 import { QuestionService } from './question.service';
+import { UpdateQuestionModalComponent } from './update-question-modal/update-question-modal.component';
 
 @Component({
     selector: 'app-question',
@@ -17,7 +19,7 @@ import { QuestionService } from './question.service';
 export class QuestionComponent implements OnInit {
     displayedColumns: string[] = ['id', 'Text', 'Type', 'Level', 'operations'];
     dataSource: MatTableDataSource<[]>;
-    questionsArray: any[] = [];
+    questionsArray: Array<QuestionInstance> = [];
     subscribed = true;
 
     test_id: number;
@@ -41,20 +43,20 @@ export class QuestionComponent implements OnInit {
             this.dataSource.paginator.firstPage();
         }
     }
-    openModal(operationType: string, question?: any): void {
+    openModal(operationType: string, question?: QuestionInstance): void {
         switch (operationType) {
             case 'Add':
                 this.addQuestionModelOpen();
                 break;
             case 'Update':
-                this.updateQuestionModelOpen();
+                this.updateQuestionModelOpen(question);
                 break;
             case 'Delete':
                 this.deleteQuestionModalOpen(question);
                 break;
         }
     }
-    deleteQuestionModalOpen(question: any): void {
+    deleteQuestionModalOpen(question: QuestionInstance): void {
         this.dialog
             .open(DeleteConfirmationModalComponent, {
                 data: {
@@ -65,6 +67,7 @@ export class QuestionComponent implements OnInit {
             .afterClosed()
             .subscribe((res) => {
                 if (!res) return;
+
                 if (res.finished) {
                     this.dataSource.data.splice(
                         this.dataSource.data.indexOf(res.question),
@@ -75,17 +78,30 @@ export class QuestionComponent implements OnInit {
                 }
             });
     }
-    updateQuestionModelOpen(): void {
-        this.router.navigate(
-            [`admin/subjects/tests/${this.test_id}/questions/answer`],
-            {
-                queryParams: {
-                    test_id: this.test_id,
-                },
-            }
-        );
-    }
 
+    updateQuestionModelOpen(question: any): void {
+        this.dialog
+            .open(UpdateQuestionModalComponent, {
+                data: {
+                    question: question,
+                    selected: question.type,
+                },
+            })
+            .afterClosed()
+            .subscribe((res: QuestionDataAfterClosed) => {
+                if (!res || !res.finished) return null;
+                console.warn(res);
+                this.dataSource.data.forEach((item: any, index) => {
+                    const oldindex = this.dataSource.data.findIndex(
+                        (item) => item === question
+                    );
+                    if (index === oldindex) {
+                        item = res.updatedquestion;
+                        this.dataSource._updateChangeSubscription();
+                    }
+                });
+            });
+    }
     addQuestionModelOpen(): void {
         this.router.navigate(
             [`admin/subjects/tests/${this.test_id}/questions/answer`],
@@ -116,7 +132,7 @@ export class QuestionComponent implements OnInit {
                 }
                 this.questionService
                     .getQuestions(this.test_id, numbersOfRecords)
-                    .subscribe((val) => {
+                    .subscribe((val: any) => {
                         this.dataSource = new MatTableDataSource(val);
                         this.dataSource.paginator = this.paginator;
                         this.dataSource.sort = this.sort;

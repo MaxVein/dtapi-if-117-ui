@@ -2,7 +2,10 @@ import { Component, Inject } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { of } from 'rxjs';
+import { delay, switchMap, switchMapTo } from 'rxjs/operators';
 import { AnswersService } from '../../answers/answers.service';
+import { QuestionData, QuestionInstance } from '../Question';
 import { QuestionService } from '../question.service';
 
 @Component({
@@ -19,45 +22,43 @@ export class DeleteConfirmationModalComponent {
         private answerscrud: AnswersService
     ) {}
 
-    submit(data: any, form: NgForm): void {
+    submit(data: QuestionData, form: NgForm): void {
         if (form.submitted) {
             this.answerscrud
                 .getAnswers(data.question.question_id)
-                .subscribe((result: any) => {
-                    if (Array.isArray(result)) {
-                        let finishedClean = false;
-                        result.forEach((element: any) => {
-                            this.answerscrud
-                                .deleteAnswer(element.answer_id)
-                                .subscribe((res) => (finishedClean = true));
-                            console.warn(finishedClean);
-                        });
-                        if (finishedClean) {
-                            this.questioncrud
-                                .deleteQuestion(data.question.question_id)
-                                .subscribe(
-                                    (res) => {
-                                        this.resultSuccess(res, data);
-                                    },
-                                    (err) => {
-                                        this.resultFailed(err, data);
-                                    }
-                                );
+                .pipe(
+                    switchMap(
+                        (array: {
+                            response: string | Array<QuestionInstance>;
+                        }) => {
+                            return array.response !== 'no records'
+                                ? this.questioncrud.deleteAnswerCollection(
+                                      array
+                                  )
+                                : of(array);
                         }
-                    } else {
-                        this.questioncrud
-                            .deleteQuestion(data.question.question_id)
-                            .subscribe((res) => {
-                                this.resultSuccess(res, data);
-                            });
+                    ),
+                    switchMap(() => {
+                        return this.questioncrud.deleteQuestion(
+                            data.question.question_id
+                        );
+                    })
+                )
+                .subscribe(
+                    (res: { response: string }) => {
+                        this.resultSuccess(res, data);
+                    },
+                    (err) => {
+                        this.resultFailed(err, data);
                     }
-                });
+                );
         }
     }
-    resultSuccess(res: any, data: any): void {
+
+    resultSuccess(res: { response: string }, data: QuestionData): void {
         if (res.response === 'ok') {
-            this.snackBar.open('Question was successfully deleted', 'X', {
-                duration: 2000,
+            this.snackBar.open('Питання успішно видалене', 'X', {
+                duration: 3000,
             });
             this.dialogRef.close({
                 finished: true,
@@ -65,12 +66,12 @@ export class DeleteConfirmationModalComponent {
             });
         }
     }
-    resultFailed(err, data: any): void {
+    resultFailed(err, data: QuestionData): void {
         this.snackBar.open(
             'Потрібно видалити всі відповіді до даного завдання',
             'X',
             {
-                duration: 2000,
+                duration: 3000,
             }
         );
         this.dialogRef.close({

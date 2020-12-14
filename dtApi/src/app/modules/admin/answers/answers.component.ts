@@ -125,7 +125,25 @@ export class AnswersComponent implements OnInit {
             this.questionId = params.questionId;
         });
         this.state = history.state.data;
+
+        this.state = history.state.data;
         if (this.state) {
+            const question = history.state.data;
+            switch (question.type) {
+                case 'Простий вибір':
+                    question.type = 1;
+                    break;
+                case 'Мульти вибір':
+                    question.type = 2;
+                    break;
+                case 'Текстове поле':
+                    question.type = 3;
+                    break;
+                case 'Числове поле вводу':
+                    question.type = 4;
+                    break;
+            }
+            this.state = question;
             this.initializeEditMode();
         }
         this.formInitialazer();

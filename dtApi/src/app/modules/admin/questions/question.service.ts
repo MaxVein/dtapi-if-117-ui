@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { forkJoin, Observable } from 'rxjs';
 import { map, pluck } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
 
@@ -27,7 +27,10 @@ export class QuestionService {
                                 item.type = 'Мульти вибір';
                                 break;
                             case '3':
-                                item.type = 'Текстовий';
+                                item.type = 'Текстове поле';
+                                break;
+                            case '4':
+                                item.type = 'Числове поле вводу';
                                 break;
                         }
                         return {
@@ -54,7 +57,15 @@ export class QuestionService {
             body
         );
     }
-    updateQuestion(body: string, id: string): Observable<any> {
+    deleteAnswerCollection(answers: any): Observable<any> {
+        const deleteAnswerObservables = answers.map((answer) =>
+            this.httpInstance.delete(
+                `${environment.BASEURL}answer/del/` + answer.answer_id
+            )
+        );
+        return forkJoin(deleteAnswerObservables);
+    }
+    updateQuestion(body: string, id: string | number): Observable<any> {
         return this.httpInstance.post(
             `${environment.BASEURL}${this.entity}/update/${id}`,
             body
