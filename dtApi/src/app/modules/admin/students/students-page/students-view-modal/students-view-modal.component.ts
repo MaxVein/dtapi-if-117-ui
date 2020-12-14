@@ -13,6 +13,7 @@ import { environment } from 'src/environments/environment';
 import {
     closeMessageE,
     getUpdateErrorMessage,
+    notViewStudentData,
     titleErrorMessage,
 } from '../../../Messages';
 
@@ -46,8 +47,12 @@ export class StudentsViewModalComponent implements OnInit, OnDestroy {
             .getAllStudentData(this.studentID, this.groupID)
             .subscribe(
                 (response: StudentProfileData) => {
-                    this.student = response;
-                    this.loading = false;
+                    if (!response) {
+                        this.closeModal({ message: notViewStudentData });
+                    } else {
+                        this.student = response;
+                        this.loading = false;
+                    }
                 },
                 (error: Response) => {
                     this.loading = false;

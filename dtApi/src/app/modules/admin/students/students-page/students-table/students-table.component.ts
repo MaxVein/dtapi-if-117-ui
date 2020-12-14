@@ -26,6 +26,8 @@ import {
     closeError,
     closeMessageE,
     errorMessage,
+    notStudentDataMessage,
+    notViewStudentData,
     removeStudentMessage,
     studentRemoveMessage,
     studentsTableColumns,
@@ -139,6 +141,8 @@ export class StudentsTableComponent implements AfterViewInit, OnDestroy {
                     this.modalService.showSnackBar(closeMessageE);
                 } else if (result.message === titleErrorMessage) {
                     this.modalService.showSnackBar(closeError);
+                } else if (result.message === notViewStudentData) {
+                    this.modalService.showSnackBar(notStudentDataMessage);
                 }
             }
         );

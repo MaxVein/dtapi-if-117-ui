@@ -1,65 +1,86 @@
 <form [formGroup]="answerForm" (submit)="createQuestionAndAnswer()">
-    <div class="question">
-        <mat-form-field appearance="fill">
-            <mat-label>Питання</mat-label>
-            <textarea formControlName="questionText" matInput></textarea>
-            <mat-error *ngIf="answerForm.controls.questionText.invalid"
-                >{{ errorQuestionTitle }}
-            </mat-error>
-        </mat-form-field>
-    </div>
-    <mat-card *ngIf="attachmentQuestionSrc">
-        <img
-            mat-card-image
-            class="image"
-            src="{{ attachmentQuestionSrc }}"
-            alt="question picture"
-        />
-        <span class="material-icons close-btn" (click)="removeImageQuestion()">
-            close
-        </span>
-    </mat-card>
-    <div>
-        <mat-form-field>
-            <ngx-mat-file-input
-                formControlName="atachmentQuestion"
-                placeholder="Додати зображення"
-            ></ngx-mat-file-input>
-            <mat-icon matSuffix>folder</mat-icon>
-        </mat-form-field>
-    </div>
-    <mat-form-field appearance="fill">
-        <mat-label>Тип питання</mat-label>
-        <mat-select
-            formControlName="typeOfQuestion"
-            (selectionChange)="changeType()"
-        >
-            <mat-option
-                *ngFor="let type of questionType; let i = index"
-                value="{{ i + 1 }}"
+    <div class="question-container">
+        <h2>
+            {{
+                createMode
+                    ? 'Заповніть форму для створення питання та відповідей до нього'
+                    : 'Внесіть зміни для редагування'
+            }}
+        </h2>
+        <div class="question">
+            <mat-form-field appearance="fill">
+                <mat-label>Текст питання</mat-label>
+                <textarea formControlName="questionText" matInput></textarea>
+                <mat-error *ngIf="answerForm.controls.questionText.invalid"
+                    >{{ errorQuestionTitle }}
+                </mat-error>
+            </mat-form-field>
+        </div>
+        <mat-card *ngIf="attachmentQuestionSrc">
+            <img
+                mat-card-image
+                class="image"
+                src="{{ attachmentQuestionSrc }}"
+                alt="question picture"
+            />
+            <span
+                class="material-icons close-btn"
+                (click)="removeImageQuestion()"
             >
-                {{ type }}
-            </mat-option>
-        </mat-select>
-    </mat-form-field>
-    <mat-form-field appearance="fill">
-        <mat-label>Рівень питання</mat-label>
-        <mat-select formControlName="level">
-            <mat-option
-                *ngFor="let level of levelType; let i = index"
-                value="{{ i + 1 }}"
-                >{{ i + 1 }}
-            </mat-option>
-        </mat-select>
-    </mat-form-field>
-
-    <div id="createAnswer">
+                close
+            </span>
+        </mat-card>
+        <div>
+            <mat-form-field>
+                <ngx-mat-file-input
+                    (change)="inputQuestionAtachment()"
+                    formControlName="atachmentQuestion"
+                    placeholder="Додати зображення"
+                    [accept]="'.png,.jpeg'"
+                ></ngx-mat-file-input>
+                <mat-icon matSuffix>folder</mat-icon>
+            </mat-form-field>
+        </div>
+        <mat-form-field appearance="fill">
+            <mat-label>Тип питання</mat-label>
+            <mat-select
+                formControlName="typeOfQuestion"
+                (selectionChange)="changeTypeQuestion()"
+            >
+                <mat-option
+                    *ngFor="let type of questionType; let i = index"
+                    value="{{ i + 1 }}"
+                >
+                    {{ type }}
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+        <mat-form-field appearance="fill">
+            <mat-label>Рівень питання</mat-label>
+            <mat-select formControlName="level">
+                <mat-option
+                    *ngFor="let level of levelType; let i = index"
+                    value="{{ i + 1 }}"
+                    >{{ i + 1 }}
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+    </div>
+    <div class="createAnswer">
         <div
             formArrayName="answersType"
             *ngFor="let ans of answersType.controls; let i = index"
         >
             <div [formGroupName]="i">
-                <div *ngIf="showAnswers">
+                <div *ngIf="showAnswers" class="answer-container">
+                    <button
+                        class="answer-number"
+                        mat-mini-fab
+                        color="primary"
+                        (click)="$event.preventDefault()"
+                    >
+                        {{ i + 1 }}
+                    </button>
                     <div class="addAnswerField">
                         <mat-checkbox
                             *ngIf="typeOfQuestion === '2'"
@@ -81,7 +102,7 @@
                             </mat-error>
                         </mat-form-field>
                         <button
-                            (click)="removeAnswer(i)"
+                            (click)="removeAnswer($event, i)"
                             mat-mini-fab
                             color="primary"
                             aria-label="Example icon button with a delete icon"
@@ -89,11 +110,11 @@
                             <mat-icon>delete</mat-icon>
                         </button>
                     </div>
-                    <mat-card *ngIf="ans.value.atachmentAnswer">
+                    <mat-card *ngIf="answerAtachmentSrc">
                         <img
                             mat-card-image
                             class="image"
-                            src="{{ ans.value.atachmentAnswer }}"
+                            src="{{ answerAtachmentSrc }}"
                             alt="answer"
                         />
                         <span
@@ -109,6 +130,7 @@
                                 (change)="inputAnswerAtachment(i)"
                                 formControlName="atachmentAnswer"
                                 placeholder="Додати зображення"
+                                [accept]="'.png,.jpeg'"
                             ></ngx-mat-file-input>
                             <mat-icon matSuffix>folder</mat-icon>
                         </mat-form-field>
@@ -117,7 +139,11 @@
             </div>
         </div>
         <div *ngIf="noAnswers">Відповіді відсутні</div>
-        <div *ngIf="showAnswersNumeric" formGroupName="answersTypeNumeric">
+        <div
+            *ngIf="showAnswersNumeric"
+            formGroupName="answersTypeNumeric"
+            class="answer-container"
+        >
             <mat-form-field>
                 <input
                     formControlName="numericAnswerMin"
@@ -147,16 +173,22 @@
                 >
             </mat-form-field>
         </div>
-        <button
-            [disabled]="showAnswersNumeric"
-            class="create-answer-btn"
-            mat-raised-button
-            color="primary"
-            (click)="addAnswer($event)"
+        <div class="create-btn">
+            <button
+                [disabled]="showAnswersNumeric"
+                class="create-answer-btn"
+                mat-raised-button
+                color="primary"
+                (click)="addAnswer($event)"
+            >
+                Створити відповідь
+            </button>
+        </div>
+
+        <div
+            сlass="btn-group"
+            style="display: flex; justify-content: space-between"
         >
-            Створити відповідь
-        </button>
-        <div сlass="btn-group">
             <div>
                 <button
                     mat-raised-button
@@ -170,7 +202,7 @@
                 <button
                     mat-raised-button
                     color="primary"
-                    (click)="cancelRedirect($event)"
+                    (click)="cancelButton($event)"
                 >
                     Скасувати
                 </button>

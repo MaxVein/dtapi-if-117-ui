@@ -27,7 +27,7 @@
             Фільтр
         </mat-label>
         <input
-            [disabled]="!testsBySubject.length"
+            [disabled]="!testsBySubject.length || !dataSource.data.length"
             matInput
             (keyup)="applyFilter($event)"
             placeholder="Здійснюйте фільтрацію по всіх колонках таблиці"
@@ -36,7 +36,7 @@
     </mat-form-field>
     <div
         class="mat-elevation-z8 profile-table__table"
-        [hidden]="!testsBySubject.length"
+        [hidden]="!testsBySubject.length || !dataSource.data.length"
     >
         <table
             mat-table
@@ -112,12 +112,17 @@
         ></mat-paginator>
     </div>
     <div class="empty-data-test" *ngIf="!testsBySubject.length && !hide">
-        <h1 class="empty-data-theme">
+        <mat-icon class="dark-theme-icon">report</mat-icon>
+        <h1>
             Тести з даного предмету <br />
             відсутні
         </h1>
     </div>
-    <div class="empty-data-test select" *ngIf="startText && hide">
-        <h1 class="empty-data-theme">Оберіть предмет для тестування</h1>
+    <div
+        class="empty-data-test select"
+        *ngIf="!dataSource.data.length && startText"
+    >
+        <mat-icon class="dark-theme-icon">playlist_add_check</mat-icon>
+        <h1>Оберіть предмет для тестування</h1>
     </div>
 </div>

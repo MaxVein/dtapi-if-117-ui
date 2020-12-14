@@ -1,8 +1,8 @@
 <section class="students entity-page">
-    <div class="students__container">
+    <div class="students__container entity-container">
         <div class="students__header entity-header">
             <h1 class="mat-h1 entity-title">
-                <mat-icon class="entity-title-icon">how_to_reg</mat-icon>
+                <mat-icon class="entity-title-icon">how_to_reg </mat-icon>
                 Студенти {{ groupName ? 'групи ' + groupName : '' }}
             </h1>
             <button
@@ -27,7 +27,8 @@
             </div>
             <ng-template #empty>
                 <div class="empty-data">
-                    <h1 class="empty-data-theme">Студенти відсутні</h1>
+                    <mat-icon class="empty-data-icon">report</mat-icon>
+                    <h1 class="empty-data-text">Студенти відсутні</h1>
                 </div>
             </ng-template>
         </div>
