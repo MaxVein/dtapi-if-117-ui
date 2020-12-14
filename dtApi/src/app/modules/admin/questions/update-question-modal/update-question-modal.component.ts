@@ -12,12 +12,6 @@ import { QuestionService } from '../question.service';
 })
 export class UpdateQuestionModalComponent implements OnInit {
     QuestionUpdateForm: FormGroup;
-    questionTypes: string[] = [
-        'Простий вибір',
-        'Мульти вибір',
-        'Текстове поле',
-        'Числове поле вводу',
-    ];
     levels = [...Array(20).keys()];
     constructor(
         public dialogRef: MatDialogRef<UpdateQuestionModalComponent>,
@@ -33,9 +27,6 @@ export class UpdateQuestionModalComponent implements OnInit {
             question_text: new FormControl(
                 this.data.question ? this.data.question.question_text : null
             ),
-            type: new FormControl(
-                this.data.question ? this.data.question.type : null
-            ),
             level: new FormControl(
                 this.data.question ? this.data.question.level : null
             ),
@@ -44,8 +35,6 @@ export class UpdateQuestionModalComponent implements OnInit {
 
     submit(data: { question: any }): void {
         if (this.QuestionUpdateForm.valid) {
-            const type = this.QuestionUpdateForm.value.type;
-            this.QuestionUpdateForm.value.type = typeReverse(type);
             this.questionservice
                 .updateQuestion(
                     JSON.stringify(this.QuestionUpdateForm.value),

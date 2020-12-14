@@ -17,23 +17,6 @@
             ></textarea>
         </mat-form-field>
         <mat-form-field class="modal-field">
-            <mat-label>Тип запитання</mat-label>
-            <mat-select
-                appeareance="fill"
-                formControlName="type"
-                matInput
-                name="type"
-                cdkFocusInitial
-            >
-                <mat-option
-                    *ngFor="let type of questionTypes"
-                    value="{{ type }}"
-                >
-                    {{ type }}</mat-option
-                >
-            </mat-select>
-        </mat-form-field>
-        <mat-form-field class="modal-field">
             <mat-label>Рівень запитання</mat-label>
             <mat-select
                 appeareance="fill"
