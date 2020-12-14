@@ -11,10 +11,10 @@ import { environment } from 'src/environments/environment';
 export class ResultsService {
     constructor(private http: HttpClient, private snackBar: MatSnackBar) {}
 
-    getGroupList() {
+    getGroupList(): Observable<any> {
         return this.http.get(`${environment.BASEURL}group/getRecords`);
     }
-    getTestsList() {
+    getTestsList(): Observable<any> {
         return this.http.get(`${environment.BASEURL}test/getRecords`);
     }
 
@@ -23,17 +23,17 @@ export class ResultsService {
             duration: 1500,
         });
     }
-    getResultTestIdsByGroup(group_id) {
+    getResultTestIdsByGroup(group_id): Observable<any> {
         return this.http.get(
             `${environment.BASEURL}Result/getResultTestIdsByGroup/${group_id}`
         );
     }
-    getStudentInfo(id) {
+    getStudentInfo(id): Observable<any> {
         return this.http.get(
             `${environment.BASEURL}Student/getStudentsByGroup/${id}`
         );
     }
-    getRecordsByTestDate(testId, groupId) {
+    getRecordsByTestDate(testId, groupId): Observable<any> {
         return this.http.get(
             `${environment.BASEURL}Result/getRecordsByTestGroupDate/${testId}/${groupId}`
         );
@@ -73,7 +73,7 @@ export class ResultsService {
             data
         );
     }
-    getAnswersByQuestions(id) {
+    getAnswersByQuestions(id): Observable<any> {
         return this.http.get(
             `${environment.BASEURL}answer/getAnswersByQuestion/${id}`
         );
