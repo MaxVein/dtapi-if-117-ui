@@ -68,8 +68,13 @@ $dark-theme: mat-dark-theme($dark-primary, $dark-accent, $dark-warn);
 .dark-theme .mat-nav-list .active-link:hover {
     background-color: #e91e63 !important;
 }
-.dark-theme .empty-data-theme {
-    background: #e91e63 !important;
+.dark-theme .empty-data {
+    mat-icon {
+        color: #212121;
+    }
+}
+.dark-theme .dark-theme-icon {
+    color: #212121 !important;
 }
 .dark-theme .icon-theme {
     color: #e91e63 !important;

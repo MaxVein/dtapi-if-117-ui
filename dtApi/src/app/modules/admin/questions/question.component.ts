@@ -152,6 +152,7 @@ export class QuestionComponent implements OnInit {
 
             {
                 queryParams: {
+                    test_id: this.test_id,
                     mode: 'edit',
                 },
                 state: { data: data },

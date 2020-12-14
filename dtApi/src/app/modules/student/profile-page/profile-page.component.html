@@ -13,8 +13,9 @@
         ></app-profile-table>
     </div>
     <ng-template #empty>
-        <div class="empty-data-subjects" *ngIf="!studentProfileData">
-            <h1 class="empty-data-theme">Предмети відсутні</h1>
+        <div class="empty-data" *ngIf="!studentProfileData">
+            <mat-icon class="empty-data-icon">report</mat-icon>
+            <h1 class="empty-data-text">Дані студента відсутні</h1>
         </div>
     </ng-template>
 </div>
