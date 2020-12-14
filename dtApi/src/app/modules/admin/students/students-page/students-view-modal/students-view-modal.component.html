@@ -5,7 +5,7 @@
             Інформація про студента
         </h3>
     </div>
-    <mat-dialog-content class="modal__content" *ngIf="student; else empty">
+    <mat-dialog-content class="modal__content">
         <div class="modal__container">
             <div class="modal__student-photo" *ngIf="student.photo !== ''">
                 <img [src]="student.photo" alt="Student photo" />
@@ -111,12 +111,6 @@
             </div>
         </div>
     </mat-dialog-content>
-
-    <ng-template #empty>
-        <div class="empty-data">
-            <h1>Немає інформації про вибраного студента</h1>
-        </div>
-    </ng-template>
 
     <mat-dialog-actions class="modal__actions">
         <div class="modal__buttons">
