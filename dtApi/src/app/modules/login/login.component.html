@@ -3,14 +3,14 @@
         <img src="{{ logoSrc }}" alt="logo" srcset="" />
     </div>
     <div class="form-wrap">
-        <p class="form-title">Authorization</p>
+        <p class="form-title">Авторизація</p>
         <form [formGroup]="loginForm" novalidate (submit)="onSubmit()">
             <mat-form-field
                 class="form-field"
                 appearance="outline"
                 #outlineFieldRef
             >
-                <mat-label> Login </mat-label>
+                <mat-label> Логін </mat-label>
                 <input
                     (focus)="fixOutlineStyle(outlineFieldRef)"
                     formControlName="userName"
@@ -27,7 +27,7 @@
                 appearance="outline"
                 #outlineFieldPas
             >
-                <mat-label> Password </mat-label>
+                <mat-label> Пароль </mat-label>
                 <input
                     (focus)="fixOutlineStyle(outlineFieldPas)"
                     name="password"
@@ -50,7 +50,7 @@
                         >{{ hide ? 'visibility_off' : 'visibility' }}
                     </mat-icon>
                 </span>
-                <mat-hint>Password must be at list 8 characters</mat-hint>
+                <mat-hint>Пароль повинен містити не меше 8 символів </mat-hint>
             </mat-form-field>
             <button
                 mat-raised-button
@@ -58,7 +58,7 @@
                 type="submit"
                 [disabled]="loginForm.invalid"
             >
-                Log In
+                Вхід
             </button>
         </form>
     </div>
