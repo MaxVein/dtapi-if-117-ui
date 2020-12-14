@@ -1,9 +1,9 @@
-<div class="profile-card">
+<div class="profile-card" *ngIf="profileData">
     <h1 class="profile-card__title">
         <mat-icon class="header-icon">assignment_ind</mat-icon> Профіль студента
     </h1>
     <mat-card matRipple>
-        <div class="card" *ngIf="profileData; else notData">
+        <div class="card">
             <div class="profile-card__student-photo">
                 <img
                     class="student-photo"
@@ -79,10 +79,5 @@
                 </div>
             </mat-card-content>
         </div>
-        <ng-template #notData>
-            <div class="empty-data-profile">
-                <h1 class="empty-data-theme">Дані студента відсутні</h1>
-            </div>
-        </ng-template>
     </mat-card>
 </div>

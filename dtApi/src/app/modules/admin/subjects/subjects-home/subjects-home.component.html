@@ -47,20 +47,6 @@
                     class="operation-button"
                     mat-flat-button
                     color="primary"
-                    (click)="
-                        redirectToTests(
-                            element.subject_id,
-                            element.subject_name
-                        )
-                    "
-                    matTooltip="Перейти до тестів"
-                >
-                    <mat-icon class="mat-18">task_alt</mat-icon>
-                </button>
-                <button
-                    class="operation-button"
-                    mat-flat-button
-                    color="primary"
                     (click)="onEdit(element)"
                     matTooltip="Оновити"
                 >
@@ -70,7 +56,7 @@
                     class="operation-button"
                     mat-flat-button
                     color="primary"
-                    (click)="redirectToDelete(element.subject_id)"
+                    (click)="redirectToDelete(element)"
                     matTooltip="Видалити"
                 >
                     <mat-icon class="mat-18">delete</mat-icon>
@@ -79,13 +65,10 @@
                     class="operation-button"
                     mat-flat-button
                     color="primary"
-                    (click)="redirectToTest()"
+                    (click)="redirectToTests(element.subject_id)"
+                    matTooltip="Перейти до тестів"
                 >
-                    <mat-icon class="mat-18"
-                        ><span class="material-icons">
-                            fact_check
-                        </span></mat-icon
-                    >
+                    <mat-icon class="mat-18">fact_check</mat-icon>
                 </button>
             </td>
         </ng-container>

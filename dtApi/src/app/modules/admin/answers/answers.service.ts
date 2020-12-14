@@ -13,7 +13,7 @@ export class AnswersService {
         const url = `Question/getRecords/${id}/`;
         return this.http.get(`${environment.BASEURL}${url}`);
     }
-    getAnswers(id: string) {
+    getAnswers(id: string | number) {
         const url = `answer/getAnswersByQuestion/${id}/`;
         return this.http.get(`${environment.BASEURL}${url}`);
     }

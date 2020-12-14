@@ -4,7 +4,7 @@ import { QuestionComponent } from './question.component';
 import { RouterModule, Routes } from '@angular/router';
 import { SharedModule } from 'src/app/shared/modules/shared.module';
 import { DeleteConfirmationModalComponent } from './delete-confirmation-modal/delete-confirmation-modal.component';
-import { AddUpdateModalComponent } from './add-update-modal/add-update-modal.component';
+import { UpdateQuestionModalComponent } from './update-question-modal/update-question-modal.component';
 
 const routes: Routes = [{ path: '', component: QuestionComponent }];
 
@@ -12,7 +12,7 @@ const routes: Routes = [{ path: '', component: QuestionComponent }];
     declarations: [
         QuestionComponent,
         DeleteConfirmationModalComponent,
-        AddUpdateModalComponent,
+        UpdateQuestionModalComponent,
     ],
     imports: [CommonModule, SharedModule, RouterModule.forChild(routes)],
     exports: [],

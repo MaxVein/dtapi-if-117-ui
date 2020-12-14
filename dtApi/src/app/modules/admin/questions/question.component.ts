@@ -1,11 +1,18 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { ActivatedRoute, Router } from '@angular/router';
 import { DeleteConfirmationModalComponent } from './delete-confirmation-modal/delete-confirmation-modal.component';
+import {
+    QuestionDataAfterClosed,
+    QuestionInstance,
+    typeReverse,
+} from './Question';
 import { QuestionService } from './question.service';
+import { UpdateQuestionModalComponent } from './update-question-modal/update-question-modal.component';
 
 @Component({
     selector: 'app-question',
@@ -16,7 +23,7 @@ import { QuestionService } from './question.service';
 export class QuestionComponent implements OnInit {
     displayedColumns: string[] = ['id', 'Text', 'Type', 'Level', 'operations'];
     dataSource: MatTableDataSource<[]>;
-    qyestionsArray: [] = [];
+    questionsArray: Array<QuestionInstance> = [];
     subscribed = true;
 
     test_id: number;
@@ -28,7 +35,8 @@ export class QuestionComponent implements OnInit {
         public dialog: MatDialog,
         private router: Router,
         private activeRoute: ActivatedRoute,
-        private questionService: QuestionService
+        private questionService: QuestionService,
+        private snackBar: MatSnackBar
     ) {}
 
     applyFilter(event: Event): void {
@@ -39,20 +47,20 @@ export class QuestionComponent implements OnInit {
             this.dataSource.paginator.firstPage();
         }
     }
-    openModal(operationType: string, question?: any): void {
+    openModal(operationType: string, question?: QuestionInstance): void {
         switch (operationType) {
             case 'Add':
                 this.addQuestionModelOpen();
                 break;
             case 'Update':
-                this.updateQuestionModelOpen();
+                this.updateQuestionModelOpen(question);
                 break;
             case 'Delete':
-                this.deleteQuestionModelOpen(question);
+                this.deleteQuestionModalOpen(question);
                 break;
         }
     }
-    deleteQuestionModelOpen(question: any): void {
+    deleteQuestionModalOpen(question: QuestionInstance): void {
         this.dialog
             .open(DeleteConfirmationModalComponent, {
                 data: {
@@ -63,6 +71,7 @@ export class QuestionComponent implements OnInit {
             .afterClosed()
             .subscribe((res) => {
                 if (!res) return;
+
                 if (res.finished) {
                     this.dataSource.data.splice(
                         this.dataSource.data.indexOf(res.question),
@@ -73,7 +82,32 @@ export class QuestionComponent implements OnInit {
                 }
             });
     }
-    updateQuestionModelOpen(): void {}
+    //Як виправити порівняння item === question
+    updateQuestionModelOpen(question: any): void {
+        this.dialog
+            .open(UpdateQuestionModalComponent, {
+                data: {
+                    question: question,
+                },
+            })
+            .afterClosed()
+            .subscribe((res: QuestionDataAfterClosed) => {
+                if (!res || !res.finished) return null;
+                res.updatedquestion.type = typeReverse(
+                    res.updatedquestion.type
+                );
+                const oldindex = this.dataSource.data.findIndex(
+                    (item) => item === question
+                );
+                this.dataSource.data = this.dataSource.data.map(
+                    (curQuestion: any, curIndex) => {
+                        return curIndex === oldindex
+                            ? (curQuestion = res.updatedquestion)
+                            : curQuestion;
+                    }
+                );
+            });
+    }
     addQuestionModelOpen(): void {
         this.router.navigate(
             [`admin/subjects/tests/${this.test_id}/questions/answer`],
@@ -92,10 +126,20 @@ export class QuestionComponent implements OnInit {
         this.questionService
             .getNumberOfQuestions(this.test_id)
             .subscribe((numbersOfRecords: number) => {
+                if (numbersOfRecords === 0) {
+                    this.snackBar.open(
+                        'В базі даних немає питань по даному предмету',
+                        'X',
+                        {
+                            duration: 3000,
+                        }
+                    );
+                    return null;
+                }
                 this.questionService
                     .getQuestions(this.test_id, numbersOfRecords)
-                    .subscribe((val) => {
-                        this.dataSource = val;
+                    .subscribe((val: any) => {
+                        this.dataSource = new MatTableDataSource(val);
                         this.dataSource.paginator = this.paginator;
                         this.dataSource.sort = this.sort;
                     });
@@ -108,6 +152,7 @@ export class QuestionComponent implements OnInit {
 
             {
                 queryParams: {
+                    test_id: this.test_id,
                     mode: 'edit',
                 },
                 state: { data: data },

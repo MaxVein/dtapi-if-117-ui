@@ -2,8 +2,11 @@ import { Component, Inject } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { pluck } from 'rxjs/operators';
-import { AddUpdateModalComponent } from '../add-update-modal/add-update-modal.component';
+import { of } from 'rxjs';
+import { switchMap } from 'rxjs/operators';
+import { AnswersService } from '../../answers/answers.service';
+import { answerData } from '../../answers/answersInterfaces';
+import { QuestionData, QuestionInstance } from '../Question';
 import { QuestionService } from '../question.service';
 
 @Component({
@@ -13,38 +16,67 @@ import { QuestionService } from '../question.service';
 })
 export class DeleteConfirmationModalComponent {
     constructor(
-        public dialogRef: MatDialogRef<AddUpdateModalComponent>,
+        public dialogRef: MatDialogRef<DeleteConfirmationModalComponent>,
         @Inject(MAT_DIALOG_DATA) public data: any,
         private questioncrud: QuestionService,
-        private snackBar: MatSnackBar
+        private snackBar: MatSnackBar,
+        private answerscrud: AnswersService
     ) {}
 
-    submit(data: any, form: NgForm): void {
+    submit(data: QuestionData, form: NgForm): void {
         if (form.submitted) {
-            this.questioncrud
-                .deleteQuestion(data.question.question_id)
-                .pipe(pluck('response'))
-                .subscribe((res) => {
-                    if (res === 'ok') {
-                        this.snackBar.open(
-                            'Question was successfully deleted',
-                            '/&#10006',
-                            {
-                                duration: 3000,
-                            }
+            this.answerscrud
+                .getAnswers(data.question.question_id)
+                .pipe(
+                    switchMap(
+                        (array: { response: string | Array<answerData> }) => {
+                            return array.response !== 'no records'
+                                ? this.questioncrud.deleteAnswerCollection(
+                                      array
+                                  )
+                                : of(array);
+                        }
+                    ),
+                    switchMap(() => {
+                        return this.questioncrud.deleteQuestion(
+                            data.question.question_id
                         );
-                        this.dialogRef.close({
-                            finished: true,
-                            question: data.question,
-                        });
+                    })
+                )
+                .subscribe(
+                    (res: { response: string }) => {
+                        this.resultSuccess(res, data);
+                    },
+                    () => {
+                        this.resultFailed(data);
                     }
-                });
-        } else {
+                );
+        }
+    }
+
+    resultSuccess(res: { response: string }, data: QuestionData): void {
+        if (res.response === 'ok') {
+            this.snackBar.open('Питання успішно видалене', 'X', {
+                duration: 3000,
+            });
             this.dialogRef.close({
-                finished: false,
+                finished: true,
                 question: data.question,
             });
         }
+    }
+    resultFailed(data: QuestionData): void {
+        this.snackBar.open(
+            'Потрібно видалити всі відповіді до даного завдання',
+            'X',
+            {
+                duration: 3000,
+            }
+        );
+        this.dialogRef.close({
+            finished: false,
+            question: data.question,
+        });
     }
     onNoClick(): void {
         this.dialogRef.close();

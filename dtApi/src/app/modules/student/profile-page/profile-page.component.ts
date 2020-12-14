@@ -14,6 +14,7 @@ import { StudentProfile } from '../../../shared/interfaces/student.interfaces';
 import {
     errorTitleMessage,
     isMatchErrorMessage,
+    notSubjectsErrorMessage,
     profileStudentMessage,
     profileSubjectsMessage,
     welcomeMessage,
@@ -77,7 +78,11 @@ export class ProfilePageComponent implements OnInit, OnDestroy {
             .getRecords('Subject')
             .subscribe(
                 (response: Subject[]) => {
-                    this.subjects = response;
+                    if (response) {
+                        this.subjects = response;
+                    } else {
+                        this.modalService.showSnackBar(notSubjectsErrorMessage);
+                    }
                 },
                 (error: Response) => {
                     this.loading = false;

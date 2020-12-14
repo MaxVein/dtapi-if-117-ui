@@ -4,9 +4,13 @@ import { MatSort } from '@angular/material/sort';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
+import { Subscription } from 'rxjs';
 
 import { SubjectsService } from '../subjects.service';
 import { ModalComponent } from '../modal/modal.component';
+import { ModalService } from 'src/app/shared/services/modal.service';
+import { ConfirmComponent } from 'src/app/shared/components/confirm/confirm.component';
+import { ConfirmDeleteComponent } from '../../groups/confirm-delete/confirm-delete.component';
 
 interface SubjectsResponse {
     subject_id: number;
@@ -31,6 +35,7 @@ export class SubjectsHomeComponent implements OnInit, AfterViewInit {
         'operations',
     ];
     public dataSource = new MatTableDataSource<SubjectsResponse>();
+    subjectSubscription: Subscription;
 
     @ViewChild(MatSort) sort: MatSort;
     @ViewChild(MatPaginator) paginator: MatPaginator;
@@ -38,7 +43,8 @@ export class SubjectsHomeComponent implements OnInit, AfterViewInit {
     constructor(
         private subjectsService: SubjectsService,
         public dialog: MatDialog,
-        private router: Router
+        private router: Router,
+        private modalService: ModalService
     ) {}
 
     ngOnInit() {
@@ -51,22 +57,26 @@ export class SubjectsHomeComponent implements OnInit, AfterViewInit {
     }
 
     public getSubjects() {
-        this.subjectsService
+        this.subjectSubscription = this.subjectsService
             .getData()
-            .subscribe((response) => (this.dataSource.data = response));
+            .subscribe((response) => {
+                this.dataSource.data = response;
+                this.modalService.showSnackBar('Предмети завантажено');
+            });
     }
 
     public redirectToCreate = (data: SubjectsRequest) => {
-        this.subjectsService
+        this.subjectSubscription = this.subjectsService
             .create(data)
             .subscribe((result: SubjectsResponse) => {
                 this.dataSource.data = this.dataSource.data.concat(result[0]);
                 this.dataSource.paginator.lastPage();
+                this.modalService.showSnackBar('Предмети додано');
             });
     };
 
     public redirectToUpdate = (id: number, body: SubjectsResponse) => {
-        this.subjectsService
+        this.subjectSubscription = this.subjectsService
             .update(id, body)
             .subscribe((result: SubjectsResponse) => {
                 const newSourse = this.dataSource.data.map((item) => {
@@ -79,15 +89,36 @@ export class SubjectsHomeComponent implements OnInit, AfterViewInit {
                     }
                 });
                 this.dataSource.data = newSourse;
+                this.modalService.showSnackBar('Предмети оновлено');
             });
     };
-
-    public redirectToDelete = (id: number) => {
-        this.subjectsService.delete(id).subscribe(() => {
-            this.dataSource.data = this.dataSource.data.filter(
-                (item) => item.subject_id !== id
-            );
+    redirectToDelete(subject: SubjectsResponse): void {
+        const dialogRef = this.dialog.open(ConfirmDeleteComponent, {
+            width: '300px',
+            data: {
+                group_name: subject.subject_name,
+            },
         });
+        dialogRef.afterClosed().subscribe((result: boolean) => {
+            if (result) {
+                this.delete(subject.subject_id);
+            } else {
+                this.dataSource.paginator = this.paginator;
+                this.dataSource.sort = this.sort;
+            }
+        });
+    }
+    public delete = (id: number) => {
+        this.subjectSubscription = this.subjectsService.delete(id).subscribe(
+            () => {
+                this.dataSource.data = this.dataSource.data.filter(
+                    (item) => item.subject_id !== id
+                );
+                this.modalService.showSnackBar('Предмети видалено');
+            },
+            (error) =>
+                this.modalService.showSnackBar('Помилка при видаленні предмету')
+        );
     };
 
     public onCreate(): void {
@@ -102,7 +133,6 @@ export class SubjectsHomeComponent implements OnInit, AfterViewInit {
                     if (!updResult[k]) delete updResult[k];
                 }
                 this.redirectToCreate(updResult);
-                this.getSubjects();
             }
         });
     }
@@ -116,7 +146,6 @@ export class SubjectsHomeComponent implements OnInit, AfterViewInit {
         dialogRef.afterClosed().subscribe((result: SubjectsResponse) => {
             if (result) {
                 this.redirectToUpdate(result.subject_id, result);
-                this.getSubjects();
             }
         });
     }
@@ -124,11 +153,12 @@ export class SubjectsHomeComponent implements OnInit, AfterViewInit {
     public doFilter = (value: string) => {
         this.dataSource.filter = value.trim().toLocaleLowerCase();
     };
-    public redirectToTests(id: string, subject_name: string) {
-        this.router.navigate(['admin/subjects/tests/', id], {
-            queryParams: {
-                subject_name: subject_name,
-            },
-        });
+    public redirectToTests(id: string) {
+        this.router.navigate(['admin/subjects/tests/', id], {});
+    }
+    ngOnDestroy(): void {
+        if (this.subjectSubscription) {
+            this.subjectSubscription.unsubscribe();
+        }
     }
 }

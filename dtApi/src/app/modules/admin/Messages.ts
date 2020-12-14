@@ -20,6 +20,8 @@ export const getGroupErrorMessage =
     'Сталася помилка при списку груп. Спробуйте знову';
 export const transferStudentErrorMessage =
     'Сталася помилка при переведенні студента. Спробуйте знову';
+export const notViewStudentData = 'Немає даних';
+export const notStudentDataMessage = 'Немає даних про вибраного студента';
 export const studentsTableColumns = [
     'id',
     'gradebook_id',

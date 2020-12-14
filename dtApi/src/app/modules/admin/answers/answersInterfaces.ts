@@ -1,11 +1,11 @@
-export interface typeOfQuestion {
+export interface TypeOfQuestion {
     simpleChoice: string;
     multiChoice: string;
     inputField: string;
     numerical: string;
 }
 
-export interface questionData {
+export interface QuestionData {
     test_id: string;
     question_text: string;
     level: string;
@@ -13,7 +13,7 @@ export interface questionData {
     attachment?: string;
     question_id?: string;
 }
-export interface answerData {
+export interface AnswerData {
     answer_id?: string;
     question_id: string;
     true_answer: string;
@@ -25,4 +25,11 @@ export interface noRecords {
 }
 export interface Response {
     response: string;
+}
+export interface AnswerType {
+    answer_id?: string;
+    atachmentAnswer?: string;
+    text: string;
+    trueAnswerMulti?: boolean;
+    trueAnswerSimple?: boolean;
 }
