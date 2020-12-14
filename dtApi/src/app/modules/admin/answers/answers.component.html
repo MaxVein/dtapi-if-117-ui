@@ -36,6 +36,7 @@
                     (change)="inputQuestionAtachment()"
                     formControlName="atachmentQuestion"
                     placeholder="Додати зображення"
+                    [accept]="'.png,.jpeg'"
                 ></ngx-mat-file-input>
                 <mat-icon matSuffix>folder</mat-icon>
             </mat-form-field>
@@ -129,6 +130,7 @@
                                 (change)="inputAnswerAtachment(i)"
                                 formControlName="atachmentAnswer"
                                 placeholder="Додати зображення"
+                                [accept]="'.png,.jpeg'"
                             ></ngx-mat-file-input>
                             <mat-icon matSuffix>folder</mat-icon>
                         </mat-form-field>

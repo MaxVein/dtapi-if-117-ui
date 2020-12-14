@@ -27,7 +27,7 @@ export class AnswersComponent implements OnInit {
     noChanges = false;
     updateAnswers: AnswerData[];
     alert = {
-        titleAlert: 'Увага',
+        titleAlert: 'Повідомлення',
         titleError: 'Помилка',
         messageNoAnswer: 'Питання повинне містити відповіді',
         messageNumCompare:
@@ -158,6 +158,23 @@ export class AnswersComponent implements OnInit {
             const data = JSON.parse(localStorage.getItem('state'));
             this.state = data.localState;
         }
+        this.state.test_id = this.testId;
+        switch (this.state.type) {
+            case 'Простий вибір':
+                this.state.type = '1';
+                break;
+            case 'Мульти вибір':
+                this.state.type = '2';
+                break;
+            case 'Текстовий':
+                this.state.type = '3';
+                break;
+            case 'Числове поле вводу':
+                this.state.type = '4';
+                break;
+            default:
+                break;
+        }
         this.initializeEditMode();
     }
     //update question and answer part
@@ -165,18 +182,17 @@ export class AnswersComponent implements OnInit {
         this.createMode = false;
         this.questionId = this.state.question_id;
         this.attachmentQuestionSrc = this.state.attachment;
-        (this.testId = this.state.test_id),
-            this.answerServise
-                .getQuestions(this.questionId)
-                .subscribe((res: QuestionData) => {
-                    if (res[0]) {
-                        this.state.attachment = res[0].attachment;
-                        this.attachmentQuestionSrc = res[0].attachment;
-                    } else {
-                        this.state.attachment = '';
-                    }
-                    this.getAnswers();
-                });
+        this.answerServise
+            .getQuestions(this.questionId)
+            .subscribe((res: QuestionData) => {
+                if (res[0]) {
+                    this.state.attachment = res[0].attachment;
+                    this.attachmentQuestionSrc = res[0].attachment;
+                } else {
+                    this.state.attachment = '';
+                }
+                this.getAnswers();
+            });
     }
     getAnswers(): void {
         this.answerServise
@@ -246,7 +262,7 @@ export class AnswersComponent implements OnInit {
                 .map((elem, index) => {
                     return this.objectsAreSame(elem, this.updateAnswers[index]);
                 })
-                .every((elem, index) => {
+                .every((elem) => {
                     return elem === true;
                 });
         }
@@ -291,10 +307,10 @@ export class AnswersComponent implements OnInit {
     createQuestionData(): void {
         this.sendQuestionData = {
             question_id: this.questionId,
-            test_id: this.testId,
             question_text: this.questionText,
-            level: this.level,
             type: this.typeOfQuestion,
+            level: this.level,
+            test_id: this.testId,
             attachment: this.atachmentQuestion.value
                 ? this.atachmentQuestion.value
                 : '',
@@ -441,11 +457,11 @@ export class AnswersComponent implements OnInit {
         switch (this.typeOfQuestion) {
             case '1':
                 return this.trueAnswer.value.every(
-                    (res) => res.trueAnswerSimple === false
+                    (res: AnswerType) => res.trueAnswerSimple === false
                 );
             case '2':
                 return this.trueAnswer.value.every(
-                    (res) => res.trueAnswerMulti === false
+                    (res: AnswerType) => res.trueAnswerMulti === false
                 );
             default:
                 return false;
@@ -514,6 +530,7 @@ export class AnswersComponent implements OnInit {
     }
 
     sendAnswerDataRequest(): void {
+        let counter: number = null;
         if (this.createMode) {
             this.createAnswer();
         }
@@ -527,11 +544,7 @@ export class AnswersComponent implements OnInit {
                     .createAnswerRequest(elem)
                     .subscribe((res: AnswerData) => {
                         if (res[0].answer_id && this.compareQuestions()) {
-                            this.openModal(
-                                this.alert.titleAlert,
-                                this.alert.messageAnswerCreate,
-                                AlertComponent
-                            );
+                            counter = 0;
                         }
                     });
             } else if (this.idAnswerArray.includes(elem.answer_id)) {
@@ -539,15 +552,21 @@ export class AnswersComponent implements OnInit {
                     .updateAnswer(elem, elem.answer_id)
                     .subscribe((res) => {
                         if (this.compareQuestions() && res) {
-                            this.openModal(
-                                this.alert.titleAlert,
-                                this.alert.messageAnswerUpdate,
-                                AlertComponent
-                            );
+                            counter = 1;
                         }
                     });
             }
         });
+        this.showMessage(counter);
+    }
+    showMessage(counter: number) {
+        if (this.compareQuestions()) {
+            const message =
+                counter === 0
+                    ? this.alert.messageAnswerCreate
+                    : this.alert.messageAnswerUpdate;
+            this.openModal(this.alert.titleAlert, message, AlertComponent);
+        }
     }
     createQuestionAndAnswer(): void {
         if (!this.compareAnswers() && !this.createMode) {
