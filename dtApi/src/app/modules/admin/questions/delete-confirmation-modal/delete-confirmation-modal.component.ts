@@ -3,7 +3,7 @@ import { NgForm } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { of } from 'rxjs';
-import { delay, switchMap, switchMapTo } from 'rxjs/operators';
+import { switchMap } from 'rxjs/operators';
 import { AnswersService } from '../../answers/answers.service';
 import { QuestionData, QuestionInstance } from '../Question';
 import { QuestionService } from '../question.service';
@@ -48,8 +48,8 @@ export class DeleteConfirmationModalComponent {
                     (res: { response: string }) => {
                         this.resultSuccess(res, data);
                     },
-                    (err) => {
-                        this.resultFailed(err, data);
+                    () => {
+                        this.resultFailed(data);
                     }
                 );
         }
@@ -66,7 +66,7 @@ export class DeleteConfirmationModalComponent {
             });
         }
     }
-    resultFailed(err, data: QuestionData): void {
+    resultFailed(data: QuestionData): void {
         this.snackBar.open(
             'Потрібно видалити всі відповіді до даного завдання',
             'X',

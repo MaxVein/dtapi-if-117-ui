@@ -6,7 +6,11 @@ import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { ActivatedRoute, Router } from '@angular/router';
 import { DeleteConfirmationModalComponent } from './delete-confirmation-modal/delete-confirmation-modal.component';
-import { QuestionDataAfterClosed, QuestionInstance } from './Question';
+import {
+    QuestionDataAfterClosed,
+    QuestionInstance,
+    typeReverse,
+} from './Question';
 import { QuestionService } from './question.service';
 import { UpdateQuestionModalComponent } from './update-question-modal/update-question-modal.component';
 
@@ -78,28 +82,30 @@ export class QuestionComponent implements OnInit {
                 }
             });
     }
-
+    //?Як виправити порівняння item === question
     updateQuestionModelOpen(question: any): void {
         this.dialog
             .open(UpdateQuestionModalComponent, {
                 data: {
                     question: question,
-                    selected: question.type,
                 },
             })
             .afterClosed()
             .subscribe((res: QuestionDataAfterClosed) => {
                 if (!res || !res.finished) return null;
-                console.warn(res);
-                this.dataSource.data.forEach((item: any, index) => {
-                    const oldindex = this.dataSource.data.findIndex(
-                        (item) => item === question
-                    );
-                    if (index === oldindex) {
-                        item = res.updatedquestion;
-                        this.dataSource._updateChangeSubscription();
+                res.updatedquestion.type = typeReverse(
+                    res.updatedquestion.type
+                );
+                const oldindex = this.dataSource.data.findIndex(
+                    (item) => item === question
+                );
+                this.dataSource.data = this.dataSource.data.map(
+                    (curQuestion: any, curIndex) => {
+                        return curIndex === oldindex
+                            ? (curQuestion = res.updatedquestion)
+                            : curQuestion;
                     }
-                });
+                );
             });
     }
     addQuestionModelOpen(): void {
