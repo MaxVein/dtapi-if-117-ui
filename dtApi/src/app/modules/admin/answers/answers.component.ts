@@ -1,13 +1,17 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Observable, Observer, of } from 'rxjs';
-import { concatMap } from 'rxjs/operators';
+import { Observable, Observer } from 'rxjs';
 
 import { ConfirmComponent } from '../../../shared/components/confirm/confirm.component';
 import { ModalService } from '../../../shared/services/modal.service';
 import { AlertComponent } from '../../../shared/components/alert/alert.component';
-import { answerData, questionData, Response } from './answersInterfaces';
+import {
+    AnswerData,
+    QuestionData,
+    Response,
+    AnswerType,
+} from './answersInterfaces';
 import { AnswersService } from './answers.service';
 import { minMaxValidator } from './validators/minMaxValidator';
 
@@ -15,31 +19,40 @@ import { minMaxValidator } from './validators/minMaxValidator';
     selector: 'app-answers',
     templateUrl: './answers.component.html',
     styleUrls: ['./answers.component.scss'],
+    encapsulation: ViewEncapsulation.None,
 })
 export class AnswersComponent implements OnInit {
+    confirmIcon = 'question_answer';
     answerAtachmentSrc = '';
     noChanges = false;
-    updateAnswers: answerData[];
-    questionChanges = false;
-    answerTypeChanges = false;
-    typeNumericChanges = false;
-    alertMessage = 'Увага';
+    updateAnswers: AnswerData[];
+    alert = {
+        titleAlert: 'Увага',
+        titleError: 'Помилка',
+        messageNoAnswer: 'Питання повинне містити відповіді',
+        messageNumCompare:
+            'Мінімальне значення не може бути більше або рівне макcимального',
+        messageNoEdit: 'Для редагування внесіть зміни в форму',
+        messageNoTruAnswer: 'Відсутня правильна відповідь',
+        messageAnswerUpdate: 'Відповідь оновлена',
+        messageAnswerCreate: 'Відповідь створена',
+        messageAnswerDelete: 'Відповідь видалена',
+        messageQuestionCreate: 'Питання створено',
+        messageQuestionUpdate: 'Питання оновлено',
+        messageConfirm: 'Ви впевнені що бажаєте видалити цю відповідь?',
+    };
     errorQuestionTitle = "Це поле обов'язкове";
     showAtachmentAnswer = false;
     answerAttachmentArr: string[];
-    isAttachmentQuestion = false;
     noAnswers = false;
     idAnswerArray: string[] = [];
     createMode = true;
-    formAnswerArray;
     attachmentQuestionSrc: string;
-    state: questionData;
+    state: QuestionData;
     testId: string;
     questionId: string;
-    arrayOfButtons = [];
-    sendAnswerData: answerData[] = [];
-    sendQuestionData: questionData;
-    checkedElem: string;
+    sendAnswerData: AnswerData[] = [];
+    sendQuestionData: QuestionData;
     answerForm: FormGroup;
     showAnswers = false;
     showAnswersNumeric = false;
@@ -80,7 +93,7 @@ export class AnswersComponent implements OnInit {
             ),
         });
     }
-    newAnswersType(item?, trueAnswer?): FormGroup {
+    newAnswersType(item?: AnswerData, trueAnswer?: string): FormGroup {
         return this.fb.group({
             text: [item ? item.answer_text : '', Validators.required],
             trueAnswerSimple: [
@@ -120,26 +133,42 @@ export class AnswersComponent implements OnInit {
         return this.answerForm.controls.answersType;
     }
     ngOnInit(): void {
+        let mode: string;
         this.activatedRoute.queryParams.subscribe((params) => {
             this.testId = params.test_id;
-            this.questionId = params.questionId;
+            mode = params.mode;
         });
-        this.state = history.state.data;
-        if (this.state) {
-            this.initializeEditMode();
+        if (mode === 'edit') {
+            this.state = history.state.data;
+            this.checkState(mode);
         }
         this.formInitialazer();
     }
-
+    checkState(mode: string): void {
+        if (this.state) {
+            let localState = this.state;
+            localStorage.setItem(
+                'state',
+                JSON.stringify({
+                    localState,
+                })
+            );
+        }
+        if (mode === 'edit' && !this.state) {
+            let data = JSON.parse(localStorage.getItem('state'));
+            this.state = data.localState;
+        }
+        this.initializeEditMode();
+    }
     //update question and answer part
-    initializeEditMode() {
+    initializeEditMode(): void {
         this.createMode = false;
         this.questionId = this.state.question_id;
         this.attachmentQuestionSrc = this.state.attachment;
         (this.testId = this.state.test_id),
             this.answerServise
                 .getQuestions(this.questionId)
-                .subscribe((res: questionData) => {
+                .subscribe((res: QuestionData) => {
                     if (res[0]) {
                         this.state.attachment = res[0].attachment;
                         this.attachmentQuestionSrc = res[0].attachment;
@@ -149,10 +178,10 @@ export class AnswersComponent implements OnInit {
                     this.getAnswers();
                 });
     }
-    getAnswers() {
+    getAnswers(): void {
         this.answerServise
             .getAnswers(this.state.question_id)
-            .subscribe((res: answerData[]) => {
+            .subscribe((res: AnswerData[]) => {
                 this.answerForm.get('typeOfQuestion').disable();
                 if (!res[0]) {
                     this.noAnswers = true;
@@ -164,12 +193,11 @@ export class AnswersComponent implements OnInit {
             });
     }
 
-    fillForm(result: answerData[]) {
+    fillForm(result: AnswerData[]): void {
         this.showAnswers = true;
-        this.formAnswerArray = result;
         if (this.typeOfQuestion === '4') {
             this.showAnswersNumeric = true;
-            this.formAnswerArray.map((item: answerData, index: number) => {
+            result.map((item: AnswerData, index: number) => {
                 this.idAnswerArray.push(item.answer_id);
                 if (index === 0) {
                     this.answerForm.controls.answersTypeNumeric
@@ -188,7 +216,7 @@ export class AnswersComponent implements OnInit {
                 }
             });
         } else {
-            this.formAnswerArray.map((item: answerData) => {
+            result.map((item: AnswerData) => {
                 this.idAnswerArray.push(item.answer_id);
                 this.showAtachmentAnswer = item.attachment ? true : false;
                 const trueAnswer = item.true_answer;
@@ -202,7 +230,7 @@ export class AnswersComponent implements OnInit {
         }
         return this.objectsAreSame(this.sendQuestionData, this.state);
     }
-    removeImageQuestion() {
+    removeImageQuestion(): void {
         this.attachmentQuestionSrc = '';
         this.answerForm.controls.atachmentQuestion.setValue('');
         this.answerForm.controls.atachmentQuestion.markAsDirty();
@@ -223,7 +251,7 @@ export class AnswersComponent implements OnInit {
                 });
         }
     }
-    finaleCompare() {
+    finaleCompare(): void {
         let chooseArr = 0;
         if (this.sendAnswerData.length > this.updateAnswers.length) {
             chooseArr = this.updateAnswers.length;
@@ -244,11 +272,11 @@ export class AnswersComponent implements OnInit {
         }
         this.idAnswerArray = result;
     }
-    removeImageAnswer(i: number) {
+    removeImageAnswer(i: number): void {
         this.answersType.controls[i].get('atachmentAnswer').setValue('');
-        this.showAtachmentAnswer = false;
+        this.answerAtachmentSrc = '';
     }
-    objectsAreSame(x, y) {
+    objectsAreSame(x, y): boolean {
         let objectsAreSame = true;
         for (const propertyName in x) {
             if (x[propertyName] !== y[propertyName]) {
@@ -260,17 +288,7 @@ export class AnswersComponent implements OnInit {
     }
 
     //create question part
-    getQuestionAttachment(): Observable<any> {
-        const file = this.atachmentQuestion.value;
-        if (!file) {
-            return of('');
-        } else if (typeof file === 'string') {
-            return of(file);
-        } else {
-            return this.getImageBase64(file._files[0]);
-        }
-    }
-    createQuestionData() {
+    createQuestionData(): void {
         this.sendQuestionData = {
             question_id: this.questionId,
             test_id: this.testId,
@@ -282,70 +300,101 @@ export class AnswersComponent implements OnInit {
                 : '',
         };
     }
-    createQuestion() {
-        this.getQuestionAttachment()
-            .pipe(
-                concatMap((res) => {
-                    this.sendQuestionData.attachment = res;
-                    if (this.createMode) {
-                        return this.answerServise.createQuestionRequest(
-                            this.sendQuestionData
-                        );
-                    } else if (!this.compareQuestions()) {
-                        return this.answerServise.updateQuestion(
-                            this.sendQuestionData,
-                            this.questionId
-                        );
-                    } else {
-                        return of(null);
-                    }
-                })
-            )
-            .subscribe((res: questionData) => {
-                if (res === null) {
-                } else if (this.questionId === res[0].question_id) {
-                    this.openModal('Alert', 'Question Update', AlertComponent);
-                } else if (res) {
-                    this.openModal('Alert', 'Question Create', AlertComponent);
-                    this.questionId = res[0].question_id;
-                }
-                this.sendAnswerDataRequest();
-                this.navigateToQuestionPage(res);
+    inputQuestionAtachment(): void {
+        const atachment = this.answerForm.get('atachmentQuestion');
+        if (atachment.value._files[0]) {
+            this.getImageBase64(atachment.value._files[0]).subscribe((res) => {
+                atachment.setValue(res);
+                this.attachmentQuestionSrc = res;
             });
+        } else {
+            atachment.setValue('');
+        }
+    }
+    createQuestion(): void {
+        if (this.createMode) {
+            this.answerServise
+                .createQuestionRequest(this.sendQuestionData)
+                .subscribe((res: QuestionData) => {
+                    this.openModal(
+                        this.alert.titleAlert,
+                        this.alert.messageQuestionCreate,
+                        AlertComponent
+                    );
+                    this.questionId = res[0].question_id;
+                    this.sendAnswerDataRequest();
+                    this.navigateToQuestionPage();
+                });
+        } else if (!this.compareQuestions()) {
+            this.answerServise
+                .updateQuestion(this.sendQuestionData, this.questionId)
+                .subscribe((res: QuestionData) => {
+                    if (this.questionId === res[0].question_id) {
+                        this.openModal(
+                            this.alert.titleAlert,
+                            this.alert.messageQuestionUpdate,
+                            AlertComponent
+                        );
+                    }
+                    this.sendAnswerDataRequest();
+                    this.navigateToQuestionPage();
+                });
+        } else {
+            this.sendAnswerDataRequest();
+            this.navigateToQuestionPage();
+        }
     }
 
     // create answer part
 
-    addAnswer(e) {
+    addAnswer(e: MouseEvent): void {
         e.preventDefault();
         this.noChanges = true;
         this.noAnswers = false;
         this.showAnswers = true;
         this.answersType.push(this.newAnswersType());
     }
-    removeAnswer(index: number) {
+
+    removeAnswer(e: MouseEvent, index: number): void {
+        e.preventDefault();
         const removeId = this.idAnswerArray[index];
-
-        this.modalService.openModal(ConfirmComponent, {
-            data: {
-                icon: 'question_answer',
-                message: 'Ви впевнені що бажаєте видалити цю відповідь?',
-            },
-        });
-
         if (!this.createMode && removeId) {
-            const removeId = this.idAnswerArray[index];
-            this.answerServise
-                .deleteAnswer(+removeId)
-                .subscribe((res: Response) => {
-                    if (res.response === 'ok') {
-                        this.idAnswerArray.splice(index, 1);
-                    }
-                });
+            this.modalService.openModal(
+                ConfirmComponent,
+                {
+                    data: {
+                        icon: this.confirmIcon,
+                        message: this.alert.messageConfirm,
+                    },
+                },
+                (result) => {
+                    dialog(result);
+                }
+            );
+            const dialog = (res: boolean) => {
+                if (res) {
+                    this.answerServise
+                        .deleteAnswer(+removeId)
+                        .subscribe((res: Response) => {
+                            if (res.response === 'ok') {
+                                this.answersType.removeAt(index);
+                                this.idAnswerArray.splice(index, 1);
+                                this.openModal(
+                                    this.alert.titleAlert,
+                                    this.alert.messageAnswerDelete,
+                                    AlertComponent
+                                );
+                            }
+                        });
+                } else {
+                    return;
+                }
+            };
+        } else {
+            this.answersType.removeAt(index);
         }
-        this.answersType.removeAt(index);
     }
-    getTrueAnswer(item) {
+    getTrueAnswer(item): string {
         switch (this.typeOfQuestion) {
             case '1':
                 if (item.trueAnswerSimple) {
@@ -363,22 +412,22 @@ export class AnswersComponent implements OnInit {
                 return '1';
         }
     }
-    inputAnswerAtachment(index: number) {
+    inputAnswerAtachment(index: number): void {
         const atachment = this.answersType.controls[index].get(
             'atachmentAnswer'
         );
         if (this.answersType.value[index].atachmentAnswer._files[0]) {
             this.getImageBase64(
                 this.answersType.value[index].atachmentAnswer._files[0]
-            ).subscribe((res) => {
-                atachment.setValue(res);
+            ).subscribe((res: string) => {
                 this.answerAtachmentSrc = res;
+                atachment.setValue(res);
             });
         } else {
             atachment.setValue('');
         }
     }
-    getImageBase64(file) {
+    getImageBase64(file): Observable<any> {
         const reader = new FileReader();
         return new Observable((observer: Observer<any>) => {
             reader.readAsDataURL(file);
@@ -402,10 +451,10 @@ export class AnswersComponent implements OnInit {
                 return false;
         }
     }
-    createAnswer() {
+    createAnswer(): void {
         this.sendAnswerData = [];
         const formFieldsValue = this.answerForm.value;
-        formFieldsValue.answersType.map((item) => {
+        formFieldsValue.answersType.map((item: AnswerType) => {
             {
                 this.sendAnswerData.push({
                     answer_id: item.answer_id,
@@ -442,8 +491,7 @@ export class AnswersComponent implements OnInit {
             }
         }
     }
-
-    changeType() {
+    changeTypeQuestion(): void {
         switch (this.typeOfQuestion) {
             case '4':
                 this.showAnswersNumeric = true;
@@ -455,8 +503,8 @@ export class AnswersComponent implements OnInit {
                 break;
         }
     }
-    checkRadioBtn(id) {
-        this.answersType.value.map((elem, index) => {
+    checkRadioBtn(id: number): void {
+        this.answersType.value.map((elem: AnswerType, index: number) => {
             if (id !== index) {
                 this.answersType.controls[index]
                     .get('trueAnswerSimple')
@@ -465,27 +513,35 @@ export class AnswersComponent implements OnInit {
         });
     }
 
-    sendAnswerDataRequest() {
+    sendAnswerDataRequest(): void {
         if (this.createMode) {
             this.createAnswer();
         }
         if (!this.createMode && this.updateAnswers) {
             this.finaleCompare();
         }
-        this.sendAnswerData.map((elem, index) => {
+        this.sendAnswerData.map((elem) => {
             if (this.createMode || !elem.answer_id) {
                 delete elem.answer_id;
                 return this.answerServise
                     .createAnswerRequest(elem)
-                    .subscribe((res) => {});
+                    .subscribe((res: AnswerData) => {
+                        if (res[0].answer_id && this.compareQuestions()) {
+                            this.openModal(
+                                this.alert.titleAlert,
+                                this.alert.messageAnswerCreate,
+                                AlertComponent
+                            );
+                        }
+                    });
             } else if (this.idAnswerArray.includes(elem.answer_id)) {
                 return this.answerServise
                     .updateAnswer(elem, elem.answer_id)
                     .subscribe((res) => {
                         if (this.compareQuestions() && res) {
                             this.openModal(
-                                'Alert',
-                                'Answers Updated',
+                                this.alert.titleAlert,
+                                this.alert.messageAnswerUpdate,
                                 AlertComponent
                             );
                         }
@@ -493,7 +549,7 @@ export class AnswersComponent implements OnInit {
             }
         });
     }
-    createQuestionAndAnswer() {
+    createQuestionAndAnswer(): void {
         if (!this.compareAnswers() && !this.createMode) {
             this.createAnswer();
         }
@@ -503,24 +559,23 @@ export class AnswersComponent implements OnInit {
                 this.answersTypeNumeric.invalid) ||
             (this.compareAnswers() && this.compareQuestions())
         ) {
-            let message = 'Питання повинне містити відповіді';
+            let message = this.alert.messageNoAnswer;
             if (
                 this.answersTypeNumeric.errors?.comparisonError &&
                 this.typeOfQuestion === '4'
             ) {
-                message =
-                    'Мінімальне значення не може бути більше або рівне макcимального';
+                message = this.alert.messageNumCompare;
             } else if (this.compareAnswers() && this.compareQuestions()) {
-                message = 'Для редагування внесіть зміни в форму';
+                message = this.alert.messageNoEdit;
             }
-            this.openModal(this.alertMessage, message, AlertComponent);
+            this.openModal(this.alert.titleAlert, message, AlertComponent);
             return;
         } else if (this.answerForm.controls.answersType.invalid) {
             return;
         } else if (this.isTrueAnswer()) {
             this.openModal(
-                'Помилка',
-                'Відсутня правильна відповідь',
+                this.alert.titleError,
+                this.alert.messageNoTruAnswer,
                 AlertComponent
             );
             return;
@@ -528,31 +583,32 @@ export class AnswersComponent implements OnInit {
             this.createQuestion();
         }
     }
-    cancelRedirect(e) {
+    cancelButton(e: MouseEvent): void {
         e.preventDefault();
-        this.router.navigate([`admin/subjects/tests/${this.testId}/questions`]);
-    }
-    navigateToQuestionPage(data: questionData) {
         this.router.navigate(
             [`admin/subjects/tests/${this.testId}/questions`],
             {
-                state: { data: data },
+                queryParams: {
+                    test_id: this.testId,
+                },
             }
         );
     }
-    openModal(title: string, message: string, component: any) {
+    navigateToQuestionPage(): void {
+        this.router.navigate(
+            [`admin/subjects/tests/${this.testId}/questions`],
+            {
+                queryParams: {
+                    test_id: this.testId,
+                },
+            }
+        );
+    }
+    openModal(title: string, message: string, component: any): void {
         this.modalService.openModal(component, {
             data: {
                 message,
                 title,
-            },
-        });
-    }
-    openModalConfrim() {
-        this.modalService.openModal(ConfirmComponent, {
-            data: {
-                icon: 'question_answer',
-                message: 'Ви впевнені що бажаєте видалити цю відповідь?',
             },
         });
     }

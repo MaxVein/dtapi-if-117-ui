@@ -1,24 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import { NavigationExtras, Router } from '@angular/router';
-import { trigger, style, animate, transition } from '@angular/animations';
 import { FormBuilder, FormGroup } from '@angular/forms';
+
+import { ModalService } from '../../shared/services/modal.service';
 import { AuthService } from './auth.service';
 import { Logged, Logo, Login } from '../../shared/interfaces/auth.interfaces';
 import { Response } from '../../shared/interfaces/entity.interfaces';
 
 @Component({
-    animations: [
-        trigger('inOutAnimation', [
-            transition(':enter', [
-                style({ opacity: 0 }),
-                animate('1s ease-out', style({ opacity: 1 })),
-            ]),
-            transition(':leave', [
-                style({ opacity: 1 }),
-                animate('1s ease-in', style({ opacity: 0 })),
-            ]),
-        ]),
-    ],
     selector: 'app-login',
     templateUrl: './login.component.html',
     styleUrls: ['./login.component.scss'],
@@ -34,6 +23,7 @@ export class LoginComponent implements OnInit {
     private password: string;
 
     constructor(
+        public modalService: ModalService,
         private request: AuthService,
         private router: Router,
         private fb: FormBuilder
@@ -68,15 +58,9 @@ export class LoginComponent implements OnInit {
     }
 
     handlerError(err: any): void {
-        this.badRequest = true;
-        this.errorMessage = err.error.response;
-        this.removeErrorMessage();
-    }
-
-    removeErrorMessage(): void {
-        setTimeout(() => {
-            this.badRequest = false;
-        }, 1500);
+        if (err.error.response === 'Invalid login or password') {
+            this.modalService.showSnackBar('Неправильний логін або пароль');
+        }
     }
 
     getLogo(): void {
