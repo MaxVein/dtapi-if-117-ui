@@ -25,9 +25,12 @@ export class DetailsByQuestionComponent implements OnInit {
             return this.data.answer_ids.some((i) => i == item.answer_id);
         });
         if (!more.length) {
+            if (!this.data.answer_ids[0]) {
+                return 'Користувач не дав відповіді';
+            }
             return this.data.answer_ids;
         }
-        const toText = more.map((i) => i.answer_text).join(',');
+        let toText = more.map((i) => i.answer_text).join(', ');
 
         return toText;
     }
