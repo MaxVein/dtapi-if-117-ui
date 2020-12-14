@@ -146,7 +146,7 @@ export class AnswersComponent implements OnInit {
     }
     checkState(mode: string): void {
         if (this.state) {
-            let localState = this.state;
+            const localState = this.state;
             localStorage.setItem(
                 'state',
                 JSON.stringify({
@@ -155,7 +155,7 @@ export class AnswersComponent implements OnInit {
             );
         }
         if (mode === 'edit' && !this.state) {
-            let data = JSON.parse(localStorage.getItem('state'));
+            const data = JSON.parse(localStorage.getItem('state'));
             this.state = data.localState;
         }
         this.initializeEditMode();
