@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { forkJoin, Observable } from 'rxjs';
 import { map, pluck } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
+import { typeReverse } from './Question';
 
 @Injectable({
     providedIn: 'root',
@@ -19,24 +20,10 @@ export class QuestionService {
             .pipe(
                 map((arr: any[]) => {
                     const newarr = arr.map((item) => {
-                        switch (item.type) {
-                            case '1':
-                                item.type = 'Простий вибір';
-                                break;
-                            case '2':
-                                item.type = 'Мульти вибір';
-                                break;
-                            case '3':
-                                item.type = 'Текстове поле';
-                                break;
-                            case '4':
-                                item.type = 'Числове поле вводу';
-                                break;
-                        }
                         return {
                             question_id: item.question_id,
                             question_text: item.question_text,
-                            type: item.type,
+                            type: typeReverse(item.type),
                             level: item.level,
                         };
                     });
