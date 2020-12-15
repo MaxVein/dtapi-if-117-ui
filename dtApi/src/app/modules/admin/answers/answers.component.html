@@ -109,10 +109,10 @@
                             <mat-icon>delete</mat-icon>
                         </button>
                     </div>
-                    <mat-card *ngIf="answerAtachmentSrc">
+                    <mat-card *ngIf="answerAtachmentSrc[i]">
                         <img
                             class="image"
-                            src="{{ answerAtachmentSrc }}"
+                            src="{{ answerAtachmentSrc[i] }}"
                             alt="answer"
                         />
                         <span

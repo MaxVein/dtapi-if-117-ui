@@ -24,7 +24,7 @@ import { minMaxValidator } from './validators/minMaxValidator';
 export class AnswersComponent implements OnInit {
     allSubscription: Subscription;
     confirmIcon = 'question_answer';
-    answerAtachmentSrc = '';
+    answerAtachmentSrc: string[] = [];
     noChanges = false;
     updateAnswers: AnswerData[];
     alert = {
@@ -197,7 +197,7 @@ export class AnswersComponent implements OnInit {
             });
     }
     getAnswers(): void {
-        this.allSubscription = this.answerServise
+        this.answerServise
             .getAnswers(this.state.question_id)
             .subscribe((res: AnswerData[]) => {
                 this.answerForm.get('typeOfQuestion').disable();
@@ -235,6 +235,7 @@ export class AnswersComponent implements OnInit {
             });
         } else {
             result.map((item: AnswerData) => {
+                this.answerAtachmentSrc.push(item.attachment);
                 this.idAnswerArray.push(item.answer_id);
                 this.showAtachmentAnswer = item.attachment ? true : false;
                 const trueAnswer = item.true_answer;
@@ -291,7 +292,7 @@ export class AnswersComponent implements OnInit {
     }
     removeImageAnswer(i: number): void {
         this.answersType.controls[i].get('atachmentAnswer').setValue('');
-        this.answerAtachmentSrc = '';
+        this.answerAtachmentSrc[i] = '';
     }
     objectsAreSame(x, y): boolean {
         let objectsAreSame = true;
@@ -437,7 +438,7 @@ export class AnswersComponent implements OnInit {
             this.allSubscription = this.getImageBase64(
                 this.answersType.value[index].atachmentAnswer._files[0]
             ).subscribe((res: string) => {
-                this.answerAtachmentSrc = res;
+                this.answerAtachmentSrc[index] = res;
                 atachment.setValue(res);
             });
         } else {
@@ -468,7 +469,7 @@ export class AnswersComponent implements OnInit {
                 return false;
         }
     }
-    createAnswer(): void {
+    createAnswerData(): void {
         this.sendAnswerData = [];
         const formFieldsValue = this.answerForm.value;
         if (this.typeOfQuestion === '4') {
@@ -534,7 +535,7 @@ export class AnswersComponent implements OnInit {
     sendAnswerDataRequest(): void {
         let counter: number = null;
         if (this.createMode) {
-            this.createAnswer();
+            this.createAnswerData();
         }
         if (!this.createMode && this.updateAnswers) {
             this.getIdOfUpdateAnswer();
@@ -571,12 +572,14 @@ export class AnswersComponent implements OnInit {
         }
     }
     createQuestionAndAnswer(): void {
-        this.createAnswer();
+        this.createAnswerData();
         this.createQuestionData();
         if (
             (this.answersType.controls.length === 0 &&
                 this.answersTypeNumeric.invalid) ||
-            (this.compareAnswers() && this.compareQuestions())
+            (this.compareAnswers() && this.compareQuestions()) ||
+            (this.answersTypeNumeric.errors?.comparisonError &&
+                this.typeOfQuestion === '4')
         ) {
             let message = this.alert.messageNoAnswer;
             if (
