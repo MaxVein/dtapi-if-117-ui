@@ -50,6 +50,24 @@
                     class="operation-button"
                     mat-flat-button
                     color="primary"
+                    (click)="redirectToTimetable(element)"
+                    matTooltip="Перейти до розкладу"
+                >
+                    <mat-icon class="mat-18">date_range</mat-icon>
+                </button>
+                <button
+                    class="operation-button"
+                    mat-flat-button
+                    color="primary"
+                    (click)="redirectToTests(element.subject_id)"
+                    matTooltip="Перейти до тестів"
+                >
+                    <mat-icon class="mat-18">fact_check</mat-icon>
+                </button>
+                <button
+                    class="operation-button"
+                    mat-flat-button
+                    color="primary"
                     (click)="onEdit(element)"
                     matTooltip="Оновити"
                 >
@@ -63,15 +81,6 @@
                     matTooltip="Видалити"
                 >
                     <mat-icon class="mat-18">delete</mat-icon>
-                </button>
-                <button
-                    class="operation-button"
-                    mat-flat-button
-                    color="primary"
-                    (click)="redirectToTests(element.subject_id)"
-                    matTooltip="Перейти до тестів"
-                >
-                    <mat-icon class="mat-18">fact_check</mat-icon>
                 </button>
             </td>
         </ng-container>

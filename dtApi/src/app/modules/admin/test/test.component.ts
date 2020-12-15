@@ -137,7 +137,6 @@ export class TestComponent implements OnInit {
         this.testSubscription = this.testService
             .updateEntity('test', test, id)
             .subscribe((data: Test) => {
-                this.dataSource.data = this.dataSource.data.concat(data);
                 const newSourse = this.dataSource.data.map((item) => {
                     if (item.test_id === id) {
                         return (item = {
