@@ -108,7 +108,7 @@ export class DashboardComponent implements OnInit {
                 title: 'Результати',
                 icon: 'insights',
                 count: null,
-                link: '/admin/result',
+                link: '/admin/results',
             },
             {
                 title: 'Протокол',
