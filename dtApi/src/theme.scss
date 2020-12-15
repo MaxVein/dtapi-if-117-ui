@@ -90,3 +90,7 @@ $dark-theme: mat-dark-theme($dark-primary, $dark-accent, $dark-warn);
 .dark-theme .dark-btn {
     background: inherit !important;
 }
+.dark-theme .showRate {
+    background: #424242 !important;
+    border-bottom: 0.5px solid #595959 !important;
+}

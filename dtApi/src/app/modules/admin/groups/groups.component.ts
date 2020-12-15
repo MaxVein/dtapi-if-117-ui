@@ -1,4 +1,4 @@
-import { Component, ViewChild, OnInit } from '@angular/core';
+import { Component, ViewChild, OnInit, AfterViewInit } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatDialog } from '@angular/material/dialog';
@@ -18,7 +18,7 @@ let ELEMENT_DATA: GroupData[];
     templateUrl: './groups.component.html',
     styleUrls: ['./groups.component.scss'],
 })
-export class GroupsComponent implements OnInit {
+export class GroupsComponent implements OnInit, AfterViewInit {
     loading: boolean;
     specialities: Array<{
         speciality_id: string;
@@ -57,9 +57,15 @@ export class GroupsComponent implements OnInit {
         private router: Router
     ) {}
 
-    ngOnInit() {
+    ngOnInit(): void {
         this.loading = true;
         this.getGroups();
+    }
+
+    ngAfterViewInit(): void {
+        this.paginator._intl.itemsPerPageLabel = 'Рядків у таблиці';
+        this.dataSource.paginator = this.paginator;
+        this.dataSource.sort = this.sort;
     }
 
     private getGroups(): void {

@@ -1,5 +1,5 @@
-import { Component, ViewChild, OnInit } from '@angular/core';
-import { Subscription } from 'rxjs';
+import { Component, ViewChild, OnInit, AfterViewInit } from '@angular/core';
+import { Observable, Subscription } from 'rxjs';
 import { ActivatedRoute } from '@angular/router';
 
 import { TestService } from '../test/services/test.service';
@@ -18,7 +18,7 @@ import { ConfirmDeleteComponent } from '../groups/confirm-delete/confirm-delete.
     templateUrl: './test-detailes.component.html',
     styleUrls: ['./test-detailes.component.scss'],
 })
-export class TestDetailesComponent implements OnInit {
+export class TestDetailesComponent implements OnInit, AfterViewInit {
     tests: TestDetails[] = [];
     test_id: number;
     testRate: string;
@@ -39,11 +39,17 @@ export class TestDetailesComponent implements OnInit {
         public dialog: MatDialog
     ) {}
 
-    ngOnInit() {
+    ngOnInit(): void {
         this.route.queryParams.subscribe((param) => {
             this.test_id = param['test_id'];
         });
         this.getTestDetails(this.test_id);
+    }
+
+    ngAfterViewInit(): void {
+        this.paginator._intl.itemsPerPageLabel = 'Рядків у таблиці';
+        this.dataSource.paginator = this.paginator;
+        this.dataSource.sort = this.sort;
     }
 
     getTestDetails(id: number): void {

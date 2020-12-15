@@ -51,6 +51,7 @@ export class SubjectsHomeComponent implements OnInit, AfterViewInit {
     }
 
     ngAfterViewInit(): void {
+        this.paginator._intl.itemsPerPageLabel = 'Рядків у таблиці';
         this.dataSource.sort = this.sort;
         this.dataSource.paginator = this.paginator;
     }
@@ -149,9 +150,14 @@ export class SubjectsHomeComponent implements OnInit, AfterViewInit {
         });
     }
 
-    public doFilter = (value: string) => {
-        this.dataSource.filter = value.trim().toLocaleLowerCase();
-    };
+    applyFilter(event: Event): void {
+        const filterValue = (event.target as HTMLInputElement).value;
+        this.dataSource.filter = filterValue.trim().toLowerCase();
+        if (this.dataSource.paginator) {
+            this.dataSource.paginator.firstPage();
+        }
+    }
+
     public redirectToTests(id: string) {
         this.router.navigate(['admin/subjects/tests/', id], {});
     }

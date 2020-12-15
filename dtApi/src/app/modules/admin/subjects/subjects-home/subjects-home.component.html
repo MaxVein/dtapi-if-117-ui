@@ -8,15 +8,18 @@
         <mat-icon>add_circle</mat-icon> Додати Предмет
     </button>
 </div>
-<mat-form-field>
+<mat-form-field class="entity-table-filter filter">
+    <mat-label class="entity-search-label">
+        <mat-icon class="entity-search-icon">person_search</mat-icon>
+        Пошук
+    </mat-label>
     <input
         matInput
-        type="text"
-        (keyup)="doFilter($event.target.value)"
-        placeholder="Пошук"
+        (keyup)="applyFilter($event)"
+        placeholder="Здійснюйте фільтрацію по всіх колонках таблиці"
+        #input
     />
 </mat-form-field>
-
 <div class="mat-elevation-z8">
     <table mat-table [dataSource]="dataSource" matSort matSortStart="desc">
         <ng-container matColumnDef="№">
@@ -84,6 +87,11 @@
 
         <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
         <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+        <tr class="mat-row" *matNoDataRow>
+            <td class="mat-cell" colspan="4">
+                Нічого не знайдено за заданим фільтром "{{ input.value }}"
+            </td>
+        </tr>
     </table>
     <mat-paginator [pageSizeOptions]="[5, 10, 15, 20, 25]"> </mat-paginator>
 </div>
