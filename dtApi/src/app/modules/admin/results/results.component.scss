@@ -29,3 +29,15 @@ th {
         font-size: 1.6rem;
     }
 }
+.entity-title {
+    display: flex;
+    align-items: center;
+    .mat-icon {
+        width: auto;
+        height: auto;
+    }
+    .results-title-icon {
+        font-size: 2rem;
+        margin-right: 0.5rem;
+    }
+}
