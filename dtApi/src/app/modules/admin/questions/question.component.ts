@@ -137,9 +137,11 @@ export class QuestionComponent implements OnInit {
                 }
                 this.questionService
                     .getQuestions(this.test_id, numbersOfRecords)
-                    .subscribe((val: any) => {
+                    .subscribe((val: []) => {
                         this.dataSource = new MatTableDataSource(val);
                         this.dataSource.paginator = this.paginator;
+                        this.paginator._intl.itemsPerPageLabel =
+                            'Рядків у таблиці';
                         this.dataSource.sort = this.sort;
                     });
             });
