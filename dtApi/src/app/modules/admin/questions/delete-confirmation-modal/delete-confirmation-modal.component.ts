@@ -6,7 +6,7 @@ import { of } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 import { AnswersService } from '../../answers/answers.service';
 import { AnswerData } from '../../answers/answersInterfaces';
-import { QuestionData, QuestionInstance } from '../Question';
+import { QuestionData } from '../Question';
 import { QuestionService } from '../question.service';
 
 @Component({

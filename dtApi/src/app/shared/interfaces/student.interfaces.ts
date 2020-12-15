@@ -35,6 +35,7 @@ export interface TestDate {
     subject_id?: string;
     timetable_id?: string;
     response?: string;
+    subjectname?: string;
 }
 
 export interface SpecialityDataProfile {
