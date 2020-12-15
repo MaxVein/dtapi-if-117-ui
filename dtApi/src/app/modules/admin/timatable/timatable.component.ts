@@ -83,7 +83,7 @@ export class TimatableComponent implements OnInit {
     }
 
     getGroupName(id: string, groups) {
-        let newSource = groups.filter((element) => element.group_id === id);
+        const newSource = groups.filter((element) => element.group_id === id);
         return newSource[0].group_name;
     }
 
@@ -151,9 +151,9 @@ export class TimatableComponent implements OnInit {
     }
 
     getDate(Date: Date) {
-        let currDate = Date.getDate();
-        let currMonth = Date.getMonth() + 1;
-        let currYear = Date.getFullYear();
+        const currDate = Date.getDate();
+        const currMonth = Date.getMonth() + 1;
+        const currYear = Date.getFullYear();
         return currYear + '-' + currMonth + '-' + currDate;
     }
     editTest(timetable: TimeTable, id: string): void {
