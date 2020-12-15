@@ -9,7 +9,6 @@ import { Subscription } from 'rxjs';
 import { SubjectsService } from '../subjects.service';
 import { ModalComponent } from '../modal/modal.component';
 import { ModalService } from 'src/app/shared/services/modal.service';
-import { ConfirmComponent } from 'src/app/shared/components/confirm/confirm.component';
 import { ConfirmDeleteComponent } from '../../groups/confirm-delete/confirm-delete.component';
 
 interface SubjectsResponse {
@@ -155,6 +154,14 @@ export class SubjectsHomeComponent implements OnInit, AfterViewInit {
     };
     public redirectToTests(id: string) {
         this.router.navigate(['admin/subjects/tests/', id], {});
+    }
+    public redirectToTimetable(subject: SubjectsResponse) {
+        this.router.navigate(['admin/subjects/timetable/'], {
+            queryParams: {
+                subject_name: subject.subject_name,
+                subject_id: subject.subject_id,
+            },
+        });
     }
     ngOnDestroy(): void {
         if (this.subjectSubscription) {

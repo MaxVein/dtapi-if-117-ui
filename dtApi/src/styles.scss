@@ -19,7 +19,12 @@ td,
 th {
     width: 25%;
 }
-
+.mat-calendar-table {
+    th,
+    td {
+        width: 0% !important;
+    }
+}
 .custom-dialog-container {
     mat-dialog-container {
         padding: 0px;

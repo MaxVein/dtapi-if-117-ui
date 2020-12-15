@@ -1,0 +1,80 @@
+<!-- <h3 mat-dialog-title>{{data.description.title}}</h3> -->
+<form [formGroup]="form" (ngSubmit)="sendTimetable()" class="timatable">
+    <div mat-dialog-content>
+        <mat-form-field class="example-full-width">
+            <mat-label>Група</mat-label>
+            <mat-select formControlName="group_id">
+                <mat-option
+                    *ngFor="let group of data.groups"
+                    [value]="group.group_id"
+                >
+                    {{ group.group_name }}
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+    </div>
+    <div class="options">
+        <mat-form-field appearance="fill">
+            <mat-label>Дата початку</mat-label>
+            <input
+                matInput
+                [matDatepicker]="picker1"
+                placeholder="Виберіть початкову дату"
+                formControlName="start_date"
+            />
+            <mat-datepicker-toggle
+                matSuffix
+                [for]="picker1"
+            ></mat-datepicker-toggle>
+            <mat-datepicker #picker1 disabled="false"></mat-datepicker>
+            <mat-error
+                >Початкова дата не може бути меншою за сьогоднішню</mat-error
+            >
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+            <mat-label>Час початку</mat-label>
+            <input
+                matInput
+                placeholder="Виберіть початкову годину"
+                formControlName="start_time"
+                pattern="^((2[0-3]|[01]?[0-9]):([0-5]?[0-9]):([0-5]?[0-9]))|((2[0-3]|[01]?[0-9]):([0-5]?[0-9]))$"
+            />
+            <mat-error>Формат часу: 09:35</mat-error>
+        </mat-form-field>
+    </div>
+    <div class="options">
+        <mat-form-field appearance="outline">
+            <mat-label>Дата закінчекння</mat-label>
+            <input
+                matInput
+                [matDatepicker]="picker2"
+                placeholder="Виберіть кінцеву дату"
+                formControlName="end_date"
+            />
+            <mat-datepicker-toggle
+                matSuffix
+                [for]="picker2"
+            ></mat-datepicker-toggle>
+            <mat-datepicker #picker2 disabled="false"></mat-datepicker>
+            <mat-error
+                >Кінцева дата менша за початкову або сьогоднішню</mat-error
+            >
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+            <mat-label>Час закінчення</mat-label>
+            <input
+                matInput
+                placeholder="Виберіть кінцеву годину"
+                formControlName="end_time"
+                pattern="^((2[0-3]|[01]?[0-9]):([0-5]?[0-9]):([0-5]?[0-9]))|((2[0-3]|[01]?[0-9]):([0-5]?[0-9]))$"
+            />
+            <mat-error>Формат часу: 09:35</mat-error>
+        </mat-form-field>
+    </div>
+    <div class="toolbar" mat-dialog-actions>
+        <button mat-raised-button mat-dialog-close>Відмінити</button>
+        <button mat-button type="submit" [disabled]="form.invalid">
+            Зберегти
+        </button>
+    </div>
+</form>
