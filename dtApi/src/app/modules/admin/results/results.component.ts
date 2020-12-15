@@ -56,17 +56,7 @@ export class ResultsComponent implements OnInit {
     onChange($event) {
         this.resultService.getResultTestIdsByGroup($event.value).subscribe({
             next: (res: any) => {
-                if (res.response) {
-                    this.testsList = null;
-                    this.form.get('testName').reset();
-                    this.resultService.snackBarOpen();
-                } else {
-                    this.form.get('testName').reset();
-                    this.groupId = $event.value;
-                    this.testsList = this.testsListByGroup.filter((i) =>
-                        res.some((j) => j.test_id === i.test_id)
-                    );
-                }
+                this.filteredTestOptions(res, $event);
             },
         });
     }
@@ -79,23 +69,8 @@ export class ResultsComponent implements OnInit {
                     this.groupId
                 ),
             ]).subscribe({
-                next: ([gropuRes, testRes]) => {
-                    this.testResults = testRes;
-                    this.studentsResultsByGroup = gropuRes;
-                    this.dataSource.data = this.testResults.map((item) => {
-                        const duration = this.resultService.getDuration(
-                            item.session_date,
-                            item.start_time,
-                            item.end_time
-                        );
-
-                        const studentInfo = this.studentsResultsByGroup.filter(
-                            (data) => data.user_id === item.student_id
-                        );
-                        return Object.assign({}, item, ...studentInfo, {
-                            duration,
-                        });
-                    });
+                next: ([groupRes, testRes]) => {
+                    this.getTestInfoByGroup(groupRes, testRes);
                 },
             });
         }
@@ -105,6 +80,37 @@ export class ResultsComponent implements OnInit {
         if ($event.value) {
             this.testId = $event.value;
         }
+    }
+    private filteredTestOptions(res, $event) {
+        if (res.response) {
+            this.testsList = null;
+            this.form.get('testName').reset();
+            this.resultService.snackBarOpen();
+        } else {
+            this.form.get('testName').reset();
+            this.groupId = $event.value;
+            this.testsList = this.testsListByGroup.filter((i) =>
+                res.some((j) => j.test_id === i.test_id)
+            );
+        }
+    }
+    private getTestInfoByGroup(groupRes, testRes) {
+        this.testResults = testRes;
+        this.studentsResultsByGroup = groupRes;
+        this.dataSource.data = this.testResults.map((item) => {
+            const duration = this.resultService.getDuration(
+                item.session_date,
+                item.start_time,
+                item.end_time
+            );
+
+            const studentInfo = this.studentsResultsByGroup.filter(
+                (data) => data.user_id === item.student_id
+            );
+            return Object.assign({}, item, ...studentInfo, {
+                duration,
+            });
+        });
     }
 
     private formInitialize() {
