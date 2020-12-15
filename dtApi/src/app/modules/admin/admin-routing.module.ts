@@ -108,6 +108,13 @@ const routes: Routes = [
                             },
                         ],
                     },
+                    {
+                        path: 'timetable',
+                        loadChildren: () =>
+                            import('./timatable/timatable.module').then(
+                                (m) => m.TimatableModule
+                            ),
+                    },
                 ],
             },
             {

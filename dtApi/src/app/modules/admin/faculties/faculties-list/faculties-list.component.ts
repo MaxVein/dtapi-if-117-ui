@@ -1,7 +1,7 @@
 import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
 
 import { MatPaginator } from '@angular/material/paginator';
-import { MatDialog, MatDialogRef } from '@angular/material/dialog';
+import { MatDialogRef } from '@angular/material/dialog';
 import { MatTableDataSource } from '@angular/material/table';
 
 import { Faculty } from '../../../../shared/interfaces/entity.interfaces';
@@ -15,7 +15,7 @@ import { DialogService } from '../dialog.service';
     templateUrl: './faculties-list.component.html',
     styleUrls: ['./faculties-list.component.scss'],
 })
-export class FacultiesListComponent implements OnInit {
+export class FacultiesListComponent implements OnInit, AfterViewInit {
     dataSource = new MatTableDataSource<Faculty>();
     displayedColumns: string[] = ['id', 'name', 'description', 'buttons'];
     fileNameDialogRef: MatDialogRef<ModalFormComponent>;
@@ -32,6 +32,7 @@ export class FacultiesListComponent implements OnInit {
         this.getFaculty();
     }
     ngAfterViewInit(): void {
+        this.paginator._intl.itemsPerPageLabel = 'Рядків у таблиці';
         this.dataSource.paginator = this.paginator;
     }
     applyFilter(event: Event): void {

@@ -9,7 +9,6 @@ import { Subscription } from 'rxjs';
 import { SubjectsService } from '../subjects.service';
 import { ModalComponent } from '../modal/modal.component';
 import { ModalService } from 'src/app/shared/services/modal.service';
-import { ConfirmComponent } from 'src/app/shared/components/confirm/confirm.component';
 import { ConfirmDeleteComponent } from '../../groups/confirm-delete/confirm-delete.component';
 
 interface SubjectsResponse {
@@ -52,6 +51,7 @@ export class SubjectsHomeComponent implements OnInit, AfterViewInit {
     }
 
     ngAfterViewInit(): void {
+        this.paginator._intl.itemsPerPageLabel = 'Рядків у таблиці';
         this.dataSource.sort = this.sort;
         this.dataSource.paginator = this.paginator;
     }
@@ -150,11 +150,24 @@ export class SubjectsHomeComponent implements OnInit, AfterViewInit {
         });
     }
 
-    public doFilter = (value: string) => {
-        this.dataSource.filter = value.trim().toLocaleLowerCase();
-    };
+    applyFilter(event: Event): void {
+        const filterValue = (event.target as HTMLInputElement).value;
+        this.dataSource.filter = filterValue.trim().toLowerCase();
+        if (this.dataSource.paginator) {
+            this.dataSource.paginator.firstPage();
+        }
+    }
+
     public redirectToTests(id: string) {
         this.router.navigate(['admin/subjects/tests/', id], {});
+    }
+    public redirectToTimetable(subject: SubjectsResponse) {
+        this.router.navigate(['admin/subjects/timetable/'], {
+            queryParams: {
+                subject_name: subject.subject_name,
+                subject_id: subject.subject_id,
+            },
+        });
     }
     ngOnDestroy(): void {
         if (this.subjectSubscription) {

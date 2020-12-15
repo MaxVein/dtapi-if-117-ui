@@ -40,18 +40,39 @@
         </ng-container>
         <ng-container matColumnDef="buttons">
             <th mat-header-cell *matHeaderCellDef>Дія</th>
-            <td mat-cell *matCellDef="let element" class="action-link">
-                <a (click)="editSpeciality(element)"
-                    ><i class="material-icons edit"> edit </i></a
+            <td
+                mat-cell
+                *matCellDef="let element"
+                class="entity-operation-buttons"
+            >
+                <button
+                    class="entity-operation-button"
+                    mat-flat-button
+                    color="primary"
+                    (click)="editSpeciality(element)"
+                    matTooltip="Редагувати спеціальність"
                 >
-                <a (click)="deleteSpeciality(element)"
-                    ><i class="material-icons delete"> delete </i></a
+                    <mat-icon class="entity-operation-icon">edit</mat-icon>
+                </button>
+                <button
+                    class="entity-operation-button"
+                    mat-flat-button
+                    color="primary"
+                    matTooltip="Видалити спеціальність"
+                    (click)="deleteSpeciality(element)"
                 >
+                    <mat-icon class="entity-operation-icon">delete</mat-icon>
+                </button>
             </td>
         </ng-container>
 
         <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
         <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+        <tr class="mat-row" *matNoDataRow>
+            <td class="mat-cell" colspan="4">
+                Нічого не знайдено за заданим фільтром "{{ input.value }}"
+            </td>
+        </tr>
     </table>
     <mat-paginator
         class="paginator"

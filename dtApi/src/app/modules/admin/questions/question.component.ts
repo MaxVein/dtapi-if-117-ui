@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -20,7 +20,7 @@ import { UpdateQuestionModalComponent } from './update-question-modal/update-que
     styleUrls: ['./question.component.scss'],
     providers: [QuestionService],
 })
-export class QuestionComponent implements OnInit {
+export class QuestionComponent implements OnInit, AfterViewInit {
     displayedColumns: string[] = ['id', 'Text', 'Type', 'Level', 'operations'];
     dataSource: MatTableDataSource<[]>;
     questionsArray: Array<QuestionInstance> = [];
@@ -38,6 +38,12 @@ export class QuestionComponent implements OnInit {
         private questionService: QuestionService,
         private snackBar: MatSnackBar
     ) {}
+
+    ngAfterViewInit(): void {
+        this.paginator._intl.itemsPerPageLabel = 'Рядків у таблиці';
+        this.dataSource.paginator = this.paginator;
+        this.dataSource.sort = this.sort;
+    }
 
     applyFilter(event: Event): void {
         const filterValue = (event.target as HTMLInputElement).value;

@@ -71,21 +71,21 @@
                 </td>
             </ng-container>
             <ng-container matColumnDef="Кількість завдань">
-                <th mat-header-cell *matHeaderCellDef>Кількість завдань</th>
+                <th mat-header-cell *matHeaderCellDef>К-сть завдань</th>
                 <td mat-cell *matCellDef="let test">{{ test.tasks }}</td>
             </ng-container>
             <ng-container matColumnDef="Тривалість тесту">
-                <th mat-header-cell *matHeaderCellDef>Тривалість тесту</th>
+                <th mat-header-cell *matHeaderCellDef>Тривалість</th>
                 <td mat-cell *matCellDef="let test">
                     {{ test.time_for_test }}
                 </td>
             </ng-container>
             <ng-container matColumnDef="Кількість спроб">
-                <th mat-header-cell *matHeaderCellDef>Кількість спроб</th>
+                <th mat-header-cell *matHeaderCellDef>К-сть спроб</th>
                 <td mat-cell *matCellDef="let test">{{ test.attempts }}</td>
             </ng-container>
             <ng-container matColumnDef="Почати тестування">
-                <th mat-header-cell *matHeaderCellDef>Почати тестування</th>
+                <th mat-header-cell *matHeaderCellDef>Здати тест</th>
                 <td mat-cell *matCellDef="let test">
                     <button
                         class="operation-button"
