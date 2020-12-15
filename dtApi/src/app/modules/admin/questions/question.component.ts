@@ -20,7 +20,7 @@ import { UpdateQuestionModalComponent } from './update-question-modal/update-que
     styleUrls: ['./question.component.scss'],
     providers: [QuestionService],
 })
-export class QuestionComponent implements OnInit, AfterViewInit {
+export class QuestionComponent implements OnInit {
     displayedColumns: string[] = ['id', 'Text', 'Type', 'Level', 'operations'];
     dataSource: MatTableDataSource<[]>;
     questionsArray: Array<QuestionInstance> = [];
@@ -38,12 +38,6 @@ export class QuestionComponent implements OnInit, AfterViewInit {
         private questionService: QuestionService,
         private snackBar: MatSnackBar
     ) {}
-
-    ngAfterViewInit(): void {
-        this.paginator._intl.itemsPerPageLabel = 'Рядків у таблиці';
-        this.dataSource.paginator = this.paginator;
-        this.dataSource.sort = this.sort;
-    }
 
     applyFilter(event: Event): void {
         const filterValue = (event.target as HTMLInputElement).value;
