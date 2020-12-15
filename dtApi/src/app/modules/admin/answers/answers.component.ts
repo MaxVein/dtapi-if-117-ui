@@ -575,8 +575,6 @@ export class AnswersComponent implements OnInit {
         this.createAnswerData();
         this.createQuestionData();
         if (
-            (this.answersType.controls.length === 0 &&
-                this.answersTypeNumeric.invalid) ||
             (this.compareAnswers() && this.compareQuestions()) ||
             (this.answersTypeNumeric.errors?.comparisonError &&
                 this.typeOfQuestion === '4')
