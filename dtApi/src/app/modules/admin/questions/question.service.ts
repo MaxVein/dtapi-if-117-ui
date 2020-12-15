@@ -3,7 +3,6 @@ import { Injectable } from '@angular/core';
 import { forkJoin, Observable } from 'rxjs';
 import { map, pluck } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
-import { answerData } from '../answers/answersInterfaces';
 import { QuestionInstance, typeReverse } from './Question';
 
 @Injectable({
