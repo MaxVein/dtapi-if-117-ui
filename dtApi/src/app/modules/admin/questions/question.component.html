@@ -9,7 +9,8 @@
 </div>
 <mat-form-field>
     <mat-label class="entity-search-label">
-        <mat-icon class="entity-search-icon">help</mat-icon> Пошук</mat-label
+        <mat-icon class="entity-search-icon">person_search</mat-icon>
+        Пошук</mat-label
     >
     <input
         matInput
@@ -85,7 +86,7 @@
         <!-- Row shown when there is no matching data. -->
         <tr class="mat-row" *matNoDataRow>
             <td class="mat-cell" colspan="4">
-                No data matching the filter "{{ input.value }}"
+                Нічого не знайдено за заданим фільтром "{{ input.value }}"
             </td>
         </tr>
     </table>

@@ -117,7 +117,7 @@ export function testLogError7(error: boolean): string {
     if (error) {
         return 'Error. User made test recently';
     } else {
-        return 'Користувач здав даний тест недавно. Зачекайте деякий час (до 1хв)';
+        return 'Користувач здав даний тест недавно. Зачекайте деякий час ( до 1хв )';
     }
 }
 
