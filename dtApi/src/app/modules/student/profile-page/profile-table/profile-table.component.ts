@@ -217,13 +217,14 @@ export class ProfileTableComponent implements OnInit, AfterViewInit, OnDestroy {
             });
     }
 
-    getSubName(id: string) {
+    getSubName(id: string): string {
         const currentSpec = this.subjects.filter(
             (item) => item.subject_id === id
         );
         return currentSpec[0].subject_name;
     }
-    getNewSubjects(res: TestDetails[]) {
+
+    getNewSubjects(res: TestDetails[]): void {
         res.forEach((elem) => {
             const newElem = this.subjects.filter(
                 (item) => elem.subject_id === item.subject_id

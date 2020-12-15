@@ -1,4 +1,4 @@
-import { Component, ViewChild, OnInit } from '@angular/core';
+import { Component, ViewChild, OnInit, AfterViewInit } from '@angular/core';
 import { Observable, Subscription } from 'rxjs';
 import { ActivatedRoute } from '@angular/router';
 
@@ -28,7 +28,7 @@ export interface TestRate {
     templateUrl: './test-detailes.component.html',
     styleUrls: ['./test-detailes.component.scss'],
 })
-export class TestDetailesComponent implements OnInit {
+export class TestDetailesComponent implements OnInit, AfterViewInit {
     tests: TestDetails[] = [];
     test_id: number;
     testRate: string;
@@ -49,12 +49,18 @@ export class TestDetailesComponent implements OnInit {
         public dialog: MatDialog
     ) {}
 
-    ngOnInit() {
+    ngOnInit(): void {
         this.route.queryParams.subscribe((param) => {
             this.test_id = param['test_id'];
         });
         this.getTestDetails(this.test_id);
         this.getTestRate(this.test_id);
+        this.dataSource.paginator = this.paginator;
+        this.dataSource.sort = this.sort;
+    }
+
+    ngAfterViewInit(): void {
+        this.paginator._intl.itemsPerPageLabel = 'Рядків у таблиці';
         this.dataSource.paginator = this.paginator;
         this.dataSource.sort = this.sort;
     }
