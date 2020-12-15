@@ -1,38 +1,28 @@
-import { Component, ViewChild, OnInit } from '@angular/core';
+import { Component, ViewChild, OnInit, AfterViewInit } from '@angular/core';
 import { Observable, Subscription } from 'rxjs';
 import { ActivatedRoute } from '@angular/router';
 
 import { TestService } from '../test/services/test.service';
 import { ModalService } from 'src/app/shared/services/modal.service';
+import { TestDetails, TestRate } from './test-detailes.interfaces';
 
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource, MatTable } from '@angular/material/table';
 import { MatSort } from '@angular/material/sort';
 import { MatDialog } from '@angular/material/dialog';
 import { TestDetailsDialogComponent } from './test-details-dialog/test-details-dialog.component';
-import { ConfirmComponent } from 'src/app/shared/components/confirm/confirm.component';
-
-export interface TestDetails {
-    test_id: number;
-    id: number;
-    level: string;
-    tasks: string;
-    rate: string;
-}
-export interface TestRate {
-    testRate: string;
-}
+import { ConfirmDeleteComponent } from '../groups/confirm-delete/confirm-delete.component';
 
 @Component({
     selector: 'app-test-detailes',
     templateUrl: './test-detailes.component.html',
     styleUrls: ['./test-detailes.component.scss'],
 })
-export class TestDetailesComponent implements OnInit {
+export class TestDetailesComponent implements OnInit, AfterViewInit {
     tests: TestDetails[] = [];
     test_id: number;
     testRate: string;
-
+    levels: number[];
     displayedColumns: string[] = ['id', 'level', 'tasks', 'rate', 'actions'];
 
     dataSource = new MatTableDataSource<TestDetails>();
@@ -49,12 +39,15 @@ export class TestDetailesComponent implements OnInit {
         public dialog: MatDialog
     ) {}
 
-    ngOnInit() {
+    ngOnInit(): void {
         this.route.queryParams.subscribe((param) => {
             this.test_id = param['test_id'];
         });
         this.getTestDetails(this.test_id);
-        this.getTestRate(this.test_id);
+    }
+
+    ngAfterViewInit(): void {
+        this.paginator._intl.itemsPerPageLabel = 'Рядків у таблиці';
         this.dataSource.paginator = this.paginator;
         this.dataSource.sort = this.sort;
     }
@@ -64,9 +57,21 @@ export class TestDetailesComponent implements OnInit {
             .getTestDetailes('getTestDetailsByTest', id)
             .subscribe(
                 (data: Array<TestDetails>) => {
-                    this.tests = data;
-                    this.dataSource.data = this.tests;
-                    this.modalService.showSnackBar('Деталі тестів завантажено');
+                    if (data[0]) {
+                        this.tests = data;
+                        this.dataSource.data = this.tests;
+                        this.levels = this.dataSource.data.map((item) =>
+                            Number(item.level)
+                        );
+                        this.getTestRate(this.test_id);
+                        this.dataSource.paginator = this.paginator;
+                        this.dataSource.sort = this.sort;
+                        this.modalService.showSnackBar(
+                            'Деталі тестів завантажено'
+                        );
+                    } else {
+                        this.levels = [];
+                    }
                 },
                 (err) => {
                     this.modalService.showSnackBar(
@@ -81,12 +86,10 @@ export class TestDetailesComponent implements OnInit {
             .subscribe(
                 (data: TestRate) => {
                     this.testRate = data.testRate;
-                    this.dataSource.data = this.tests;
                 },
                 (err) => {
-                    this.modalService.showSnackBar(
-                        'Помилка завантаження оцінки за тест'
-                    );
+                    this.testRate = '0';
+                    this.modalService.showSnackBar('Дані відсутні');
                 }
             );
     }
@@ -98,11 +101,10 @@ export class TestDetailesComponent implements OnInit {
     }
 
     openAddDialog(): void {
-        const levels = this.dataSource.data.map((item) => Number(item.level));
         const dialogRef = this.dialog.open(TestDetailsDialogComponent, {
             width: '600px',
             data: {
-                levels: levels,
+                levels: this.levels,
             },
         });
 
@@ -112,14 +114,13 @@ export class TestDetailesComponent implements OnInit {
     }
 
     openEditDialog(test: TestDetails): void {
-        const levels = this.dataSource.data.map((item) => Number(item.level));
         const dialogRef = this.dialog.open(TestDetailsDialogComponent, {
             width: '600px',
             data: {
                 rate: test.rate,
                 level: test.level,
                 tasks: test.tasks,
-                levels: levels,
+                levels: this.levels,
             },
         });
         dialogRef.afterClosed().subscribe((result) => {
@@ -154,7 +155,6 @@ export class TestDetailesComponent implements OnInit {
             .updateEntity('TestDetail', newTest, curId)
             .subscribe((data: TestDetails) => {
                 this.getTestRate(this.test_id);
-                this.dataSource.data = this.dataSource.data.concat(data);
                 const newSourse = this.dataSource.data.map((item) => {
                     if (item.id === curId) {
                         return (item = {
@@ -168,37 +168,38 @@ export class TestDetailesComponent implements OnInit {
                 this.modalService.showSnackBar('Деталі тесту оновлено');
             });
     }
-
+    removeTimeTable(test: TestDetails): void {
+        const dialogRef = this.dialog.open(ConfirmDeleteComponent, {
+            width: '300px',
+            data: {
+                group_name: test.test_id,
+            },
+        });
+        dialogRef.afterClosed().subscribe((result: boolean) => {
+            if (result) {
+                this.removeTest(test);
+            } else {
+                this.dataSource.paginator = this.paginator;
+                this.dataSource.sort = this.sort;
+            }
+        });
+    }
     removeTest(test: TestDetails): void {
         this.testDetailesSubscription = this.testService
             .deleteEntity('testDetail', test.id)
             .subscribe(
                 () => {
-                    this.modalService.openModal(
-                        ConfirmComponent,
-                        {
-                            data: {
-                                message:
-                                    'Ви впевнені що хочете видалити деталі тесту?',
-                            },
-                        },
-                        () => {
-                            this.dataSource.data = this.dataSource.data.filter(
-                                (t) => t.id !== test.id
-                            );
-                            this.getTestRate(this.test_id);
-                            this.modalService.showSnackBar(
-                                'Деталі тесту видалено'
-                            );
-                        }
+                    this.dataSource.data = this.dataSource.data.filter(
+                        (t) => t.id !== test.id
                     );
+                    this.getTestRate(this.test_id);
+                    this.modalService.showSnackBar('Деталі тесту видалено');
                 },
                 (error) =>
-                    this.modalService.showSnackBar(
-                        'Деталі тесту неможливо видалити'
-                    )
+                    this.modalService.showSnackBar('Тест неможливо видалити')
             );
     }
+
     ngOnDestroy(): void {
         if (this.testDetailesSubscription) {
             this.testDetailesSubscription.unsubscribe();

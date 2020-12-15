@@ -26,6 +26,8 @@ import { MatSortModule } from '@angular/material/sort';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatRippleModule } from '@angular/material/core';
 import { FlexLayoutModule } from '@angular/flex-layout';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatNativeDateModule } from '@angular/material/core';
 
 @NgModule({
     declarations: [],
@@ -56,6 +58,8 @@ import { FlexLayoutModule } from '@angular/flex-layout';
         MatTabsModule,
         MatSortModule,
         MatRippleModule,
+        MatDatepickerModule,
+        MatNativeDateModule,
     ],
     exports: [
         FlexLayoutModule,
@@ -83,6 +87,8 @@ import { FlexLayoutModule } from '@angular/flex-layout';
         MatTabsModule,
         MatSortModule,
         MatRippleModule,
+        MatDatepickerModule,
+        MatNativeDateModule,
     ],
 })
 export class AngularMaterialModule {}
