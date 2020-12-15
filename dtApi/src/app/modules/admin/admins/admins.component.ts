@@ -72,21 +72,17 @@ export class AdminsComponent implements OnInit {
             })
             .afterClosed()
             .subscribe((res) => {
-                if (res) {
-                    if (!res.finished) return;
-                    const oldUser = this.dataSource.data.find(
-                        (item, index) =>
-                            index === this.dataSource.data.indexOf(user)
-                    );
-                    for (const oldItem in oldUser) {
-                        for (const newItem in res.user) {
-                            if (oldItem === newItem) {
-                                oldUser[oldItem] = res.user[newItem];
-                                this.dataSource._updateChangeSubscription();
-                            }
-                        }
+                if (!res || !res.finished) return null;
+                const oldIndex = this.dataSource.data.findIndex(
+                    (item) => item === user
+                );
+                this.dataSource.data = this.dataSource.data.map(
+                    (curUser: any, curIndex) => {
+                        return curIndex === oldIndex
+                            ? (curUser = res.user)
+                            : curUser;
                     }
-                }
+                );
             });
     }
     deleteAdminModelOpen(user: Admins): void {

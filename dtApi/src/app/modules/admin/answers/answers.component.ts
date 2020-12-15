@@ -1,7 +1,7 @@
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Observable, Observer } from 'rxjs';
+import { Observable, Observer, Subscription } from 'rxjs';
 
 import { ConfirmComponent } from '../../../shared/components/confirm/confirm.component';
 import { ModalService } from '../../../shared/services/modal.service';
@@ -22,8 +22,9 @@ import { minMaxValidator } from './validators/minMaxValidator';
     encapsulation: ViewEncapsulation.None,
 })
 export class AnswersComponent implements OnInit {
+    allSubscription: Subscription;
     confirmIcon = 'question_answer';
-    answerAtachmentSrc = '';
+    answerAtachmentSrc: string[] = [];
     noChanges = false;
     updateAnswers: AnswerData[];
     alert = {
@@ -40,6 +41,7 @@ export class AnswersComponent implements OnInit {
         messageQuestionCreate: 'Питання створено',
         messageQuestionUpdate: 'Питання оновлено',
         messageConfirm: 'Ви впевнені що бажаєте видалити цю відповідь?',
+        messageNoAnswerTitle: "Заповніть усі обов'язкові поля",
     };
     errorQuestionTitle = "Це поле обов'язкове";
     showAtachmentAnswer = false;
@@ -182,7 +184,7 @@ export class AnswersComponent implements OnInit {
         this.createMode = false;
         this.questionId = this.state.question_id;
         this.attachmentQuestionSrc = this.state.attachment;
-        this.answerServise
+        this.allSubscription = this.answerServise
             .getQuestions(this.questionId)
             .subscribe((res: QuestionData) => {
                 if (res[0]) {
@@ -233,6 +235,7 @@ export class AnswersComponent implements OnInit {
             });
         } else {
             result.map((item: AnswerData) => {
+                this.answerAtachmentSrc.push(item.attachment);
                 this.idAnswerArray.push(item.answer_id);
                 this.showAtachmentAnswer = item.attachment ? true : false;
                 const trueAnswer = item.true_answer;
@@ -249,7 +252,6 @@ export class AnswersComponent implements OnInit {
     removeImageQuestion(): void {
         this.attachmentQuestionSrc = '';
         this.answerForm.controls.atachmentQuestion.setValue('');
-        this.answerForm.controls.atachmentQuestion.markAsDirty();
     }
     compareAnswers(): boolean {
         if (this.noChanges) {
@@ -267,7 +269,7 @@ export class AnswersComponent implements OnInit {
                 });
         }
     }
-    finaleCompare(): void {
+    getIdOfUpdateAnswer(): void {
         let chooseArr = 0;
         if (this.sendAnswerData.length > this.updateAnswers.length) {
             chooseArr = this.updateAnswers.length;
@@ -290,7 +292,7 @@ export class AnswersComponent implements OnInit {
     }
     removeImageAnswer(i: number): void {
         this.answersType.controls[i].get('atachmentAnswer').setValue('');
-        this.answerAtachmentSrc = '';
+        this.answerAtachmentSrc[i] = '';
     }
     objectsAreSame(x, y): boolean {
         let objectsAreSame = true;
@@ -389,7 +391,7 @@ export class AnswersComponent implements OnInit {
             );
             const dialog = (res: boolean) => {
                 if (res) {
-                    this.answerServise
+                    this.allSubscription = this.answerServise
                         .deleteAnswer(+removeId)
                         .subscribe((res: Response) => {
                             if (res.response === 'ok') {
@@ -410,7 +412,7 @@ export class AnswersComponent implements OnInit {
             this.answersType.removeAt(index);
         }
     }
-    getTrueAnswer(item): string {
+    getTrueAnswer(item: AnswerType): string {
         switch (this.typeOfQuestion) {
             case '1':
                 if (item.trueAnswerSimple) {
@@ -433,10 +435,10 @@ export class AnswersComponent implements OnInit {
             'atachmentAnswer'
         );
         if (this.answersType.value[index].atachmentAnswer._files[0]) {
-            this.getImageBase64(
+            this.allSubscription = this.getImageBase64(
                 this.answersType.value[index].atachmentAnswer._files[0]
             ).subscribe((res: string) => {
-                this.answerAtachmentSrc = res;
+                this.answerAtachmentSrc[index] = res;
                 atachment.setValue(res);
             });
         } else {
@@ -467,20 +469,9 @@ export class AnswersComponent implements OnInit {
                 return false;
         }
     }
-    createAnswer(): void {
+    createAnswerData(): void {
         this.sendAnswerData = [];
         const formFieldsValue = this.answerForm.value;
-        formFieldsValue.answersType.map((item: AnswerType) => {
-            {
-                this.sendAnswerData.push({
-                    answer_id: item.answer_id,
-                    question_id: this.questionId,
-                    true_answer: this.getTrueAnswer(item),
-                    answer_text: item.text,
-                    attachment: item.atachmentAnswer,
-                });
-            }
-        });
         if (this.typeOfQuestion === '4') {
             const typeQuestionNumeric = [
                 {
@@ -499,12 +490,24 @@ export class AnswersComponent implements OnInit {
                 const item = typeQuestionNumeric[i];
                 this.sendAnswerData.push({
                     answer_id: item.answer_id,
-                    answer_text: item.answer_text,
+                    answer_text: `${item.answer_text}`,
                     true_answer: '1',
                     question_id: this.questionId,
                     attachment: '',
                 });
             }
+        } else {
+            formFieldsValue.answersType.map((item: AnswerType) => {
+                {
+                    this.sendAnswerData.push({
+                        answer_id: item.answer_id,
+                        question_id: this.questionId,
+                        true_answer: this.getTrueAnswer(item),
+                        answer_text: item.text,
+                        attachment: item.atachmentAnswer,
+                    });
+                }
+            });
         }
     }
     changeTypeQuestion(): void {
@@ -519,7 +522,7 @@ export class AnswersComponent implements OnInit {
                 break;
         }
     }
-    checkRadioBtn(id: number): void {
+    trueAnswerSimpleOne(id: number): void {
         this.answersType.value.map((elem: AnswerType, index: number) => {
             if (id !== index) {
                 this.answersType.controls[index]
@@ -532,29 +535,29 @@ export class AnswersComponent implements OnInit {
     sendAnswerDataRequest(): void {
         let counter: number = null;
         if (this.createMode) {
-            this.createAnswer();
+            this.createAnswerData();
         }
         if (!this.createMode && this.updateAnswers) {
-            this.finaleCompare();
+            this.getIdOfUpdateAnswer();
         }
         this.sendAnswerData.map((elem) => {
             if (this.createMode || !elem.answer_id) {
                 delete elem.answer_id;
-                return this.answerServise
+                return (this.allSubscription = this.answerServise
                     .createAnswerRequest(elem)
                     .subscribe((res: AnswerData) => {
                         if (res[0].answer_id && this.compareQuestions()) {
                             counter = 0;
                         }
-                    });
+                    }));
             } else if (this.idAnswerArray.includes(elem.answer_id)) {
-                return this.answerServise
+                return (this.allSubscription = this.answerServise
                     .updateAnswer(elem, elem.answer_id)
                     .subscribe((res) => {
                         if (this.compareQuestions() && res) {
                             counter = 1;
                         }
-                    });
+                    }));
             }
         });
         this.showMessage(counter);
@@ -569,14 +572,14 @@ export class AnswersComponent implements OnInit {
         }
     }
     createQuestionAndAnswer(): void {
-        if (!this.compareAnswers() && !this.createMode) {
-            this.createAnswer();
-        }
+        this.createAnswerData();
         this.createQuestionData();
         if (
             (this.answersType.controls.length === 0 &&
                 this.answersTypeNumeric.invalid) ||
-            (this.compareAnswers() && this.compareQuestions())
+            (this.compareAnswers() && this.compareQuestions()) ||
+            (this.answersTypeNumeric.errors?.comparisonError &&
+                this.typeOfQuestion === '4')
         ) {
             let message = this.alert.messageNoAnswer;
             if (
@@ -589,12 +592,15 @@ export class AnswersComponent implements OnInit {
             }
             this.openModal(this.alert.titleAlert, message, AlertComponent);
             return;
-        } else if (this.answerForm.controls.answersType.invalid) {
-            return;
-        } else if (this.isTrueAnswer()) {
+        } else if (
+            this.isTrueAnswer() ||
+            this.sendAnswerData.some((elem) => elem.answer_text === '')
+        ) {
             this.openModal(
                 this.alert.titleError,
-                this.alert.messageNoTruAnswer,
+                this.isTrueAnswer()
+                    ? this.alert.messageNoTruAnswer
+                    : this.alert.messageNoAnswerTitle,
                 AlertComponent
             );
             return;

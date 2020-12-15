@@ -13,8 +13,8 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { ModalData } from '../Admins';
 import { MustMatch } from '../validators/password-match.validator';
 import { AdminsCrudService } from '../admins.service';
-import { Observable } from 'rxjs';
-import { pluck } from 'rxjs/operators';
+import { pluck, switchMap } from 'rxjs/operators';
+import { of } from 'rxjs';
 
 @Component({
     selector: 'app-admin-modal-creation',
@@ -87,38 +87,43 @@ export class AdminModalCreationComponent implements OnInit {
         const snackbar = this.snackBar;
         this.adminservice
             .checkAdminName(this.AdminForm.get('username').value)
-            .pipe(pluck('response'))
-            .subscribe((res) => {
-                if (res) {
-                    snackbar.open("Таке ім'я вже існує", 'Закрити', {
+            .pipe(
+                pluck('response'),
+                switchMap((response: boolean) => {
+                    if (response) {
+                        snackbar.open("Таке ім'я вже існує", 'Закрити', {
+                            duration: 3000,
+                        });
+                        return of(response);
+                    } else {
+                        return this.adminservice
+                            .updateAdmin(
+                                JSON.stringify(formValues),
+                                data.user.id
+                            )
+                            .pipe(pluck('response'));
+                    }
+                })
+            )
+            .subscribe(
+                (res) => {
+                    snackbar.open('Адміна успішно відредаговано', 'Закрити', {
                         duration: 3000,
                     });
-                } else {
-                    this.adminservice
-                        .updateAdmin(JSON.stringify(formValues), data.user.id)
-                        .pipe(pluck('response'))
-                        .subscribe(
-                            (res) => {
-                                snackbar.open(
-                                    'Адміна успішно відредаговано',
-                                    'Закрити',
-                                    {
-                                        duration: 3000,
-                                    }
-                                );
-                                this.dialogRef.close({
-                                    finished: true,
-                                    user: formValues,
-                                });
-                            },
-                            (err) => {
-                                snackbar.open('Щось пішло не так', 'Закрити', {
-                                    duration: 3000,
-                                });
-                            }
-                        );
+                    this.dialogRef.close({
+                        finished: true,
+                        user: {
+                            id: data.user.id,
+                            ...formValues,
+                        },
+                    });
+                },
+                (err) => {
+                    snackbar.open('Щось пішло не так', 'Закрити', {
+                        duration: 3000,
+                    });
                 }
-            });
+            );
     }
     submit(data: any): void {
         if (this.AdminForm.valid) {

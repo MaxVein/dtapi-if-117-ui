@@ -44,6 +44,7 @@
 
 .image {
     position: relative;
+    width: 50%;
 }
 
 .close-btn {
@@ -52,6 +53,10 @@
     font-size: 30px;
     top: -5%;
     position: absolute;
+}
+
+.mat-card {
+    text-align: center;
 }
 
 .btn-group {

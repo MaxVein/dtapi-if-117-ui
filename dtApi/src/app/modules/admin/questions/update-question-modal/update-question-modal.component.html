@@ -1,0 +1,40 @@
+<form
+    action="post"
+    [formGroup]="QuestionUpdateForm"
+    (ngSubmit)="submit(data)"
+    novalidate
+    class="modal"
+>
+    <h1 mat-dialog-title class="modal-title">Редагувати запитання</h1>
+    <div mat-dialog-content>
+        <mat-form-field class="modal-field">
+            <mat-label>Ваше запитання</mat-label>
+            <textarea
+                formControlName="question_text"
+                matInput
+                name="question_text"
+                cdkFocusInitial
+            ></textarea>
+        </mat-form-field>
+        <mat-form-field class="modal-field">
+            <mat-label>Рівень запитання</mat-label>
+            <mat-select
+                appeareance="fill"
+                formControlName="level"
+                matInput
+                name="level"
+                cdkFocusInitial
+            >
+                <mat-option *ngFor="let level of levels" value="{{ level }}">{{
+                    level
+                }}</mat-option>
+            </mat-select>
+        </mat-form-field>
+    </div>
+    <div mat-dialog-actions class="modal-field">
+        <button mat-button type="reset" (click)="onNoClick()">Скасувати</button>
+        <button type="submit" [disabled]="!QuestionUpdateForm.valid" mat-button>
+            Зберегти
+        </button>
+    </div>
+</form>

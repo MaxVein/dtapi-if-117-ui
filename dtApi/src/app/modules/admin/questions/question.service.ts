@@ -1,8 +1,9 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { forkJoin, Observable } from 'rxjs';
 import { map, pluck } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
+import { QuestionInstance, typeReverse } from './Question';
 
 @Injectable({
     providedIn: 'root',
@@ -17,23 +18,12 @@ export class QuestionService {
                 `${environment.BASEURL}${this.entity}/getRecordsRangeByTest/${id}/${quantity}/0/wi`
             )
             .pipe(
-                map((arr: any[]) => {
+                map((arr: Array<QuestionInstance>) => {
                     const newarr = arr.map((item) => {
-                        switch (item.type) {
-                            case '1':
-                                item.type = 'Простий вибір';
-                                break;
-                            case '2':
-                                item.type = 'Мульти вибір';
-                                break;
-                            case '3':
-                                item.type = 'Текстовий';
-                                break;
-                        }
                         return {
                             question_id: item.question_id,
                             question_text: item.question_text,
-                            type: item.type,
+                            type: typeReverse(item.type),
                             level: item.level,
                         };
                     });
@@ -41,20 +31,22 @@ export class QuestionService {
                 })
             );
     }
-    getNumberOfQuestions(id: number): Observable<any> {
+    getNumberOfQuestions(id: number): Observable<number> {
         return this.httpInstance
             .get(
                 `${environment.BASEURL}${this.entity}/countRecordsByTest/${id}`
             )
             .pipe(pluck('numberOfRecords'));
     }
-    addQuestion(body: string): Observable<any> {
-        return this.httpInstance.post(
-            `${environment.BASEURL}${this.entity}/insertData`,
-            body
+    deleteAnswerCollection(answers: any): Observable<any> {
+        const deleteAnswerObservables = answers.map((answer) =>
+            this.httpInstance.delete(
+                `${environment.BASEURL}answer/del/` + answer.answer_id
+            )
         );
+        return forkJoin(deleteAnswerObservables);
     }
-    updateQuestion(body: string, id: string): Observable<any> {
+    updateQuestion(body: string, id: string | number): Observable<any> {
         return this.httpInstance.post(
             `${environment.BASEURL}${this.entity}/update/${id}`,
             body
