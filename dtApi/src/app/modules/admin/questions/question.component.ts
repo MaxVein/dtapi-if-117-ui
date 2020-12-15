@@ -101,7 +101,7 @@ export class QuestionComponent implements OnInit {
                 this.dataSource.data = this.dataSource.data.map(
                     (curQuestion: any, curIndex) => {
                         return curIndex === oldindex
-                            ? (curQuestion = res.updatedquestion)
+                            ? res.updatedquestion
                             : curQuestion;
                     }
                 );
