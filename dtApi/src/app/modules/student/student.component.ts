@@ -3,8 +3,8 @@ import { Router } from '@angular/router';
 import { AuthService } from '../../modules/login/auth.service';
 import { ThemeService } from '../../shared/services/theme.service';
 import { ModalService } from '../../shared/services/modal.service';
+import { AlertService } from '../../shared/services/alert.service';
 import { TestPlayerService } from './services/test-player.service';
-import { AlertComponent } from '../../shared/components/alert/alert.component';
 import { ConfirmComponent } from '../../shared/components/confirm/confirm.component';
 import { Subscription } from 'rxjs';
 import { RouterState } from '../../shared/interfaces/student.interfaces';
@@ -14,11 +14,9 @@ import {
     Response,
 } from '../../shared/interfaces/entity.interfaces';
 import {
-    cancelMessage,
-    errorTitleMessage,
-    logoutErrorMessage,
-    sessionErrorMessage,
-    testLogoutConfirmMessage,
+    logoutMessages,
+    snackBarMessages,
+    testPlayerServerMessages,
     themeChangeMessage,
 } from './Messages';
 
@@ -38,7 +36,8 @@ export class StudentComponent implements OnInit, OnDestroy {
         private authService: AuthService,
         private testPlayerService: TestPlayerService,
         private themeService: ThemeService,
-        private modalService: ModalService
+        private modalService: ModalService,
+        private alertService: AlertService
     ) {
         this.getUserData();
     }
@@ -61,21 +60,17 @@ export class StudentComponent implements OnInit, OnDestroy {
 
     onSetTheme(theme: string): void {
         this.componentCssClass = this.themeService.onSetTheme(theme);
-        this.modalService.showSnackBar(themeChangeMessage(theme));
+        this.alertService.message(themeChangeMessage(theme));
     }
 
     logout(): void {
         this.studentSubscription = this.authService.logOutRequest().subscribe({
             next: () => {
                 this.router.navigate(['/login']);
+                this.alertService.message(logoutMessages('logout'));
             },
             error: () => {
-                this.modalService.openModal(AlertComponent, {
-                    data: {
-                        title: errorTitleMessage,
-                        message: logoutErrorMessage,
-                    },
-                });
+                this.alertService.error(logoutMessages('error'));
             },
         });
     }
@@ -83,28 +78,37 @@ export class StudentComponent implements OnInit, OnDestroy {
     testInProgress(): void {
         this.studentSubscription = this.testPlayerService
             .testPlayerGetData()
-            .subscribe((response: TestPlayerResponse) => {
-                if (response.testInProgress) {
-                    this.modalService.openModal(
-                        ConfirmComponent,
-                        {
-                            data: {
-                                icon: 'exit_to_app',
-                                message: testLogoutConfirmMessage,
-                            },
-                        },
-                        (result: DialogResult) => {
-                            if (result) {
-                                this.resetSession();
-                            } else if (!result) {
-                                this.modalService.showSnackBar(cancelMessage);
-                            }
-                        }
-                    );
-                } else {
-                    this.logout();
+            .subscribe(
+                (response: TestPlayerResponse) => {
+                    if (response.testInProgress) {
+                        this.confirmLogout();
+                    } else {
+                        this.logout();
+                    }
+                },
+                (error: Response) => {
+                    this.alertService.error(testPlayerServerMessages('get'));
                 }
-            });
+            );
+    }
+
+    confirmLogout(): void {
+        this.modalService.openModal(
+            ConfirmComponent,
+            {
+                data: {
+                    icon: 'exit_to_app',
+                    message: logoutMessages('testInProcess'),
+                },
+            },
+            (result: DialogResult) => {
+                if (result) {
+                    this.resetSession();
+                } else if (!result) {
+                    this.alertService.message(snackBarMessages('cancel'));
+                }
+            }
+        );
     }
 
     resetSession(): void {
@@ -117,26 +121,17 @@ export class StudentComponent implements OnInit, OnDestroy {
                     }
                 },
                 (error: Response) => {
-                    this.errorHandler(
-                        error,
-                        errorTitleMessage,
-                        sessionErrorMessage
+                    this.alertService.message(
+                        testPlayerServerMessages('reset')
                     );
                 }
             );
     }
 
-    errorHandler(error: Response, title: string, message: string): void {
-        this.modalService.openModal(AlertComponent, {
-            data: {
-                message,
-                title,
-                error,
-            },
-        });
-    }
-
     ngOnDestroy(): void {
+        if (this.studentSubscription) {
+            this.studentSubscription.unsubscribe();
+        }
         localStorage.clear();
     }
 }

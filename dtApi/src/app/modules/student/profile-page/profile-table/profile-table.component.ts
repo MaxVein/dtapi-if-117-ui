@@ -6,13 +6,14 @@ import {
     OnInit,
     ViewChild,
 } from '@angular/core';
-import { NavigationExtras, Router } from '@angular/router';
+import { Router } from '@angular/router';
 import { MatSelectChange } from '@angular/material/select';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import { ModalService } from '../../../../shared/services/modal.service';
+import { AlertService } from '../../../../shared/services/alert.service';
 import { ProfileService } from '../../services/profile.service';
-import { AlertComponent } from '../../../../shared/components/alert/alert.component';
+import { TestPlayerService } from '../../services/test-player.service';
 import { ConfirmComponent } from '../../../../shared/components/confirm/confirm.component';
 import { of, Subscription, from } from 'rxjs';
 import { concatMap, mergeMap } from 'rxjs/operators';
@@ -25,7 +26,6 @@ import {
     Response,
     Subject,
 } from '../../../../shared/interfaces/entity.interfaces';
-import { TestPlayerService } from '../../services/test-player.service';
 import {
     TestLog,
     TestLogError,
@@ -33,27 +33,11 @@ import {
     TestPlayerSaveData,
 } from '../../../../shared/interfaces/test-player.interfaces';
 import {
-    baseErrorMessage,
-    cancelMessage,
-    confirmStartTestMessage,
-    errorTitleMessage,
-    isTestStart,
-    notDataRequiredMessage,
-    notTestData,
-    profileTestMessage,
-    testLogError1,
-    testLogError2,
-    testLogError3,
-    testLogError4,
-    testLogError5,
-    testLogError6,
-    testLogError7,
-    testNoAvailableMessage,
     testsTableColumns,
-    testWillBeAvailableLaterMessage,
-    testWillBeAvailableTodayMessage,
-    uploadTests,
-    warningTitleMessage,
+    checkTestDateMessages,
+    scheduleMessages,
+    snackBarMessages,
+    startTestPlayerMessages,
 } from '../../Messages';
 
 @Component({
@@ -84,7 +68,8 @@ export class ProfileTableComponent implements OnInit, AfterViewInit, OnDestroy {
         public modalService: ModalService,
         private router: Router,
         private profileService: ProfileService,
-        private testPlayerService: TestPlayerService
+        private testPlayerService: TestPlayerService,
+        private alertService: AlertService
     ) {}
 
     ngOnInit(): void {
@@ -115,7 +100,7 @@ export class ProfileTableComponent implements OnInit, AfterViewInit, OnDestroy {
                     if (res.length) {
                         this.testsBySubject = res;
                         this.subjectsIds = res.map((item) => item.subject_id);
-                        this.modalService.showSnackBar(uploadTests(true));
+                        this.alertService.message(scheduleMessages('isTests'));
                         return from(this.subjectsIds).pipe(
                             mergeMap((id) =>
                                 this.profileService.getTestDate(id)
@@ -124,7 +109,7 @@ export class ProfileTableComponent implements OnInit, AfterViewInit, OnDestroy {
                     } else {
                         this.startText = true;
                         this.testsBySubject = [];
-                        this.modalService.showSnackBar(uploadTests(false));
+                        this.alertService.message(scheduleMessages('noTests'));
                         return of();
                     }
                 })
@@ -151,10 +136,8 @@ export class ProfileTableComponent implements OnInit, AfterViewInit, OnDestroy {
                     this.dataSource.paginator = this.paginator;
                 },
                 error: (error: Response) => {
-                    this.errorHandler(
-                        error,
-                        errorTitleMessage,
-                        baseErrorMessage
+                    this.alertService.error(
+                        scheduleMessages('activeTestsError')
                     );
                 },
             });
@@ -180,12 +163,12 @@ export class ProfileTableComponent implements OnInit, AfterViewInit, OnDestroy {
                 concatMap((res: TestDetails[]) => {
                     if (res.length) {
                         this.testsBySubject = res;
-                        this.modalService.showSnackBar(uploadTests(true));
+                        this.alertService.message(scheduleMessages('isTests'));
                         return this.profileService.getTestDetails(this.groupId);
                     } else {
                         this.hide = false;
                         this.testsBySubject = [];
-                        this.modalService.showSnackBar(uploadTests(false));
+                        this.alertService.message(scheduleMessages('noTests'));
                         return of();
                     }
                 })
@@ -195,8 +178,8 @@ export class ProfileTableComponent implements OnInit, AfterViewInit, OnDestroy {
                     let testDate = res[0] ? res[0] : res;
                     if (testDate.response === 'no records') {
                         testDate = {
-                            end_date: notTestData,
-                            start_date: notTestData,
+                            end_date: scheduleMessages('noTestData'),
+                            start_date: scheduleMessages('noTestData'),
                         };
                     }
                     this.testDetails = [...this.testsBySubject].map((test) => ({
@@ -208,10 +191,8 @@ export class ProfileTableComponent implements OnInit, AfterViewInit, OnDestroy {
                     this.dataSource.paginator = this.paginator;
                 },
                 error: (error: Response) => {
-                    this.errorHandler(
-                        error,
-                        errorTitleMessage,
-                        profileTestMessage(this.subjectName)
+                    this.alertService.error(
+                        scheduleMessages('subjectTestsError', this.subjectName)
                     );
                 },
             });
@@ -240,22 +221,19 @@ export class ProfileTableComponent implements OnInit, AfterViewInit, OnDestroy {
         );
         const endDate = new Date(`${test.end_date} ${test.end_time}`);
         if (this.currentDate >= startDate && this.currentDate <= endDate) {
-            return testWillBeAvailableTodayMessage(test.start_time);
+            return checkTestDateMessages('willBeAvailableToday', test);
         } else if (
             this.currentDate > startDateWithTime &&
             this.currentDate > endDate
         ) {
-            return testNoAvailableMessage(test.end_date);
+            return checkTestDateMessages('noAvailable', test);
         } else if (
             this.currentDate < startDateWithTime &&
             this.currentDate < endDate
         ) {
-            return testWillBeAvailableLaterMessage(
-                test.start_date,
-                test.start_time
-            );
+            return checkTestDateMessages('willBeAvailableLater', test);
         } else {
-            return notDataRequiredMessage();
+            return checkTestDateMessages('notData', test);
         }
     }
 
@@ -267,11 +245,7 @@ export class ProfileTableComponent implements OnInit, AfterViewInit, OnDestroy {
                     this.confirmStartTest(test);
                 },
                 (error: Response) => {
-                    this.errorHandler(
-                        error,
-                        warningTitleMessage,
-                        this.checkCurrentDate(test)
-                    );
+                    this.alertService.warning(this.checkCurrentDate(test));
                 }
             );
     }
@@ -282,14 +256,14 @@ export class ProfileTableComponent implements OnInit, AfterViewInit, OnDestroy {
             {
                 data: {
                     icon: 'school',
-                    message: confirmStartTestMessage(test),
+                    message: scheduleMessages('confirmStartTest', '', test),
                 },
             },
             (result: DialogResult) => {
                 if (result) {
                     this.startTest(test);
                 } else if (!result) {
-                    this.modalService.showSnackBar(cancelMessage);
+                    this.alertService.message(snackBarMessages('cancel'));
                 }
             }
         );
@@ -301,108 +275,101 @@ export class ProfileTableComponent implements OnInit, AfterViewInit, OnDestroy {
             .subscribe(
                 (log: TestLog) => {
                     if (log.response === 'ok') {
-                        this.modalService.showSnackBar(isTestStart(true));
-                        this.testPlayerService
-                            .testPlayerSaveData({
-                                id: +test.test_id,
-                                testInProgress: true,
-                            })
-                            .subscribe(
-                                (response: TestPlayerSaveData) => {
-                                    if (response.response) {
-                                        this.navigateToTest(test);
-                                    }
-                                },
-                                (error: Response) => {
-                                    this.errorHandler(
-                                        error,
-                                        errorTitleMessage,
-                                        isTestStart(false)
-                                    );
-                                }
-                            );
+                        this.saveSession(test);
+                        this.modalService.showSnackBar(
+                            startTestPlayerMessages('startTest')
+                        );
                     }
                 },
                 (error: TestLogError) => {
-                    switch (error.error.response) {
-                        case testLogError1(true):
-                            this.errorHandler(
-                                error.error,
-                                errorTitleMessage,
-                                testLogError1(false)
-                            );
-                            break;
-                        case testLogError2(true):
-                            this.errorHandler(
-                                error.error,
-                                errorTitleMessage,
-                                testLogError2(false)
-                            );
-                            break;
-                        case testLogError3(true):
-                            this.errorHandler(
-                                error.error,
-                                errorTitleMessage,
-                                testLogError3(false)
-                            );
-                            break;
-                        case testLogError4(true):
-                            this.profileSubscription = this.testPlayerService
-                                .testPlayerGetData()
-                                .subscribe((response: TestPlayerResponse) => {
-                                    if (+response.id === +test.test_id) {
-                                        this.navigateToTest(test);
-                                    } else {
-                                        this.errorHandler(
-                                            error.error,
-                                            errorTitleMessage,
-                                            testLogError4(false)
-                                        );
-                                    }
-                                });
-                            break;
-                        case testLogError5(true):
-                            this.errorHandler(
-                                error.error,
-                                errorTitleMessage,
-                                testLogError5(false)
-                            );
-                            break;
-                        case testLogError6(true):
-                            this.errorHandler(
-                                error.error,
-                                errorTitleMessage,
-                                testLogError6(false)
-                            );
-                            break;
-                        case testLogError7(true):
-                            this.errorHandler(
-                                error.error,
-                                errorTitleMessage,
-                                testLogError7(false)
-                            );
-                            break;
-                    }
+                    this.startTestErrorHandler(error, test);
                 }
             );
     }
 
-    navigateToTest(test: TestDetails): void {
-        const navigationExtras: NavigationExtras = {
-            state: test,
-        };
-        this.router.navigate(['student/test-player'], navigationExtras);
+    saveSession(test: TestDetails): void {
+        this.profileSubscription = this.testPlayerService
+            .testPlayerSaveData({
+                id: +test.test_id,
+                testInProgress: true,
+                currentTest: test,
+            })
+            .subscribe(
+                (response: TestPlayerSaveData) => {
+                    if (response.response) {
+                        this.router.navigate(['student/test-player']);
+                    }
+                },
+                (error: Response) => {
+                    this.alertService.error(
+                        startTestPlayerMessages('saveSessionError')
+                    );
+                }
+            );
     }
 
-    errorHandler(error: Response, title: string, message: string): void {
-        this.modalService.openModal(AlertComponent, {
-            data: {
-                message,
-                title,
-                error,
-            },
-        });
+    getSession(test: TestDetails): void {
+        this.profileSubscription = this.testPlayerService
+            .testPlayerGetData()
+            .subscribe(
+                (response: TestPlayerResponse) => {
+                    if (+response.id === +test.test_id) {
+                        this.router.navigate(['student/test-player']);
+                    } else {
+                        this.alertService.error(
+                            startTestPlayerMessages('makingTest', false)
+                        );
+                    }
+                },
+                (error: Response) => {
+                    this.alertService.error(
+                        startTestPlayerMessages('getSessionError')
+                    );
+                }
+            );
     }
+
+    startTestErrorHandler(error: TestLogError, test: TestDetails): void {
+        switch (error.error.response) {
+            case startTestPlayerMessages('scheduleError', true):
+                this.alertService.error(
+                    startTestPlayerMessages('scheduleError', false)
+                );
+                break;
+            case startTestPlayerMessages('numberOfQuestions', true):
+                this.alertService.error(
+                    startTestPlayerMessages('numberOfQuestions', false)
+                );
+                break;
+            case startTestPlayerMessages('allAttempts', true):
+                this.alertService.error(
+                    startTestPlayerMessages('allAttempts', false)
+                );
+                break;
+            case startTestPlayerMessages('makingTest', true):
+                this.getSession(test);
+                break;
+            case startTestPlayerMessages('onlyForYou', true):
+                this.alertService.error(
+                    startTestPlayerMessages('onlyForYou', false)
+                );
+                break;
+            case startTestPlayerMessages('paramsNotFound', true):
+                this.alertService.error(
+                    startTestPlayerMessages('paramsNotFound', false)
+                );
+                break;
+            case startTestPlayerMessages('madeRecently', true):
+                this.alertService.error(
+                    startTestPlayerMessages('madeRecently', false)
+                );
+                break;
+            default:
+                this.alertService.error(startTestPlayerMessages('default'));
+                break;
+        }
+    }
+
     ngOnDestroy(): void {
         if (this.profileSubscription) {
             this.profileSubscription.unsubscribe();

@@ -8,8 +8,7 @@ import {
 } from '@angular/core';
 import { Router } from '@angular/router';
 import { TestPlayerService } from '../../services/test-player.service';
-import { ModalService } from '../../../../shared/services/modal.service';
-import { AlertComponent } from '../../../../shared/components/alert/alert.component';
+import { AlertService } from '../../../../shared/services/alert.service';
 import { Observable } from 'rxjs/internal/Observable';
 import { interval, Subscription } from 'rxjs';
 import { TestDetails } from '../../../../shared/interfaces/student.interfaces';
@@ -20,18 +19,11 @@ import {
     TestCheck,
     TestPlayerResponse,
 } from '../../../../shared/interfaces/test-player.interfaces';
+import { Response } from '../../../../shared/interfaces/entity.interfaces';
 import {
-    DialogResult,
-    Response,
-} from '../../../../shared/interfaces/entity.interfaces';
-import {
-    endTimeErrorMessage,
-    errorTitleMessage,
-    saveTimeErrorMessage,
-    sessionErrorMessage,
-    synchronizeErrorMessage,
-    testPlayerFinishMessage,
-    timerErrorMessage,
+    testPlayerMessages,
+    testPlayerServerMessages,
+    timerMessages,
 } from '../../Messages';
 
 @Component({
@@ -63,7 +55,7 @@ export class TimerComponent implements OnInit, OnDestroy {
     constructor(
         private router: Router,
         private testPlayerService: TestPlayerService,
-        private modalService: ModalService
+        private alertService: AlertService
     ) {}
 
     ngOnInit(): void {
@@ -112,38 +104,22 @@ export class TimerComponent implements OnInit, OnDestroy {
                     this.startDate = new Date(this.time.curtime).getTime();
                     this.endDate = this.startDate + this.timeForTest;
                     this.count = this.endDate - this.startDate;
-                    this.saveTestTime();
+                    this.getEndTestTime();
                 },
                 (error: Response) => {
-                    this.errorHandler(
-                        error,
-                        errorTitleMessage,
-                        synchronizeErrorMessage
-                    );
+                    this.alertService.error(timerMessages('syncError'));
+                    this.router.navigate(['/student/profile']);
                 }
             );
     }
 
-    saveTestTime(): void {
+    getEndTestTime(): void {
         this.timerSubscription = this.testPlayerService
             .testPlayerGetEndTime()
             .subscribe(
                 (endTime: TestPlayerEndTime) => {
                     if (endTime.response === 'Empty slot') {
-                        this.timerSubscription = this.testPlayerService
-                            .testPlayerSaveEndTime({
-                                end: this.startDate + this.count,
-                            })
-                            .subscribe(
-                                () => {},
-                                (error: Response) => {
-                                    this.errorHandler(
-                                        error,
-                                        errorTitleMessage,
-                                        saveTimeErrorMessage
-                                    );
-                                }
-                            );
+                        this.saveTestTime();
                     } else {
                         this.count = endTime.end - this.startDate;
                         if (this.count > this.endDate - this.startDate) {
@@ -155,11 +131,22 @@ export class TimerComponent implements OnInit, OnDestroy {
                     }
                 },
                 (error: Response) => {
-                    this.errorHandler(
-                        error,
-                        errorTitleMessage,
-                        endTimeErrorMessage
-                    );
+                    this.alertService.error(timerMessages('endError'));
+                    this.router.navigate(['/student/profile']);
+                }
+            );
+    }
+
+    saveTestTime(): void {
+        this.timerSubscription = this.testPlayerService
+            .testPlayerSaveEndTime({
+                end: this.startDate + this.count,
+            })
+            .subscribe(
+                () => {},
+                (error: Response) => {
+                    this.alertService.error(timerMessages('saveError'));
+                    this.router.navigate(['/student/profile']);
                 }
             );
     }
@@ -179,44 +166,19 @@ export class TimerComponent implements OnInit, OnDestroy {
             .subscribe(
                 (response: TestPlayerResponse) => {
                     if (response && count) {
-                        this.errorHandler(
-                            response,
-                            errorTitleMessage,
-                            timerErrorMessage
-                        );
+                        this.alertService.error(timerMessages('timerError'));
                     } else if (response && !count) {
-                        this.modalService.showSnackBar(
-                            testPlayerFinishMessage(true)
+                        this.alertService.message(
+                            testPlayerMessages('finish', false, '', true)
                         );
                         this.onCheck.emit({ time: true, finish: false });
                     }
                 },
                 (error: Response) => {
-                    this.errorHandler(
-                        error,
-                        errorTitleMessage,
-                        sessionErrorMessage
-                    );
-                }
-            );
-    }
-
-    errorHandler(error: Response, title: string, message: string): void {
-        this.modalService.openModal(
-            AlertComponent,
-            {
-                data: {
-                    message,
-                    title,
-                    error,
-                },
-            },
-            (result: DialogResult) => {
-                if (!result) {
+                    this.alertService.error(testPlayerServerMessages('reset'));
                     this.router.navigate(['/student/profile']);
                 }
-            }
-        );
+            );
     }
 
     ngOnDestroy(): void {
