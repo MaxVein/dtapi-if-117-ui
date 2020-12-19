@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { StudentComponent } from './student.component';
+import { ResultsComponent } from './test-player/results/results.component';
 
 const routes: Routes = [
     {
@@ -26,10 +27,7 @@ const routes: Routes = [
                     },
                     {
                         path: 'results',
-                        loadChildren: () =>
-                            import('./test-player/results/results.module').then(
-                                (m) => m.ResultsModule
-                            ),
+                        component: ResultsComponent,
                     },
                 ],
             },

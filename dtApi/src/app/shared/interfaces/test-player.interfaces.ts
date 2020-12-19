@@ -1,5 +1,5 @@
 import { Response } from './entity.interfaces';
-import { Answer, Question } from './student.interfaces';
+import { Answer, Question, TestDetails } from './student.interfaces';
 
 export interface ServerTime {
     unix_timestamp: number;
@@ -17,12 +17,14 @@ export interface TestPlayerSaveData {
     id?: number;
     testInProgress?: boolean;
     response?: string;
+    currentTest?: TestDetails;
 }
 
 export interface TestPlayerResponse {
     response?: string;
     id?: number;
     testInProgress?: boolean;
+    currentTest?: TestDetails;
 }
 
 export interface TestLog {
