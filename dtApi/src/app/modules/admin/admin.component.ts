@@ -3,16 +3,12 @@ import { Router } from '@angular/router';
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 import { AuthService } from '../login/auth.service';
 import { ThemeService } from '../../shared/services/theme.service';
-import { ModalService } from '../../shared/services/modal.service';
-import { AlertComponent } from '../../shared/components/alert/alert.component';
-import { Observable } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 import { map, shareReplay } from 'rxjs/operators';
 import { RouterState } from '../../shared/interfaces/student.interfaces';
-import {
-    errorTitleMessage,
-    logoutErrorMessage,
-    themeChangeMessage,
-} from '../student/Messages';
+import { logoutMessages, themeChangeMessage } from '../student/Messages';
+import { AlertService } from '../../shared/services/alert.service';
+
 @Component({
     selector: 'app-admin',
     templateUrl: './admin.component.html',
@@ -21,6 +17,7 @@ import {
 export class AdminComponent implements OnInit, OnDestroy {
     menuIcon = 'menu_open';
     username: string;
+    adminSubscription: Subscription;
 
     @HostBinding('class') componentCssClass;
 
@@ -29,7 +26,7 @@ export class AdminComponent implements OnInit, OnDestroy {
         private themeService: ThemeService,
         private router: Router,
         private breakpointObserver: BreakpointObserver,
-        private modalService: ModalService
+        private alertService: AlertService
     ) {
         this.getUserData();
     }
@@ -51,21 +48,17 @@ export class AdminComponent implements OnInit, OnDestroy {
 
     onSetTheme(theme: string): void {
         this.componentCssClass = this.themeService.onSetTheme(theme);
-        this.modalService.showSnackBar(themeChangeMessage(theme));
+        this.alertService.message(themeChangeMessage(theme));
     }
 
     logOut(): void {
-        this.apiService.logOutRequest().subscribe({
+        this.adminSubscription = this.apiService.logOutRequest().subscribe({
             next: () => {
                 this.router.navigate(['/login']);
+                this.alertService.message(logoutMessages('logout'));
             },
             error: () => {
-                this.modalService.openModal(AlertComponent, {
-                    data: {
-                        title: errorTitleMessage,
-                        message: logoutErrorMessage,
-                    },
-                });
+                this.alertService.error(logoutMessages('error'));
             },
         });
     }
@@ -86,6 +79,9 @@ export class AdminComponent implements OnInit, OnDestroy {
         );
 
     ngOnDestroy(): void {
+        if (this.adminSubscription) {
+            this.adminSubscription.unsubscribe();
+        }
         localStorage.clear();
     }
 }
