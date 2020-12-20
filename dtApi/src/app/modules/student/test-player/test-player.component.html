@@ -6,7 +6,11 @@
                 [test]="currentTest"
             ></app-timer>
         </div>
-        <div class="test-player__content"></div>
+        <div class="test-player__content">
+            <app-questions
+                [questions]="testQuestionsAndAnswers"
+            ></app-questions>
+        </div>
     </div>
 </section>
 <ng-template #loader>

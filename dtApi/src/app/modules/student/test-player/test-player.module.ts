@@ -6,9 +6,10 @@ import { SharedModule } from '../../../shared/modules/shared.module';
 import { TestPlayerComponent } from './test-player.component';
 
 import { TimerComponent } from './timer/timer.component';
+import { QuestionsComponent } from './questions/questions.component';
 
 @NgModule({
-    declarations: [TestPlayerComponent, TimerComponent],
+    declarations: [TestPlayerComponent, TimerComponent, QuestionsComponent],
     imports: [
         CommonModule,
         SharedModule,

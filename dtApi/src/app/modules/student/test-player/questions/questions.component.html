@@ -1,0 +1,74 @@
+<form action="">
+    <div class="button-question">
+        <button
+            mat-raised-button
+            color="primary"
+            *ngFor="let btn of btnCount; let i = index"
+            (click)="changeQuestion($event, i)"
+        >
+            {{ i + 1 }}
+        </button>
+    </div>
+    <h2>{{ questions[startTest].question_text }}</h2>
+
+    <ng-container *ngIf="questions[startTest].type === '1'">
+        <div *ngFor="let answer of answers[startTest]">
+            <mat-checkbox
+                class="simple-checkbox"
+                [checked]="answer.answer_id === completed[startTest]"
+                id="{{ answer.answer_id }}"
+                class="radio-button"
+                (change)="trueAnswerSimpleOne($event, answer.answer_id)"
+            ></mat-checkbox>
+            <div
+                *ngIf="
+                    questions[startTest].type === '1' ||
+                    questions[startTest].type === '2'
+                "
+            >
+                {{ answer.answer_text }}
+            </div>
+        </div>
+    </ng-container>
+
+    <ng-container *ngIf="questions[startTest].type === '2'">
+        <div *ngFor="let answer of answers[startTest]">
+            <mat-checkbox
+                id="{{ answer.answer_id }}"
+                [checked]="getTrueAnswer(answer.answer_id, startTest)"
+                class="example-margin"
+                (change)="trueAnswerMulti($event, answer.answer_id)"
+            ></mat-checkbox>
+            <div
+                *ngIf="
+                    questions[startTest].type === '1' ||
+                    questions[startTest].type === '2'
+                "
+            >
+                {{ answer.answer_text }}
+            </div>
+        </div>
+    </ng-container>
+
+    <div *ngIf="questions[startTest].type === '3'">
+        <mat-form-field>
+            <mat-label>Ваша відповідь</mat-label>
+            <input
+                matInput
+                type="text"
+                [value]="textValue[startTest] ? textValue[startTest] : ''"
+                (change)="trueAnswerText($event)"
+            />
+        </mat-form-field>
+    </div>
+    <div *ngIf="questions[startTest].type === '4'">
+        <mat-form-field>
+            <mat-label>Введіть мінімальне значення</mat-label>
+            <input matInput type="number" />
+        </mat-form-field>
+        <mat-form-field>
+            <mat-label>Введіть максимальне значення</mat-label>
+            <input matInput type="number" />
+        </mat-form-field>
+    </div>
+</form>
