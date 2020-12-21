@@ -8,7 +8,8 @@
         </div>
         <div class="test-player__content">
             <app-questions
-                [questions]="testQuestionsAndAnswers"
+                (studentAnswer)="studentAnswer($event)"
+                [questionsAndAnswers]="testQuestionsAndAnswers"
             ></app-questions>
         </div>
     </div>
