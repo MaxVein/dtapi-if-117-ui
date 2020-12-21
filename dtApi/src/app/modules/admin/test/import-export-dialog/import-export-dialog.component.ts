@@ -89,15 +89,15 @@ export class ImportExportDialogComponent implements OnInit {
                         }
                     });
                 });
-                let blob = new Blob(
+                const blob = new Blob(
                     [JSON.stringify(this.testFullData, null, 2)],
                     {
                         type: 'text/json',
                     }
                 );
 
-                let url = URL.createObjectURL(blob);
-                let link = document.createElement('a');
+                const url = URL.createObjectURL(blob);
+                const link = document.createElement('a');
                 link.setAttribute('href', url);
                 link.setAttribute('download', 'data.json');
                 link.click();
@@ -108,7 +108,7 @@ export class ImportExportDialogComponent implements OnInit {
     }
     fileUpload(e) {
         this.file = e.target.files[0];
-        let fileReader = new FileReader();
+        const fileReader = new FileReader();
         fileReader.onload = (e) => {
             this.fileData = JSON.parse(fileReader.result.toString());
         };
