@@ -12,8 +12,8 @@ import { StudentsModalComponent } from '../students-modal/students-modal.compone
 import { StudentsTransferModalComponent } from '../students-transfer-modal/students-transfer-modal.component';
 import { StudentsViewModalComponent } from '../students-view-modal/students-view-modal.component';
 import { ConfirmComponent } from '../../../../../shared/components/confirm/confirm.component';
-import { AlertComponent } from '../../../../../shared/components/alert/alert.component';
 import { ModalService } from '../../../../../shared/services/modal.service';
+import { AlertService } from '../../../../../shared/services/alert.service';
 import { StudentsService } from '../../services/students.service';
 import { Subscription } from 'rxjs';
 import {
@@ -21,20 +21,7 @@ import {
     Response,
     Student,
 } from '../../../../../shared/interfaces/entity.interfaces';
-import {
-    cancelErrorMessage,
-    closeError,
-    closeMessageE,
-    errorMessage,
-    notStudentDataMessage,
-    notViewStudentData,
-    removeStudentMessage,
-    studentRemoveMessage,
-    studentsTableColumns,
-    titleErrorMessage,
-    transferStudentMessage,
-    updateStudentMessage,
-} from '../../../Messages';
+import { studentsMessages, studentsTableColumns } from '../../../Messages';
 
 @Component({
     selector: 'app-students-table',
@@ -53,7 +40,8 @@ export class StudentsTableComponent implements AfterViewInit, OnDestroy {
 
     constructor(
         private studentsService: StudentsService,
-        public modalService: ModalService
+        public modalService: ModalService,
+        private alertService: AlertService
     ) {}
 
     ngAfterViewInit(): void {
@@ -85,8 +73,10 @@ export class StudentsTableComponent implements AfterViewInit, OnDestroy {
                 },
             },
             (result: DialogResult) => {
-                if (result.message === titleErrorMessage) {
-                    this.modalService.showSnackBar(closeError);
+                if (result.message === studentsMessages('modalError')) {
+                    this.alertService.message(
+                        studentsMessages('modalErrClose')
+                    );
                 } else if (result.message.response === 'ok') {
                     const index = this.dataSource.data.findIndex(
                         (s) => s.user_id === result.id
@@ -94,9 +84,9 @@ export class StudentsTableComponent implements AfterViewInit, OnDestroy {
                     result.data.user_id = result.id;
                     this.dataSource.data[index] = result.data;
                     this.dataSource._updateChangeSubscription();
-                    this.modalService.showSnackBar(updateStudentMessage);
-                } else if (result.message === cancelErrorMessage) {
-                    this.modalService.showSnackBar(cancelErrorMessage);
+                    this.alertService.message(studentsMessages('update'));
+                } else if (result.message === studentsMessages('modalCancel')) {
+                    this.alertService.message(studentsMessages('modalCancel'));
                 }
             }
         );
@@ -112,15 +102,17 @@ export class StudentsTableComponent implements AfterViewInit, OnDestroy {
                 },
             },
             (result: DialogResult) => {
-                if (result.message === titleErrorMessage) {
-                    this.modalService.showSnackBar(closeError);
+                if (result.message === studentsMessages('modalError')) {
+                    this.alertService.message(
+                        studentsMessages('modalErrClose')
+                    );
                 } else if (result.message.response === 'ok') {
                     this.dataSource.data = this.dataSource.data.filter(
                         (s) => s.user_id !== result.id
                     );
-                    this.modalService.showSnackBar(transferStudentMessage);
-                } else if (result.message === cancelErrorMessage) {
-                    this.modalService.showSnackBar(cancelErrorMessage);
+                    this.alertService.message(studentsMessages('transfer'));
+                } else if (result.message === studentsMessages('modalCancel')) {
+                    this.alertService.message(studentsMessages('modalCancel'));
                 }
             }
         );
@@ -137,12 +129,16 @@ export class StudentsTableComponent implements AfterViewInit, OnDestroy {
                 },
             },
             (result: DialogResult) => {
-                if (result.message === closeMessageE) {
-                    this.modalService.showSnackBar(closeMessageE);
-                } else if (result.message === titleErrorMessage) {
-                    this.modalService.showSnackBar(closeError);
-                } else if (result.message === notViewStudentData) {
-                    this.modalService.showSnackBar(notStudentDataMessage);
+                if (result.message === studentsMessages('modalError')) {
+                    this.alertService.message(
+                        studentsMessages('modalErrClose')
+                    );
+                } else if (result.message === studentsMessages('modalClose')) {
+                    this.alertService.message(studentsMessages('modalClose'));
+                } else if (
+                    result.message === studentsMessages('viewDataError')
+                ) {
+                    this.alertService.message(studentsMessages('notViewData'));
                 }
             }
         );
@@ -154,14 +150,18 @@ export class StudentsTableComponent implements AfterViewInit, OnDestroy {
             {
                 data: {
                     icon: 'person_remove',
-                    message: removeStudentMessage(firstname, lastname),
+                    message: studentsMessages(
+                        'confirmRemove',
+                        firstname,
+                        lastname
+                    ),
                 },
             },
             (result: DialogResult) => {
                 if (result) {
                     this.delete(id);
                 } else if (!result) {
-                    this.modalService.showSnackBar(cancelErrorMessage);
+                    this.alertService.message(studentsMessages('modalCancel'));
                 }
             }
         );
@@ -174,23 +174,13 @@ export class StudentsTableComponent implements AfterViewInit, OnDestroy {
                     this.dataSource.data = this.dataSource.data.filter(
                         (s) => s.user_id !== id
                     );
-                    this.modalService.showSnackBar(studentRemoveMessage);
+                    this.alertService.message(studentsMessages('remove'));
                 }
             },
             (error: Response) => {
-                this.errorHandler(error, titleErrorMessage, errorMessage);
+                this.alertService.error(studentsMessages('removeError'));
             }
         );
-    }
-
-    errorHandler(error: Response, title: string, message: string): void {
-        this.modalService.openModal(AlertComponent, {
-            data: {
-                message,
-                title,
-                error,
-            },
-        });
     }
 
     ngOnDestroy(): void {
