@@ -32,6 +32,7 @@ export class TestPlayerComponent implements OnInit, OnDestroy {
     currentTest: TestDetails;
     testQuestionsAndAnswers: QA[] = [];
     playerSubscription: Subscription;
+    studentAnswers = [];
 
     @HostListener('window:beforeunload', ['$event'])
     onReloadHandler(event: Event): void {
@@ -134,7 +135,13 @@ export class TestPlayerComponent implements OnInit, OnDestroy {
         }
     }
 
+    studentAnswer(event) {
+        this.studentAnswers = event;
+    }
     checkTest(): void {
+        this.testPlayerService
+            .getResult(this.studentAnswers)
+            .subscribe((res) => {});
         this.router.navigate(['/student/test-player/results']);
         // this.playerSubscription = this.testPlayerService.checkDoneTest().subscribe()
     }

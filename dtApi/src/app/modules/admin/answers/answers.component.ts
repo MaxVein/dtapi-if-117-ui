@@ -168,7 +168,7 @@ export class AnswersComponent implements OnInit {
             case 'Мульти вибір':
                 this.state.type = '2';
                 break;
-            case 'Текстовий':
+            case '	Текстове поле':
                 this.state.type = '3';
                 break;
             case 'Числове поле вводу':
@@ -575,8 +575,6 @@ export class AnswersComponent implements OnInit {
         this.createAnswerData();
         this.createQuestionData();
         if (
-            (this.answersType.controls.length === 0 &&
-                this.answersTypeNumeric.invalid) ||
             (this.compareAnswers() && this.compareQuestions()) ||
             (this.answersTypeNumeric.errors?.comparisonError &&
                 this.typeOfQuestion === '4')
@@ -610,14 +608,7 @@ export class AnswersComponent implements OnInit {
     }
     cancelButton(e: MouseEvent): void {
         e.preventDefault();
-        this.router.navigate(
-            [`admin/subjects/tests/${this.testId}/questions`],
-            {
-                queryParams: {
-                    test_id: this.testId,
-                },
-            }
-        );
+        this.navigateToQuestionPage();
     }
     navigateToQuestionPage(): void {
         this.router.navigate(
