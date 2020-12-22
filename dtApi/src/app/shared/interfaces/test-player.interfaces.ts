@@ -65,18 +65,3 @@ export interface AnswerData {
     question_id: number;
     answer_ids: any[];
 }
-export interface QuestionsAndAnswers {
-    answers: Answers[];
-    attachment: string;
-    level: string;
-    question_id: string;
-    question_text: string;
-    test_id: string;
-    type: string;
-}
-export interface Answers {
-    answer_id: string;
-    answer_text: string;
-    attachment: string;
-    question_id: string;
-}
