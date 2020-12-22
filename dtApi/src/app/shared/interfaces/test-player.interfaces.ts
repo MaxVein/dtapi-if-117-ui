@@ -61,3 +61,7 @@ export interface TestDetailsByTest {
 export interface QA extends Question {
     answers: Answer[];
 }
+export interface AnswerData {
+    question_id: number;
+    answer_ids: any[];
+}

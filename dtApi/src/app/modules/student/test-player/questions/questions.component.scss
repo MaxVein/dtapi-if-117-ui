@@ -1,4 +1,22 @@
 .button-question {
     display: flex;
     flex-wrap: wrap;
+    justify-content: center;
+    button {
+        margin: 3px;
+    }
+}
+
+.active {
+    background-color: rgb(226, 226, 221) !important;
+    color: black !important;
+}
+
+.done {
+    background-color: rgb(43, 161, 43) !important;
+}
+
+.answer-text {
+    margin-left: 5px;
+    font-size: 1rem;
 }
