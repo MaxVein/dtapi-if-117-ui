@@ -2,7 +2,7 @@ import { Component, Inject, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { QuestionInstance, typeReverse } from '../Question';
+import { QuestionInstance } from '../Question';
 import { QuestionService } from '../question.service';
 
 @Component({
@@ -19,9 +19,40 @@ export class UpdateQuestionModalComponent implements OnInit {
         public data: { question: QuestionInstance },
         private formBuilder: FormBuilder,
         private questionservice: QuestionService,
-        private snackBar: MatSnackBar
+        private snackBar: MatSnackBar,
+        private questionService: QuestionService
     ) {}
 
+    submit(data: { question: QuestionInstance }): void {
+        if (this.QuestionUpdateForm.valid) {
+            this.questionservice
+                .updateQuestion(
+                    JSON.stringify(this.QuestionUpdateForm.value),
+                    data.question.question_id
+                )
+                .subscribe(
+                    (result: QuestionInstance) =>
+                        this.questionService.resultSuccess(
+                            {
+                                res: result,
+                                snackBar: this.snackBar,
+                                dialogRef: this.dialogRef,
+                                message: 'Питання було відредаговано',
+                            },
+                            'Update'
+                        ),
+                    () =>
+                        this.questionService.resultFailed({
+                            snackBar: this.snackBar,
+                            message: 'Потрібно щось змінити',
+                        })
+                );
+        }
+    }
+
+    onNoClick(): void {
+        this.dialogRef.close();
+    }
     ngOnInit(): void {
         this.QuestionUpdateForm = this.formBuilder.group({
             question_text: new FormControl(
@@ -31,39 +62,5 @@ export class UpdateQuestionModalComponent implements OnInit {
                 this.data.question ? this.data.question.level : null
             ),
         });
-    }
-
-    submit(data: { question: any }): void {
-        if (this.QuestionUpdateForm.valid) {
-            this.questionservice
-                .updateQuestion(
-                    JSON.stringify(this.QuestionUpdateForm.value),
-                    data.question.question_id
-                )
-                .subscribe(
-                    (result: QuestionInstance) => this.resultSuccess(result),
-                    () => this.resultFailed()
-                );
-        }
-    }
-    resultSuccess(res: QuestionInstance): void {
-        if (!res) return null;
-        this.snackBar.open('Питання було відредаговано', 'X', {
-            duration: 3000,
-        });
-        this.dialogRef.close({
-            finished: true,
-            updatedquestion: {
-                ...res[0],
-            },
-        });
-    }
-    resultFailed(): void {
-        this.snackBar.open('Потрібно щось змінити', 'X', {
-            duration: 3000,
-        });
-    }
-    onNoClick(): void {
-        this.dialogRef.close();
     }
 }

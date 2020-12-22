@@ -1,24 +1,15 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { ProfileService } from '../services/profile.service';
+import { AlertService } from '../../../shared/services/alert.service';
 import { ModalService } from '../../../shared/services/modal.service';
-import { AlertComponent } from '../../../shared/components/alert/alert.component';
 import { Subscription } from 'rxjs';
 import {
-    DialogResult,
     Response,
-    Student,
     Subject,
 } from '../../../shared/interfaces/entity.interfaces';
 import { StudentProfile } from '../../../shared/interfaces/student.interfaces';
-import {
-    errorTitleMessage,
-    isMatchErrorMessage,
-    notSubjectsErrorMessage,
-    profileStudentMessage,
-    profileSubjectsMessage,
-    welcomeMessage,
-} from '../Messages';
+import { profileMessages } from '../Messages';
 
 @Component({
     selector: 'app-profile-page',
@@ -35,7 +26,8 @@ export class ProfilePageComponent implements OnInit, OnDestroy {
     constructor(
         private router: Router,
         private profileService: ProfileService,
-        public modalService: ModalService
+        public modalService: ModalService,
+        private alertService: AlertService
     ) {}
 
     ngOnInit(): void {
@@ -49,14 +41,14 @@ export class ProfilePageComponent implements OnInit, OnDestroy {
         this.profileSubscription = this.profileService
             .getAllStudentData()
             .subscribe(
-                (response: Student) => {
+                (response: StudentProfile) => {
                     if (response) {
-                        this.groupId = response.group_id;
-                        this.studentProfileData = response;
-                        this.loading = false;
-                        this.modalService.showSnackBar(
-                            welcomeMessage(response)
+                        this.alertService.message(
+                            profileMessages('welcome', response)
                         );
+                        this.studentProfileData = response;
+                        this.groupId = response.group_id;
+                        this.loading = false;
                     } else {
                         this.studentProfileData = null;
                         this.loading = false;
@@ -64,11 +56,7 @@ export class ProfilePageComponent implements OnInit, OnDestroy {
                 },
                 (error: Response) => {
                     this.loading = false;
-                    this.errorHandler(
-                        error,
-                        errorTitleMessage,
-                        profileStudentMessage
-                    );
+                    this.alertService.error(profileMessages('student'));
                 }
             );
     }
@@ -81,16 +69,14 @@ export class ProfilePageComponent implements OnInit, OnDestroy {
                     if (response) {
                         this.subjects = response;
                     } else {
-                        this.modalService.showSnackBar(notSubjectsErrorMessage);
+                        this.alertService.message(
+                            profileMessages('emptySubjects')
+                        );
                     }
                 },
                 (error: Response) => {
                     this.loading = false;
-                    this.errorHandler(
-                        error,
-                        errorTitleMessage,
-                        profileSubjectsMessage
-                    );
+                    this.alertService.error(profileMessages('subjects'));
                 }
             );
     }
@@ -98,32 +84,9 @@ export class ProfilePageComponent implements OnInit, OnDestroy {
     isMatch(): void {
         const match = localStorage.getItem('isMatch');
         if (match === 'notMatch') {
-            this.modalService.openModal(AlertComponent, {
-                data: {
-                    title: errorTitleMessage,
-                    message: isMatchErrorMessage,
-                },
-            });
+            this.alertService.error(profileMessages('isMatch'));
         }
         localStorage.setItem('isMatch', null);
-    }
-
-    errorHandler(error: Response, title: string, message: string): void {
-        this.modalService.openModal(
-            AlertComponent,
-            {
-                data: {
-                    message,
-                    title,
-                    error,
-                },
-            },
-            (result: DialogResult) => {
-                if (!result) {
-                    this.router.navigate(['/student/profile']);
-                }
-            }
-        );
     }
 
     ngOnDestroy(): void {

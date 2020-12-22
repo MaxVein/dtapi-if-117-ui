@@ -1,25 +1,54 @@
-import { TestDetails } from '../../shared/interfaces/student.interfaces';
-import { Student } from '../../shared/interfaces/entity.interfaces';
+import {
+    StudentProfile,
+    TestDate,
+    TestDetails,
+} from '../../shared/interfaces/student.interfaces';
 
-// Student Module Shared Messages //
-export const errorTitleMessage = 'Помилка';
-export const warningTitleMessage = 'Попередження';
-export const cancelMessage = 'Скасовано';
-export const baseErrorMessage = 'Сталася помилка. Спробуйте знову';
-export const logoutErrorMessage = 'Сталася помилка при виході. Спробуйте знову';
+// Logout Messages //
+type Logout = 'error' | 'logout' | 'testInProcess';
 
-export function themeChangeMessage(theme: string): string {
-    if (theme === 'default-theme') {
-        return 'Ви змінили тему додатку на світлу';
-    } else {
-        return 'Ви змінили тему додатку на темну';
+export function logoutMessages(logout: Logout): string {
+    if (logout === 'error') {
+        return 'Сталася помилка при виході. Спробуйте знову';
+    } else if (logout === 'logout') {
+        return 'Ви успішно здійснили вихід з профілю! Успіхів!';
+    } else if (logout === 'testInProcess') {
+        return 'Ви дійсно хочете покинути профіль? Тест триває! Якщо ви вийдете, ваша спроба та поточні відповіді будуть зараховані!';
     }
 }
 
-export const testLogoutConfirmMessage =
-    'Ви дійсно хочете покинути профіль? Тест триває! Якщо ви вийдете, ваша спроба та поточні відповіді будуть зараховані!';
+// TestPlayer Server Messages //
+type TestPlayer = 'get' | 'save' | 'reset';
 
-// Student Module Profile Page Messages //
+export function testPlayerServerMessages(testPlayer: TestPlayer): string {
+    if (testPlayer === 'get') {
+        return 'Сталася помилка при отриманні даних із сесії. Невдається продовжити операцію! Спробуйте знову';
+    } else if (testPlayer === 'reset') {
+        return 'Сталася помилка при видаленні сесії. Невдається продовжити операцію! Спробуйте знову';
+    } else if (testPlayer === 'save') {
+        return 'Сталася помилка при збереженні даних у сесії. Невдається продовжити операцію! Спробуйте знову';
+    }
+}
+
+// SnackBar Messages //
+type SnackBar = 'cancel' | 'close';
+
+export function snackBarMessages(snackBar: SnackBar): string {
+    if (snackBar === 'cancel') {
+        return 'Скасовано';
+    }
+}
+
+// Theme Messages //
+export function themeChangeMessage(theme: string): string {
+    if (theme === 'default-theme') {
+        return 'Тему додатку змінено на світлу';
+    } else {
+        return 'Тему додатку змінено на темну';
+    }
+}
+
+// Profile Page Messages //
 export const testsTableColumns = [
     'Предмет',
     'Тест',
@@ -30,152 +59,179 @@ export const testsTableColumns = [
     'Кількість спроб',
     'Почати тестування',
 ];
-export const notSubjectsErrorMessage = 'Предмети відсутні';
-export const isMatchErrorMessage =
-    'Неможливо здати даний тест. У сесії відсутній код даного тесту';
+type Profile = 'subjects' | 'student' | 'emptySubjects' | 'isMatch' | 'welcome';
 
-export function welcomeMessage(response: Student): string {
-    return `Ласкаво просимо ${response.student_surname} ${response.student_name} ${response.student_fname}`;
-}
-
-export const profileStudentMessage =
-    'Сталася помилка. Не вдалося отримати дані студента. Спробуйте знову';
-export const profileSubjectsMessage =
-    'Сталася помилка. Не вдалося отримати предмети студента. Спробуйте знову';
-
-export function profileTestMessage(subjectName: string): string {
-    return `Сталася помилка. Не вдалося отримати тести з предмету ${subjectName}. Спробуйте знову`;
-}
-
-export const notTestData = 'Дані відсутні';
-
-export function uploadTests(isTest: boolean): string {
-    if (isTest) {
-        return 'Тести завантажено';
-    } else {
-        return 'Тести відсутні';
-    }
-}
-
-export function isTestStart(testStart: boolean): string {
-    if (testStart) {
-        return 'Тест розпочато! Час пішов!';
-    } else {
-        return 'Сталася помилка при старті тесту! Спробуйте знову';
-    }
-}
-
-export function testLogError1(error: boolean): string {
-    if (error) {
-        return 'You cannot make the test due to your schedule';
-    } else {
-        return 'Сталася помилка! Ви не можете пройти тест за своїм розкладом';
-    }
-}
-
-export function testLogError2(error: boolean): string {
-    if (error) {
-        return 'Error: The number of needed questions for the quiz is not suitable due to test details';
-    } else {
-        return 'Сталася помилка! Кількість необхідних питань для вікторини не підходить через деталі тесту';
-    }
-}
-
-export function testLogError3(error: boolean): string {
-    if (error) {
-        return 'You cannot make the test due to used all attempts';
-    } else {
-        return 'Сталася помилка! Ви використали всі спроби для здачі даного тесту';
-    }
-}
-
-export function testLogError4(error: boolean): string {
-    if (error) {
-        return 'User is making test at current moment';
-    } else {
-        return 'Користувач здає тест у даний момент';
-    }
-}
-
-export function testLogError5(error: boolean): string {
-    if (error) {
-        return 'You can start tests which are only for you!!!';
-    } else {
-        return 'Ви можете розпочати тести, які призначені лише Вам';
-    }
-}
-
-export function testLogError6(error: boolean): string {
-    if (error) {
-        return 'Test detail parameters not found for requested test';
-    } else {
-        return 'Не знайдено детальних параметрів для запитуваного тесту';
-    }
-}
-
-export function testLogError7(error: boolean): string {
-    if (error) {
-        return 'Error. User made test recently';
-    } else {
-        return 'Користувач здав даний тест недавно. Зачекайте деякий час ( до 1хв )';
-    }
-}
-
-export function confirmStartTestMessage(test: TestDetails): string {
-    return `Розпочати тест ${test.test_name} з предмету ${test.subjectname}?
-                    Тривалість тесту ${test.time_for_test} та ${test.attempts} спроби на здачу ${test.tasks} завдань!`;
-}
-
-export function testWillBeAvailableTodayMessage(startTime: string): string {
-    return `Ви не можете здавати цей екзамен! Екзамен буде доступний сьогодні о ${startTime}`;
-}
-
-export function testNoAvailableMessage(endDate: string): string {
-    return `Ви не можете здавати цей екзамен! Екзамен більше не доступний! Кінцева дата здачі була ${endDate}`;
-}
-
-export function testWillBeAvailableLaterMessage(
-    startDate: string,
-    startTime: string
+export function profileMessages(
+    profile: Profile,
+    response?: StudentProfile
 ): string {
-    return `Ви не можете здавати цей екзамен! Екзамен буде доступний ${startDate} о ${startTime}`;
+    if (profile === 'student') {
+        return `Сталася помилка. Не вдалося отримати дані Ваші дані. Спробуйте знову`;
+    } else if (profile === 'subjects') {
+        return `Сталася помилка. Не вдалося отримати предмети Вашої групи. Спробуйте знову`;
+    } else if (profile === 'emptySubjects') {
+        return 'Предмети у групи відсутні';
+    } else if (profile === 'isMatch') {
+        return 'Неможливо здати даний тест! У сесії відсутні дані про тест, який Ви хочете здавати';
+    } else if (profile === 'welcome') {
+        return `Ласкаво просимо ${response.student_surname} ${response.student_name} ${response.student_fname}`;
+    }
 }
 
-export function notDataRequiredMessage(): string {
-    return `Екзамен не доступний! Немає потрібних даних`;
+// Schedule Table Messages //
+type Schedule =
+    | 'isTests'
+    | 'noTests'
+    | 'noTestData'
+    | 'activeTestsError'
+    | 'subjectTestsError'
+    | 'confirmStartTest';
+
+export function scheduleMessages(
+    schedule: Schedule,
+    subjectName?: string,
+    test?: TestDetails
+): string {
+    if (schedule === 'isTests') {
+        return 'Тести завантажено';
+    } else if (schedule === 'noTests') {
+        return 'Тести відсутні';
+    } else if (schedule === 'noTestData') {
+        return 'Дані відсутні';
+    } else if (schedule === 'activeTestsError') {
+        return 'Сталася помилка під час складання списку активних тестів. Спробуйте знову';
+    } else if (schedule === 'subjectTestsError') {
+        return `Сталася помилка. Не вдалося отримати тести з предмету ${subjectName}. Спробуйте знову`;
+    } else if (schedule === 'confirmStartTest') {
+        return `Розпочати тест ${test.test_name} з предмету ${test.subjectname}?
+                    Тривалість тесту ${test.time_for_test} та ${test.attempts} спроби на здачу ${test.tasks} завдань!`;
+    }
 }
 
-// Student Module Test Player Messages //
-export function testPlayerQAError1(error: boolean): string {
-    if (error) {
+// Check Date For Pass Test Messages //
+type CheckTestDate =
+    | 'noAvailable'
+    | 'willBeAvailableLater'
+    | 'notData'
+    | 'willBeAvailableToday';
+
+export function checkTestDateMessages(
+    check: CheckTestDate,
+    test: TestDate
+): string {
+    if (check === 'noAvailable') {
+        return `Ви не можете здавати цей екзамен! Екзамен більше не доступний! Кінцева дата здачі була ${test.end_date}`;
+    } else if (check === 'willBeAvailableLater') {
+        return `Ви не можете здавати цей екзамен! Екзамен буде доступний ${test.start_date} о ${test.start_time}`;
+    } else if (check === 'notData') {
+        return `Екзамен не доступний! Немає потрібних даних`;
+    } else if (check === 'willBeAvailableToday') {
+        return `Ви не можете здавати цей екзамен! Екзамен буде доступний сьогодні о ${test.start_time}`;
+    }
+}
+
+// Start Test Messages //
+type StartTestPlayer =
+    | 'startTest'
+    | 'getLogError'
+    | 'saveSessionError'
+    | 'getSessionError'
+    | 'scheduleError'
+    | 'numberOfQuestions'
+    | 'allAttempts'
+    | 'makingTest'
+    | 'onlyForYou'
+    | 'paramsNotFound'
+    | 'madeRecently'
+    | 'default';
+
+export function startTestPlayerMessages(
+    startTest: StartTestPlayer,
+    error?: boolean
+): string {
+    if (startTest === 'startTest') {
+        return 'Тест розпочато! Час пішов!';
+    } else if (startTest === 'saveSessionError') {
+        return 'Сталася помилка при старті тесту! Не вдалося зберегти дані у сесії для здачі тесту! Спробуйте знову';
+    } else if (startTest === 'getSessionError') {
+        return 'Сталася помилка при спробі продовжити тест! Не вдалося отримати дані з сесії для здачі тесту! Спробуйте знову';
+    } else if (startTest === 'scheduleError' && error) {
+        return 'You cannot make the test due to your schedule';
+    } else if (startTest === 'scheduleError' && !error) {
+        return 'Сталася помилка! Ви не можете пройти тест за своїм розкладом';
+    } else if (startTest === 'numberOfQuestions' && error) {
+        return 'Error: The number of needed questions for the quiz is not suitable due to test details';
+    } else if (startTest === 'numberOfQuestions' && !error) {
+        return 'Сталася помилка! Кількість необхідних питань для вікторини не підходить через деталі тесту';
+    } else if (startTest === 'allAttempts' && error) {
+        return 'You cannot make the test due to used all attempts';
+    } else if (startTest === 'allAttempts' && !error) {
+        return 'Сталася помилка! Ви використали всі спроби для здачі даного тесту';
+    } else if (startTest === 'makingTest' && error) {
+        return 'User is making test at current moment';
+    } else if (startTest === 'makingTest' && !error) {
+        return 'Сталася помилка! Користувач здає тест у даний момент';
+    } else if (startTest === 'onlyForYou' && error) {
+        return 'You can start tests which are only for you!!!';
+    } else if (startTest === 'onlyForYou' && !error) {
+        return 'Сталася помилка! Ви можете розпочати тести, які призначені лише Вам';
+    } else if (startTest === 'paramsNotFound' && error) {
+        return 'Test detail parameters not found for requested test';
+    } else if (startTest === 'paramsNotFound' && !error) {
+        return 'Сталася помилка! Не знайдено детальних параметрів для запитуваного тесту';
+    } else if (startTest === 'madeRecently' && error) {
+        return 'Error. User made test recently';
+    } else if (startTest === 'madeRecently' && !error) {
+        return 'Сталася помилка! Користувач здав даний тест недавно. Зачекайте деякий час ( до 1хв )';
+    } else if (startTest === 'default') {
+        return 'Сталася помилка! Невідома помилка, тест розпочати не вдається! Спробуйте знову';
+    }
+}
+
+// Test Player Messages //
+type TestPlayerClient =
+    | 'withoutMakingQuiz'
+    | 'enoughNumber'
+    | 'default'
+    | 'finish'
+    | 'sureFinish';
+
+export function testPlayerMessages(
+    testPlayer: TestPlayerClient,
+    error?: boolean,
+    testName?: string,
+    gone?: boolean
+): string {
+    if (testPlayer === 'default') {
+        return 'Сталася помилка! Невідома помилка при отриманні запитань до тесту, тест розпочати не вдається! Спробуйте знову';
+    } else if (testPlayer === 'withoutMakingQuiz' && error) {
         return 'You cannot call this method without making an quiz';
-    } else {
+    } else if (testPlayer === 'withoutMakingQuiz' && !error) {
         return 'Сталася помилка! Неможливо запустити даний текст';
-    }
-}
-
-export function testPlayerQAError2(error: boolean): string {
-    if (error) {
+    } else if (testPlayer === 'enoughNumber' && error) {
         return 'Not enough number of questions for quiz';
-    } else {
-        return 'Сталася помилка! Недостатня кількість питань для тесту';
-    }
-}
-
-export function areYouSureFinishTestMessage(testName: string): string {
-    return `Ви впевнені, що хочете завершити ${testName}?`;
-}
-
-export function testPlayerFinishMessage(gone: boolean): string {
-    if (gone) {
+    } else if (testPlayer === 'enoughNumber' && !error) {
+        return 'Сталася помилка! Недостатня кількість питань для тесту! Неможливо продовжити! Спробуйте знову';
+    } else if (testPlayer === 'sureFinish') {
+        return `Ви впевнені, що хочете завершити ${testName}?`;
+    } else if (testPlayer === 'finish' && gone) {
         return 'Час здачі тесту вийшов! Ваш результат!';
-    } else {
+    } else if (testPlayer === 'finish' && !gone) {
         return 'Ви закінчили тест! Ваш результат!';
     }
 }
 
-export const sessionErrorMessage = 'Помилка сесії';
-export const timerErrorMessage = 'Помилка таймера';
-export const endTimeErrorMessage = 'Не вдалося отримати час закінчення тесту';
-export const saveTimeErrorMessage = 'Не вдалося зберегти час';
-export const synchronizeErrorMessage = 'Не вдалося синхронізувати час';
+// Timer Messages //
+type Timer = 'timerError' | 'endError' | 'saveError' | 'syncError';
+
+export function timerMessages(timer: Timer): string {
+    if (timer === 'syncError') {
+        return 'Сталася помилка! Не вдалося синхронізувати час! Неможливо продовжити! Спробуйте знову';
+    } else if (timer === 'endError') {
+        return 'Сталася помилка! Не вдалося отримати час закінчення тесту! Неможливо продовжити! Спробуйте знову';
+    } else if (timer === 'saveError') {
+        return 'Сталася помилка! Не вдалося зберегти час тесту! Неможливо продовжити! Спробуйте знову';
+    } else if (timer === 'timerError') {
+        return 'Сталася помилка! Проблеми таймера! Спробуйте знову';
+    }
+}

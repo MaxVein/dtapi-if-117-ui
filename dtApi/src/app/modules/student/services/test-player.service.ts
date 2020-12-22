@@ -24,6 +24,13 @@ import {
 export class TestPlayerService {
     constructor(private http: HttpClient, private authService: AuthService) {}
 
+    getResult(payload) {
+        return this.http.post(
+            `${environment.BASEURL}SAnswer/checkAnswers`,
+            payload
+        );
+    }
+
     getTestDetailsByTest(id: number): Observable<TestDetailsByTest[]> {
         return this.http.get<TestDetailsByTest[]>(
             `${environment.BASEURL}testDetail/getTestDetailsByTest/${id}`
@@ -85,16 +92,23 @@ export class TestPlayerService {
                 );
             }),
             switchMap((questions: Question[] | any) => {
-                const answers$ = questions.map(({ question_id }) =>
+                questions.map(({ question_id }) =>
                     this.getTestAnswers(+question_id)
                 );
+                const answers$ = questions.map(({ question_id, type }) => {
+                    if (type === '1' || type === '2') {
+                        return this.getTestAnswers(+question_id);
+                    } else {
+                        return of([]);
+                    }
+                });
                 return forkJoin([of(questions), forkJoin(answers$)]);
             }),
             map(([question, answers]: QA[] | any) => {
-                return question.map((question: Question) => {
+                return question.map((question: Question, index: number) => {
                     return {
                         ...question,
-                        answers: answers.flat(),
+                        answers: answers[index].flat(),
                     };
                 });
             })

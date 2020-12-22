@@ -1,16 +1,14 @@
-import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
+
 import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
-import { ActivatedRoute, Router } from '@angular/router';
+
 import { DeleteConfirmationModalComponent } from './delete-confirmation-modal/delete-confirmation-modal.component';
-import {
-    QuestionDataAfterClosed,
-    QuestionInstance,
-    typeReverse,
-} from './Question';
+import { QuestionDataAfterClosed, QuestionInstance } from './Question';
 import { QuestionService } from './question.service';
 import { UpdateQuestionModalComponent } from './update-question-modal/update-question-modal.component';
 
@@ -22,10 +20,9 @@ import { UpdateQuestionModalComponent } from './update-question-modal/update-que
 })
 export class QuestionComponent implements OnInit {
     displayedColumns: string[] = ['id', 'Text', 'Type', 'Level', 'operations'];
-    dataSource: MatTableDataSource<[]>;
+    dataSource: MatTableDataSource<QuestionInstance>;
     questionsArray: Array<QuestionInstance> = [];
     subscribed = true;
-
     test_id: number;
 
     @ViewChild(MatPaginator) paginator: MatPaginator;
@@ -82,7 +79,7 @@ export class QuestionComponent implements OnInit {
                 }
             });
     }
-    updateQuestionModelOpen(question: any): void {
+    updateQuestionModelOpen(question: QuestionInstance): void {
         this.dialog
             .open(UpdateQuestionModalComponent, {
                 data: {
@@ -92,14 +89,11 @@ export class QuestionComponent implements OnInit {
             .afterClosed()
             .subscribe((res: QuestionDataAfterClosed) => {
                 if (!res || !res.finished) return null;
-                res.updatedquestion.type = typeReverse(
-                    res.updatedquestion.type
-                );
                 const oldindex = this.dataSource.data.findIndex(
-                    (item) => item === question
+                    (item: QuestionInstance) => item === question
                 );
                 this.dataSource.data = this.dataSource.data.map(
-                    (curQuestion: any, curIndex) => {
+                    (curQuestion: QuestionInstance, curIndex) => {
                         return curIndex === oldindex
                             ? res.updatedquestion
                             : curQuestion;
@@ -117,7 +111,6 @@ export class QuestionComponent implements OnInit {
             }
         );
     }
-
     ngOnInit(): void {
         this.activeRoute.params.subscribe(
             (params) => (this.test_id = params['id'])
@@ -137,7 +130,7 @@ export class QuestionComponent implements OnInit {
                 }
                 this.questionService
                     .getQuestions(this.test_id, numbersOfRecords)
-                    .subscribe((val: []) => {
+                    .subscribe((val: Array<QuestionInstance>) => {
                         this.dataSource = new MatTableDataSource(val);
                         this.dataSource.paginator = this.paginator;
                         this.paginator._intl.itemsPerPageLabel =
@@ -146,8 +139,7 @@ export class QuestionComponent implements OnInit {
                     });
             });
     }
-
-    redirectToAnswers(data) {
+    redirectToAnswers(data: QuestionInstance): void {
         this.router.navigate(
             [`admin/subjects/tests/${this.test_id}/questions/answer`],
 
