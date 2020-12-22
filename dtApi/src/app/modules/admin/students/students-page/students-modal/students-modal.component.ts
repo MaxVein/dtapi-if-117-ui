@@ -15,9 +15,8 @@ import {
     Validators,
 } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { AlertComponent } from '../../../../../shared/components/alert/alert.component';
 import { StudentsService } from 'src/app/modules/admin/students/services/students.service';
-import { ModalService } from '../../../../../shared/services/modal.service';
+import { AlertService } from '../../../../../shared/services/alert.service';
 import { Observable, of, Subscription } from 'rxjs';
 import {
     DialogResult,
@@ -28,12 +27,7 @@ import {
     ValidateStudentData,
 } from 'src/app/shared/interfaces/entity.interfaces';
 import { environment } from 'src/environments/environment';
-import {
-    cancelErrorMessage,
-    getUpdateErrorMessage,
-    titleErrorMessage,
-    updateCreateErrorMessage,
-} from '../../../Messages';
+import { studentsMessages } from '../../../Messages';
 
 @Component({
     selector: 'app-students-modal',
@@ -41,6 +35,8 @@ import {
     styleUrls: ['./students-modal.component.scss'],
 })
 export class StudentsModalComponent implements OnInit, OnDestroy {
+    @ViewChild('imageFile') inputRef: ElementRef;
+
     form: FormGroup;
     loading = false;
     submitted = false;
@@ -51,14 +47,12 @@ export class StudentsModalComponent implements OnInit, OnDestroy {
     defaultImage = environment.defaultImage;
     studentSubscription: Subscription;
 
-    @ViewChild('imageFile') inputRef: ElementRef;
-
     constructor(
-        private formBuilder: FormBuilder,
+        @Inject(MAT_DIALOG_DATA) public data: any,
         public dialogRef: MatDialogRef<StudentsModalComponent>,
+        private formBuilder: FormBuilder,
         private studentsService: StudentsService,
-        private modalService: ModalService,
-        @Inject(MAT_DIALOG_DATA) public data: any
+        private alertService: AlertService
     ) {}
 
     ngOnInit(): void {
@@ -167,12 +161,10 @@ export class StudentsModalComponent implements OnInit, OnDestroy {
                     },
                     (error: Response) => {
                         this.loading = false;
-                        this.closeModal({ message: titleErrorMessage });
-                        this.errorHandler(
-                            error,
-                            titleErrorMessage,
-                            getUpdateErrorMessage
-                        );
+                        this.closeModal({
+                            message: studentsMessages('modalError'),
+                        });
+                        this.alertService.error(studentsMessages('viewError'));
                     }
                 );
         }
@@ -215,7 +207,6 @@ export class StudentsModalComponent implements OnInit, OnDestroy {
             password_confirm: this.form.value.password_confirm,
             plain_password: this.form.value.password,
         };
-
         const studentInfo: StudentInfo = {
             email: this.form.value.email,
             username: this.form.value.username,
@@ -225,18 +216,22 @@ export class StudentsModalComponent implements OnInit, OnDestroy {
             formData.photo = this.student.photo;
         }
 
-        return Object.assign({}, formData, studentInfo);
+        if (!formData && !studentInfo) {
+            this.alertService.warning(studentsMessages('newStudentError'));
+        } else {
+            return Object.assign({}, formData, studentInfo);
+        }
     }
 
     submit(): void {
         if (this.form.invalid) {
+            this.alertService.warning(studentsMessages('formInvalid'));
             return;
         }
 
         this.form.disable();
         this.submitted = true;
         this.loading = true;
-
         const newStudent = this.studentData();
 
         if (this.data.isUpdateData) {
@@ -261,12 +256,10 @@ export class StudentsModalComponent implements OnInit, OnDestroy {
                 },
                 (error: Response) => {
                     this.loading = false;
-                    this.closeModal({ message: titleErrorMessage });
-                    this.errorHandler(
-                        error,
-                        titleErrorMessage,
-                        updateCreateErrorMessage(true)
-                    );
+                    this.closeModal({
+                        message: studentsMessages('modalError'),
+                    });
+                    this.alertService.error(studentsMessages('updateError'));
                 }
             );
     }
@@ -286,12 +279,10 @@ export class StudentsModalComponent implements OnInit, OnDestroy {
                 },
                 (error: Response) => {
                     this.loading = false;
-                    this.closeModal({ message: titleErrorMessage });
-                    this.errorHandler(
-                        error,
-                        titleErrorMessage,
-                        updateCreateErrorMessage(false)
-                    );
+                    this.closeModal({
+                        message: studentsMessages('modalError'),
+                    });
+                    this.alertService.error(studentsMessages('createError'));
                 }
             );
     }
@@ -309,18 +300,10 @@ export class StudentsModalComponent implements OnInit, OnDestroy {
         reader.readAsDataURL(file);
     }
 
-    errorHandler(error: Response, title: string, message: string): void {
-        this.modalService.openModal(AlertComponent, {
-            data: {
-                message,
-                title,
-                error,
-            },
-        });
-    }
-
     closeModal(
-        dialogResult: DialogResult = { message: cancelErrorMessage }
+        dialogResult: DialogResult = {
+            message: studentsMessages('modalCancel'),
+        }
     ): void {
         this.dialogRef.close(dialogResult);
     }

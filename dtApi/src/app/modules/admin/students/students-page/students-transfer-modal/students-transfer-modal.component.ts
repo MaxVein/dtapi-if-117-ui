@@ -1,9 +1,8 @@
 import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { MatSelectChange } from '@angular/material/select';
-import { AlertComponent } from 'src/app/shared/components/alert/alert.component';
 import { StudentsService } from 'src/app/modules/admin/students/services/students.service';
-import { ModalService } from 'src/app/shared/services/modal.service';
+import { AlertService } from '../../../../../shared/services/alert.service';
 import { Subscription } from 'rxjs';
 import {
     DialogResult,
@@ -13,14 +12,7 @@ import {
     Student,
     StudentInfo,
 } from 'src/app/shared/interfaces/entity.interfaces';
-import {
-    cancelErrorMessage,
-    getFacultyErrorMessage,
-    getGroupErrorMessage,
-    getUpdateErrorMessage,
-    titleErrorMessage,
-    transferStudentErrorMessage,
-} from '../../../Messages';
+import { studentsMessages } from '../../../Messages';
 
 @Component({
     selector: 'app-students-transfer-modal',
@@ -42,7 +34,7 @@ export class StudentsTransferModalComponent implements OnInit, OnDestroy {
         @Inject(MAT_DIALOG_DATA) public data: any,
         public dialogRef: MatDialogRef<StudentsTransferModalComponent>,
         private studentsService: StudentsService,
-        public modalService: ModalService
+        private alertService: AlertService
     ) {}
 
     ngOnInit(): void {
@@ -63,12 +55,10 @@ export class StudentsTransferModalComponent implements OnInit, OnDestroy {
                 },
                 (error: Response) => {
                     this.loading = false;
-                    this.closeModal({ message: titleErrorMessage });
-                    this.errorHandler(
-                        error,
-                        titleErrorMessage,
-                        getUpdateErrorMessage
-                    );
+                    this.closeModal({
+                        message: studentsMessages('modalError'),
+                    });
+                    this.alertService.error(studentsMessages('viewError'));
                 }
             );
     }
@@ -83,11 +73,11 @@ export class StudentsTransferModalComponent implements OnInit, OnDestroy {
                 },
                 (error: Response) => {
                     this.loading = false;
-                    this.closeModal({ message: titleErrorMessage });
-                    this.errorHandler(
-                        error,
-                        titleErrorMessage,
-                        getFacultyErrorMessage
+                    this.closeModal({
+                        message: studentsMessages('modalError'),
+                    });
+                    this.alertService.error(
+                        studentsMessages('getFacultyError')
                     );
                 }
             );
@@ -102,12 +92,10 @@ export class StudentsTransferModalComponent implements OnInit, OnDestroy {
                     this.selectedFaculty = true;
                 },
                 (error: Response) => {
-                    this.closeModal({ message: titleErrorMessage });
-                    this.errorHandler(
-                        error,
-                        titleErrorMessage,
-                        getGroupErrorMessage
-                    );
+                    this.closeModal({
+                        message: studentsMessages('modalError'),
+                    });
+                    this.alertService.error(studentsMessages('getGroupsError'));
                 }
             );
     }
@@ -137,28 +125,18 @@ export class StudentsTransferModalComponent implements OnInit, OnDestroy {
                 },
                 (error: Response) => {
                     this.loading = false;
-                    this.closeModal({ message: titleErrorMessage });
-                    this.errorHandler(
-                        error,
-                        titleErrorMessage,
-                        transferStudentErrorMessage
-                    );
+                    this.closeModal({
+                        message: studentsMessages('modalError'),
+                    });
+                    this.alertService.error(studentsMessages('transferError'));
                 }
             );
     }
 
-    errorHandler(error: Response, title: string, message: string): void {
-        this.modalService.openModal(AlertComponent, {
-            data: {
-                message,
-                title,
-                error,
-            },
-        });
-    }
-
     closeModal(
-        dialogResult: DialogResult = { message: cancelErrorMessage }
+        dialogResult: DialogResult = {
+            message: studentsMessages('modalCancel'),
+        }
     ): void {
         this.dialogRef.close(dialogResult);
     }
