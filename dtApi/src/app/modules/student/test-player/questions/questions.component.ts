@@ -1,10 +1,10 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
-
 import {
     AnswerData,
     QA,
 } from '../../../../shared/interfaces/test-player.interfaces';
 import { Answer } from '../../../../shared/interfaces/student.interfaces';
+import { MatCheckboxChange } from '@angular/material/checkbox';
 
 @Component({
     selector: 'app-questions',
@@ -13,6 +13,9 @@ import { Answer } from '../../../../shared/interfaces/student.interfaces';
 })
 export class QuestionsComponent implements OnInit {
     @Input() questionsAndAnswers: QA[];
+    @Output() onAnswer: EventEmitter<AnswerData[]> = new EventEmitter<
+        AnswerData[]
+    >();
     isAnswer: number[] = [];
     answersIdNum = [];
     answerIdsMulti: number[] = [];
@@ -21,18 +24,20 @@ export class QuestionsComponent implements OnInit {
     startTest = 0;
     sendAnswerData: AnswerData[] = [];
     textValue: string[] = [];
-    @Output() studentAnswer = new EventEmitter<AnswerData[]>();
+
     constructor() {}
+
     ngOnInit(): void {
         this.getRandomAnswers(this.questionsAndAnswers);
         this.btnCount = [...Array(this.questionsAndAnswers.length).keys()];
     }
-    changeQuestion(event: MouseEvent, index: number) {
+
+    changeQuestion(event: Event, index: number): void {
         event.preventDefault();
         this.startTest = index;
     }
 
-    trueAnswerMulti(event, id: number): void {
+    trueAnswerMulti(event: MatCheckboxChange, id: number): void {
         if (event.checked) {
             this.answerIdsMulti.push(id);
         } else if (!event.checked) {
@@ -44,11 +49,11 @@ export class QuestionsComponent implements OnInit {
             +this.questionsAndAnswers[this.startTest].question_id,
             this.answerIdsMulti
         );
-        this.studentAnswer.emit(this.removeEmptyElem(this.sendAnswerData));
+        this.onAnswer.emit(this.removeEmptyElem(this.sendAnswerData));
         this.markStudentAnswer();
     }
 
-    trueAnswerSimpleOne(event, answerId: number): void {
+    trueAnswerSimpleOne(event: MatCheckboxChange, answerId: number): void {
         if (event.checked) {
             this.completed[this.startTest] = answerId;
             this.sendAnswerData[this.startTest] = this.createStudentAnswer(
@@ -59,28 +64,35 @@ export class QuestionsComponent implements OnInit {
             this.completed[this.startTest] = null;
             this.sendAnswerData[this.startTest] = null;
         }
-        this.studentAnswer.emit(this.removeEmptyElem(this.sendAnswerData));
+        this.onAnswer.emit(this.removeEmptyElem(this.sendAnswerData));
         this.markStudentAnswer();
     }
-    trueAnswerText(event): void {
-        const value = event.target.value;
+
+    trueAnswerText(event: Event): void {
+        const value = (event.target as HTMLInputElement).value;
         this.textValue[this.startTest] = value ? value : null;
         this.sendUserAnswer(value);
     }
-    truAnswerNum(event): void {
-        const value = event.target.value;
+
+    truAnswerNum(event: Event): void {
+        const value = (event.target as HTMLInputElement).value;
         this.answersIdNum[this.startTest] = value ? value : null;
         this.sendUserAnswer(value);
     }
-    sendUserAnswer(value): void {
+
+    sendUserAnswer(value: any): void {
         this.sendAnswerData[this.startTest] = this.createStudentAnswer(
             +this.questionsAndAnswers[this.startTest].question_id,
             [value]
         );
-        this.studentAnswer.emit(this.removeEmptyElem(this.sendAnswerData));
+        this.onAnswer.emit(this.removeEmptyElem(this.sendAnswerData));
         this.markStudentAnswer();
     }
-    createStudentAnswer(questionId: number, answerId: any[]): AnswerData {
+
+    createStudentAnswer(
+        questionId: number,
+        answerId: Array<number>
+    ): AnswerData {
         return { question_id: questionId, answer_ids: answerId };
     }
 
@@ -93,6 +105,7 @@ export class QuestionsComponent implements OnInit {
             return this.sendAnswerData[index].answer_ids.includes(answerId);
         }
     }
+
     markStudentAnswer(): void {
         this.isAnswer = this.sendAnswerData.map((elem, index) => {
             return !elem ||
@@ -102,6 +115,7 @@ export class QuestionsComponent implements OnInit {
                 : index;
         });
     }
+
     getShuffledArr(arr: Answer[]): Answer[] {
         return arr.reduce(
             (newArr, _, i) => {
@@ -113,6 +127,7 @@ export class QuestionsComponent implements OnInit {
             [...arr]
         );
     }
+
     getRandomAnswers(arr: QA[]): void {
         arr.forEach((elem) => {
             elem.answers = this.getShuffledArr(elem.answers);
