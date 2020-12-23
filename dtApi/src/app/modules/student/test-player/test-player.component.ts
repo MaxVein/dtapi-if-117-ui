@@ -1,5 +1,5 @@
 import { Component, HostListener, OnDestroy, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { NavigationExtras, Router } from '@angular/router';
 import { TestPlayerService } from '../services/test-player.service';
 import { ModalService } from '../../../shared/services/modal.service';
 import { AlertService } from '../../../shared/services/alert.service';
@@ -15,6 +15,9 @@ import {
     QA,
     TestCheck,
     TestPlayerQAError,
+    AnswerData,
+    TestResult,
+    TestPlayerNavigate,
 } from '../../../shared/interfaces/test-player.interfaces';
 import {
     snackBarMessages,
@@ -31,8 +34,8 @@ export class TestPlayerComponent implements OnInit, OnDestroy {
     loading = false;
     currentTest: TestDetails;
     testQuestionsAndAnswers: QA[] = [];
+    studentAnswers: AnswerData[] = [];
     playerSubscription: Subscription;
-    studentAnswers = [];
 
     @HostListener('window:beforeunload', ['$event'])
     onReloadHandler(event: Event): void {
@@ -56,24 +59,34 @@ export class TestPlayerComponent implements OnInit, OnDestroy {
             .testPlayerGetData()
             .subscribe(
                 (response: TestPlayerResponse) => {
-                    if (
-                        +response.id !== +response.currentTest.test_id &&
-                        !response.currentTest
-                    ) {
-                        this.playerSubscription = this.testPlayerService
-                            .testPlayerResetSession()
-                            .subscribe(() => {});
-                        this.router.navigate(['/student/profile']);
-                        localStorage.setItem('isMatch', 'notMatch');
+                    if (response.response === 'Empty slot') {
+                        this.alertService.warning(
+                            testPlayerMessages('emptySlot')
+                        );
+                        this.navigateTo('profile');
                     } else {
-                        this.currentTest = response.currentTest;
-                        this.getTestQA(+response.currentTest.test_id);
+                        this.startTestPlayer(response);
                     }
                 },
                 (error: Response) => {
                     this.alertService.error(testPlayerServerMessages('get'));
                 }
             );
+    }
+
+    startTestPlayer(response: TestPlayerResponse): void {
+        if (
+            !response.id &&
+            !response.currentTest &&
+            +response.id !== +response.currentTest.test_id
+        ) {
+            this.resetSession(false);
+            this.navigateTo('profile');
+            localStorage.setItem('isMatch', 'notMatch');
+        } else {
+            this.currentTest = response.currentTest;
+            this.getTestQA(+response.currentTest.test_id);
+        }
     }
 
     getTestQA(id: number): void {
@@ -85,7 +98,7 @@ export class TestPlayerComponent implements OnInit, OnDestroy {
             (error: TestPlayerQAError) => {
                 this.loading = false;
                 this.getTestQAErrorHandler(error);
-                this.router.navigate(['/student/profile']);
+                this.navigateTo('profile');
             }
         );
     }
@@ -124,7 +137,7 @@ export class TestPlayerComponent implements OnInit, OnDestroy {
                 },
                 (result: DialogResult) => {
                     if (result) {
-                        this.resetSession();
+                        this.resetSession(true);
                     } else if (!result) {
                         this.alertService.message(snackBarMessages('cancel'));
                     }
@@ -135,23 +148,50 @@ export class TestPlayerComponent implements OnInit, OnDestroy {
         }
     }
 
-    studentAnswer(event) {
+    studentAnswer(event: AnswerData[]): void {
         this.studentAnswers = event;
-    }
-    checkTest(): void {
-        this.testPlayerService
-            .getResult(this.studentAnswers)
-            .subscribe((res) => {});
-        this.router.navigate(['/student/test-player/results']);
-        // this.playerSubscription = this.testPlayerService.checkDoneTest().subscribe()
+        sessionStorage.setItem('test_progress', JSON.stringify(event));
     }
 
-    resetSession(): void {
+    checkTest(): void {
+        this.playerSubscription = this.testPlayerService
+            .checkDoneTest(this.studentAnswers)
+            .subscribe(
+                (response: TestResult) => {
+                    this.navigateTo('results', response);
+                },
+                (error: Response) => {
+                    this.alertService.error(testPlayerMessages('checkError'));
+                    this.navigateTo('profile');
+                }
+            );
+    }
+
+    navigateTo(navigate: TestPlayerNavigate, result?: TestResult): void {
+        if (navigate === 'results') {
+            const navigationExtras: NavigationExtras = {
+                state: {
+                    result: result,
+                    countOfQuestions: this.studentAnswers.length,
+                    testName: this.currentTest.test_name,
+                    subjectName: this.currentTest.subjectname,
+                },
+            };
+            this.router.navigate(
+                ['/student/test-player/results'],
+                navigationExtras
+            );
+        } else if (navigate === 'profile') {
+            this.router.navigate(['/student/profile']);
+        }
+    }
+
+    resetSession(finish: boolean): void {
         this.playerSubscription = this.testPlayerService
             .testPlayerResetSession()
             .subscribe(
                 (response: TestPlayerResponse) => {
-                    if (response) {
+                    if (response && finish) {
                         this.alertService.message(
                             testPlayerMessages('finish', false, '', false)
                         );

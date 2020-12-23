@@ -5,11 +5,15 @@ import { AlertService } from '../../../shared/services/alert.service';
 import { ModalService } from '../../../shared/services/modal.service';
 import { Subscription } from 'rxjs';
 import {
+    DialogResult,
     Response,
     Subject,
 } from '../../../shared/interfaces/entity.interfaces';
 import { StudentProfile } from '../../../shared/interfaces/student.interfaces';
 import { profileMessages } from '../Messages';
+import { TestPlayerResponse } from '../../../shared/interfaces/test-player.interfaces';
+import { TestPlayerService } from '../services/test-player.service';
+import { ConfirmComponent } from '../../../shared/components/confirm/confirm.component';
 
 @Component({
     selector: 'app-profile-page',
@@ -26,6 +30,7 @@ export class ProfilePageComponent implements OnInit, OnDestroy {
     constructor(
         private router: Router,
         private profileService: ProfileService,
+        private testPlayerService: TestPlayerService,
         public modalService: ModalService,
         private alertService: AlertService
     ) {}
@@ -34,6 +39,7 @@ export class ProfilePageComponent implements OnInit, OnDestroy {
         this.loading = true;
         this.getStudentInfo();
         this.getSubjectInfo();
+        this.getSession();
         this.isMatch();
     }
 
@@ -79,6 +85,54 @@ export class ProfilePageComponent implements OnInit, OnDestroy {
                     this.alertService.error(profileMessages('subjects'));
                 }
             );
+    }
+
+    getSession(): void {
+        this.profileSubscription = this.testPlayerService
+            .testPlayerGetData()
+            .subscribe(
+                (response: TestPlayerResponse) => {
+                    if (
+                        response.id &&
+                        response.currentTest &&
+                        response.testInProgress
+                    ) {
+                        this.confirmContinueTest(
+                            response.currentTest.test_name,
+                            response.currentTest.subjectname
+                        );
+                    }
+                },
+                (error: Response) => {
+                    this.alertService.error(profileMessages('getSessionError'));
+                }
+            );
+    }
+
+    confirmContinueTest(testName: string, subjectName: string): void {
+        this.modalService.openModal(
+            ConfirmComponent,
+            {
+                data: {
+                    icon: 'school',
+                    message: profileMessages(
+                        'continueTest',
+                        null,
+                        testName,
+                        subjectName
+                    ),
+                },
+            },
+            (result: DialogResult) => {
+                if (result) {
+                    this.router.navigate(['student/test-player']);
+                } else if (!result) {
+                    this.alertService.message(
+                        profileMessages('snackbarCancel', null, testName)
+                    );
+                }
+            }
+        );
     }
 
     isMatch(): void {
