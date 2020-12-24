@@ -1,8 +1,7 @@
 import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { AlertComponent } from '../../../../../shared/components/alert/alert.component';
 import { StudentsService } from 'src/app/modules/admin/students/services/students.service';
-import { ModalService } from '../../../../../shared/services/modal.service';
+import { AlertService } from '../../../../../shared/services/alert.service';
 import { Subscription } from 'rxjs';
 import {
     DialogResult,
@@ -10,12 +9,7 @@ import {
     StudentProfileData,
 } from 'src/app/shared/interfaces/entity.interfaces';
 import { environment } from 'src/environments/environment';
-import {
-    closeMessageE,
-    getUpdateErrorMessage,
-    notViewStudentData,
-    titleErrorMessage,
-} from '../../../Messages';
+import { studentsMessages } from '../../../Messages';
 
 @Component({
     selector: 'app-students-view-modal',
@@ -34,7 +28,7 @@ export class StudentsViewModalComponent implements OnInit, OnDestroy {
         @Inject(MAT_DIALOG_DATA) public data: any,
         public dialogRef: MatDialogRef<StudentsViewModalComponent>,
         private studentsService: StudentsService,
-        private modalService: ModalService
+        private alertService: AlertService
     ) {}
 
     ngOnInit(): void {
@@ -48,7 +42,9 @@ export class StudentsViewModalComponent implements OnInit, OnDestroy {
             .subscribe(
                 (response: StudentProfileData) => {
                     if (!response) {
-                        this.closeModal({ message: notViewStudentData });
+                        this.closeModal({
+                            message: studentsMessages('viewDataError'),
+                        });
                     } else {
                         this.student = response;
                         this.loading = false;
@@ -56,19 +52,17 @@ export class StudentsViewModalComponent implements OnInit, OnDestroy {
                 },
                 (error: Response) => {
                     this.loading = false;
-                    this.closeModal({ message: titleErrorMessage });
-                    this.modalService.openModal(AlertComponent, {
-                        data: {
-                            message: getUpdateErrorMessage,
-                            title: titleErrorMessage,
-                            error,
-                        },
+                    this.closeModal({
+                        message: studentsMessages('modalError'),
                     });
+                    this.alertService.error(studentsMessages('viewError'));
                 }
             );
     }
 
-    closeModal(dialogResult: DialogResult = { message: closeMessageE }): void {
+    closeModal(
+        dialogResult: DialogResult = { message: studentsMessages('modalClose') }
+    ): void {
         this.dialogRef.close(dialogResult);
     }
 

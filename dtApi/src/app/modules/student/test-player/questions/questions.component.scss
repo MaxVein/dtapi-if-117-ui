@@ -1,4 +1,55 @@
-.button-question {
-    display: flex;
-    flex-wrap: wrap;
+.quiz {
+    margin: 50px auto;
+
+    &__button-question {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        margin-bottom: 30px;
+
+        & button {
+            margin: 7px;
+        }
+    }
+
+    &__question-text {
+        font-size: 27px;
+        font-weight: 500;
+    }
+
+    &__answers-block {
+        margin: 30px auto;
+
+        & mat-checkbox ::ng-deep .mat-checkbox-inner-container {
+            width: 25px;
+            height: 25px;
+            margin: 8px;
+        }
+
+        & .answer-text {
+            vertical-align: middle;
+            margin-left: 10px;
+            font-size: 18px;
+            font-weight: 500;
+        }
+
+        & .type_three {
+            & mat-form-field {
+                font-size: 16px;
+            }
+        }
+    }
+
+    & .active {
+        background-color: rgb(226, 226, 221) !important;
+        color: black !important;
+    }
+
+    &.done {
+        background-color: rgb(43, 161, 43) !important;
+    }
+}
+
+mat-divider {
+    margin-top: 100px;
 }
