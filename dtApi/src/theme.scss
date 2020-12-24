@@ -85,7 +85,7 @@ $dark-theme: mat-dark-theme($dark-primary, $dark-accent, $dark-warn);
     }
 }
 .dark-theme .timer-circle {
-    background: #e91e63;
+    background: #e91e63 !important;
 }
 .dark-theme .dark-btn {
     background: inherit !important;

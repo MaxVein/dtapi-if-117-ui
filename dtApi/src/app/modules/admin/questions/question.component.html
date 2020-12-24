@@ -37,7 +37,9 @@
         <!-- Level Column -->
         <ng-container matColumnDef="Type">
             <th mat-header-cell *matHeaderCellDef mat-sort-header>Тип</th>
-            <td mat-cell *matCellDef="let item">{{ item.type }}</td>
+            <td mat-cell *matCellDef="let item">
+                {{ item.type | TypeReverse }}
+            </td>
         </ng-container>
 
         <!-- Level Column -->

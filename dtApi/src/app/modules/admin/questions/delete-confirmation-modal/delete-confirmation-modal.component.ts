@@ -18,7 +18,7 @@ export class DeleteConfirmationModalComponent {
     constructor(
         public dialogRef: MatDialogRef<DeleteConfirmationModalComponent>,
         @Inject(MAT_DIALOG_DATA) public data: any,
-        private questioncrud: QuestionService,
+        private questionService: QuestionService,
         private snackBar: MatSnackBar,
         private answerscrud: AnswersService
     ) {}
@@ -31,52 +31,44 @@ export class DeleteConfirmationModalComponent {
                     switchMap(
                         (array: { response: string | Array<AnswerData> }) => {
                             return array.response !== 'no records'
-                                ? this.questioncrud.deleteAnswerCollection(
+                                ? this.questionService.deleteAnswerCollection(
                                       array
                                   )
                                 : of(array);
                         }
                     ),
                     switchMap(() => {
-                        return this.questioncrud.deleteQuestion(
+                        return this.questionService.deleteQuestion(
                             data.question.question_id
                         );
                     })
                 )
                 .subscribe(
                     (res: { response: string }) => {
-                        this.resultSuccess(res, data);
+                        this.questionService.resultSuccess(
+                            {
+                                res: res,
+                                snackBar: this.snackBar,
+                                dialogRef: this.dialogRef,
+                                data: data.question,
+                                message: 'Питання успішно видалене',
+                            },
+                            'Delete'
+                        );
                     },
                     () => {
-                        this.resultFailed(data);
+                        this.questionService.resultFailed(
+                            {
+                                snackBar: this.snackBar,
+                                data: data.question,
+                                message:
+                                    'Потрібно видалити всі відповіді до даного завдання',
+                            },
+                            'Delete'
+                        );
                     }
                 );
         }
-    }
-
-    resultSuccess(res: { response: string }, data: QuestionData): void {
-        if (res.response === 'ok') {
-            this.snackBar.open('Питання успішно видалене', 'X', {
-                duration: 3000,
-            });
-            this.dialogRef.close({
-                finished: true,
-                question: data.question,
-            });
-        }
-    }
-    resultFailed(data: QuestionData): void {
-        this.snackBar.open(
-            'Потрібно видалити всі відповіді до даного завдання',
-            'X',
-            {
-                duration: 3000,
-            }
-        );
-        this.dialogRef.close({
-            finished: false,
-            question: data.question,
-        });
     }
     onNoClick(): void {
         this.dialogRef.close();

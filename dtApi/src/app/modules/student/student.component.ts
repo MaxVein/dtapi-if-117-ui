@@ -8,7 +8,10 @@ import { TestPlayerService } from './services/test-player.service';
 import { ConfirmComponent } from '../../shared/components/confirm/confirm.component';
 import { Subscription } from 'rxjs';
 import { RouterState } from '../../shared/interfaces/student.interfaces';
-import { TestPlayerResponse } from '../../shared/interfaces/test-player.interfaces';
+import {
+    TestPlayerResponse,
+    TestResult,
+} from '../../shared/interfaces/test-player.interfaces';
 import {
     DialogResult,
     Response,
@@ -103,10 +106,25 @@ export class StudentComponent implements OnInit, OnDestroy {
             },
             (result: DialogResult) => {
                 if (result) {
+                    this.checkTest();
                     this.resetSession();
                 } else if (!result) {
                     this.alertService.message(snackBarMessages('cancel'));
                 }
+            }
+        );
+    }
+
+    checkTest(): void {
+        const testProgress = JSON.parse(
+            sessionStorage.getItem('test_progress')
+        );
+        this.testPlayerService.checkDoneTest(testProgress).subscribe(
+            (response: TestResult) => {
+                this.alertService.warning(logoutMessages('result', response));
+            },
+            (error: Response) => {
+                this.alertService.error(logoutMessages('checkError'));
             }
         );
     }
@@ -133,5 +151,6 @@ export class StudentComponent implements OnInit, OnDestroy {
             this.studentSubscription.unsubscribe();
         }
         localStorage.clear();
+        sessionStorage.clear();
     }
 }

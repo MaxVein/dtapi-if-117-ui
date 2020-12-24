@@ -2,9 +2,9 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { MatTableDataSource } from '@angular/material/table';
 import { StudentsModalComponent } from './students-modal/students-modal.component';
-import { AlertComponent } from '../../../../shared/components/alert/alert.component';
 import { StudentsService } from 'src/app/modules/admin/students/services/students.service';
 import { ModalService } from 'src/app/shared/services/modal.service';
+import { AlertService } from '../../../../shared/services/alert.service';
 import { Subscription } from 'rxjs';
 import {
     Student,
@@ -12,15 +12,7 @@ import {
     GroupInfoState,
     DialogResult,
 } from 'src/app/shared/interfaces/entity.interfaces';
-import {
-    addStudentMessage,
-    cancelErrorMessage,
-    closeError,
-    errorMessage,
-    notStudentsMessage,
-    titleErrorMessage,
-    uploadStudentsMessage,
-} from '../../Messages';
+import { studentsMessages } from '../../Messages';
 
 @Component({
     selector: 'app-students-page',
@@ -38,7 +30,8 @@ export class StudentsPageComponent implements OnInit, OnDestroy {
     constructor(
         private studentsService: StudentsService,
         private router: Router,
-        public modalService: ModalService
+        public modalService: ModalService,
+        private alertService: AlertService
     ) {
         this.initGroupInfo();
     }
@@ -60,6 +53,10 @@ export class StudentsPageComponent implements OnInit, OnDestroy {
             this.groupName = JSON.parse(localStorage.getItem('group_name'));
             this.groupID = JSON.parse(localStorage.getItem('group_id'));
         }
+        if (!this.groupID && !this.groupName) {
+            this.alertService.error(studentsMessages('extrasError'));
+            this.router.navigate(['/admin/group']);
+        }
     }
 
     getStudentsByGroup(): void {
@@ -70,16 +67,19 @@ export class StudentsPageComponent implements OnInit, OnDestroy {
                     if (response.length) {
                         this.dataSource.data = response;
                         this.loading = false;
-                        this.modalService.showSnackBar(uploadStudentsMessage);
+                        this.alertService.message(studentsMessages('upload'));
                     } else {
                         this.dataSource.data = [];
                         this.loading = false;
-                        this.modalService.showSnackBar(notStudentsMessage);
+                        this.alertService.message(
+                            studentsMessages('notStudents')
+                        );
                     }
                 },
                 (error: Response) => {
                     this.loading = false;
-                    this.errorHandler(error, titleErrorMessage, errorMessage);
+                    this.alertService.error(studentsMessages('getError'));
+                    this.router.navigate(['/admin/group']);
                 }
             );
     }
@@ -99,30 +99,21 @@ export class StudentsPageComponent implements OnInit, OnDestroy {
                 },
             },
             (result: DialogResult) => {
-                if (result.message === titleErrorMessage) {
-                    this.modalService.showSnackBar(closeError);
+                if (result.message === studentsMessages('modalError')) {
+                    this.alertService.message(
+                        studentsMessages('modalErrClose')
+                    );
                 } else if (result.message.response === 'ok') {
                     result.data.user_id = result.id;
                     this.dataSource.data.unshift(result.data);
                     this.dataSource._updateChangeSubscription();
                     this.dataSource.paginator.firstPage();
-                    this.modalService.showSnackBar(addStudentMessage);
-                } else if (result.message === cancelErrorMessage) {
-                    this.modalService.showSnackBar(cancelErrorMessage);
+                    this.alertService.message(studentsMessages('add'));
+                } else if (result.message === studentsMessages('modalCancel')) {
+                    this.alertService.message(studentsMessages('modalCancel'));
                 }
             }
         );
-    }
-
-    errorHandler(error: Response, title: string, message: string): void {
-        this.modalService.openModal(AlertComponent, {
-            data: {
-                message,
-                title,
-                error,
-            },
-        });
-        this.router.navigate(['/admin/group']);
     }
 
     ngOnDestroy(): void {

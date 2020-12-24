@@ -1,94 +1,130 @@
-<form action="">
-    <div class="button-question">
-        <button
-            mat-raised-button
-            color="primary"
-            *ngFor="let btn of btnCount; let i = index"
-            (click)="changeQuestion($event, i)"
-        >
-            {{ i + 1 }}
-        </button>
-    </div>
-    <h2>{{ questionsAndAnswers[startTest].question_text }}</h2>
-    <div *ngIf="questionsAndAnswers[startTest].attachment">
-        <img
-            src="{{ questionsAndAnswers[startTest].attachment }}"
-            alt="question picture"
-        />
-    </div>
-    <ng-container *ngIf="questionsAndAnswers[startTest].type === '1'">
-        <div *ngFor="let answer of questionsAndAnswers[startTest].answers">
-            <div>
-                <mat-checkbox
-                    class="simple-checkbox"
-                    [checked]="answer.answer_id === completed[startTest]"
-                    id="{{ answer.answer_id }}"
-                    class="radio-button"
-                    (change)="trueAnswerSimpleOne($event, answer.answer_id)"
-                ></mat-checkbox>
-                {{ answer.answer_text }}
+<div class="quiz">
+    <form>
+        <div class="quiz__button-question">
+            <button
+                class="quiz__number_of_question"
+                mat-raised-button
+                color="primary"
+                *ngFor="let btn of btnCount; let i = index"
+                (click)="changeQuestion($event, i)"
+                [ngClass]="{
+                    active: startTest === i,
+                    done: isAnswer[i] === i
+                }"
+            >
+                {{ i + 1 }}
+            </button>
+        </div>
+        <h2 class="quiz__question-text">
+            {{ questionsAndAnswers[startTest].question_text }}
+        </h2>
+        <div class="quiz__answers-block">
+            <div
+                class="quiz__question-picture"
+                *ngIf="questionsAndAnswers[startTest].attachment"
+            >
+                <img
+                    src="{{ questionsAndAnswers[startTest].attachment }}"
+                    alt="question picture"
+                />
             </div>
-            <div *ngIf="answer.attachment">
-                <img src="{{ answer.attachment }}" alt="answer picture" />
+            <ng-container
+                *ngIf="questionsAndAnswers[startTest].type === '1'"
+                class="type_one answer-attachment"
+            >
+                <div
+                    *ngFor="
+                        let answer of questionsAndAnswers[startTest].answers
+                    "
+                >
+                    <div>
+                        <mat-checkbox
+                            class="simple-checkbox"
+                            [checked]="
+                                answer.answer_id === completed[startTest]
+                            "
+                            id="{{ answer.answer_id }}"
+                            (change)="
+                                trueAnswerSimpleOne($event, answer.answer_id)
+                            "
+                        ></mat-checkbox>
+                        <span class="answer-text">{{
+                            answer.answer_text
+                        }}</span>
+                    </div>
+                    <div *ngIf="answer.attachment">
+                        <img
+                            src="{{ answer.attachment }}"
+                            alt="answer picture"
+                        />
+                    </div>
+                </div>
+            </ng-container>
+            <ng-container
+                *ngIf="questionsAndAnswers[startTest].type === '2'"
+                class="type__two answer-attachment"
+            >
+                <div
+                    *ngFor="
+                        let answer of questionsAndAnswers[startTest].answers
+                    "
+                >
+                    <div>
+                        <mat-checkbox
+                            id="{{ answer.answer_id }}"
+                            [checked]="
+                                getTrueAnswer(answer.answer_id, startTest)
+                            "
+                            class="example-margin"
+                            (change)="trueAnswerMulti($event, answer.answer_id)"
+                        ></mat-checkbox>
+                        <span class="answer-text">{{
+                            answer.answer_text
+                        }}</span>
+                    </div>
+                    <div *ngIf="answer.attachment">
+                        <img
+                            src="{{ answer.attachment }}"
+                            alt="answer picture"
+                        />
+                    </div>
+                </div>
+            </ng-container>
+            <div
+                class="type_three"
+                *ngIf="questionsAndAnswers[startTest].type === '3'"
+            >
+                <mat-form-field>
+                    <mat-label>Ваша відповідь</mat-label>
+                    <input
+                        matInput
+                        type="text"
+                        [value]="
+                            textValue[startTest] ? textValue[startTest] : ''
+                        "
+                        (change)="trueAnswerText($event)"
+                    />
+                </mat-form-field>
+            </div>
+            <div
+                class="type_four"
+                *ngIf="questionsAndAnswers[startTest].type === '4'"
+            >
+                <mat-form-field>
+                    <mat-label>Введіть значення</mat-label>
+                    <input
+                        [value]="
+                            answersIdNum[this.startTest]
+                                ? answersIdNum[this.startTest]
+                                : ''
+                        "
+                        matInput
+                        type="number"
+                        (change)="truAnswerNum($event)"
+                    />
+                </mat-form-field>
             </div>
         </div>
-    </ng-container>
-    <ng-container *ngIf="questionsAndAnswers[startTest].type === '2'">
-        <div *ngFor="let answer of questionsAndAnswers[startTest].answers">
-            <div>
-                <mat-checkbox
-                    id="{{ answer.answer_id }}"
-                    [checked]="getTrueAnswer(answer.answer_id, startTest)"
-                    class="example-margin"
-                    (change)="trueAnswerMulti($event, answer.answer_id)"
-                ></mat-checkbox>
-                {{ answer.answer_text }}
-            </div>
-            <div *ngIf="answer.attachment">
-                <img src="{{ answer.attachment }}" alt="answer picture" />
-            </div>
-        </div>
-    </ng-container>
-
-    <div *ngIf="questionsAndAnswers[startTest].type === '3'">
-        <mat-form-field>
-            <mat-label>Ваша відповідь</mat-label>
-            <input
-                matInput
-                type="text"
-                [value]="textValue[startTest] ? textValue[startTest] : ''"
-                (change)="trueAnswerText($event)"
-            />
-        </mat-form-field>
-    </div>
-    <div *ngIf="questionsAndAnswers[startTest].type === '4'">
-        <mat-form-field>
-            <mat-label>Введіть мінімальне значення</mat-label>
-            <input
-                [value]="
-                    answersIdNum[this.startTest]
-                        ? answersIdNum[this.startTest][0]
-                        : ''
-                "
-                matInput
-                type="number"
-                id="{{ startTest }}-min"
-                (change)="truAnswerNum($event)"
-            />
-        </mat-form-field>
-        <mat-form-field>
-            <mat-label>Введіть максимальне значення</mat-label>
-            <input
-                [value]="
-                    answersIdNum[this.startTest]
-                        ? answersIdNum[this.startTest][1]
-                        : ''
-                "
-                matInput
-                type="number"
-                id="{{ startTest }}-max"
-                (change)="truAnswerNum($event)"
-            />
-        </mat-form-field>
-    </div>
-</form>
+    </form>
+</div>
+<mat-divider></mat-divider>

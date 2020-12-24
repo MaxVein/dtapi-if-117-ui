@@ -1,16 +1,22 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import {
+    AnswerData,
+    QA,
+} from '../../../../shared/interfaces/test-player.interfaces';
+import { Answer } from '../../../../shared/interfaces/student.interfaces';
+import { MatCheckboxChange } from '@angular/material/checkbox';
 
-export interface AnswerData {
-    question_id: number;
-    answer_ids: any[];
-}
 @Component({
     selector: 'app-questions',
     templateUrl: './questions.component.html',
     styleUrls: ['./questions.component.scss'],
 })
 export class QuestionsComponent implements OnInit {
-    @Input() questionsAndAnswers: any;
+    @Input() questionsAndAnswers: QA[];
+    @Output() onAnswer: EventEmitter<AnswerData[]> = new EventEmitter<
+        AnswerData[]
+    >();
+    isAnswer: number[] = [];
     answersIdNum = [];
     answerIdsMulti: number[] = [];
     completed: number[] = [];
@@ -18,78 +24,113 @@ export class QuestionsComponent implements OnInit {
     startTest = 0;
     sendAnswerData: AnswerData[] = [];
     textValue: string[] = [];
-    @Output() studentAnswer = new EventEmitter<AnswerData[]>();
+
     constructor() {}
+
     ngOnInit(): void {
+        this.getRandomAnswers(this.questionsAndAnswers);
         this.btnCount = [...Array(this.questionsAndAnswers.length).keys()];
     }
-    changeQuestion(event, index: number) {
+
+    changeQuestion(event: Event, index: number): void {
         event.preventDefault();
         this.startTest = index;
     }
 
-    trueAnswerMulti(event, id: number) {
+    trueAnswerMulti(event: MatCheckboxChange, id: number): void {
         if (event.checked) {
             this.answerIdsMulti.push(id);
-            this.sendAnswerData[this.startTest] = this.createStudentAnswer(
-                +this.questionsAndAnswers[this.startTest].question_id,
-                this.answerIdsMulti
-            );
-        } else if (event.checked === false) {
+        } else if (!event.checked) {
             this.answerIdsMulti = this.answerIdsMulti.filter(
                 (elem) => elem !== id
             );
-            this.sendAnswerData[this.startTest] = this.createStudentAnswer(
-                +this.questionsAndAnswers[this.startTest].question_id,
-                this.answerIdsMulti
-            );
         }
-        this.studentAnswer.emit(this.removeEmptyElem(this.sendAnswerData));
+        this.sendAnswerData[this.startTest] = this.createStudentAnswer(
+            +this.questionsAndAnswers[this.startTest].question_id,
+            this.answerIdsMulti
+        );
+        this.onAnswer.emit(this.removeEmptyElem(this.sendAnswerData));
+        this.markStudentAnswer();
     }
-    createStudentAnswer(questionId: number, answerId: any[]): AnswerData {
-        return { question_id: questionId, answer_ids: answerId };
-    }
-    trueAnswerSimpleOne(event, answerId: number): void {
+
+    trueAnswerSimpleOne(event: MatCheckboxChange, answerId: number): void {
         if (event.checked) {
             this.completed[this.startTest] = answerId;
             this.sendAnswerData[this.startTest] = this.createStudentAnswer(
                 +this.questionsAndAnswers[this.startTest].question_id,
                 [answerId]
             );
-            this.studentAnswer.emit(this.removeEmptyElem(this.sendAnswerData));
+        } else if (!event.checked) {
+            this.completed[this.startTest] = null;
+            this.sendAnswerData[this.startTest] = null;
         }
+        this.onAnswer.emit(this.removeEmptyElem(this.sendAnswerData));
+        this.markStudentAnswer();
     }
+
+    trueAnswerText(event: Event): void {
+        const value = (event.target as HTMLInputElement).value;
+        this.textValue[this.startTest] = value ? value : null;
+        this.sendUserAnswer(value);
+    }
+
+    truAnswerNum(event: Event): void {
+        const value = (event.target as HTMLInputElement).value;
+        this.answersIdNum[this.startTest] = value ? value : null;
+        this.sendUserAnswer(value);
+    }
+
+    sendUserAnswer(value: any): void {
+        this.sendAnswerData[this.startTest] = this.createStudentAnswer(
+            +this.questionsAndAnswers[this.startTest].question_id,
+            [value]
+        );
+        this.onAnswer.emit(this.removeEmptyElem(this.sendAnswerData));
+        this.markStudentAnswer();
+    }
+
+    createStudentAnswer(
+        questionId: number,
+        answerId: Array<number>
+    ): AnswerData {
+        return { question_id: questionId, answer_ids: answerId };
+    }
+
     removeEmptyElem(array: AnswerData[]): AnswerData[] {
         return array.filter((el) => el !== null);
     }
-    trueAnswerText(event) {
-        this.textValue[this.startTest] = event.target.value;
-        this.sendAnswerData[this.startTest] = this.createStudentAnswer(
-            +this.questionsAndAnswers[this.startTest].question_id,
-            [event.target.value]
-        );
-        this.studentAnswer.emit(this.removeEmptyElem(this.sendAnswerData));
-    }
+
     getTrueAnswer(answerId: number, index: number): boolean {
-        if (this.sendAnswerData[this.startTest]) {
-            return this.sendAnswerData[this.startTest].answer_ids.includes(
-                answerId
-            );
+        if (this.sendAnswerData[index]) {
+            return this.sendAnswerData[index].answer_ids.includes(answerId);
         }
     }
-    truAnswerNum(event) {
-        if (!this.answersIdNum[this.startTest]) {
-            this.answersIdNum[this.startTest] = [];
-        }
-        if (event.target.id === `${this.startTest}-min`) {
-            this.answersIdNum[this.startTest][0] = event.target.value;
-        } else if (event.target.id === `${this.startTest}-max`) {
-            this.answersIdNum[this.startTest][1] = event.target.value;
-        }
-        this.sendAnswerData[this.startTest] = this.createStudentAnswer(
-            +this.questionsAndAnswers[this.startTest].question_id,
-            this.answersIdNum[this.startTest]
+
+    markStudentAnswer(): void {
+        this.isAnswer = this.sendAnswerData.map((elem, index) => {
+            return !elem ||
+                elem.answer_ids.includes(null) ||
+                !elem.answer_ids.length
+                ? -1
+                : index;
+        });
+    }
+
+    getShuffledArr(arr: Answer[]): Answer[] {
+        return arr.reduce(
+            (newArr, _, i) => {
+                const rand =
+                    i + Math.floor(Math.random() * (newArr.length - i));
+                [newArr[rand], newArr[i]] = [newArr[i], newArr[rand]];
+                return newArr;
+            },
+            [...arr]
         );
-        this.studentAnswer.emit(this.removeEmptyElem(this.sendAnswerData));
+    }
+
+    getRandomAnswers(arr: QA[]): void {
+        arr.forEach((elem) => {
+            elem.answers = this.getShuffledArr(elem.answers);
+        });
     }
 }
