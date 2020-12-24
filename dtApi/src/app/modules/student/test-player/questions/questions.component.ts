@@ -24,8 +24,14 @@ export class QuestionsComponent implements OnInit {
     @Output() studentAnswer = new EventEmitter<AnswerData[]>();
     constructor() {}
     ngOnInit(): void {
+        this.studentAnswer.emit(this.firstEmitData());
         this.getRandomAnswers(this.questionsAndAnswers);
         this.btnCount = [...Array(this.questionsAndAnswers.length).keys()];
+    }
+    firstEmitData() {
+        return this.questionsAndAnswers.map((elem) => {
+            return { question_id: +elem.question_id, answer_ids: [''] };
+        });
     }
     changeQuestion(event: MouseEvent, index: number) {
         event.preventDefault();
