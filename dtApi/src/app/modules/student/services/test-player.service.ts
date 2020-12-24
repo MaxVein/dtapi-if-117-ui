@@ -18,18 +18,13 @@ import {
     TestPlayerEndTime,
     TestDetailsByTest,
     QA,
+    AnswerData,
+    TestResult,
 } from '../../../shared/interfaces/test-player.interfaces';
 
 @Injectable()
 export class TestPlayerService {
     constructor(private http: HttpClient, private authService: AuthService) {}
-
-    getResult(payload) {
-        return this.http.post(
-            `${environment.BASEURL}SAnswer/checkAnswers`,
-            payload
-        );
-    }
 
     getTestDetailsByTest(id: number): Observable<TestDetailsByTest[]> {
         return this.http.get<TestDetailsByTest[]>(
@@ -151,10 +146,10 @@ export class TestPlayerService {
         );
     }
 
-    checkDoneTest(test: any): Observable<any> {
-        return this.http.post<any>(
+    checkDoneTest(answers: AnswerData[]): Observable<TestResult> {
+        return this.http.post<TestResult>(
             `${environment.BASEURL}SAnswer/checkAnswers`,
-            test
+            answers
         );
     }
 }

@@ -3,17 +3,25 @@ import {
     TestDate,
     TestDetails,
 } from '../../shared/interfaces/student.interfaces';
+import {
+    TestPlayerResponse,
+    TestResult,
+} from '../../shared/interfaces/test-player.interfaces';
 
 // Logout Messages //
-type Logout = 'error' | 'logout' | 'testInProcess';
+type Logout = 'error' | 'logout' | 'testInProcess' | 'checkError' | 'result';
 
-export function logoutMessages(logout: Logout): string {
+export function logoutMessages(logout: Logout, result?: TestResult): string {
     if (logout === 'error') {
         return 'Сталася помилка при виході. Спробуйте знову';
     } else if (logout === 'logout') {
         return 'Ви успішно здійснили вихід з профілю! Успіхів!';
     } else if (logout === 'testInProcess') {
         return 'Ви дійсно хочете покинути профіль? Тест триває! Якщо ви вийдете, ваша спроба та поточні відповіді будуть зараховані!';
+    } else if (logout === 'checkError') {
+        return 'Сталася помилка! Не вдалося перевірити Ваш тест та визначити результат';
+    } else if (logout === 'result') {
+        return `Ви покинули профіль! Ваш результат тесту: Правильних відповідей: ${result.number_of_true_answers}; Результат: ${result.full_mark}`;
     }
 }
 
@@ -59,11 +67,20 @@ export const testsTableColumns = [
     'Кількість спроб',
     'Почати тестування',
 ];
-type Profile = 'subjects' | 'student' | 'emptySubjects' | 'isMatch' | 'welcome';
-
+type Profile =
+    | 'subjects'
+    | 'student'
+    | 'emptySubjects'
+    | 'isMatch'
+    | 'welcome'
+    | 'getSessionError'
+    | 'continueTest'
+    | 'snackbarCancel';
 export function profileMessages(
     profile: Profile,
-    response?: StudentProfile
+    response?: StudentProfile,
+    testName?: string,
+    subjectName?: string
 ): string {
     if (profile === 'student') {
         return `Сталася помилка. Не вдалося отримати дані Ваші дані. Спробуйте знову`;
@@ -75,6 +92,12 @@ export function profileMessages(
         return 'Неможливо здати даний тест! У сесії відсутні дані про тест, який Ви хочете здавати';
     } else if (profile === 'welcome') {
         return `Ласкаво просимо ${response.student_surname} ${response.student_name} ${response.student_fname}`;
+    } else if (profile === 'getSessionError') {
+        return 'Сталася помилка при перевірці незакінчених тестів Не вдалося отримати дані з сесії для перевірки здачі тесту! Спробуйте знову';
+    } else if (profile === 'continueTest') {
+        return `У даний момент у Вас є незакінчений тест ${testName} з предмету ${subjectName}! Бажаєте продовжити здачу тесту? У випадку відмови, тест буде тривати і щойно закінчиться час - тест буде закінчено і отримано результат`;
+    } else if (profile === 'snackbarCancel') {
+        return `Тест ${testName} триває. Ви завжди можете повернутися до здачі`;
     }
 }
 
@@ -194,8 +217,9 @@ type TestPlayerClient =
     | 'enoughNumber'
     | 'default'
     | 'finish'
-    | 'sureFinish';
-
+    | 'sureFinish'
+    | 'checkError'
+    | 'emptySlot';
 export function testPlayerMessages(
     testPlayer: TestPlayerClient,
     error?: boolean,
@@ -218,6 +242,10 @@ export function testPlayerMessages(
         return 'Час здачі тесту вийшов! Ваш результат!';
     } else if (testPlayer === 'finish' && !gone) {
         return 'Ви закінчили тест! Ваш результат!';
+    } else if (testPlayer === 'checkError') {
+        return 'Сталася помилка! Не вдалося перевірити Ваш тест та визначити результат';
+    } else if (testPlayer === 'emptySlot') {
+        return 'Сталася помилка! Тест не було розпочато або тест уже було закінчено! Неможливо здати тест або повернутися до його здачі';
     }
 }
 

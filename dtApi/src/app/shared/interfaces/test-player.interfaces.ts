@@ -61,7 +61,22 @@ export interface TestDetailsByTest {
 export interface QA extends Question {
     answers: Answer[];
 }
+
 export interface AnswerData {
     question_id: number;
-    answer_ids: any[];
+    answer_ids: Array<number>;
 }
+
+export interface TestResult {
+    full_mark: number;
+    number_of_true_answers: number;
+}
+
+export interface RouterResults {
+    result: TestResult;
+    countOfQuestions: number;
+    testName: string;
+    subjectName: string;
+}
+
+export type TestPlayerNavigate = 'profile' | 'results';
