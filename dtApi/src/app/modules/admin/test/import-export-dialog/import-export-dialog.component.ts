@@ -132,7 +132,7 @@ export class ImportExportDialogComponent implements OnInit {
             )
             .pipe(
                 mergeMap((res: any) => {
-                    let newAnswers = [];
+                    const newAnswers = [];
 
                     this.answersImportData.forEach((item, ind) => {
                         item.forEach((elem) => {
