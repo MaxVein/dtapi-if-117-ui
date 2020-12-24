@@ -18,6 +18,7 @@
             <mat-label>Дата початку</mat-label>
             <input
                 matInput
+                [min]="currDate"
                 [matDatepicker]="picker1"
                 placeholder="Виберіть початкову дату"
                 formControlName="start_date"
@@ -47,6 +48,7 @@
             <mat-label>Дата закінчекння</mat-label>
             <input
                 matInput
+                [min]="currDate"
                 [matDatepicker]="picker2"
                 placeholder="Виберіть кінцеву дату"
                 formControlName="end_date"
