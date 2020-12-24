@@ -22,12 +22,7 @@ export class ImportExportService {
     }
     public getQuestions(entity, id, num): Observable<any> {
         return this.http.get(
-            `${environment.BASEURL}${entity}/getRecordsRangeByTest/${id}/${num}/0/wi`
-        );
-    }
-    public delData(entity, id?): Observable<any> {
-        return this.http.get(
-            `${environment.BASEURL}${entity}/del/${id ? id : ''}`
+            `${environment.BASEURL}${entity}/getRecordsRangeByTest/${id}/${num}/0`
         );
     }
     public getCount(entity: string, id: string) {
@@ -35,15 +30,15 @@ export class ImportExportService {
             `${environment.BASEURL}${entity}/countRecordsByTest/${id}`
         );
     }
+
+    public importTests(entity, id): Observable<any> {
+        return this.http.get(
+            `${environment.BASEURL}${entity}/getAnswersByQuestion/${id}`
+        );
+    }
     public insertData(entity, payload): Observable<any> {
         return this.http.post(
             `${environment.BASEURL}${entity}/insertData`,
-            payload
-        );
-    }
-    public updateData(entity, id, payload): Observable<any> {
-        return this.http.post(
-            `${environment.BASEURL}${entity}/update/${id}`,
             payload
         );
     }

@@ -2,6 +2,9 @@
 <mat-dialog-content class="mat-typography" *ngIf="!isExport && !isImport">
     <p>Виберіть дію</p>
 </mat-dialog-content>
+<mat-dialog-content class="mat-typography" *ngIf="isExport && !isImport">
+    <p>Ви успішно імпортували</p>
+</mat-dialog-content>
 <form [formGroup]="ieForm" *ngIf="isImport">
     <mat-form-field>
         <ngx-mat-file-input
@@ -9,6 +12,7 @@
             placeholder="Basic Input"
             (change)="fileUpload($event)"
         ></ngx-mat-file-input>
+
         <mat-icon matSuffix>folder</mat-icon>
     </mat-form-field>
 </form>

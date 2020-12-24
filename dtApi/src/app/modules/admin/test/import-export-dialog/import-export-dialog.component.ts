@@ -1,14 +1,9 @@
 import { Component, OnInit, Inject } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { forkJoin, of } from 'rxjs';
-import {
-    FormArray,
-    FormBuilder,
-    FormControl,
-    FormGroup,
-    Validators,
-} from '@angular/forms';
+import { FormControl, FormGroup } from '@angular/forms';
 import { mergeMap } from 'rxjs/operators';
+import { ModalService } from 'src/app/shared/services/modal.service';
 
 import { ImportExportService } from './import-export.service';
 
@@ -24,6 +19,7 @@ export interface QuestionInstance {
     question_text: string;
     level: string;
     type: string;
+    answers?: any;
 }
 
 @Component({
@@ -41,11 +37,13 @@ export class ImportExportDialogComponent implements OnInit {
     ieForm: FormGroup;
     file: any;
     fileData: any;
+    questionsImportData: Array<QuestionInstance> = [];
+    answersImportData: any = [];
 
     constructor(
         public dialogRef: MatDialogRef<ImportExportDialogComponent>,
         private ieService: ImportExportService,
-        private fb: FormBuilder,
+        private modalService: ModalService,
         @Inject(MAT_DIALOG_DATA) public data: DialogData
     ) {}
 
@@ -66,9 +64,9 @@ export class ImportExportDialogComponent implements OnInit {
                         .pipe(
                             mergeMap((item) => {
                                 this.questions = item;
-                                this.questionsIds = item.map(
-                                    (item) => item.question_id
-                                );
+                                this.questionsIds = item.map((item) => {
+                                    return item.question_id;
+                                });
                                 const observables = this.questionsIds.map(
                                     (id) =>
                                         this.ieService.getAnswers('answer', id)
@@ -79,8 +77,8 @@ export class ImportExportDialogComponent implements OnInit {
                 })
             )
             .subscribe((res) => {
-                this.questions.forEach((item: QuestionInstance) => {
-                    res.forEach((elem) => {
+                this.questions.forEach((item: any) => {
+                    res.forEach((elem: any) => {
                         if (item.question_id === elem[0].question_id) {
                             this.testFullData.push({
                                 ...item,
@@ -111,7 +109,49 @@ export class ImportExportDialogComponent implements OnInit {
         const fileReader = new FileReader();
         fileReader.onload = (e) => {
             this.fileData = JSON.parse(fileReader.result.toString());
+            this.insertQuestions(this.fileData);
         };
         fileReader.readAsText(this.file);
+    }
+    insertQuestions(fileData) {
+        fileData.map((item: QuestionInstance) => {
+            this.answersImportData.push([...item.answers]);
+            delete item.answers;
+            delete item.question_id;
+            return item;
+        });
+        of(fileData)
+            .pipe(
+                mergeMap((res) => {
+                    const quwstionsObservables = res.map((item) =>
+                        this.ieService.insertData('question', item)
+                    );
+
+                    return forkJoin(quwstionsObservables);
+                })
+            )
+            .pipe(
+                mergeMap((res: any) => {
+                    let newAnswers = [];
+
+                    this.answersImportData.forEach((item, ind) => {
+                        item.forEach((elem) => {
+                            newAnswers.push({
+                                ...elem,
+                                question_id: res[ind][0].question_id,
+                            });
+                        });
+                    });
+                    const answersObservables = newAnswers.map((item) => {
+                        delete item.answer_id;
+                        return this.ieService.insertData('answer', item);
+                    });
+                    return forkJoin(answersObservables);
+                })
+            )
+            .subscribe((res) => {
+                this.dialogRef.close();
+                this.modalService.showSnackBar('Тести Імпортовано');
+            });
     }
 }
