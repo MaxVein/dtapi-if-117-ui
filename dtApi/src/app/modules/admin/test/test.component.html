@@ -100,6 +100,21 @@
                     class="operation-button"
                     mat-flat-button
                     color="primary"
+                    (click)="openEIDialog(element)"
+                >
+                    <mat-icon
+                        aria-hidden="false"
+                        aria-label="delete"
+                        matTooltip="Імпорт/експорт
+                    "
+                    >
+                        import_export
+                    </mat-icon>
+                </button>
+                <button
+                    class="operation-button"
+                    mat-flat-button
+                    color="primary"
                     (click)="redirectToTestDetail(element.test_id)"
                 >
                     <mat-icon

@@ -102,7 +102,7 @@ export class TimatableComponent implements OnInit {
         });
 
         dialogRef.afterClosed().subscribe((result) => {
-            if (result) this.addTest(result);
+            if (result) this.add(result);
         });
     }
 
@@ -121,12 +121,12 @@ export class TimatableComponent implements OnInit {
         });
         dialogRef.afterClosed().subscribe((result) => {
             if (result) {
-                this.editTest(result, timaTable.timetable_id);
+                this.edit(result, timaTable.timetable_id);
             }
         });
     }
 
-    addTest(timetable: TimeTable): void {
+    add(timetable: TimeTable): void {
         const newTimetable = {
             subject_id: this.subject_id,
             ...timetable,
@@ -156,7 +156,7 @@ export class TimatableComponent implements OnInit {
         const currYear = Date.getFullYear();
         return currYear + '-' + currMonth + '-' + currDate;
     }
-    editTest(timetable: TimeTable, id: string): void {
+    edit(timetable: TimeTable, id: string): void {
         const newTimetable = {
             subject_id: this.subject_id,
             ...timetable,
