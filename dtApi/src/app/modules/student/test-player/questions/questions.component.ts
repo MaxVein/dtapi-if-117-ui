@@ -28,11 +28,18 @@ export class QuestionsComponent implements OnInit {
     constructor() {}
 
     ngOnInit(): void {
+        this.onAnswer.emit(this.firstEmitData());
         this.getRandomAnswers(this.questionsAndAnswers);
         this.btnCount = [...Array(this.questionsAndAnswers.length).keys()];
     }
-
-    changeQuestion(event: Event, index: number): void {
+    firstEmitData() {
+        let firstEmit = [];
+        firstEmit = this.questionsAndAnswers.map((elem) => {
+            return { question_id: +elem.question_id, answer_ids: [''] };
+        });
+        return firstEmit;
+    }
+    changeQuestion(event: Event, index: number) {
         event.preventDefault();
         this.startTest = index;
     }
@@ -115,7 +122,6 @@ export class QuestionsComponent implements OnInit {
                 : index;
         });
     }
-
     getShuffledArr(arr: Answer[]): Answer[] {
         return arr.reduce(
             (newArr, _, i) => {
@@ -127,7 +133,6 @@ export class QuestionsComponent implements OnInit {
             [...arr]
         );
     }
-
     getRandomAnswers(arr: QA[]): void {
         arr.forEach((elem) => {
             elem.answers = this.getShuffledArr(elem.answers);

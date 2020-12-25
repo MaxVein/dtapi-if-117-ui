@@ -172,7 +172,7 @@ export class TestPlayerComponent implements OnInit, OnDestroy {
             const navigationExtras: NavigationExtras = {
                 state: {
                     result: result,
-                    countOfQuestions: this.studentAnswers.length,
+                    countOfQuestions: this.testQuestionsAndAnswers.length,
                     testName: this.currentTest.test_name,
                     subjectName: this.currentTest.subjectname,
                 },
