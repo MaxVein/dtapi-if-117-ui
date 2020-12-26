@@ -18,6 +18,7 @@ export interface TestPlayerSaveData {
     testInProgress?: boolean;
     response?: string;
     currentTest?: TestDetails;
+    testPlayerResults?: TestPlayerResults;
 }
 
 export interface TestPlayerResponse {
@@ -25,6 +26,7 @@ export interface TestPlayerResponse {
     id?: number;
     testInProgress?: boolean;
     currentTest?: TestDetails;
+    testPlayerResults?: TestPlayerResults;
 }
 
 export interface TestLog {
@@ -43,11 +45,6 @@ export interface TestPlayerQAError {
 export interface TestPlayerEndTime {
     end: number;
     response?: string;
-}
-
-export interface TestCheck {
-    time: boolean;
-    finish: boolean;
 }
 
 export interface TestDetailsByTest {
@@ -72,7 +69,7 @@ export interface TestResult {
     number_of_true_answers: number;
 }
 
-export interface RouterResults {
+export interface TestPlayerResults {
     result: TestResult;
     countOfQuestions: number;
     testName: string;
@@ -80,3 +77,4 @@ export interface RouterResults {
 }
 
 export type TestPlayerNavigate = 'profile' | 'results';
+export type TestPlayerResetSessionActions = 'navigate' | 'notMatch';

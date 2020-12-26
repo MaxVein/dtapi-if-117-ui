@@ -1,58 +1,84 @@
-import { Component } from '@angular/core';
-import { Navigation, Router } from '@angular/router';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
+import { TestPlayerService } from '../../services/test-player.service';
+import { AlertService } from '../../../../shared/services/alert.service';
+import { Subscription } from 'rxjs';
 import {
-    RouterResults,
-    TestResult,
+    TestPlayerResponse,
+    TestPlayerResults,
 } from '../../../../shared/interfaces/test-player.interfaces';
+import { Response } from '../../../../shared/interfaces/entity.interfaces';
+import { resultsMessages, testPlayerServerMessages } from '../../Messages';
 
 @Component({
     selector: 'app-results',
     templateUrl: './results.component.html',
     styleUrls: ['./results.component.scss'],
 })
-export class ResultsComponent {
-    testResults: TestResult;
-    countOfQuestions: number;
-    testName: string;
-    subjectName: string;
+export class ResultsComponent implements OnInit, OnDestroy {
+    loading = false;
+    testPlayerResults: TestPlayerResults;
+    resultsSubscription: Subscription;
 
-    constructor(private router: Router) {
+    constructor(
+        private router: Router,
+        private testPlayerService: TestPlayerService,
+        private alertService: AlertService
+    ) {}
+
+    ngOnInit(): void {
+        this.loading = true;
         this.initTestResults();
     }
 
     initTestResults(): void {
-        const navigation = this.router.getCurrentNavigation();
-        if (navigation.extras.state) {
-            this.getState(navigation);
-        } else {
-            this.getSessionStorage();
+        this.resultsSubscription = this.testPlayerService
+            .testPlayerGetData()
+            .subscribe(
+                (response: TestPlayerResponse) => {
+                    if (
+                        response.response === 'Empty slot' ||
+                        (!response.testPlayerResults && response.currentTest)
+                    ) {
+                        this.alertService.warning(resultsMessages('emptySlot'));
+                        this.alertService.message(resultsMessages('notAccess'));
+                        this.router.navigate(['/student/profile']);
+                    } else if (response.testPlayerResults) {
+                        this.testPlayerResults = response.testPlayerResults;
+                        this.loading = false;
+                        this.alertService.message(resultsMessages('upload'));
+                    }
+                },
+                (error: Response) => {
+                    this.alertService.error(resultsMessages('get'));
+                    this.resetSession();
+                }
+            );
+    }
+
+    resetSession(): void {
+        this.resultsSubscription = this.testPlayerService
+            .testPlayerResetSession()
+            .subscribe(
+                (response: TestPlayerResponse) => {
+                    if (response.response === 'Custom data has been deleted') {
+                        this.router.navigate(['/student/profile']);
+                    } else {
+                        this.alertService.warning(resultsMessages('navigate'));
+                        this.router.navigate(['/student/test-player/results']);
+                    }
+                },
+                (error: Response) => {
+                    this.alertService.error(testPlayerServerMessages('reset'));
+                    this.router.navigate(['/student/profile']);
+                }
+            );
+    }
+
+    ngOnDestroy(): void {
+        if (this.resultsSubscription) {
+            this.resultsSubscription.unsubscribe();
         }
-    }
-
-    getState(navigation: Navigation): void {
-        const state = navigation.extras.state as RouterResults;
-        this.testResults = state.result;
-        this.countOfQuestions = state.countOfQuestions;
-        this.testName = state.testName;
-        this.subjectName = state.subjectName;
-        sessionStorage.setItem('result', JSON.stringify(state.result));
-        sessionStorage.setItem(
-            'countOfQuestions',
-            JSON.stringify(state.countOfQuestions)
-        );
-        sessionStorage.setItem('test_name', JSON.stringify(state.testName));
-        sessionStorage.setItem(
-            'subject_name',
-            JSON.stringify(state.subjectName)
-        );
-    }
-
-    getSessionStorage(): void {
-        this.testResults = JSON.parse(sessionStorage.getItem('result'));
-        this.countOfQuestions = JSON.parse(
-            sessionStorage.getItem('countOfQuestions')
-        );
-        this.subjectName = JSON.parse(sessionStorage.getItem('subject_name'));
-        this.testName = JSON.parse(sessionStorage.getItem('test_name'));
+        sessionStorage.clear();
     }
 }
