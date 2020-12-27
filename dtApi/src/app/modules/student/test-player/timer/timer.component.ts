@@ -9,6 +9,8 @@ import {
 import { Router } from '@angular/router';
 import { TestPlayerService } from '../../services/test-player.service';
 import { AlertService } from '../../../../shared/services/alert.service';
+import { ModalService } from '../../../../shared/services/modal.service';
+import { ConfirmComponent } from '../../../../shared/components/confirm/confirm.component';
 import { Observable } from 'rxjs/internal/Observable';
 import { interval, Subscription } from 'rxjs';
 import { TestDetails } from '../../../../shared/interfaces/student.interfaces';
@@ -16,11 +18,14 @@ import {
     Timer,
     TestPlayerEndTime,
     ServerTime,
-    TestCheck,
     TestPlayerResponse,
 } from '../../../../shared/interfaces/test-player.interfaces';
-import { Response } from '../../../../shared/interfaces/entity.interfaces';
 import {
+    DialogResult,
+    Response,
+} from '../../../../shared/interfaces/entity.interfaces';
+import {
+    snackBarMessages,
     testPlayerMessages,
     testPlayerServerMessages,
     timerMessages,
@@ -33,7 +38,7 @@ import {
 })
 export class TimerComponent implements OnInit, OnDestroy {
     @Input() test: TestDetails;
-    @Output() onCheck: EventEmitter<TestCheck> = new EventEmitter<TestCheck>();
+    @Output() onCheck: EventEmitter<void> = new EventEmitter<void>();
     time: ServerTime = {
         curtime: 0,
         unix_timestamp: 0,
@@ -55,6 +60,7 @@ export class TimerComponent implements OnInit, OnDestroy {
     constructor(
         private router: Router,
         private testPlayerService: TestPlayerService,
+        private modalService: ModalService,
         private alertService: AlertService
     ) {}
 
@@ -108,7 +114,7 @@ export class TimerComponent implements OnInit, OnDestroy {
                 },
                 (error: Response) => {
                     this.alertService.error(timerMessages('syncError'));
-                    this.router.navigate(['/student/profile']);
+                    this.resetSession(false, false, true);
                 }
             );
     }
@@ -125,14 +131,14 @@ export class TimerComponent implements OnInit, OnDestroy {
                         if (this.count > this.endDate - this.startDate) {
                             this.count = this.endDate - this.startDate;
                         }
-                        if (this.count === null) {
-                            this.resetSession(true);
+                        if (this.count === undefined) {
+                            this.resetSession(true, false, false);
                         }
                     }
                 },
                 (error: Response) => {
                     this.alertService.error(timerMessages('endError'));
-                    this.router.navigate(['/student/profile']);
+                    this.resetSession(false, false, true);
                 }
             );
     }
@@ -143,35 +149,66 @@ export class TimerComponent implements OnInit, OnDestroy {
                 end: this.startDate + this.count,
             })
             .subscribe(
-                () => {},
+                (response: TestPlayerEndTime) => {},
                 (error: Response) => {
                     this.alertService.error(timerMessages('saveError'));
-                    this.router.navigate(['/student/profile']);
+                    this.resetSession(false, false, true);
                 }
             );
+    }
+
+    confirmFinishTest(): void {
+        this.modalService.openModal(
+            ConfirmComponent,
+            {
+                data: {
+                    icon: 'cancel',
+                    message: testPlayerMessages(
+                        'sureFinish',
+                        false,
+                        this.test.test_name
+                    ),
+                },
+            },
+            (result: DialogResult) => {
+                if (result) {
+                    this.resetSession(false, true, false);
+                } else if (!result) {
+                    this.alertService.message(snackBarMessages('cancel'));
+                }
+            }
+        );
     }
 
     finishTest(gone: boolean): void {
         if (gone) {
             this.intervalSubscription.unsubscribe();
-            this.resetSession(false);
+            this.resetSession(false, false, false);
         } else {
-            this.onCheck.emit({ time: false, finish: true });
+            this.confirmFinishTest();
         }
     }
 
-    resetSession(count: boolean): void {
+    resetSession(count: boolean, finish: boolean, error: boolean): void {
         this.timerSubscription = this.testPlayerService
             .testPlayerResetSession()
             .subscribe(
                 (response: TestPlayerResponse) => {
                     if (response && count) {
                         this.alertService.error(timerMessages('timerError'));
-                    } else if (response && !count) {
+                        this.router.navigate(['/student/profile']);
+                    } else if (response && !count && !finish) {
                         this.alertService.message(
                             testPlayerMessages('finish', false, '', true)
                         );
-                        this.onCheck.emit({ time: true, finish: false });
+                        this.onCheck.emit();
+                    } else if (response && !count && finish) {
+                        this.alertService.message(
+                            testPlayerMessages('finish', false, '', false)
+                        );
+                        this.onCheck.emit();
+                    } else if (response && !count && !finish && error) {
+                        this.router.navigate(['/student/profile']);
                     }
                 },
                 (error: Response) => {

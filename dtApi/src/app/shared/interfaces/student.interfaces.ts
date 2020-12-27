@@ -59,3 +59,8 @@ export interface Answer {
     answer_text: string;
     attachment: string;
 }
+
+export interface TestPlayerRouterExtras {
+    resetSession?: boolean;
+    notMatch?: boolean;
+}

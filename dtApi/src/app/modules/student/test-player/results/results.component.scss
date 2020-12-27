@@ -14,6 +14,7 @@
     }
 
     &__test-info {
+        width: 20%;
         margin-top: 5px;
 
         & mat-icon {
@@ -28,6 +29,7 @@
     }
 
     &__finish-text {
+        margin-left: -100px;
         & mat-icon {
             vertical-align: middle;
             font-size: 30px;

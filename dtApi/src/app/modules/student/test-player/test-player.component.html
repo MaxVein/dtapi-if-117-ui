@@ -1,10 +1,7 @@
 <section class="test-player" *ngIf="!loading; else loader">
     <div class="test-player__container">
         <div class="test-player__header">
-            <app-timer
-                (onCheck)="finishTest($event)"
-                [test]="currentTest"
-            ></app-timer>
+            <app-timer (onCheck)="checkTest()" [test]="currentTest"></app-timer>
         </div>
         <div class="test-player__content">
             <app-questions
