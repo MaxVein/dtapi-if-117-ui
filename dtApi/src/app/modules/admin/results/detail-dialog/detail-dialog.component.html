@@ -27,7 +27,7 @@
             *matCellDef="let element"
             [ngClass]="element.true ? 'true-answer' : 'false-answer'"
         >
-            {{ element.true ? 'правильна' : 'неправильна' }}
+            {{ +element.true ? 'правильна' : 'неправильна' }}
         </td>
     </ng-container>
     <ng-container matColumnDef="details">
