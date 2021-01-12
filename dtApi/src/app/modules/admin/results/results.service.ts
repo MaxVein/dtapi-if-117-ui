@@ -43,9 +43,10 @@ export class ResultsService {
         );
     }
     getDuration(session_date, start_time, end_time) {
-        const startTime = Date.parse(`${session_date} ${start_time}`);
-        const endTime = Date.parse(`${session_date} ${end_time}`);
-        const duration = endTime - startTime;
+        const startTime: any = new Date(`${session_date} ${start_time}`);
+        const endTime: any = new Date(`${session_date} ${end_time}`);
+        const duration: number = Date.parse(endTime) - Date.parse(startTime);
+
         return this.msToTime(duration);
     }
     private msToTime(duration: number) {
