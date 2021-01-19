@@ -2,9 +2,29 @@
 <mat-dialog-content class="mat-typography" *ngIf="!isExport && !isImport">
     <p>Виберіть дію</p>
 </mat-dialog-content>
-<mat-dialog-content class="mat-typography" *ngIf="isExport && !isImport">
-    <p>Ви успішно імпортували</p>
+<mat-dialog-content
+    class="mat-typography"
+    *ngIf="isExport && !levels; then spinner"
+>
 </mat-dialog-content>
+<form [formGroup]="form" (ngSubmit)="saveTests()">
+    <mat-dialog-content class="mat-typography" *ngIf="levels && isExport">
+        <mat-label>Виберіть рівень</mat-label>
+        <mat-select name="levels" formControlName="levels">
+            <mat-option *ngFor="let item of levelsIds" [value]="item">{{
+                item
+            }}</mat-option>
+        </mat-select>
+        <mat-error
+            *ngIf="form.get('levels').invalid && form.get('levels').touched"
+        >
+            Поле не має бути пустим
+        </mat-error>
+        <button mat-button type="submit" [disabled]="form.invalid">
+            Зберегти
+        </button>
+    </mat-dialog-content>
+</form>
 <form [formGroup]="ieForm" *ngIf="isImport">
     <mat-form-field>
         <ngx-mat-file-input
@@ -24,6 +44,9 @@
         Експортувати
     </button>
     <button mat-raised-button color="primary" (click)="importTests()">
-        імпортувати
+        Імпортувати
     </button></mat-dialog-actions
 >
+<ng-template #spinner>
+    <app-loader></app-loader>
+</ng-template>
