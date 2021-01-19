@@ -54,10 +54,10 @@ export class DetailDialogComponent implements OnInit {
         this.questionsList = res;
         this.dataSource.data = this.questionsList.map((item) => {
             const studentInfo = JSON.parse(this.data.true_answers).filter(
-                (data) => data.question_id === item.question_id
+                (data) => +data.question_id === +item.question_id
             );
             const answerData = JSON.parse(this.data.questions).filter(
-                (data) => data.question_id === item.question_id
+                (data) => +data.question_id === +item.question_id
             );
             return Object.assign({}, item, ...studentInfo, ...answerData);
         });

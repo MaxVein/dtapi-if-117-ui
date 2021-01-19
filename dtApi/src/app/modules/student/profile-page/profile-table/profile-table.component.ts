@@ -15,8 +15,8 @@ import { AlertService } from '../../../../shared/services/alert.service';
 import { ProfileService } from '../../services/profile.service';
 import { TestPlayerService } from '../../services/test-player.service';
 import { ConfirmComponent } from '../../../../shared/components/confirm/confirm.component';
-import { of, Subscription, from, forkJoin } from 'rxjs';
-import { concatMap, mergeMap, map } from 'rxjs/operators';
+import { of, Subscription, forkJoin } from 'rxjs';
+import { concatMap, mergeMap } from 'rxjs/operators';
 import {
     TestDate,
     TestDetails,
@@ -65,10 +65,10 @@ export class ProfileTableComponent implements OnInit, AfterViewInit, OnDestroy {
     @ViewChild(MatPaginator, { static: false }) paginator: MatPaginator;
 
     constructor(
-        public modalService: ModalService,
         private router: Router,
         private profileService: ProfileService,
         private testPlayerService: TestPlayerService,
+        public modalService: ModalService,
         private alertService: AlertService
     ) {}
 
@@ -314,12 +314,23 @@ export class ProfileTableComponent implements OnInit, AfterViewInit, OnDestroy {
             .testPlayerGetData()
             .subscribe(
                 (response: TestPlayerResponse) => {
-                    if (+response.id === +test.test_id) {
-                        this.router.navigate(['student/test-player']);
-                    } else {
+                    if (response.response === 'Empty slot') {
                         this.alertService.error(
-                            startTestPlayerMessages('makingTest', false)
+                            startTestPlayerMessages('emptySlot')
                         );
+                    } else {
+                        if (+response.id === +test.test_id) {
+                            this.router.navigate(['student/test-player']);
+                        } else {
+                            this.alertService.warning(
+                                startTestPlayerMessages(
+                                    'makingTest',
+                                    false,
+                                    response.currentTest.test_name,
+                                    test.test_name
+                                )
+                            );
+                        }
                     }
                 },
                 (error: Response) => {

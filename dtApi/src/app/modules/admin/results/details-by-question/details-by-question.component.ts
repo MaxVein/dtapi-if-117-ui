@@ -22,6 +22,9 @@ export class DetailsByQuestionComponent implements OnInit {
     }
     getAnswerText() {
         const more = this.dataSource.filter((item) => {
+            if (!this.data.answer_ids) {
+                return 'Користувач не дав відповіді';
+            }
             return this.data.answer_ids.some((i) => i == item.answer_id);
         });
         if (!more.length) {

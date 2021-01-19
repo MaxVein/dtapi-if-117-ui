@@ -1,8 +1,10 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { ProfileService } from '../services/profile.service';
+import { TestPlayerService } from '../services/test-player.service';
 import { AlertService } from '../../../shared/services/alert.service';
 import { ModalService } from '../../../shared/services/modal.service';
+import { ConfirmComponent } from '../../../shared/components/confirm/confirm.component';
 import { Subscription } from 'rxjs';
 import {
     DialogResult,
@@ -10,10 +12,8 @@ import {
     Subject,
 } from '../../../shared/interfaces/entity.interfaces';
 import { StudentProfile } from '../../../shared/interfaces/student.interfaces';
-import { profileMessages } from '../Messages';
 import { TestPlayerResponse } from '../../../shared/interfaces/test-player.interfaces';
-import { TestPlayerService } from '../services/test-player.service';
-import { ConfirmComponent } from '../../../shared/components/confirm/confirm.component';
+import { profileMessages } from '../Messages';
 
 @Component({
     selector: 'app-profile-page',
@@ -33,14 +33,14 @@ export class ProfilePageComponent implements OnInit, OnDestroy {
         private testPlayerService: TestPlayerService,
         public modalService: ModalService,
         private alertService: AlertService
-    ) {}
+    ) {
+        this.getSession();
+    }
 
     ngOnInit(): void {
         this.loading = true;
         this.getStudentInfo();
         this.getSubjectInfo();
-        this.getSession();
-        this.isMatch();
     }
 
     getStudentInfo(): void {
@@ -49,9 +49,6 @@ export class ProfilePageComponent implements OnInit, OnDestroy {
             .subscribe(
                 (response: StudentProfile) => {
                     if (response) {
-                        this.alertService.message(
-                            profileMessages('welcome', response)
-                        );
                         this.studentProfileData = response;
                         this.groupId = response.group_id;
                         this.loading = false;
@@ -133,14 +130,6 @@ export class ProfilePageComponent implements OnInit, OnDestroy {
                 }
             }
         );
-    }
-
-    isMatch(): void {
-        const match = localStorage.getItem('isMatch');
-        if (match === 'notMatch') {
-            this.alertService.error(profileMessages('isMatch'));
-        }
-        localStorage.setItem('isMatch', null);
     }
 
     ngOnDestroy(): void {

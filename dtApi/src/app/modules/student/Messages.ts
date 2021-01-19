@@ -3,10 +3,7 @@ import {
     TestDate,
     TestDetails,
 } from '../../shared/interfaces/student.interfaces';
-import {
-    TestPlayerResponse,
-    TestResult,
-} from '../../shared/interfaces/test-player.interfaces';
+import { TestResult } from '../../shared/interfaces/test-player.interfaces';
 
 // Logout Messages //
 type Logout = 'error' | 'logout' | 'testInProcess' | 'checkError' | 'result';
@@ -71,11 +68,10 @@ type Profile =
     | 'subjects'
     | 'student'
     | 'emptySubjects'
-    | 'isMatch'
-    | 'welcome'
     | 'getSessionError'
     | 'continueTest'
     | 'snackbarCancel';
+
 export function profileMessages(
     profile: Profile,
     response?: StudentProfile,
@@ -88,10 +84,6 @@ export function profileMessages(
         return `Сталася помилка. Не вдалося отримати предмети Вашої групи. Спробуйте знову`;
     } else if (profile === 'emptySubjects') {
         return 'Предмети у групи відсутні';
-    } else if (profile === 'isMatch') {
-        return 'Неможливо здати даний тест! У сесії відсутні дані про тест, який Ви хочете здавати';
-    } else if (profile === 'welcome') {
-        return `Ласкаво просимо ${response.student_surname} ${response.student_name} ${response.student_fname}`;
     } else if (profile === 'getSessionError') {
         return 'Сталася помилка при перевірці незакінчених тестів Не вдалося отримати дані з сесії для перевірки здачі тесту! Спробуйте знову';
     } else if (profile === 'continueTest') {
@@ -166,11 +158,14 @@ type StartTestPlayer =
     | 'onlyForYou'
     | 'paramsNotFound'
     | 'madeRecently'
-    | 'default';
+    | 'default'
+    | 'emptySlot';
 
 export function startTestPlayerMessages(
     startTest: StartTestPlayer,
-    error?: boolean
+    error?: boolean,
+    activeTestName?: string,
+    selectTestName?: string
 ): string {
     if (startTest === 'startTest') {
         return 'Тест розпочато! Час пішов!';
@@ -193,7 +188,7 @@ export function startTestPlayerMessages(
     } else if (startTest === 'makingTest' && error) {
         return 'User is making test at current moment';
     } else if (startTest === 'makingTest' && !error) {
-        return 'Сталася помилка! Користувач здає тест у даний момент';
+        return `Попередження! У даний момент у Вас запущено тест ${activeTestName}, який ще не закінчено! Щоб почати тест ${selectTestName} слід завершити тест ${activeTestName}!`;
     } else if (startTest === 'onlyForYou' && error) {
         return 'You can start tests which are only for you!!!';
     } else if (startTest === 'onlyForYou' && !error) {
@@ -205,9 +200,11 @@ export function startTestPlayerMessages(
     } else if (startTest === 'madeRecently' && error) {
         return 'Error. User made test recently';
     } else if (startTest === 'madeRecently' && !error) {
-        return 'Сталася помилка! Користувач здав даний тест недавно. Зачекайте деякий час ( до 1хв )';
+        return 'Сталася помилка! Користувач здав даний тест недавно. Зачекайте деякий час (до 1хв)';
     } else if (startTest === 'default') {
         return 'Сталася помилка! Невідома помилка, тест розпочати не вдається! Спробуйте знову';
+    } else if (startTest === 'emptySlot') {
+        return 'Сталася помилка! Роботу тестового плеєра було порушено! Повернутися до тесту або здавати новий неможливо у даний момент';
     }
 }
 
@@ -219,7 +216,13 @@ type TestPlayerClient =
     | 'finish'
     | 'sureFinish'
     | 'checkError'
-    | 'emptySlot';
+    | 'emptySlot'
+    | 'saveSessionError'
+    | 'refresh'
+    | 'checkEmpty'
+    | 'notAnswers'
+    | 'isMatch'
+    | 'notAccess';
 export function testPlayerMessages(
     testPlayer: TestPlayerClient,
     error?: boolean,
@@ -239,13 +242,25 @@ export function testPlayerMessages(
     } else if (testPlayer === 'sureFinish') {
         return `Ви впевнені, що хочете завершити ${testName}?`;
     } else if (testPlayer === 'finish' && gone) {
-        return 'Час здачі тесту вийшов! Ваш результат!';
+        return 'Час здачі тесту вийшов! Тест завершено!';
     } else if (testPlayer === 'finish' && !gone) {
-        return 'Ви закінчили тест! Ваш результат!';
+        return 'Тест завершено!';
     } else if (testPlayer === 'checkError') {
         return 'Сталася помилка! Не вдалося перевірити Ваш тест та визначити результат';
     } else if (testPlayer === 'emptySlot') {
-        return 'Сталася помилка! Тест не було розпочато або тест уже було закінчено! Неможливо здати тест або повернутися до його здачі';
+        return 'Попередження! Тест не було розпочато або тест уже було закінчено! Неможливо здати тест або повернутися до його здачі';
+    } else if (testPlayer === 'saveSessionError') {
+        return 'Сталася помилка при збереженні даних тесту! Не вдалося зберегти дані у сесії для перегляду результатів тесту! Спробуйте знову';
+    } else if (testPlayer === 'refresh') {
+        return 'Увага! Сторінку буде перезавантажено! Тест буде продовжено!';
+    } else if (testPlayer === 'checkEmpty') {
+        return 'Попередження! Дані щодо перевіреного тесту відсутні! Спробуйте знову';
+    } else if (testPlayer === 'notAnswers') {
+        return 'Сталася помилка! Некоректна робота компоненту здачі тесту! Ваші відповіді не зараховуються! Спробуйте знову';
+    } else if (testPlayer === 'isMatch') {
+        return 'Неможливо здати даний тест! У сесії відсутні дані про тест, який Ви хочете здавати';
+    } else if (testPlayer === 'notAccess') {
+        return 'У доступі відмовлено! Перенаправлення на сторінку відповідну сторінку!';
     }
 }
 
@@ -261,5 +276,22 @@ export function timerMessages(timer: Timer): string {
         return 'Сталася помилка! Не вдалося зберегти час тесту! Неможливо продовжити! Спробуйте знову';
     } else if (timer === 'timerError') {
         return 'Сталася помилка! Проблеми таймера! Спробуйте знову';
+    }
+}
+
+// Results Messages //
+type Results = 'emptySlot' | 'upload' | 'get' | 'navigate' | 'notAccess';
+
+export function resultsMessages(results: Results): string {
+    if (results === 'emptySlot') {
+        return 'Попередження! Результати відсутні! Неможливо отримати доступ до даної сторінки не здавши тест';
+    } else if (results === 'upload') {
+        return 'Результати завантажено! Графік побудовано!';
+    } else if (results === 'get') {
+        return 'Помилка сесії! Сталася помилка при отриманні результату тесту. Невдається продовжити операцію! Спробуйте знову';
+    } else if (results === 'navigate') {
+        return 'Сталася помилка! Не вдалося перейти до профілю та очистити сесію. Спробуйте знову';
+    } else if (results === 'notAccess') {
+        return 'У доступі відмовлено! Перенаправлення на сторінку відповідну сторінку!';
     }
 }
