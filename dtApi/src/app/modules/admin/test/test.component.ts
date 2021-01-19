@@ -12,6 +12,7 @@ import { MatSort } from '@angular/material/sort';
 import { MatDialog } from '@angular/material/dialog';
 import { ServiceResponse, Test, Subject, DialogData } from './test.interfaces';
 import { ConfirmDeleteComponent } from '../groups/confirm-delete/confirm-delete.component';
+import { ImportExportDialogComponent } from './import-export-dialog/import-export-dialog.component';
 
 @Component({
     selector: 'app-tests',
@@ -86,7 +87,19 @@ export class TestComponent implements OnInit {
 
         if (this.dataSource.paginator) this.dataSource.paginator.firstPage();
     }
+    openEIDialog(test: Test): void {
+        const dialogRef = this.dialog.open(ImportExportDialogComponent, {
+            width: '600px',
+            data: {
+                test_id: test.test_id,
+            },
+        });
 
+        dialogRef.afterClosed().subscribe((result) => {
+            if (result) {
+            }
+        });
+    }
     openAddDialog(): void {
         const test = {};
         const dialogRef = this.dialog.open(TestModalComponent, {

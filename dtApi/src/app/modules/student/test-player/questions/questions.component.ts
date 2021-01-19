@@ -1,10 +1,10 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { MatCheckboxChange } from '@angular/material/checkbox';
 import {
     AnswerData,
     QA,
 } from '../../../../shared/interfaces/test-player.interfaces';
 import { Answer } from '../../../../shared/interfaces/student.interfaces';
-import { MatCheckboxChange } from '@angular/material/checkbox';
 
 @Component({
     selector: 'app-questions',
@@ -25,11 +25,18 @@ export class QuestionsComponent implements OnInit {
     sendAnswerData: AnswerData[] = [];
     textValue: string[] = [];
 
-    constructor() {}
-
     ngOnInit(): void {
+        this.onAnswer.emit(this.firstEmitData());
         this.getRandomAnswers(this.questionsAndAnswers);
         this.btnCount = [...Array(this.questionsAndAnswers.length).keys()];
+    }
+
+    firstEmitData(): Array<any> {
+        let firstEmit = [];
+        firstEmit = this.questionsAndAnswers.map((elem) => {
+            return { question_id: +elem.question_id, answer_ids: [''] };
+        });
+        return firstEmit;
     }
 
     changeQuestion(event: Event, index: number): void {

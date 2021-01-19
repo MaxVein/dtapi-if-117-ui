@@ -1,14 +1,14 @@
-<div class="results">
+<div class="results" *ngIf="!loading; else loader">
     <div class="results__container">
         <div class="results__header">
             <div class="results__test-info">
                 <h1 class="test-name">
                     <mat-icon class="timer-icon">school</mat-icon>
-                    {{ testName }}
+                    {{ testPlayerResults.testName }}
                 </h1>
                 <h1 class="test-subject">
                     <mat-icon class="timer-icon">collections_bookmark</mat-icon>
-                    {{ subjectName }}
+                    {{ testPlayerResults.subjectName }}
                 </h1>
             </div>
             <h1 class="results__finish-text">
@@ -21,7 +21,8 @@
                     type="button"
                     mat-flat-button
                     color="primary"
-                    routerLink="/student/profile"
+                    matTooltip="Завершити перегляд результату та перейти до профілю студента"
+                    (click)="resetSession()"
                 >
                     <mat-icon>assignment_ind</mat-icon>
                     Повернутись у профіль
@@ -37,16 +38,20 @@
                 <div class="results__score">
                     <span class="score">
                         <mat-icon>thumb_up_alt</mat-icon>
-                        {{ testResults.full_mark }}</span
+                        {{ testPlayerResults.result.full_mark }}</span
                     >
                 </div>
             </div>
             <div class="results__charts">
                 <app-answers-chart
-                    [testResults]="testResults"
-                    [countOfQuestions]="countOfQuestions"
+                    [testResults]="testPlayerResults.result"
+                    [countOfQuestions]="testPlayerResults.countOfQuestions"
                 ></app-answers-chart>
             </div>
         </div>
     </div>
 </div>
+
+<ng-template #loader>
+    <app-loader></app-loader>
+</ng-template>

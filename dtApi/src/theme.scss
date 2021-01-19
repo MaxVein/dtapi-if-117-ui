@@ -86,6 +86,20 @@ $dark-theme: mat-dark-theme($dark-primary, $dark-accent, $dark-warn);
 }
 .dark-theme .timer-circle {
     background: #e91e63 !important;
+    &.warning {
+        background: #fceb6f !important;
+        color: black;
+    }
+
+    &.danger {
+        background: #f44336 !important;
+        color: black;
+    }
+}
+.dark-theme .quiz .quiz__button-question {
+    button.done {
+        background-color: #69f0ae !important;
+    }
 }
 .dark-theme .dark-btn {
     background: inherit !important;

@@ -15,7 +15,7 @@ import { AlertService } from '../../../../shared/services/alert.service';
 import { ProfileService } from '../../services/profile.service';
 import { TestPlayerService } from '../../services/test-player.service';
 import { ConfirmComponent } from '../../../../shared/components/confirm/confirm.component';
-import { of, Subscription, from } from 'rxjs';
+import { of, Subscription, forkJoin } from 'rxjs';
 import { concatMap, mergeMap } from 'rxjs/operators';
 import {
     TestDate,
@@ -65,10 +65,10 @@ export class ProfileTableComponent implements OnInit, AfterViewInit, OnDestroy {
     @ViewChild(MatPaginator, { static: false }) paginator: MatPaginator;
 
     constructor(
-        public modalService: ModalService,
         private router: Router,
         private profileService: ProfileService,
         private testPlayerService: TestPlayerService,
+        public modalService: ModalService,
         private alertService: AlertService
     ) {}
 
@@ -101,11 +101,10 @@ export class ProfileTableComponent implements OnInit, AfterViewInit, OnDestroy {
                         this.testsBySubject = res;
                         this.subjectsIds = res.map((item) => item.subject_id);
                         this.alertService.message(scheduleMessages('isTests'));
-                        return from(this.subjectsIds).pipe(
-                            mergeMap((id) =>
-                                this.profileService.getTestDate(id)
-                            )
+                        const observables = this.subjectsIds.map((id) =>
+                            this.profileService.getTestDate(id)
                         );
+                        return forkJoin(observables);
                     } else {
                         this.startText = true;
                         this.testsBySubject = [];
@@ -115,21 +114,25 @@ export class ProfileTableComponent implements OnInit, AfterViewInit, OnDestroy {
                 })
             )
             .subscribe({
-                next: (res: Array<TestDate>) => {
+                next: (res: []) => {
                     if (!this.newSubjects.length) {
                         this.getNewSubjects(this.testsBySubject);
                     }
                     this.testsBySubject.forEach((test) => {
-                        res.forEach((item) => {
-                            if (item.subject_id === test.subject_id) {
-                                this.testDetails.push({
-                                    ...test,
-                                    ...item,
-                                    subjectname: this.getSubName(
-                                        test.subject_id
-                                    ),
-                                });
-                            }
+                        let detailes: any;
+                        res.forEach((item: []) => {
+                            detailes = item.forEach((elem: TestDate) => {
+                                if (elem.subject_id === test.subject_id) {
+                                    detailes = {
+                                        ...test,
+                                        ...elem,
+                                        subjectname: this.getSubName(
+                                            test.subject_id
+                                        ),
+                                    };
+                                    this.testDetails.push(detailes);
+                                }
+                            });
                         });
                     });
                     this.dataSource.data = this.testDetails;
@@ -146,8 +149,6 @@ export class ProfileTableComponent implements OnInit, AfterViewInit, OnDestroy {
     selectSubject(event: MatSelectChange): void {
         const subjectData = event.value;
         if (subjectData === 'ALL') {
-            this.hide = false;
-            this.testDetails = [];
             this.getTestInfoByGroup();
         } else {
             this.subjectID = subjectData.id;
@@ -313,12 +314,23 @@ export class ProfileTableComponent implements OnInit, AfterViewInit, OnDestroy {
             .testPlayerGetData()
             .subscribe(
                 (response: TestPlayerResponse) => {
-                    if (+response.id === +test.test_id) {
-                        this.router.navigate(['student/test-player']);
-                    } else {
+                    if (response.response === 'Empty slot') {
                         this.alertService.error(
-                            startTestPlayerMessages('makingTest', false)
+                            startTestPlayerMessages('emptySlot')
                         );
+                    } else {
+                        if (+response.id === +test.test_id) {
+                            this.router.navigate(['student/test-player']);
+                        } else {
+                            this.alertService.warning(
+                                startTestPlayerMessages(
+                                    'makingTest',
+                                    false,
+                                    response.currentTest.test_name,
+                                    test.test_name
+                                )
+                            );
+                        }
                     }
                 },
                 (error: Response) => {

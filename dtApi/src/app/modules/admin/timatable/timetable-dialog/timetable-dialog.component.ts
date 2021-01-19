@@ -22,6 +22,7 @@ export interface DialogData {
 export class TimetableDialogComponent implements OnInit {
     form: FormGroup;
     groups;
+    currDate: Date;
     constructor(
         private formBuilder: FormBuilder,
         public dialogRef: MatDialogRef<TimetableDialogComponent>,
@@ -30,6 +31,7 @@ export class TimetableDialogComponent implements OnInit {
 
     ngOnInit() {
         this.groups = this.data.groups;
+        this.currDate = new Date();
         this.form = this.formBuilder.group({
             group_id: [
                 this.data.group_id ? this.data.group_id : '',
@@ -53,6 +55,7 @@ export class TimetableDialogComponent implements OnInit {
             ],
         });
     }
+
     sendTimetable() {
         this.dialogRef.close(this.form.value);
     }
