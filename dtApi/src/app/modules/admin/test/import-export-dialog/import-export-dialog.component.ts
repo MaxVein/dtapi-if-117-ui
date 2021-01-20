@@ -1,7 +1,13 @@
 import { Component, OnInit, Inject } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { forkJoin, of } from 'rxjs';
-import { FormControl, FormGroup } from '@angular/forms';
+import {
+    FormBuilder,
+    FormGroup,
+    FormControl,
+    Validators,
+} from '@angular/forms';
+
 import { mergeMap } from 'rxjs/operators';
 import { ModalService } from 'src/app/shared/services/modal.service';
 
@@ -30,6 +36,8 @@ export interface QuestionInstance {
 export class ImportExportDialogComponent implements OnInit {
     isExport = false;
     isImport = false;
+    levels = false;
+    levelsIds: Array<string> = ['Обрати всі'];
     count: string;
     questions: [];
     questionsIds: [];
@@ -39,11 +47,13 @@ export class ImportExportDialogComponent implements OnInit {
     fileData: any;
     questionsImportData: Array<QuestionInstance> = [];
     answersImportData: any = [];
+    form: FormGroup;
 
     constructor(
         public dialogRef: MatDialogRef<ImportExportDialogComponent>,
         private ieService: ImportExportService,
         private modalService: ModalService,
+        private formBuilder: FormBuilder,
         @Inject(MAT_DIALOG_DATA) public data: DialogData
     ) {}
 
@@ -87,20 +97,42 @@ export class ImportExportDialogComponent implements OnInit {
                         }
                     });
                 });
-                const blob = new Blob(
-                    [JSON.stringify(this.testFullData, null, 2)],
-                    {
-                        type: 'text/json',
-                    }
-                );
-
-                const url = URL.createObjectURL(blob);
-                const link = document.createElement('a');
-                link.setAttribute('href', url);
-                link.setAttribute('download', 'data.json');
-                link.click();
+                this.form = this.formBuilder.group({
+                    levels: ['', [Validators.required]],
+                });
+                this.testFullData.forEach((elem) => {
+                    this.levelsIds.push(elem.level);
+                });
+                this.levelsIds = [...new Set(this.levelsIds)].sort();
+                this.levels = true;
             });
     }
+    saveTests(): void {
+        let filteredData = [];
+
+        if (this.form.value.levels === 'Обрати всі') {
+            this.downloadTests(this.testFullData);
+        } else {
+            filteredData = this.testFullData.filter(
+                (item) => item.level === this.form.value.levels
+            );
+            this.downloadTests(filteredData);
+        }
+    }
+
+    downloadTests(tests) {
+        const blob = new Blob([JSON.stringify(tests, null, 2)], {
+            type: 'text/json',
+        });
+
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.setAttribute('href', url);
+        link.setAttribute('download', 'data.json');
+        link.click();
+        this.isExport = false;
+    }
+
     importTests() {
         this.isImport = true;
     }
@@ -123,9 +155,12 @@ export class ImportExportDialogComponent implements OnInit {
         of(fileData)
             .pipe(
                 mergeMap((res) => {
-                    const quwstionsObservables = res.map((item) =>
-                        this.ieService.insertData('question', item)
-                    );
+                    const quwstionsObservables = res.map((item) => {
+                        return this.ieService.insertData('question', {
+                            ...item,
+                            test_id: this.data.test_id,
+                        });
+                    });
 
                     return forkJoin(quwstionsObservables);
                 })
