@@ -35,6 +35,7 @@
                 *ngIf="questionsAndAnswers[startTest].type === '1'"
                 class="type_one answer-attachment"
             >
+                <h4 class="question-type">Виберіть одну правильну відповідь</h4>
                 <div
                     *ngFor="
                         let answer of questionsAndAnswers[startTest].answers
@@ -68,6 +69,9 @@
                 *ngIf="questionsAndAnswers[startTest].type === '2'"
                 class="type__two answer-attachment"
             >
+                <h4 class="question-type">
+                    Виберіть одну або декілька правильних відповідей
+                </h4>
                 <div
                     *ngFor="
                         let answer of questionsAndAnswers[startTest].answers
@@ -99,6 +103,7 @@
                 class="type_three"
                 *ngIf="questionsAndAnswers[startTest].type === '3'"
             >
+                <h4>Введіть текстову відповідь</h4>
                 <mat-form-field>
                     <mat-label>Ваша відповідь</mat-label>
                     <input
@@ -115,6 +120,7 @@
                 class="type_four"
                 *ngIf="questionsAndAnswers[startTest].type === '4'"
             >
+                <h4 class="question-type">Введіть числове значення</h4>
                 <mat-form-field>
                     <mat-label>Введіть значення</mat-label>
                     <input

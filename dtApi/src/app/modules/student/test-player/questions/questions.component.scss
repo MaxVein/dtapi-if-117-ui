@@ -47,6 +47,10 @@
         padding: 20px;
         margin: 30px auto;
 
+        & .question-type {
+            margin-left: 11px;
+        }
+
         & mat-checkbox ::ng-deep .mat-checkbox-inner-container {
             width: 28px;
             height: 28px;
